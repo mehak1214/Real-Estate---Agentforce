@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>GFA_Area_Sqft_Ar__c</fullName>
+    <description>To Capture the GFA Area Sqft in arabic Format</description>
+    <externalId>false</externalId>
+    <label>GFA Area Sqft Ar</label>
+    <length>255</length>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

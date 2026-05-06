@@ -1,0 +1,27 @@
+<template>
+    <lightning-spinner if:false={detailprojectLst}>
+    </lightning-spinner>
+    <div class="slds-col slds-size_9-of-12">
+        <lightning-combobox
+            name="Location "
+            label="Location "
+            value={value}
+            placeholder="Select NearBy Location "
+            options={options}
+            onchange={handleChangeOfOptions}></lightning-combobox>
+
+        <lightning-card
+            variant="Narrow"
+            title="Amenities  Map"
+            icon-name="standard:location">
+            <div class="slds-var-p-around_small">
+                <lightning-map
+                    map-markers={mapMarkers}
+                    markers-title={markersTitle}
+                    zoom-level="15"
+                    list-view="visible"
+                    center={center}></lightning-map>
+            </div>
+        </lightning-card>
+    </div>
+</template>

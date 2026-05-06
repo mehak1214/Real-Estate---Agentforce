@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ReceiptDocId__c</fullName>
+    <externalId>false</externalId>
+    <formula>IF(CONTAINS( Operating_Unit__r.Name,&apos;Meraas&apos;),
+&apos;a0CTX000004xeNJ&apos;,
+IF(CONTAINS(Operating_Unit__r.Name,&apos;DPG&apos;),
+&apos;a0CTX000004xT8j&apos;,
+IF(CONTAINS(Operating_Unit__r.Name,&apos;Nakheel&apos;),
+&apos;a0CTX00001DxCWn&apos;,
+IF(CONTAINS(Operating_Unit__r.Name,&apos;Limitless&apos;),
+&apos;a0CTX00001ygPer&apos;,
+IF(CONTAINS(Operating_Unit__r.Name,&apos;Meydan&apos;),
+&apos;a0CTX00001hjQf4&apos;,
+IF(CONTAINS(Operating_Unit__r.Name,&apos;District One&apos;),
+&apos;a0CTX00001hjQf4&apos;,
+IF(CONTAINS(Operating_Unit__r.Name,&apos;DHRE&apos;),&apos;a0CTX000004xQVQ&apos;, IF(CONTAINS( Operating_Unit__r.Name,&apos;Shamal&apos;), &apos;a0CTX000004xeNJ&apos;, &apos;&apos;) ))))
+)))</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>ReceiptDocId</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

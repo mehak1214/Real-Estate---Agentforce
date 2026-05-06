@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Region_If_city_is_Mumbai__c</fullName>
+    <label>Region (If city is Mumbai)</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Thane</fullName>
+                <default>false</default>
+                <label>Thane</label>
+            </value>
+            <value>
+                <fullName>Western Suburb</fullName>
+                <default>false</default>
+                <label>Western Suburb</label>
+            </value>
+            <value>
+                <fullName>Central Suburb</fullName>
+                <default>false</default>
+                <label>Central Suburb</label>
+            </value>
+            <value>
+                <fullName>New Mumbai</fullName>
+                <default>false</default>
+                <label>New Mumbai</label>
+            </value>
+            <value>
+                <fullName>South Mumbai</fullName>
+                <default>false</default>
+                <label>South Mumbai</label>
+            </value>
+            <value>
+                <fullName>Western Mumbai - Main</fullName>
+                <default>false</default>
+                <label>Western Mumbai - Main</label>
+            </value>
+            <value>
+                <fullName>Western Mum - BKC</fullName>
+                <default>false</default>
+                <label>Western Mum - BKC</label>
+            </value>
+            <value>
+                <fullName>South Central</fullName>
+                <default>false</default>
+                <label>South Central</label>
+            </value>
+            <value>
+                <fullName>Central Mumbai</fullName>
+                <default>false</default>
+                <label>Central Mumbai</label>
+            </value>
+            <value>
+                <fullName>Eastern Suburbs</fullName>
+                <default>false</default>
+                <label>Eastern Suburbs</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

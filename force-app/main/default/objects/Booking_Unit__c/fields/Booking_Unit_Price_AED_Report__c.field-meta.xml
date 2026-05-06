@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Booking_Unit_Price_AED_Report__c</fullName>
+    <description>IF(LEN(TEXT(Booking_Unit_Price__c)) &gt;= 7,
+TEXT(Booking_Unit_Price__c/1000000)+&apos;M&apos;,
+IF(LEN(TEXT(Booking_Unit_Price__c)) &gt;= 4,
+TEXT(Booking_Unit_Price__c/1000)+&apos;K&apos;,TEXT(Booking_Unit_Price__c)))</description>
+    <externalId>false</externalId>
+    <formula>Booking_Unit_Price__c/1000000</formula>
+    <label>Booking Unit Price (AED)</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>3</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Sub_Status__c</fullName>
+    <description>When a plot is released from yardi to Salesforce, the sub status of the plot will be &quot;Pricing Input Required&quot;.
+This sub status will be changed to &quot;Awaiting Pricing Approval&quot; when finance team enters the price and submits for Approval.
+When the Sales Manager approves/rejects the price, the status will be changed to Approved/Rejected.</description>
+    <label>Sub Status</label>
+    <required>false</required>
+    <trackFeedHistory>true</trackFeedHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Pricing Input Required</fullName>
+                <default>false</default>
+                <label>Pricing Input Required</label>
+            </value>
+            <value>
+                <fullName>Awaiting Pricing Approval</fullName>
+                <default>false</default>
+                <label>Awaiting Pricing Approval</label>
+            </value>
+            <value>
+                <fullName>Pricing Approved</fullName>
+                <default>false</default>
+                <label>Pricing Approved</label>
+            </value>
+            <value>
+                <fullName>Pricing Rejected</fullName>
+                <default>false</default>
+                <label>Pricing Rejected</label>
+            </value>
+            <value>
+                <fullName>LB Blocked</fullName>
+                <default>false</default>
+                <label>LB Blocked</label>
+            </value>
+            <value>
+                <fullName>Released for Pricing</fullName>
+                <default>false</default>
+                <label>Released for Pricing</label>
+            </value>
+            <value>
+                <fullName>Terminated Awaiting Pricing</fullName>
+                <default>false</default>
+                <label>Terminated Awaiting Pricing</label>
+            </value>
+            <value>
+                <fullName>Handover Completed</fullName>
+                <default>false</default>
+                <label>Handover Completed</label>
+            </value>
+            <value>
+                <fullName>Ready for orientation</fullName>
+                <default>false</default>
+                <label>Ready for orientation</label>
+            </value>
+            <value>
+                <fullName>Terminated</fullName>
+                <default>false</default>
+                <label>Terminated</label>
+            </value>
+            <value>
+                <fullName>Non-Sellable</fullName>
+                <default>false</default>
+                <label>Non-Sellable</label>
+            </value>
+            <value>
+                <fullName>Sold</fullName>
+                <default>false</default>
+                <label>Sold</label>
+            </value>
+            <value>
+                <fullName>Transferred</fullName>
+                <default>false</default>
+                <label>Transferred</label>
+            </value>
+            <value>
+                <fullName>BTLS</fullName>
+                <default>false</default>
+                <label>BTLS</label>
+            </value>
+            <value>
+                <fullName>BTL</fullName>
+                <default>false</default>
+                <label>BTL</label>
+            </value>
+            <value>
+                <fullName>Leased</fullName>
+                <default>false</default>
+                <label>Leased</label>
+            </value>
+            <value>
+                <fullName>Available TBC</fullName>
+                <default>false</default>
+                <label>Available TBC</label>
+            </value>
+            <value>
+                <fullName>BTS</fullName>
+                <default>false</default>
+                <label>BTS</label>
+            </value>
+            <value>
+                <fullName>Blocked</fullName>
+                <default>false</default>
+                <label>Blocked</label>
+            </value>
+            <value>
+                <fullName>JV</fullName>
+                <default>false</default>
+                <label>JV</label>
+            </value>
+            <value>
+                <fullName>BTO</fullName>
+                <default>false</default>
+                <label>BTO</label>
+            </value>
+            <value>
+                <fullName>Price Input required</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Price Input required</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

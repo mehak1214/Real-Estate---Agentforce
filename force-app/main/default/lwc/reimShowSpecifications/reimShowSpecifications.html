@@ -1,0 +1,19 @@
+<template>
+   
+    <lightning-card>
+     <div class="Specifications">
+ 
+ <table>
+     <tbody>
+         <template for:each={specificationsLst} for:item="Specification">
+             <tr key={Specification.Id}>
+                 <td>{Specification.Specification_Title__c}</td>
+                 <td><lightning-formatted-rich-text value={Specification.Specification_Description__c}></lightning-formatted-rich-text></td>
+             </tr>
+         </template>
+     </tbody>
+ </table>
+ 
+ </div>
+    </lightning-card>
+ </template>

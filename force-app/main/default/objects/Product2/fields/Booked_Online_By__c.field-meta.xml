@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Booked_Online_By__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <label>Booked Online By</label>
+    <referenceTo>Account</referenceTo>
+    <relationshipLabel>Products (Booked Online By)</relationshipLabel>
+    <relationshipName>Products2</relationshipName>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <type>Lookup</type>
+</CustomField>

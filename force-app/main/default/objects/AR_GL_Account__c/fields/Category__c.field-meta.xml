@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Category__c</fullName>
+    <label>Category</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Unidentified Receipts</fullName>
+                <default>false</default>
+                <label>Unidentified Receipts</label>
+            </value>
+            <value>
+                <fullName>Unapplied Receipts</fullName>
+                <default>false</default>
+                <label>Unapplied Receipts</label>
+            </value>
+            <value>
+                <fullName>Default Account Receivable</fullName>
+                <default>false</default>
+                <label>Default Account Receivable</label>
+            </value>
+            <value>
+                <fullName>Default Account Receivable - NaM</fullName>
+                <default>false</default>
+                <label>Default Account Receivable - NaM</label>
+            </value>
+            <value>
+                <fullName>Intercompany</fullName>
+                <default>false</default>
+                <label>Intercompany</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

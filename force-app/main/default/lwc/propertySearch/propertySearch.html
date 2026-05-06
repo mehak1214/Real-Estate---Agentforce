@@ -1,0 +1,33 @@
+<template>
+    <div class="container">
+        <h2 class="title">LOCATIONS</h2>
+        <p class="description">
+            We handpick locations that offer seamless connectivity, unmatched return on investments, <br />
+            in a neighborhood that is truly one-of-a-kind.
+        </p>
+
+        <h3 class="subtitle">SEARCH PROPERTIES</h3>
+
+        <div class="search-box">
+            <lightning-combobox
+                label="City"
+                value={selectedCity}
+                placeholder="Select City"
+                options={cityOptions}
+                onchange={handleCityChange}
+            ></lightning-combobox>
+
+            <lightning-combobox
+                label="Project"
+                value={selectedProject}
+                placeholder="Select Project"
+                options={projectOptions}
+                onchange={handleProjectChange}
+            ></lightning-combobox>
+
+            <button class="search-btn" onclick={handleSearch}>
+                <lightning-icon icon-name="utility:search" alternative-text="Search" size="small"></lightning-icon>
+            </button>
+        </div>
+    </div>
+</template>

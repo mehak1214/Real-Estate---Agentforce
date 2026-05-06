@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Plot_Condition__c</fullName>
+    <label>Plot Condition</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Frozen</fullName>
+                <default>false</default>
+                <label>Frozen</label>
+            </value>
+            <value>
+                <fullName>Not Frozen</fullName>
+                <default>false</default>
+                <label>Not Frozen</label>
+            </value>
+            <value>
+                <fullName>Partially Frozen</fullName>
+                <default>false</default>
+                <label>Partially Frozen</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

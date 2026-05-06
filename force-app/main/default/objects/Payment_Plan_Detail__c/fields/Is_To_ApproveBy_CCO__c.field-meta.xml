@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Is_To_ApproveBy_CCO__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>This field is to flag to get the approval from CCO or not</description>
+    <label>Is To ApproveBy CCO</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

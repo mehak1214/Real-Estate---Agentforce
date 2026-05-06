@@ -1,0 +1,90 @@
+<template>
+<template if:false={showUnitScreen}>
+<lightning-card title="Add Joint Owners" icon-name="action:new_group">
+    <div slot="footer">
+        <lightning-button label="Add" variant="brand" onclick={addRow}>
+        </lightning-button>&nbsp;
+        <lightning-button label="Save" variant="brand" onclick={saveMultipleRecords}>
+        </lightning-button>&nbsp;
+        <lightning-button label="Skip" variant="brand" onclick={skip}>
+        </lightning-button>
+    </div> 
+    <table> 
+        <thead>
+            <tr>
+                <th>Account</th>
+                <th>Share %</th>
+                <th>Booking</th> 
+                <th>Remove</th>
+            </tr>
+        </thead>
+        <tbody>
+            <template for:each={JointOwnerList} for:item="JointOwner" for:index="index">
+                <tr key={JointOwner.id}> 
+                    <td>
+                        <lightning-record-edit-form
+                            object-api-name="Joint_Owner__c"
+                            data-id="JointOwnerForm"
+                        >
+                            <lightning-messages> </lightning-messages> 
+                            <lightning-input-field
+                                field-name="Account__c"
+                                name="Account"
+                                required
+                                value={JointOwner.Account}
+                                data-id={JointOwner.id} onchange={changeHandler}
+                            ></lightning-input-field>
+                        </lightning-record-edit-form> 
+                    </td>
+                    <td>
+                        <lightning-record-edit-form
+                            object-api-name="Joint_Owner__c"
+                            data-id="JointOwnerForm"
+                        >
+                            <lightning-messages> </lightning-messages> 
+                            <lightning-input-field
+                                field-name="Share__c"
+                                name="Share %"
+                                required
+                                value={JointOwner.Share}
+                                data-id={JointOwner.id} onchange={changeHandler}
+                            ></lightning-input-field>
+                        </lightning-record-edit-form> 
+                    </td>
+                    
+                    <td>
+                        <lightning-record-edit-form
+                            object-api-name="Joint_Owner__c"
+                            data-id="JointOwnerForm"
+                        >
+                            <lightning-messages> </lightning-messages> 
+                            <lightning-input-field
+                                field-name="Booking__c"
+                                name="Booking"
+                                value={JointOwner.Booking__c}
+                                data-id={JointOwner.id} onchange={changeHandler}
+                                disabled="true" 
+                            ></lightning-input-field>
+                        </lightning-record-edit-form> 
+                    </td>
+
+                    <td>
+                        <lightning-icon icon-name="action:delete" 
+                            data-id={JointOwner.id} alternative-text="Click to Remove"
+                            size="small" title="Remove Row" onclick={removeRow}>
+                        </lightning-icon>
+                    </td>
+                </tr>
+            </template>
+        </tbody>
+    </table>
+</lightning-card>
+</template>
+ <template if:true={showUnitScreen}>
+            <div class="slds-p-around_medium">
+                <c-select-unit-screen
+                    opp-id={bookingId} acc-id={primaryAccId}>
+                </c-select-unit-screen>
+            </div>
+        </template>
+</template>

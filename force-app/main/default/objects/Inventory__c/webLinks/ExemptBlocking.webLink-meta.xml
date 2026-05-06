@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ExemptBlocking</fullName>
+    <availability>online</availability>
+    <displayType>button</displayType>
+    <linkType>javascript</linkType>
+    <masterLabel>Remove Agency Blocking</masterLabel>
+    <openType>onClickJavaScript</openType>
+    <protected>false</protected>
+    <url>{!REQUIRESCRIPT(&quot;/soap/ajax/30.0/connection.js&quot;)} 
+{!REQUIRESCRIPT(&quot;/soap/ajax/30.0/apex.js&quot;)}
+
+var query = &quot;select Id, ExemptBlocking__c from Inventory__c where Id = &apos;{!Inventory__c.Id}&apos; limit 1&quot;; 
+        
+var result = sforce.connection.query(query); 
+var records = result.getArray(&quot;records&quot;); 
+        
+var myObj = records[0];
+
+myObj.ExemptBlocking__c  = true;
+        
+var results = sforce.connection.update([myObj]);
+
+var isSuccess = results[0].getBoolean(&quot;success&quot;);
+
+if (isSuccess){
+alert(&apos;Inventory is exempted from blocking.&apos;);
+} else {
+alert(results[0].get(&quot;errors&quot;).get(&quot;message&quot;));
+}</url>
+</WebLink>

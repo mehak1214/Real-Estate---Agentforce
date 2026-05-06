@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Drainage_Network_Status__c</fullName>
+    <label>Drainage Network Status</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Available</fullName>
+                <default>false</default>
+                <label>Available</label>
+            </value>
+            <value>
+                <fullName>Existing</fullName>
+                <default>false</default>
+                <label>Existing</label>
+            </value>
+            <value>
+                <fullName>Under Construction</fullName>
+                <default>false</default>
+                <label>Under Construction</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,408 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Bank_Name__c</fullName>
+    <label>Bank Name</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Others</fullName>
+                <default>false</default>
+                <label>Others</label>
+            </value>
+            <value>
+                <fullName>ABN Amro Bank NV</fullName>
+                <default>false</default>
+                <label>ABN Amro Bank NV</label>
+            </value>
+            <value>
+                <fullName>Abu Dhabi Commercial Bank</fullName>
+                <default>false</default>
+                <label>Abu Dhabi Commercial Bank</label>
+            </value>
+            <value>
+                <fullName>Abu Dhabi Islamic Bank</fullName>
+                <default>false</default>
+                <label>Abu Dhabi Islamic Bank</label>
+            </value>
+            <value>
+                <fullName>Ajman Bank</fullName>
+                <default>false</default>
+                <label>Ajman Bank</label>
+            </value>
+            <value>
+                <fullName>Al Ahli Bank of Kuwait</fullName>
+                <default>false</default>
+                <label>Al Ahli Bank of Kuwait</label>
+            </value>
+            <value>
+                <fullName>Al Hilal Bank</fullName>
+                <default>false</default>
+                <label>Al Hilal Bank</label>
+            </value>
+            <value>
+                <fullName>Al Khaliji France</fullName>
+                <default>false</default>
+                <label>Al Khaliji France</label>
+            </value>
+            <value>
+                <fullName>Al Masraf Bank</fullName>
+                <default>false</default>
+                <label>Al Masraf Bank</label>
+            </value>
+            <value>
+                <fullName>Al Rafidain Bank</fullName>
+                <default>false</default>
+                <label>Al Rafidain Bank</label>
+            </value>
+            <value>
+                <fullName>Arab African Intl Bank</fullName>
+                <default>false</default>
+                <label>Arab African Intl Bank</label>
+            </value>
+            <value>
+                <fullName>Arab Bank PLC</fullName>
+                <default>false</default>
+                <label>Arab Bank PLC</label>
+            </value>
+            <value>
+                <fullName>Arab Bank Limited</fullName>
+                <default>false</default>
+                <label>Arab Bank Limited</label>
+            </value>
+            <value>
+                <fullName>Arab Emirates Investment Bank</fullName>
+                <default>false</default>
+                <label>Arab Emirates Investment Bank</label>
+            </value>
+            <value>
+                <fullName>Arab National Bank</fullName>
+                <default>false</default>
+                <label>Arab National Bank</label>
+            </value>
+            <value>
+                <fullName>Banca Commercials Italiana</fullName>
+                <default>false</default>
+                <label>Banca Commercials Italiana</label>
+            </value>
+            <value>
+                <fullName>Bank Melli Iran</fullName>
+                <default>false</default>
+                <label>Bank Melli Iran</label>
+            </value>
+            <value>
+                <fullName>Bank of Baroda</fullName>
+                <default>false</default>
+                <label>Bank of Baroda</label>
+            </value>
+            <value>
+                <fullName>Bank of Sharjah</fullName>
+                <default>false</default>
+                <label>Bank of Sharjah</label>
+            </value>
+            <value>
+                <fullName>Bank Saderat Iran</fullName>
+                <default>false</default>
+                <label>Bank Saderat Iran</label>
+            </value>
+            <value>
+                <fullName>Banque Du Caire</fullName>
+                <default>false</default>
+                <label>Banque Du Caire</label>
+            </value>
+            <value>
+                <fullName>Banque Banorabe</fullName>
+                <default>false</default>
+                <label>Banque Banorabe</label>
+            </value>
+            <value>
+                <fullName>Banque Libanaise Pour Le Comm.</fullName>
+                <default>false</default>
+                <label>Banque Libanaise Pour Le Comm.</label>
+            </value>
+            <value>
+                <fullName>Barclays Bank</fullName>
+                <default>false</default>
+                <label>Barclays Bank</label>
+            </value>
+            <value>
+                <fullName>BLC Bank</fullName>
+                <default>false</default>
+                <label>BLC Bank</label>
+            </value>
+            <value>
+                <fullName>Blom Bank France SA</fullName>
+                <default>false</default>
+                <label>Blom Bank France SA</label>
+            </value>
+            <value>
+                <fullName>BNP Paribas Bank</fullName>
+                <default>false</default>
+                <label>BNP Paribas Bank</label>
+            </value>
+            <value>
+                <fullName>British Bank of the M.E.</fullName>
+                <default>false</default>
+                <label>British Bank of the M.E.</label>
+            </value>
+            <value>
+                <fullName>Calyon Bank</fullName>
+                <default>false</default>
+                <label>Calyon Bank</label>
+            </value>
+            <value>
+                <fullName>Canara Bank</fullName>
+                <default>false</default>
+                <label>Canara Bank</label>
+            </value>
+            <value>
+                <fullName>Central Bank of UAE</fullName>
+                <default>false</default>
+                <label>Central Bank of UAE</label>
+            </value>
+            <value>
+                <fullName>CitiBank NA</fullName>
+                <default>false</default>
+                <label>CitiBank NA</label>
+            </value>
+            <value>
+                <fullName>Citibank UAE</fullName>
+                <default>false</default>
+                <label>Citibank UAE</label>
+            </value>
+            <value>
+                <fullName>Commercial Bank International</fullName>
+                <default>false</default>
+                <label>Commercial Bank International</label>
+            </value>
+            <value>
+                <fullName>Commercial Bank of Dubai</fullName>
+                <default>false</default>
+                <label>Commercial Bank of Dubai</label>
+            </value>
+            <value>
+                <fullName>Commercial Bank of Qatar</fullName>
+                <default>false</default>
+                <label>Commercial Bank of Qatar</label>
+            </value>
+            <value>
+                <fullName>Credit Agricole Indosuez</fullName>
+                <default>false</default>
+                <label>Credit Agricole Indosuez</label>
+            </value>
+            <value>
+                <fullName>Credit Suisse</fullName>
+                <default>false</default>
+                <label>Credit Suisse</label>
+            </value>
+            <value>
+                <fullName>Doha Bank</fullName>
+                <default>false</default>
+                <label>Doha Bank</label>
+            </value>
+            <value>
+                <fullName>Deutsche Bank AG Dubai</fullName>
+                <default>false</default>
+                <label>Deutsche Bank AG Dubai</label>
+            </value>
+            <value>
+                <fullName>Dubai Islamic Bank</fullName>
+                <default>false</default>
+                <label>Dubai Islamic Bank</label>
+            </value>
+            <value>
+                <fullName>El Nilein Bank</fullName>
+                <default>false</default>
+                <label>El Nilein Bank</label>
+            </value>
+            <value>
+                <fullName>Emirates Islamic Bank</fullName>
+                <default>false</default>
+                <label>Emirates Islamic Bank</label>
+            </value>
+            <value>
+                <fullName>Emirates NBD</fullName>
+                <default>false</default>
+                <label>Emirates NBD</label>
+            </value>
+            <value>
+                <fullName>Finance House</fullName>
+                <default>false</default>
+                <label>Finance House</label>
+            </value>
+            <value>
+                <fullName>First Gulf Bank</fullName>
+                <default>false</default>
+                <label>First Gulf Bank</label>
+            </value>
+            <value>
+                <fullName>Grindlays Qatar Bank</fullName>
+                <default>false</default>
+                <label>Grindlays Qatar Bank</label>
+            </value>
+            <value>
+                <fullName>Habib Bank AG Zurich</fullName>
+                <default>false</default>
+                <label>Habib Bank AG Zurich</label>
+            </value>
+            <value>
+                <fullName>Habib Bank Limited</fullName>
+                <default>false</default>
+                <label>Habib Bank Limited</label>
+            </value>
+            <value>
+                <fullName>HSBC Bank Middle East</fullName>
+                <default>false</default>
+                <label>HSBC Bank Middle East</label>
+            </value>
+            <value>
+                <fullName>HSBC Bank Middle East Limited</fullName>
+                <default>false</default>
+                <label>HSBC Bank Middle East Limited</label>
+            </value>
+            <value>
+                <fullName>Invest Bank</fullName>
+                <default>false</default>
+                <label>Invest Bank</label>
+            </value>
+            <value>
+                <fullName>Jordan National Bank</fullName>
+                <default>false</default>
+                <label>Jordan National Bank</label>
+            </value>
+            <value>
+                <fullName>Lloyds Bank TSB</fullName>
+                <default>false</default>
+                <label>Lloyds Bank TSB</label>
+            </value>
+            <value>
+                <fullName>Mashreq Bank</fullName>
+                <default>false</default>
+                <label>Mashreq Bank</label>
+            </value>
+            <value>
+                <fullName>ME Bank</fullName>
+                <default>false</default>
+                <label>ME Bank</label>
+            </value>
+            <value>
+                <fullName>Melle Bank</fullName>
+                <default>false</default>
+                <label>Melle Bank</label>
+            </value>
+            <value>
+                <fullName>Middle East Bank</fullName>
+                <default>false</default>
+                <label>Middle East Bank</label>
+            </value>
+            <value>
+                <fullName>National Bank of Abu Dhabi</fullName>
+                <default>false</default>
+                <label>National Bank of Abu Dhabi</label>
+            </value>
+            <value>
+                <fullName>National Bank of Bahrain</fullName>
+                <default>false</default>
+                <label>National Bank of Bahrain</label>
+            </value>
+            <value>
+                <fullName>National Bank of Fujairah</fullName>
+                <default>false</default>
+                <label>National Bank of Fujairah</label>
+            </value>
+            <value>
+                <fullName>National Bank of Kuwait</fullName>
+                <default>false</default>
+                <label>National Bank of Kuwait</label>
+            </value>
+            <value>
+                <fullName>National Bank of Oman</fullName>
+                <default>false</default>
+                <label>National Bank of Oman</label>
+            </value>
+            <value>
+                <fullName>National Bank of RAK</fullName>
+                <default>false</default>
+                <label>National Bank of RAK</label>
+            </value>
+            <value>
+                <fullName>National Bank of Sharjah</fullName>
+                <default>false</default>
+                <label>National Bank of Sharjah</label>
+            </value>
+            <value>
+                <fullName>National Bank of UAQ</fullName>
+                <default>false</default>
+                <label>National Bank of UAQ</label>
+            </value>
+            <value>
+                <fullName>National Commercial Bank</fullName>
+                <default>false</default>
+                <label>National Commercial Bank</label>
+            </value>
+            <value>
+                <fullName>Noor Islamic Bank PJSC</fullName>
+                <default>false</default>
+                <label>Noor Islamic Bank PJSC</label>
+            </value>
+            <value>
+                <fullName>Noor Bank</fullName>
+                <default>false</default>
+                <label>Noor Bank</label>
+            </value>
+            <value>
+                <fullName>RAKBANK</fullName>
+                <default>false</default>
+                <label>RAKBANK</label>
+            </value>
+            <value>
+                <fullName>Saudi British Bank</fullName>
+                <default>false</default>
+                <label>Saudi British Bank</label>
+            </value>
+            <value>
+                <fullName>Sharjah Islamic Bank</fullName>
+                <default>false</default>
+                <label>Sharjah Islamic Bank</label>
+            </value>
+            <value>
+                <fullName>Standard Chartered Bank</fullName>
+                <default>false</default>
+                <label>Standard Chartered Bank</label>
+            </value>
+            <value>
+                <fullName>Standard Chartered Grindlays</fullName>
+                <default>false</default>
+                <label>Standard Chartered Grindlays</label>
+            </value>
+            <value>
+                <fullName>State Bank of India</fullName>
+                <default>false</default>
+                <label>State Bank of India</label>
+            </value>
+            <value>
+                <fullName>Union National Bank</fullName>
+                <default>false</default>
+                <label>Union National Bank</label>
+            </value>
+            <value>
+                <fullName>United Arab Bank</fullName>
+                <default>false</default>
+                <label>United Arab Bank</label>
+            </value>
+            <value>
+                <fullName>United Bank Limited</fullName>
+                <default>false</default>
+                <label>United Bank Limited</label>
+            </value>
+            <value>
+                <fullName>HDFC Bank</fullName>
+                <default>false</default>
+                <label>HDFC Bank</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SalesCon_Com_Perc__c</fullName>
+    <description>This field is populated when unit status become SOLD.</description>
+    <inlineHelpText>This field used to send data to Yardi</inlineHelpText>
+    <label>Sales Consultant Commission Percentage</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackTrending>false</trackTrending>
+    <type>Percent</type>
+</CustomField>

@@ -1,0 +1,43 @@
+<template>
+    <div class="container slds-p-around_large">
+        <div class="slds-box slds-theme_default slds-p-around_large">
+            <h2 class="slds-text-heading_medium slds-m-bottom_medium">Agency Registration</h2>
+            
+            <div class="slds-form-element slds-m-bottom_medium">
+                <label class="slds-form-element__label" for="applicationType">
+                    Application Type <span class="slds-required">*</span>
+                </label>
+                <div class="slds-form-element__control">
+                    <select id="applicationType" class="slds-select" value={applicationType} onchange={handleApplicationTypeChange}>
+                        <option value="">-- Select --</option>
+                        <option value="UAE">UAE</option>
+                        <option value="International">International</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="slds-form-element slds-m-bottom_large">
+                <label class="slds-form-element__label" for="referenceNumber">
+                    Application Reference Number <span class="slds-required">*</span>
+                </label>
+                <div class="slds-form-element__control">
+                    <input type="text" 
+                           id="referenceNumber" 
+                           class="slds-input" 
+                           placeholder="Enter reference number"
+                           value={referenceNumber}
+                           onchange={handleReferenceNumberChange} 
+                           required />
+                </div>
+            </div>
+            
+            <div class="slds-align_absolute-center">
+                <button class="slds-button slds-button_brand" 
+                        onclick={handleRegister}
+                        disabled={isRegisterDisabled}>
+                    Register
+                </button>
+            </div>
+        </div>
+    </div>
+</template>

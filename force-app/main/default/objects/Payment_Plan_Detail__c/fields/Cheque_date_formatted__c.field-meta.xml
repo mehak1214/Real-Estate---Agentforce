@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Cheque_date_formatted__c</fullName>
+    <description>IF(ISPICKVAL(Installment_No__c, &apos;in01&apos;), &apos;On the date of signing this Booking Form&apos;, IF(CONTAINS(Description__c, &apos;100&apos;),&apos;On the Completion Date  ( Indicative Date: &apos;+TEXT(DAY(Cheque_Date__c)) +&apos; &apos;+ CASE(MONTH(Cheque_Date__c), 1, &apos;January&apos;, 2, &apos;February&apos;,3,&apos;March&apos;,4,&apos;April&apos;,5,&apos;May&apos;,6,&apos;June&apos;,7,&apos;July&apos;,8,&apos;August&apos;,9,&apos;September&apos;,10,&apos;October&apos;,11,&apos;November&apos;,&apos;December&apos;) +&apos; &apos;+TEXT(YEAR(Cheque_Date__c))+&apos;)&apos;, TEXT(DAY(Cheque_Date__c)) +&apos; &apos;+ CASE(MONTH(Cheque_Date__c), 1, &apos;January&apos;, 2, &apos;February&apos;,3,&apos;March&apos;,4,&apos;April&apos;,5,&apos;May&apos;,6,&apos;June&apos;,7,&apos;July&apos;,8,&apos;August&apos;,9,&apos;September&apos;,10,&apos;October&apos;,11,&apos;November&apos;,&apos;December&apos;) +&apos; &apos;+TEXT(YEAR(Cheque_Date__c))))</description>
+    <externalId>false</externalId>
+    <formula>TEXT(DAY(Cheque_Date__c)) +&apos; &apos;+ CASE(MONTH(Cheque_Date__c), 1, &apos;January&apos;, 2, &apos;February&apos;,3,&apos;March&apos;,4,&apos;April&apos;,5,&apos;May&apos;,6,&apos;June&apos;,7,&apos;July&apos;,8,&apos;August&apos;,9,&apos;September&apos;,10,&apos;October&apos;,11,&apos;November&apos;,&apos;December&apos;) +&apos; &apos;+TEXT(YEAR(Cheque_Date__c))</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Cheque date formatted</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Construction_Status__c</fullName>
+    <label>Construction Status</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Not Applicable</fullName>
+                <default>false</default>
+                <label>Not Applicable</label>
+            </value>
+            <value>
+                <fullName>Third Party Developer</fullName>
+                <default>false</default>
+                <label>Third Party Developer</label>
+            </value>
+            <value>
+                <fullName>Under Development</fullName>
+                <default>false</default>
+                <label>Under Development</label>
+            </value>
+            <value>
+                <fullName>Developed</fullName>
+                <default>false</default>
+                <label>Developed</label>
+            </value>
+            <value>
+                <fullName>Not Developed</fullName>
+                <default>false</default>
+                <label>Not Developed</label>
+            </value>
+            <value>
+                <fullName>Construction Commenced</fullName>
+                <default>false</default>
+                <label>Construction Commenced</label>
+            </value>
+            <value>
+                <fullName>Construction Completed</fullName>
+                <default>false</default>
+                <label>Construction Completed</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

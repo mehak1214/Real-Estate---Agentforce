@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>Park Avenue</label>
+    <protected>false</protected>
+    <values>
+        <field>Expiration_Days__c</field>
+        <value xsi:type="xsd:double">44.0</value>
+    </values>
+    <values>
+        <field>Project_Name__c</field>
+        <value xsi:type="xsd:string">Park Avenue</value>
+    </values>
+</CustomMetadata>

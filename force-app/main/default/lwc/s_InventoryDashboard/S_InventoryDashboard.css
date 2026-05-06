@@ -1,0 +1,23 @@
+.ProjectList {
+    background-color: var(--lwc-brandAccessible);
+    color: white;
+}
+.grid-container {
+    display: grid;
+    grid-template-columns: auto auto auto ;
+    gap: 10px;
+    background-color: white;
+    padding: 10px;
+  }
+.grid-item {
+    background-color: rgb(249, 249, 250);
+    text-align: center;
+    padding: 20px 0;
+  }
+
+  img {
+    border-radius: 8px;
+  }
+  .filterBox{
+    padding: 20px;
+  }

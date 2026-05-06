@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SF_Unit_Code__c</fullName>
+    <caseSensitive>false</caseSensitive>
+    <description>This field is created due to 9 digit unit code which will be used for la rosa 5 launch. We have limitation in Yardi of 8 character on unit code field</description>
+    <externalId>false</externalId>
+    <label>SF Unit Code</label>
+    <length>255</length>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>true</unique>
+</CustomField>

@@ -1,0 +1,28 @@
+.ProjectList{
+    background-color: blue;
+    color: white;
+}
+
+
+.filterList{
+    background-color: lightgray;
+   
+}
+.icon{
+    background-color: blue;
+    
+}
+.grid-container {
+    display: grid;
+    gap: 50px 50px;
+        grid-template-columns: auto auto auto;
+    background-color: white;
+    padding: 10px;
+  }
+  
+  .grid-item {
+    background-color: white;
+    border: 1px solid lightblue;
+    padding: 20px;
+    
+  }

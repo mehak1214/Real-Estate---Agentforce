@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SubType__c</fullName>
+    <label>SubType</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <controllingField>Reverse_Type__c</controllingField>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Insufficient Funds (INF)</fullName>
+                <default>false</default>
+                <label>Insufficient Funds (INF)</label>
+            </value>
+            <value>
+                <fullName>Irregular Signature</fullName>
+                <default>false</default>
+                <label>Irregular Signature</label>
+            </value>
+            <value>
+                <fullName>Closed Account</fullName>
+                <default>false</default>
+                <label>Closed Account</label>
+            </value>
+            <value>
+                <fullName>Frozen Account</fullName>
+                <default>false</default>
+                <label>Frozen Account</label>
+            </value>
+            <value>
+                <fullName>Dormant Account</fullName>
+                <default>false</default>
+                <label>Dormant Account</label>
+            </value>
+            <value>
+                <fullName>Second Signature Required</fullName>
+                <default>false</default>
+                <label>Second Signature Required</label>
+            </value>
+            <value>
+                <fullName>Amount in words and Numbers Differ</fullName>
+                <default>false</default>
+                <label>Amount in words and Numbers Differ</label>
+            </value>
+            <value>
+                <fullName>Missing Signature</fullName>
+                <default>false</default>
+                <label>Missing Signature</label>
+            </value>
+            <value>
+                <fullName>Special Item to be Represented</fullName>
+                <default>false</default>
+                <label>Special Item to be Represented</label>
+            </value>
+            <value>
+                <fullName>ABS Incorrect cheque Details</fullName>
+                <default>false</default>
+                <label>ABS Incorrect cheque Details</label>
+            </value>
+            <value>
+                <fullName>Unusable or Poor Quality</fullName>
+                <default>false</default>
+                <label>Unusable or Poor Quality</label>
+            </value>
+            <value>
+                <fullName>Swift Confirmation Awaited</fullName>
+                <default>false</default>
+                <label>Swift Confirmation Awaited</label>
+            </value>
+            <value>
+                <fullName>Cheque to be Present Physically</fullName>
+                <default>false</default>
+                <label>Cheque to be Present Physically</label>
+            </value>
+            <value>
+                <fullName>Others</fullName>
+                <default>false</default>
+                <label>Others</label>
+            </value>
+            <value>
+                <fullName>Technical Issue at issued bank</fullName>
+                <default>false</default>
+                <label>Technical Issue at issued bank</label>
+            </value>
+            <value>
+                <fullName>Stale Cheque</fullName>
+                <default>false</default>
+                <label>Stale Cheque</label>
+            </value>
+            <value>
+                <fullName>Alteration on Item without Proper Endorsement</fullName>
+                <default>false</default>
+                <label>Alteration on Item without Proper Endorsement</label>
+            </value>
+            <value>
+                <fullName>Wrong Amount</fullName>
+                <default>false</default>
+                <label>Wrong Amount</label>
+            </value>
+            <value>
+                <fullName>Wrong Date</fullName>
+                <default>false</default>
+                <label>Wrong Date</label>
+            </value>
+            <value>
+                <fullName>Wrong Cash Account</fullName>
+                <default>false</default>
+                <label>Wrong Cash Account</label>
+            </value>
+            <value>
+                <fullName>Wrong Unit</fullName>
+                <default>false</default>
+                <label>Wrong Unit</label>
+            </value>
+            <value>
+                <fullName>Duplicate Receipt</fullName>
+                <default>false</default>
+                <label>Duplicate Receipt</label>
+            </value>
+            <value>
+                <fullName>Wrong Mode of Payment</fullName>
+                <default>false</default>
+                <label>Wrong Mode of Payment</label>
+            </value>
+            <value>
+                <fullName>Wrongly Created</fullName>
+                <default>false</default>
+                <label>Wrongly Created</label>
+            </value>
+        </valueSetDefinition>
+        <valueSettings>
+            <controllingFieldValue>Return Cheque</controllingFieldValue>
+            <controllingFieldValue>Un Processed Return Cheque</controllingFieldValue>
+            <valueName>Insufficient Funds (INF)</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Return Cheque</controllingFieldValue>
+            <controllingFieldValue>Un Processed Return Cheque</controllingFieldValue>
+            <valueName>Irregular Signature</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Return Cheque</controllingFieldValue>
+            <controllingFieldValue>Un Processed Return Cheque</controllingFieldValue>
+            <valueName>Closed Account</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Return Cheque</controllingFieldValue>
+            <valueName>Frozen Account</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Return Cheque</controllingFieldValue>
+            <valueName>Dormant Account</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Return Cheque</controllingFieldValue>
+            <valueName>Second Signature Required</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Return Cheque</controllingFieldValue>
+            <valueName>Amount in words and Numbers Differ</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Return Cheque</controllingFieldValue>
+            <controllingFieldValue>Un Processed Return Cheque</controllingFieldValue>
+            <valueName>Missing Signature</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Return Cheque</controllingFieldValue>
+            <controllingFieldValue>Un Processed Return Cheque</controllingFieldValue>
+            <valueName>Special Item to be Represented</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Return Cheque</controllingFieldValue>
+            <valueName>ABS Incorrect cheque Details</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Return Cheque</controllingFieldValue>
+            <valueName>Unusable or Poor Quality</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Return Cheque</controllingFieldValue>
+            <valueName>Swift Confirmation Awaited</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Return Cheque</controllingFieldValue>
+            <valueName>Cheque to be Present Physically</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Return Cheque</controllingFieldValue>
+            <controllingFieldValue>Un Processed Return Cheque</controllingFieldValue>
+            <controllingFieldValue>Error Correction</controllingFieldValue>
+            <valueName>Others</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Return Cheque</controllingFieldValue>
+            <controllingFieldValue>Un Processed Return Cheque</controllingFieldValue>
+            <valueName>Stale Cheque</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Return Cheque</controllingFieldValue>
+            <controllingFieldValue>Un Processed Return Cheque</controllingFieldValue>
+            <valueName>Alteration on Item without Proper Endorsement</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Return Cheque</controllingFieldValue>
+            <controllingFieldValue>Error Correction</controllingFieldValue>
+            <valueName>Wrong Date</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Un Processed Return Cheque</controllingFieldValue>
+            <valueName>Technical Issue at issued bank</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Un Processed Return Cheque</controllingFieldValue>
+            <controllingFieldValue>Error Correction</controllingFieldValue>
+            <valueName>Wrong Amount</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Un Processed Return Cheque</controllingFieldValue>
+            <controllingFieldValue>Error Correction</controllingFieldValue>
+            <valueName>Wrong Unit</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Error Correction</controllingFieldValue>
+            <valueName>Wrong Cash Account</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Error Correction</controllingFieldValue>
+            <valueName>Duplicate Receipt</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Error Correction</controllingFieldValue>
+            <valueName>Wrong Mode of Payment</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Error Correction</controllingFieldValue>
+            <valueName>Wrongly Created</valueName>
+        </valueSettings>
+    </valueSet>
+</CustomField>

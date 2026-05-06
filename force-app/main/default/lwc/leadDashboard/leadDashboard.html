@@ -1,0 +1,46 @@
+<template>
+
+<div class="portal-background">
+
+    <div class="main-container">
+
+        <!-- HEADER -->
+        <div class="header-card">
+            <div class="header-row">
+                <div>
+                    <div class="header-title">Leads</div>
+                    <div class="header-sub">Manage your leads</div>
+                </div>
+
+                <lightning-button 
+                    label="Create Lead"
+                    variant="brand"
+                    onclick={openModal}>
+                </lightning-button>
+
+            </div>
+        </div>
+
+        <!-- CONTENT -->
+        <div class="content-card">
+
+            <lightning-datatable
+                key-field="Id"
+                data={leads}
+                columns={columns}>
+            </lightning-datatable>
+
+        </div>
+
+    </div>
+
+</div>
+
+<template if:true={showModal}>
+    <c-create-lead-modal
+        onleadcreated={handleLeadCreated}
+        onclosemodal={closeModal}>
+    </c-create-lead-modal>
+</template>
+
+</template>

@@ -1,0 +1,295 @@
+<template>
+    <lightning-card title="Bulk PDC Processor" icon-name="utility:money" class="card-container">
+        <div class="slds-card__body_inner">
+            <!-- SEARCH SECTION -->
+            <div class="search-section">
+                <div class="slds-grid slds-wrap slds-gutters">
+                    <!-- Opportunity Lookup -->
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                        <div class="form-group">
+                            <label class="slds-form-element__label">
+                                <span class="slds-required">*</span> Opportunity
+                            </label>
+                            <div class="search-wrapper">
+                                <lightning-input
+                                    type="search"
+                                    placeholder="Search opportunity..."
+                                    value={searchKey}
+                                    onchange={handleSearchChange}
+                                    variant="label-hidden"
+                                    class="search-input">
+                                </lightning-input>
+                            </div>
+                            
+                            <!-- Dropdown Results -->
+                            <template if:true={opportunities}>
+                                <div class="lookup-dropdown">
+                                    <template for:each={opportunities} for:item="opp">
+                                        <div class="dropdown-item"
+                                             key={opp.Id}
+                                             data-id={opp.Id}
+                                             data-name={opp.Name}
+                                             onclick={selectOpportunity}>
+                                            <div class="item-content">
+                                                <lightning-icon icon-name="standard:opportunity" size="x-small" class="item-icon"></lightning-icon>
+                                                <span class="item-name">{opp.Name}</span>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+
+                    <!-- Charge Type -->
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                        <div class="form-group">
+                            <label class="slds-form-element__label">
+                                <span class="slds-required">*</span> Charge Type
+                            </label>
+                            <lightning-combobox
+                                value={selectedChargeType}
+                                options={chargeTypeOptions}
+                                placeholder="Select charge type"
+                                onchange={handleChargeTypeChange}
+                                disabled={isChargeTypeDisabled}
+                                variant="label-hidden"
+                                class="combobox-input">
+                            </lightning-combobox>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Selected Info -->
+                <template if:true={selectedOppName}>
+                    <div class="selected-info">
+                        <div class="slds-box slds-box_x-small slds-theme_info">
+                            <div class="slds-grid slds-grid_align-spread">
+                                <div>
+                                    <span class="slds-text-title_caps">Selected:</span>
+                                    <span class="selected-text slds-m-left_x-small">
+                                        <lightning-icon icon-name="standard:opportunity" size="x-small"></lightning-icon>
+                                        {selectedOppName}
+                                    </span>
+                                    <span class="selected-text slds-m-left_medium">
+                                        <lightning-icon icon-name="utility:moneybag" size="x-small"></lightning-icon>
+                                        {selectedChargeType}
+                                    </span>
+                                </div>
+                                <lightning-button-icon
+                                    icon-name="utility:clear"
+                                    variant="border-filled"
+                                    size="small"
+                                    onclick={clearSelection}>
+                                </lightning-button-icon>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+
+            <!-- ACTION BUTTON -->
+            <div class="action-section">
+                <lightning-button
+                    label="Next"
+                    variant="brand"
+                    onclick={handleNext}
+                    disabled={isNextDisabled}
+                    class="next-button">
+                </lightning-button>
+            </div>
+
+            <!-- PPD TABLE -->
+            <template if:true={showPPDTable}>
+                <div class="table-section">
+                    <div class="table-header">
+                        <h3 class="slds-text-heading_medium">
+                            <lightning-icon icon-name="utility:moneybag" size="small"></lightning-icon>
+                            Payment Plan Details
+                        </h3>
+                        <div class="table-info">
+                            <span class="slds-badge slds-theme_success">{ppdRows.length} records</span>
+                        </div>
+                    </div>
+
+                    <div class="table-container">
+                        <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                            <thead>
+                                <tr class="slds-text-title_caps">
+                                    <th scope="col" width="25%">
+                                        Cheque Number
+                                    </th>
+                                    <th scope="col" width="20%">
+                                        Amount
+                                    </th>
+                                    <th scope="col" width="25%">
+                                        Sequence
+                                    </th>
+                                    <th scope="col" width="25%">
+                                        Cheque Date
+                                    </th>
+                                    <th scope="col" width="5%" class="slds-text-align_center">
+                                        Actions
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template for:each={ppdRows} for:item="row" for:index="index">
+                                    <tr key={row.id}>
+                                        <!-- Cheque Number -->
+                                        <td>
+                                            <lightning-input
+                                                type="text"
+                                                name="chequeNumber"
+                                                data-id={row.id}
+                                                value={row.chequeNumber}
+                                                onchange={handleRowChange}
+                                                placeholder="Enter cheque number"
+                                                variant="label-hidden"
+                                                required>
+                                            </lightning-input>
+                                        </td>
+                                        
+                                        <!-- Amount -->
+                                        <td>
+                                            <lightning-input
+                                                type="number"
+                                                name="amount"
+                                                data-id={row.id}
+                                                value={row.amount}
+                                                onchange={handleRowChange}
+                                                placeholder="0.00"
+                                                variant="label-hidden"
+                                                formatter="currency"
+                                                required>
+                                            </lightning-input>
+                                        </td>
+                                        
+                                        <!-- Charge Type -->
+                                        <td>
+                                            <template if:true={row.isSeq}>
+                                                <!--<lightning-input
+                                                    type="number"
+                                                    name="Sequence"
+                                                    data-id={row.id}
+                                                    value={row.seq}
+                                                    onchange={handleRowChange}
+                                                    variant="label-hidden">
+                                                </lightning-input>-->
+                                            </template>
+                                            <template if:false={row.isSeq}>
+                                                <div class="charge-type-display">
+                                                    <span class="slds-badge">{row.seq}</span>
+                                                </div>
+                                            </template>
+                                        </td>
+                                        
+                                        <!-- Cheque Date -->
+                                        <td>
+                                            <lightning-input
+                                                type="date"
+                                                name="chequeDate"
+                                                data-id={row.id}
+                                                value={row.chequeDate}
+                                                onchange={handleRowChange}
+                                                variant="label-hidden"
+                                                required>
+                                            </lightning-input>
+                                        </td>
+                                        
+                                        <!-- DELETE ROW -->
+                                        <td class="slds-text-align_center">
+                                            <lightning-button-icon
+                                                icon-name="utility:delete"
+                                                data-id={row.id}
+                                                onclick={removeRow}
+                                                variant="border-filled"
+                                                alternative-text="Delete row">
+                                            </lightning-button-icon>
+                                        </td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                        
+                        <template if:false={ppdRows}>
+                            <div class="empty-table">
+                                <lightning-icon icon-name="utility:error" size="large"></lightning-icon>
+                                <p>No payment plan details available</p>
+                            </div>
+                        </template>
+                    </div>
+
+                    <!-- TABLE ACTIONS -->
+                    <div class="table-actions">
+                        <div class="slds-grid slds-grid_align-spread">
+                            <div>
+                                <lightning-button
+                                    label="Add Row"
+                                    icon-name="utility:add"
+                                    onclick={addRow}
+                                    variant="neutral">
+                                </lightning-button>
+                            </div>
+                            <div class="process-actions">
+                                <lightning-button
+                                    label="Cancel"
+                                    onclick={resetForm}
+                                    variant="neutral">
+                                </lightning-button>
+                                <lightning-button
+                                    label="Process Cheques"
+                                    variant="brand"
+                                    onclick={handleProcess}
+                                    icon-name="utility:check"
+                                    class="process-button"
+                                    disabled={isLoading}>
+                                </lightning-button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </template>
+
+            <!-- ERROR MESSAGE -->
+            <template if:true={errorMsg}>
+                <div class="error-message">
+                    <div class="slds-notify slds-notify_alert slds-theme_error" role="alert">
+                        <span class="slds-assistive-text">Error</span>
+                        <span class="slds-icon_container">
+                            <lightning-icon icon-name="utility:error" size="small"></lightning-icon>
+                        </span>
+                        <h2>{errorMsg}</h2>
+                    </div>
+                </div>
+            </template>
+
+            <!-- SUCCESS MESSAGE -->
+            <template if:true={successMsg}>
+                <div class="success-message">
+                    <div class="slds-notify slds-notify_alert slds-theme_success" role="alert">
+                        <span class="slds-assistive-text">Success</span>
+                        <span class="slds-icon_container">
+                            <lightning-icon icon-name="utility:success" size="small"></lightning-icon>
+                        </span>
+                        <h2>{successMsg}</h2>
+                    </div>
+                </div>
+            </template>
+
+            <!-- Loading Spinner -->
+            <template if:true={isLoading}>
+                <div class="loading-spinner">
+                    <div class="slds-spinner_container">
+                        <div class="slds-spinner slds-spinner_medium" role="status">
+                            <span class="slds-assistive-text">Processing...</span>
+                            <div class="slds-spinner__dot-a"></div>
+                            <div class="slds-spinner__dot-b"></div>
+                        </div>
+                    </div>
+                    <p class="loading-text">Processing cheques, please wait...</p>
+                </div>
+            </template> 
+        </div>
+    </lightning-card>
+</template>

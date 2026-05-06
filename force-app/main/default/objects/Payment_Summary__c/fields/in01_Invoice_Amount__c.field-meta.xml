@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>in01_Invoice_Amount__c</fullName>
+    <defaultValue>0.00</defaultValue>
+    <description>This will store installment 1 payment plan amount from booking unit</description>
+    <label>in01 Invoice Amount</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackTrending>false</trackTrending>
+    <type>Currency</type>
+</CustomField>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Check_Max_Quote_Count</fullName>
+    <active>false</active>
+    <errorConditionFormula>Opportunity.Max_Quote__c &gt; 2 &amp;&amp;  $Profile.Name != &apos;System Administrator&apos;</errorConditionFormula>
+    <errorMessage>Only two Quotes can be created related to one Opportunity in a day.</errorMessage>
+</ValidationRule>

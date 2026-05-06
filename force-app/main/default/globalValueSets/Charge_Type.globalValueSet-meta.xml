@@ -1,0 +1,943 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GlobalValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customValue>
+        <fullName>Other Charges</fullName>
+        <default>false</default>
+        <label>Other Charges</label>
+    </customValue>
+    <customValue>
+        <fullName>Admin Fees</fullName>
+        <default>false</default>
+        <label>Admin Fees</label>
+    </customValue>
+    <customValue>
+        <fullName>Late Payment Fees</fullName>
+        <default>false</default>
+        <label>Late Payment Fees</label>
+    </customValue>
+    <customValue>
+        <fullName>Installments</fullName>
+        <default>false</default>
+        <label>Installments</label>
+    </customValue>
+    <customValue>
+        <fullName>Cost of Sales</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Cost of Sales</label>
+    </customValue>
+    <customValue>
+        <fullName>Land Related Fees</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Land Related Fees</label>
+    </customValue>
+    <customValue>
+        <fullName>Legal Fees</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Legal Fees</label>
+    </customValue>
+    <customValue>
+        <fullName>NOC Fees</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>NOC Fees</label>
+    </customValue>
+    <customValue>
+        <fullName>Forfeiture</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Forfeiture</label>
+    </customValue>
+    <customValue>
+        <fullName>Admin Fees - Others</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Admin Fees - Others</label>
+    </customValue>
+    <customValue>
+        <fullName>CC Charges</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>CC Charges</label>
+    </customValue>
+    <customValue>
+        <fullName>Charge-back or Interco</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Charge-back or Interco</label>
+    </customValue>
+    <customValue>
+        <fullName>Refund</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Refund</label>
+    </customValue>
+    <customValue>
+        <fullName>Admin Fees - DLD</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Admin Fees - DLD</label>
+    </customValue>
+    <customValue>
+        <fullName>NOS Services</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>NOS Services</label>
+    </customValue>
+    <customValue>
+        <fullName>Facility Income</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Facility Income</label>
+    </customValue>
+    <customValue>
+        <fullName>Gas Concessions Royalty</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Gas Concessions Royalty</label>
+    </customValue>
+    <customValue>
+        <fullName>Security Deposit</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Security Deposit</label>
+    </customValue>
+    <customValue>
+        <fullName>Income from Termination of Properties</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Income from Termination of Properties</label>
+    </customValue>
+    <customValue>
+        <fullName>Security Deposit &amp; Others</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Security Deposit &amp; Others</label>
+    </customValue>
+    <customValue>
+        <fullName>Electricity Charges</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Electricity Charges</label>
+    </customValue>
+    <customValue>
+        <fullName>TRANSFER</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>TRANSFER</label>
+    </customValue>
+    <customValue>
+        <fullName>Unearned Revenue Account - Delayed Fees</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Unearned Revenue Account - Delayed Fees</label>
+    </customValue>
+    <customValue>
+        <fullName>Fine / Penalty</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Fine / Penalty</label>
+    </customValue>
+    <customValue>
+        <fullName>Accrued Income - Others</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Accrued Income - Others</label>
+    </customValue>
+    <customValue>
+        <fullName>Income from Sale of Property</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Income from Sale of Property</label>
+    </customValue>
+    <customValue>
+        <fullName>(S) - AR Control Account</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>(S) - AR Control Account</label>
+    </customValue>
+    <customValue>
+        <fullName>(S) - Property Consolidation Clearing</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>(S) - Property Consolidation Clearing</label>
+    </customValue>
+    <customValue>
+        <fullName>(S) - Inter Company Receivable / Payable A/c</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>(S) - Inter Company Receivable / Payable A/c</label>
+    </customValue>
+    <customValue>
+        <fullName>Consolidation Refund Account</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Consolidation Refund Account</label>
+    </customValue>
+    <customValue>
+        <fullName>Cheques on hand</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Cheques on hand</label>
+    </customValue>
+    <customValue>
+        <fullName>VISA</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>VISA</label>
+    </customValue>
+    <customValue>
+        <fullName>ADMIN</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>ADMIN</label>
+    </customValue>
+    <customValue>
+        <fullName>SERVICE</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>SERVICE</label>
+    </customValue>
+    <customValue>
+        <fullName>SALE</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>SALE</label>
+    </customValue>
+    <customValue>
+        <fullName>Unclaimed customer deposits</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Unclaimed customer deposits</label>
+    </customValue>
+    <customValue>
+        <fullName>Deferred Revenue</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Deferred Revenue</label>
+    </customValue>
+    <customValue>
+        <fullName>Dubai Land Department Fee Payable</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Dubai Land Department Fee Payable</label>
+    </customValue>
+    <customValue>
+        <fullName>Cheque Bounced Fees</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Cheque Bounced Fees</label>
+    </customValue>
+    <customValue>
+        <fullName>Revenue Account - Affection Plan fees</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Revenue Account - Affection Plan fees</label>
+    </customValue>
+    <customValue>
+        <fullName>Submission Fee Plots</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Submission Fee Plots</label>
+    </customValue>
+    <customValue>
+        <fullName>(S)- AR Control Account-Fees</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>(S)- AR Control Account-Fees</label>
+    </customValue>
+    <customValue>
+        <fullName>Marketing</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Marketing</label>
+    </customValue>
+    <customValue>
+        <fullName>Revenue Account - Assignment Fess/Consolidation Fees</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Revenue Account - Assignment Fess/Consolidation Fees</label>
+    </customValue>
+    <customValue>
+        <fullName>Refreshments</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Refreshments</label>
+    </customValue>
+    <customValue>
+        <fullName>Other Receivables</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Other Receivables</label>
+    </customValue>
+    <customValue>
+        <fullName>Other Revenue</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Other Revenue</label>
+    </customValue>
+    <customValue>
+        <fullName>Unearned Revenue Account - ICP Buildings</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Unearned Revenue Account - ICP Buildings</label>
+    </customValue>
+    <customValue>
+        <fullName>(S) - Unearned Revenue Account - Rentals</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>(S) - Unearned Revenue Account - Rentals</label>
+    </customValue>
+    <customValue>
+        <fullName>(S) - Inter Company Payable - LML</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>(S) - Inter Company Payable - LML</label>
+    </customValue>
+    <customValue>
+        <fullName>Other Liabilities.</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Other Liabilities.</label>
+    </customValue>
+    <customValue>
+        <fullName>Deposit from Lease</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Deposit from Lease</label>
+    </customValue>
+    <customValue>
+        <fullName>Sundry Revenue</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Sundry Revenue</label>
+    </customValue>
+    <customValue>
+        <fullName>Deposit Payable</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Deposit Payable</label>
+    </customValue>
+    <customValue>
+        <fullName>VAT Payable - AR</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>VAT Payable - AR</label>
+    </customValue>
+    <customValue>
+        <fullName>(S) - Gain/Loss on Disposal of Fixed Assets</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>(S) - Gain/Loss on Disposal of Fixed Assets</label>
+    </customValue>
+    <customValue>
+        <fullName>Income from sale of plots</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Income from sale of plots</label>
+    </customValue>
+    <customValue>
+        <fullName>Tender Fee</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Tender Fee</label>
+    </customValue>
+    <customValue>
+        <fullName>Other Rev.-Admin. Chrgs</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Other Rev.-Admin. Chrgs</label>
+    </customValue>
+    <customValue>
+        <fullName>(S) - Capital Work in Progress - Projects</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>(S) - Capital Work in Progress - Projects</label>
+    </customValue>
+    <customValue>
+        <fullName>Office Rental Abatements</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Office Rental Abatements</label>
+    </customValue>
+    <customValue>
+        <fullName>Land Registration Fees payables (old)</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Land Registration Fees payables (old)</label>
+    </customValue>
+    <customValue>
+        <fullName>Dewa Electricity</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Dewa Electricity</label>
+    </customValue>
+    <customValue>
+        <fullName>Auction Proceeds</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Auction Proceeds</label>
+    </customValue>
+    <customValue>
+        <fullName>Accrued Expenses - Others</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Accrued Expenses - Others</label>
+    </customValue>
+    <customValue>
+        <fullName>(S) - Inter Company Payable A/c</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>(S) - Inter Company Payable A/c</label>
+    </customValue>
+    <customValue>
+        <fullName>(S) - Sales (Inv)</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>(S) - Sales (Inv)</label>
+    </customValue>
+    <customValue>
+        <fullName>Re-Sales Commission Income</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Re-Sales Commission Income</label>
+    </customValue>
+    <customValue>
+        <fullName>Security Deposit - Rental</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Security Deposit - Rental</label>
+    </customValue>
+    <customValue>
+        <fullName>Other Receivables - ICP-CBD</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Other Receivables - ICP-CBD</label>
+    </customValue>
+    <customValue>
+        <fullName>Assignment Fee</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Assignment Fee</label>
+    </customValue>
+    <customValue>
+        <fullName>Plot Amalgamation Fee</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Plot Amalgamation Fee</label>
+    </customValue>
+    <customValue>
+        <fullName>Due From / To Group Companies Limitless - ICP-CBD (Company A6)</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Due From / To Group Companies Limitless - ICP-CBD (Company A6)</label>
+    </customValue>
+    <customValue>
+        <fullName>Electricity Consumption-Income</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Electricity Consumption-Income</label>
+    </customValue>
+    <customValue>
+        <fullName>Sponsorship Income</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Sponsorship Income</label>
+    </customValue>
+    <customValue>
+        <fullName>Due From Related Party A/c</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Due From Related Party A/c</label>
+    </customValue>
+    <customValue>
+        <fullName>Income from sale of properties</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Income from sale of properties</label>
+    </customValue>
+    <customValue>
+        <fullName>Registration Fees</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Registration Fees</label>
+    </customValue>
+    <customValue>
+        <fullName>OA &amp; MC Service charges paid/allocated</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>OA &amp; MC Service charges paid/allocated</label>
+    </customValue>
+    <customValue>
+        <fullName>VAT Payable</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>VAT Payable</label>
+    </customValue>
+    <customValue>
+        <fullName>Recoveries - Associated Entities</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Recoveries - Associated Entities</label>
+    </customValue>
+    <customValue>
+        <fullName>RTA Cost Sharing Recovery</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>RTA Cost Sharing Recovery</label>
+    </customValue>
+    <customValue>
+        <fullName>ADDCARP</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>ADDCARP</label>
+    </customValue>
+    <customValue>
+        <fullName>Due To Related Party A/c</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Due To Related Party A/c</label>
+    </customValue>
+    <customValue>
+        <fullName>Royalty Income</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Royalty Income</label>
+    </customValue>
+    <customValue>
+        <fullName>Advertisement Revenue</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Advertisement Revenue</label>
+    </customValue>
+    <customValue>
+        <fullName>Revenue Account - Apartment Rental Income</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Revenue Account - Apartment Rental Income</label>
+    </customValue>
+    <customValue>
+        <fullName>Dewatering Operation &amp; Maintenance Expenses</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Dewatering Operation &amp; Maintenance Expenses</label>
+    </customValue>
+    <customValue>
+        <fullName>Electricity Connection Income</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Electricity Connection Income</label>
+    </customValue>
+    <customValue>
+        <fullName>Revenue Account - Additional Rent</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Revenue Account - Additional Rent</label>
+    </customValue>
+    <customValue>
+        <fullName>Motor Vehicle Expenses</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Motor Vehicle Expenses</label>
+    </customValue>
+    <customValue>
+        <fullName>Service Charge Clearing Account</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Service Charge Clearing Account</label>
+    </customValue>
+    <customValue>
+        <fullName>Delay Fees Penalties</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Delay Fees Penalties</label>
+    </customValue>
+    <customValue>
+        <fullName>Deposit against sale of property - Non OPM</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Deposit against sale of property - Non OPM</label>
+    </customValue>
+    <customValue>
+        <fullName>ERES FEE</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>ERES FEE</label>
+    </customValue>
+    <customValue>
+        <fullName>Electricity.</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Electricity.</label>
+    </customValue>
+    <customValue>
+        <fullName>Airconditioning Income</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Airconditioning Income</label>
+    </customValue>
+    <customValue>
+        <fullName>(S) - Inter Company Receivable - LML</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>(S) - Inter Company Receivable - LML</label>
+    </customValue>
+    <customValue>
+        <fullName>SUBSCONT</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>SUBSCONT</label>
+    </customValue>
+    <customValue>
+        <fullName>(S) - Accommodation Allowance</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>(S) - Accommodation Allowance</label>
+    </customValue>
+    <customValue>
+        <fullName>(S) - Capital Work in Progress</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>(S) - Capital Work in Progress</label>
+    </customValue>
+    <customValue>
+        <fullName>Miscellaneous Direct Costs</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Miscellaneous Direct Costs</label>
+    </customValue>
+    <customValue>
+        <fullName>HSBC - Palm Jumeirah - AED CUR A/c - 020-617676-001 - Collcn.</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>HSBC - Palm Jumeirah - AED CUR A/c - 020-617676-001 - Collcn.</label>
+    </customValue>
+    <customValue>
+        <fullName>Revenue Account - Apts service charges</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Revenue Account - Apts service charges</label>
+    </customValue>
+    <customValue>
+        <fullName>Sales Brokerage</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Sales Brokerage</label>
+    </customValue>
+    <customValue>
+        <fullName>(S) - Telephone</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>(S) - Telephone</label>
+    </customValue>
+    <customValue>
+        <fullName>Service Charges</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Service Charges</label>
+    </customValue>
+    <customValue>
+        <fullName>DM Cost Sharing Recovery</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>DM Cost Sharing Recovery</label>
+    </customValue>
+    <customValue>
+        <fullName>Interest Income</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Interest Income</label>
+    </customValue>
+    <customValue>
+        <fullName>(S) Staff Recoverable</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>(S) Staff Recoverable</label>
+    </customValue>
+    <customValue>
+        <fullName>Penalty - Others</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Penalty - Others</label>
+    </customValue>
+    <customValue>
+        <fullName>Other Receivable</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Other Receivable</label>
+    </customValue>
+    <customValue>
+        <fullName>Staff Commission</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Staff Commission</label>
+    </customValue>
+    <customValue>
+        <fullName>Bank Charges</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Bank Charges</label>
+    </customValue>
+    <customValue>
+        <fullName>Admin Services Allocation (650)</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Admin Services Allocation (650)</label>
+    </customValue>
+    <customValue>
+        <fullName>Management Fees</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Management Fees</label>
+    </customValue>
+    <customValue>
+        <fullName>Legal Claims</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Legal Claims</label>
+    </customValue>
+    <customValue>
+        <fullName>INTERESTFEE</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>INTERESTFEE</label>
+    </customValue>
+    <customValue>
+        <fullName>(S) - Temporary Receipts</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>(S) - Temporary Receipts</label>
+    </customValue>
+    <customValue>
+        <fullName>Revenue Account  - Visa &amp; other related charges</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Revenue Account  - Visa &amp; other related charges</label>
+    </customValue>
+    <customValue>
+        <fullName>District Cooling Revenue</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>District Cooling Revenue</label>
+    </customValue>
+    <customValue>
+        <fullName>Lease One Time Income</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Lease One Time Income</label>
+    </customValue>
+    <customValue>
+        <fullName>Business Travel Expenses, Allowance</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Business Travel Expenses, Allowance</label>
+    </customValue>
+    <customValue>
+        <fullName>Maint Bldg - General Repairs &amp; Maintenance (EOL &amp; Refurbishments)</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Maint Bldg - General Repairs &amp; Maintenance (EOL &amp; Refurbishments)</label>
+    </customValue>
+    <customValue>
+        <fullName>Other Miscellaneous Services cost (Single Services)</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Other Miscellaneous Services cost (Single Services)</label>
+    </customValue>
+    <customValue>
+        <fullName>RENT</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>RENT</label>
+    </customValue>
+    <customValue>
+        <fullName>Other Payables</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Other Payables</label>
+    </customValue>
+    <customValue>
+        <fullName>(S) - AR Control Account-Fees</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>(S) - AR Control Account-Fees</label>
+    </customValue>
+    <customValue>
+        <fullName>Reimbursement to buyers</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Reimbursement to buyers</label>
+    </customValue>
+    <customValue>
+        <fullName>Security Deposit - Others</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Security Deposit - Others</label>
+    </customValue>
+    <customValue>
+        <fullName>Repair &amp; Maint. General</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Repair &amp; Maint. General</label>
+    </customValue>
+    <customValue>
+        <fullName>Legal and Professional Fees</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Legal and Professional Fees</label>
+    </customValue>
+    <customValue>
+        <fullName>Recoveries - Others</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Recoveries - Others</label>
+    </customValue>
+    <customValue>
+        <fullName>DLD_FEE</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>DLD_FEE</label>
+    </customValue>
+    <customValue>
+        <fullName>DEPOSIT</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>DEPOSIT</label>
+    </customValue>
+    <customValue>
+        <fullName>(S) - Unearned Revenue Account - Others</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>(S) - Unearned Revenue Account - Others</label>
+    </customValue>
+    <customValue>
+        <fullName>Revenue Account - Admin Charges</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Revenue Account - Admin Charges</label>
+    </customValue>
+    <customValue>
+        <fullName>Indian</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Indian</label>
+    </customValue>
+    <customValue>
+        <fullName>Revenue Account - Maintenance Charges</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Revenue Account - Maintenance Charges</label>
+    </customValue>
+    <customValue>
+        <fullName>BUA extensions</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>BUA extensions</label>
+    </customValue>
+    <customValue>
+        <fullName>Revenue Account - Plots Rental Income</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Revenue Account - Plots Rental Income</label>
+    </customValue>
+    <customValue>
+        <fullName>(S) - Unearned Revenue Account - Sale of Property</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>(S) - Unearned Revenue Account - Sale of Property</label>
+    </customValue>
+    <customValue>
+        <fullName>NOC Certificate Fees</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>NOC Certificate Fees</label>
+    </customValue>
+    <customValue>
+        <fullName>Miscellaneous income</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Miscellaneous income</label>
+    </customValue>
+    <customValue>
+        <fullName>Repair &amp; Maint. Facility</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Repair &amp; Maint. Facility</label>
+    </customValue>
+    <customValue>
+        <fullName>Late Payment Charges</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Late Payment Charges</label>
+    </customValue>
+    <customValue>
+        <fullName>(C) - AP / AR Contra Account</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>(C) - AP / AR Contra Account</label>
+    </customValue>
+    <customValue>
+        <fullName>OPTION_CHARGE</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>OPTION_CHARGE</label>
+    </customValue>
+    <customValue>
+        <fullName>Land Registration Fee Clearing Account</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Land Registration Fee Clearing Account</label>
+    </customValue>
+    <customValue>
+        <fullName>Plot extensions</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Plot extensions</label>
+    </customValue>
+    <customValue>
+        <fullName>(S) - Bank Charges</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>(S) - Bank Charges</label>
+    </customValue>
+    <customValue>
+        <fullName>Registration Charges</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Registration Charges</label>
+    </customValue>
+    <customValue>
+        <fullName>Other Miscellaneous Services (Single Services)</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Other Miscellaneous Services (Single Services)</label>
+    </customValue>
+    <customValue>
+        <fullName>REGIS-FEE</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>REGIS-FEE</label>
+    </customValue>
+    <customValue>
+        <fullName>DLD Fees</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>DLD Fees</label>
+    </customValue>
+    <customValue>
+        <fullName>Other Liabilities</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Other Liabilities</label>
+    </customValue>
+    <customValue>
+        <fullName>Contra-Expense</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Contra-Expense</label>
+    </customValue>
+    <masterLabel>Charge Type</masterLabel>
+    <sorted>false</sorted>
+</GlobalValueSet>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GlobalValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customValue>
+        <fullName>Land_Subtype</fullName>
+        <default>false</default>
+        <label>Land_Subtype</label>
+    </customValue>
+    <customValue>
+        <fullName>Investment Property</fullName>
+        <default>false</default>
+        <label>Investment Property</label>
+    </customValue>
+    <customValue>
+        <fullName>Property held for development and sale</fullName>
+        <default>false</default>
+        <label>Property held for development and sale</label>
+    </customValue>
+    <masterLabel>Land_Subtype</masterLabel>
+    <sorted>false</sorted>
+</GlobalValueSet>

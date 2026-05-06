@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Comm_Type__c</fullName>
+    <label>Commission Type</label>
+    <required>true</required>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Quantity Based</fullName>
+                <default>false</default>
+                <label>Quantity Based</label>
+            </value>
+            <value>
+                <fullName>Revenue Based</fullName>
+                <default>false</default>
+                <label>Revenue Based</label>
+            </value>
+            <value>
+                <fullName>Quantity Instant Payout</fullName>
+                <default>false</default>
+                <label>Quantity Instant Payout</label>
+            </value>
+            <value>
+                <fullName>Revenue Instant Payout</fullName>
+                <default>false</default>
+                <label>Revenue Instant Payout</label>
+            </value>
+            <value>
+                <fullName>Quantity or Revenue Instant Payout</fullName>
+                <default>false</default>
+                <label>Quantity or Revenue Instant Payout</label>
+            </value>
+            <value>
+                <fullName>Graded Instant Payout</fullName>
+                <default>false</default>
+                <label>Graded Instant Payout</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

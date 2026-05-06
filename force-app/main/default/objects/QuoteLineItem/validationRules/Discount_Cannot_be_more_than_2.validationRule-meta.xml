@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Discount_Cannot_be_more_than_2</fullName>
+    <active>true</active>
+    <errorConditionFormula>Discount  &gt;  0.02</errorConditionFormula>
+    <errorMessage>Discount % cannot be more than 2%</errorMessage>
+</ValidationRule>

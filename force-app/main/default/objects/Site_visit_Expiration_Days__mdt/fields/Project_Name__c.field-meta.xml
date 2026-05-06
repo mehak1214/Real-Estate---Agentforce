@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Project_Name__c</fullName>
+    <fieldManageability>DeveloperControlled</fieldManageability>
+    <label>Project Name</label>
+    <required>false</required>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Aspirational</fullName>
+                <default>true</default>
+                <label>Aspirational</label>
+            </value>
+            <value>
+                <fullName>Premium</fullName>
+                <default>false</default>
+                <label>Premium</label>
+            </value>
+            <value>
+                <fullName>TenX Era</fullName>
+                <default>false</default>
+                <label>TenX Era</label>
+            </value>
+            <value>
+                <fullName>The Address by GS 2.0</fullName>
+                <default>false</default>
+                <label>The Address by GS 2.0</label>
+            </value>
+            <value>
+                <fullName>Super Premium</fullName>
+                <default>false</default>
+                <label>Super Premium</label>
+            </value>
+            <value>
+                <fullName>TenX Vibes</fullName>
+                <default>false</default>
+                <label>TenX Vibes</label>
+            </value>
+            <value>
+                <fullName>The Address BY GS - Bandra</fullName>
+                <default>false</default>
+                <label>The Address BY GS - Bandra</label>
+            </value>
+            <value>
+                <fullName>The Address BY GS - Sion</fullName>
+                <default>false</default>
+                <label>The Address BY GS - Sion</label>
+            </value>
+            <value>
+                <fullName>Park Avenue</fullName>
+                <default>false</default>
+                <label>Park Avenue</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

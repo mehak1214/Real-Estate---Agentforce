@@ -1,0 +1,45 @@
+.table-header {
+    font-weight: 600;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 0.6rem;
+}
+
+.action-buttons lightning-button-icon {
+    margin-left: 0.2rem;
+    margin-right: 0.2rem;
+}
+
+.opp-header,
+.opp-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: block;
+}
+
+/* This adds a gap between different opportunity groups */
+.group-start {
+    margin-top: 1.5rem; 
+    border-top: 1px solid #dddbda;
+    padding-top: 1rem;
+}
+
+/* This styles the container to look grouped */
+.row-container {
+    transition: all 0.2s;
+}
+
+/* Optional: Add a colored strip on the left to indicate grouping */
+.row-container[data-group-start="true"] {
+    border-left: 4px solid #0176d3; /* Salesforce Blue */
+    padding-left: 0.5rem;
+}
+
+.row-container[data-group-start="false"] {
+    border-left: 4px solid #dddbda; /* Grey for continuation */
+    padding-left: 0.5rem;
+}

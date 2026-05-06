@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Finish_Type__c</fullName>
+    <description>Formula field used in Finish option Report</description>
+    <externalId>false</externalId>
+    <formula>IF(ISPICKVAL(Finishing__c, &apos;Light Option&apos;) , &apos;Default Option&apos;, 
+IF(AND(ISPICKVAL(Finishing__c,&apos;Option 3&apos;),Inventory__r.Project_Name__c=&apos;Serena&apos;),&apos;Default Option&apos;,
+IF(AND(Property_Name__c=&apos;Mudon M - Arabella III&apos;,ISPICKVAL(Finishing__c, &apos;Option 1&apos;)), &apos;Default Option&apos;,  
+IF(AND(Property_Name__c=&apos;Mudon Views – Tower 4&apos;,ISPICKVAL(Finishing__c, &apos;Option 2&apos;)), &apos;Default Option&apos;, &apos;&apos;) ) ) )</formula>
+    <label>Finish Type</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

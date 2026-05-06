@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+	<types>
+		<members>*</members>
+		<name>CustomTab</name>
+	</types>
+	<types>
+		<members>Admin</members>
+		<members>BrokerPortal Profile</members>
+		<members>BrokerPortalView Profile</members>
+		<members>ContractManager</members>
+		<members>RealEstate Profile</members>
+		<members>RealEstatePortal Profile</members>
+		<members>ThankYouPage Profile</members>
+		<name>Profile</name>
+	</types>
+	<version>66.0</version>
+</Package>

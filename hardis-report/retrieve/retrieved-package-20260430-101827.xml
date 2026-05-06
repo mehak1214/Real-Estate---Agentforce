@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+  <types>
+    <members>B2B Reordering Portal Buyer Profile</members>
+    <members>Custom Gold</members>
+    <members>Custom%3A Marketing Profile</members>
+    <members>Custom%3A Support Profile</members>
+    <members>Read Only</members>
+    <members>Sales Executive</members>
+    <members>Salesforce API Only System Integrations</members>
+    <name>Profile</name>
+  </types>
+  <version>66.0</version>
+</Package>

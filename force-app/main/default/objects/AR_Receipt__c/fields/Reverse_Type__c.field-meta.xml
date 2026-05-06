@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Reverse_Type__c</fullName>
+    <label>Reverse Type</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Return Cheque</fullName>
+                <default>false</default>
+                <label>Return Cheque</label>
+            </value>
+            <value>
+                <fullName>Un Processed Return Cheque</fullName>
+                <default>false</default>
+                <label>Un Processed Return Cheque</label>
+            </value>
+            <value>
+                <fullName>Error Correction</fullName>
+                <default>false</default>
+                <label>Error Correction</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

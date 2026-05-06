@@ -1,0 +1,40 @@
+<template>
+    <lightning-spinner if:false={specificationsLst}>
+    </lightning-spinner>
+    <div class="slds-text-heading_large">Specifications</div>
+    <p class="slds-text-heading_small"><lightning-formatted-rich-text value={specificationHeader}></lightning-formatted-rich-text></p>
+    <!-- <div class="reim-amenity slds-p-top_medium">
+        <div class="Specifications">
+            <template for:each={specificationsLst} for:item="Specification">
+                <tr key={Specification.Id}>
+                    <td>{Specification.Specification_Title__c}</td>
+                    <td><lightning-formatted-rich-text value={Specification.Specification_Image__c}></lightning-formatted-rich-text></td>
+                    <td><lightning-formatted-rich-text value={Specification.Specification_Description__c}></lightning-formatted-rich-text></td>
+                </tr>
+            </template>
+        </div>
+    </div> -->
+
+
+    <div class="reim-amenity slds-p-top_medium">
+        <div class="grid-container">
+            <template for:each={specificationsLst} for:item="Specification">
+                <div key={Specification.Id} class="grid-item">
+
+                    <div class="slds-grid slds-gutters">
+                        <div class="slds-col reim-amenity-pic">
+                            <lightning-formatted-rich-text 
+                            value={Specification.Specification_Image__c}
+                            class="amenity-img"></lightning-formatted-rich-text>
+                        </div>
+                        <div class="slds-col slds-m-vertical_small">
+                            <div class="slds-text-title_caps text-bold">{Specification.Specification_Title__c}</div>
+                            <p><lightning-formatted-rich-text value={Specification.Specification_Description__c}></lightning-formatted-rich-text></p>
+                        </div>
+                    </div>
+                            
+                </div>
+            </template>
+    </div>
+</div>
+</template>

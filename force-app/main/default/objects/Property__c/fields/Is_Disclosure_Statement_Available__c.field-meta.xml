@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Is_Disclosure_Statement_Available__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>This field will be checked if any Disclosure Statement Documents are added to Property</description>
+    <label>Is Disclosure Statement Available</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

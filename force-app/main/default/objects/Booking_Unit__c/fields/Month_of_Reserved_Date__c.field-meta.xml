@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Month_of_Reserved_Date__c</fullName>
+    <description>CASE(MONTH(Sold_Date__c), 1, &apos;January&apos;, 2, &apos;February&apos;,3,&apos;March&apos;,4,&apos;April&apos;,5,&apos;May&apos;,6,&apos;June&apos;,7,&apos;July&apos;,8,&apos;August&apos;,9,&apos;September&apos;,10,&apos;October&apos;,11,&apos;November&apos;,&apos;December&apos;)</description>
+    <externalId>false</externalId>
+    <formula>IF(NOT(ISNULL(Reserved_Date_Time__c)),CASE(MONTH( DATEVALUE( Reserved_Date_Time__c ) ), 1, &apos;01-January&apos;, 2, &apos;02-February&apos;,3,&apos;03-March&apos;,4,&apos;04-April&apos;,5,&apos;05-May&apos;,6,&apos;06-June&apos;,7,&apos;07-July&apos;,8,&apos;08-August&apos;,9,&apos;09-September&apos;,10,&apos;10-October&apos;,11,&apos;11-November&apos;,&apos;12-December&apos;),&apos;&apos;)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Month of Approved Date</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

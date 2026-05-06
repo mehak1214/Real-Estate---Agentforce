@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Past_Relationship_with_Raymond__c</fullName>
+    <label>Past Relationship with Raymond</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Distributor</fullName>
+                <default>false</default>
+                <label>Distributor</label>
+            </value>
+            <value>
+                <fullName>School</fullName>
+                <default>false</default>
+                <label>School</label>
+            </value>
+            <value>
+                <fullName>Raymond Retail</fullName>
+                <default>false</default>
+                <label>Raymond Retail</label>
+            </value>
+            <value>
+                <fullName>Raymond Loyalty Programme</fullName>
+                <default>false</default>
+                <label>Raymond Loyalty Programme</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

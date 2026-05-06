@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Sales_Director_Request_for_Unit</fullName>
+    <availability>online</availability>
+    <displayType>button</displayType>
+    <linkType>javascript</linkType>
+    <masterLabel>Unit Blocking by Sales Director</masterLabel>
+    <openType>onClickJavaScript</openType>
+    <protected>false</protected>
+    <url>{!REQUIRESCRIPT(&quot;/soap/ajax/32.0/connection.js&quot;)}
+{!REQUIRESCRIPT(&quot;/soap/ajax/32.0/apex.js&quot;)}
+try{
+var record = new sforce.SObject(&quot;Inventory__c&quot;);
+var recordSDSTS = &apos;{!Inventory__c.SD_Accessible__c}&apos;;
+var result = sforce.apex.execute(&apos;SDRequestInv&apos;, &apos;chkUser&apos;,{});
+console.log(result);
+if(result == &apos;Success&apos;){
+console.log(&apos;Success&apos;);
+console.log(&apos;----&apos;+recordSDSTS);
+
+var excptioncommntsSD = prompt(&quot;Please enter your comments&quot;, &quot;&quot;); 
+var dysSD = prompt(&quot;No. of days unit should be blocked for&quot;,); 
+var noofdaysSD = parseInt(dysSD);
+if(excptioncommntsSD === &quot;&quot; || dysSD === &quot;&quot;){ 
+alert(&apos;Please make sure to enter comments and no. of days&apos;); 
+}
+else if (Number(dysSD)){ 
+excptioncommntsSD = excptioncommntsSD.substring(0,254); 
+var result = sforce.apex.execute(&apos;SDRequestInv&apos;,&apos;inventoryBlockApprovalSD&apos;,{objID: &quot;{!Inventory__c.Id}&quot;,cmmentsSD: excptioncommntsSD,blockedtillSD : noofdaysSD}); 
+alert(result); 
+location.reload(); 
+} 
+else{ 
+alert(&apos;Please provide a valid value for no. of days&apos;); 
+}  
+
+}
+else{
+alert(&quot;Only Sales Directors can able to block this Unit.&quot;);
+}
+}
+catch(err){ 
+txt=&quot;There was an error on this page.\n\n&quot;; 
+txt+=&quot;Error description: &quot; + err.description + &quot;\n\n&quot;; 
+txt+=&quot;Click OK to continue.\n\n&quot;; 
+alert(txt); 
+}</url>
+</WebLink>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Application_Form_Verified</fullName>
+    <availability>online</availability>
+    <displayType>button</displayType>
+    <linkType>javascript</linkType>
+    <masterLabel>Application Form Verified</masterLabel>
+    <openType>onClickJavaScript</openType>
+    <protected>false</protected>
+    <url>{!REQUIRESCRIPT(&quot;/soap/ajax/32.0/connection.js&quot;)} 
+{!REQUIRESCRIPT(&quot;/soap/ajax/32.0/apex.js&quot;)} 
+
+try{ 
+
+var result = sforce.apex.execute(&apos;ApplicationFormVerify&apos;,&apos;relockandverify&apos;,{buID: &quot;{!Booking_Unit__c.Id}&quot;}); 
+alert(result); 
+location.reload(); 
+} 
+catch(err) { 
+txt=&quot;There was an error on this page.\n\n&quot;; 
+txt+=&quot;Error description: &quot; + err.description + &quot;\n\n&quot;; 
+txt+=&quot;Click OK to continue.\n\n&quot;; 
+alert(txt); 
+}</url>
+</WebLink>

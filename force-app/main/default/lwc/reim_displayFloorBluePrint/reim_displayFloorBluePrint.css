@@ -1,0 +1,101 @@
+.tower {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Adjust the number of columns as needed */
+  gap: 20px;
+  border-color: transparent;
+}
+.floor{
+  width: 70px;
+  height: 40px;
+  background-color: #C2E8FF;
+  text-align: center;
+  vertical-align: middle;
+  line-height: 40px;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: menu;
+}
+.box {
+  
+  /* width: 200px; */
+  height: 70px;
+  margin: 0;
+padding: 0;
+  background-color: #F6FFDE;
+  /* margin-bottom: 10px; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+.box:hover {
+  background-color: white;
+  border-left: 4px solid blue;
+}
+.grid-container {
+  display: grid;
+  /* grid-template-columns: 1fr; */
+  grid-template-rows: auto;
+  grid-template-areas: "main";
+  background-color: white;
+  margin-top: 10px;
+  /* padding: 10px;*/
+  margin-right: 10px; 
+}
+.ListHeader{
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.img{
+  height: 400px;
+  max-width: 350px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+.Available{
+  background-color: green;
+  display: inline-block;
+  color: white;
+  margin: auto;
+  padding: 10px;
+}
+.Hold{
+  background-color: yellow;
+  display: inline-block;
+  margin: auto;
+  padding: 10px;
+}
+.Booked{
+  background-color: orange;
+  display: inline-block;
+  margin: auto;
+  padding: 10px;
+}
+.Sold{
+  background-color: red;
+  display: inline-block;
+  margin: auto;
+  padding: 10px;
+}
+.Refuge{
+  background-color: grey;
+  display: inline-block;
+  pointer-events: none;
+  margin: auto;
+  padding: 10px;
+}
+
+.gridd{
+  grid-gap: 10px;
+  grid-template-columns: 40px 40px 40px 40px 40px 40px 40px 40px 40px 40px 40px 40px 40px;
+  margin-left: 5em;
+  margin-top: 1px;
+}

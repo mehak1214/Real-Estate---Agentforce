@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Reason_For_Lost_Mandatory</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND( ISPICKVAL( Visit_Rating__c, &apos;Lost&apos;),
+ISPICKVAL( Reason_for_Lost__c, &apos;&apos;)
+)</errorConditionFormula>
+    <errorDisplayField>Reason_for_Lost__c</errorDisplayField>
+    <errorMessage>Please Fill Reason For Lost.</errorMessage>
+</ValidationRule>

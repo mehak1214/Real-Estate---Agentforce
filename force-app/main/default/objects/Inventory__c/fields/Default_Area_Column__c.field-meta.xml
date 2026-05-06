@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Default_Area_Column__c</fullName>
+    <description>This Field  is created for Project(Land) and acts as a &quot;Pricing Calculation source field&quot; i.e., pricing calculation is based on Plot Area (Sq.ft) or GFA (Sq.ft)</description>
+    <label>Default Area Column</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Plot Area (SQFT)</fullName>
+                <default>false</default>
+                <label>Plot Area (SQFT)</label>
+            </value>
+            <value>
+                <fullName>GFA (SQFT)</fullName>
+                <default>false</default>
+                <label>GFA (SQFT)</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

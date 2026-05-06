@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Main_Payment_Plan_Detail_Cheque_Date__c</fullName>
+    <formula>Payment_Plan_Detail__r.Cheque_Date__c</formula>
+    <label>Main Payment Plan Detail Cheque Date</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Date</type>
+</CustomField>

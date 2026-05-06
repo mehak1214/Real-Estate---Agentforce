@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Shopping_Malls_or_Outlets__c</fullName>
+    <description>Property Attribute: Indicate how far are shopping malls or outlets</description>
+    <externalId>false</externalId>
+    <label>Shopping Malls or Outlets</label>
+    <length>100</length>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

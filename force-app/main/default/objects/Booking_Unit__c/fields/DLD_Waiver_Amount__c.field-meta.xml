@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DLD_Waiver_Amount__c</fullName>
+    <description>if(NOT( ISNULL(Inventory__r.Actual_DLD_Value__c)) , Inventory__r.Actual_DLD_Value__c,0)
+if(AND(NOT( ISNULL(Inventory__r.Actual_DLD_Value__c)), Project_Name__c != &apos;Madinat Jumeirah Living&apos;) , Inventory__r.Actual_DLD_Value__c,0)</description>
+    <formula>if(NOT( ISNULL(Inventory__r.Actual_DLD_Value__c)),Inventory__r.Actual_DLD_Value__c,0)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>DLD Waiver Amount</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackTrending>false</trackTrending>
+    <type>Currency</type>
+</CustomField>

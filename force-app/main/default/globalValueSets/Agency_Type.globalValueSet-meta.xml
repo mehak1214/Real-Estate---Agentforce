@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GlobalValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customValue>
+        <fullName>Sole property</fullName>
+        <default>false</default>
+        <label>Sole property</label>
+    </customValue>
+    <customValue>
+        <fullName>LLC</fullName>
+        <default>false</default>
+        <label>LLC</label>
+    </customValue>
+    <customValue>
+        <fullName>Civil company</fullName>
+        <default>false</default>
+        <label>Civil company</label>
+    </customValue>
+    <customValue>
+        <fullName>LTD</fullName>
+        <default>false</default>
+        <label>LTD</label>
+    </customValue>
+    <customValue>
+        <fullName>LLC-SPC</fullName>
+        <default>false</default>
+        <label>LLC-SPC</label>
+    </customValue>
+    <customValue>
+        <fullName>LLC-OPC</fullName>
+        <default>false</default>
+        <label>LLC-OPC</label>
+    </customValue>
+    <customValue>
+        <fullName>None</fullName>
+        <default>false</default>
+        <label>None</label>
+    </customValue>
+    <masterLabel>Agency Type</masterLabel>
+    <sorted>false</sorted>
+</GlobalValueSet>

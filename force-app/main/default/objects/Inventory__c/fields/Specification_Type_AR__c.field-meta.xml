@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Specification_Type_AR__c</fullName>
+    <label>Specification Type AR</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>فيلا</fullName>
+                <default>false</default>
+                <label>فيلا</label>
+            </value>
+            <value>
+                <fullName>شقة</fullName>
+                <default>false</default>
+                <label>شقة</label>
+            </value>
+            <value>
+                <fullName>تاونهاوس</fullName>
+                <default>false</default>
+                <label>تاونهاوس</label>
+            </value>
+            <value>
+                <fullName>مجموعات منازل</fullName>
+                <default>false</default>
+                <label>مجموعات منازل</label>
+            </value>
+            <value>
+                <fullName>مانشن</fullName>
+                <default>false</default>
+                <label>مانشن</label>
+            </value>
+            <value>
+                <fullName>فلل شبه منفصلة</fullName>
+                <default>false</default>
+                <label>فلل شبه منفصلة</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

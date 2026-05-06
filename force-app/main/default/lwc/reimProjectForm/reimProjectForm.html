@@ -1,0 +1,30 @@
+<template>
+    <lightning-card title="Project Form">
+        <div class="projectForm">
+    <lightning-record-edit-form 
+    object-api-name="Project__c" columns="2">
+  <div class="two-column-layout">
+            <div class="column">
+                <lightning-input-field label="Name" field-name="Name"></lightning-input-field>
+                <lightning-input-field label="Project Description" field-name="Project_Description__c"></lightning-input-field>
+                <lightning-input-field label="Project Header" field-name="Project_Header__c"></lightning-input-field>
+                <lightning-input-field label="Project Image" field-name="Project_Image__c"></lightning-input-field>
+            </div>
+            <div class="column">
+                <lightning-input-field label="Project Location Latitude" field-name="Project_Location__Latitude__s"></lightning-input-field>
+                <lightning-input-field label="Project Location Longitude" field-name="Project_Location__Longitude__s"></lightning-input-field>
+                <lightning-input-field label="Project Type" field-name="Project_Type__c"></lightning-input-field>
+                <lightning-input-field label="Project Status" field-name="Project_Status__c"></lightning-input-field>
+                <lightning-input-field label="Size Type" field-name="Size_Type__c"></lightning-input-field>
+            </div>
+        </div>
+   
+    <lightning-button label="Cancel" variant="neutral" onclick={handleCancel}></lightning-button>
+    <lightning-button label="Next" variant="brand" onclick={save}></lightning-button>
+    
+    <!-- <c-reim-show-amenities if:true={openAmenities}></c-reim-show-amenities> -->
+</lightning-record-edit-form>
+
+</div>
+</lightning-card>
+</template>

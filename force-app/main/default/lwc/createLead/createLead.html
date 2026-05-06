@@ -1,0 +1,17 @@
+<template>
+    <lightning-card title="Create Lead">
+
+        <lightning-input label="First Name" onchange={handleFirst}></lightning-input>
+        <lightning-input label="Last Name" onchange={handleLast}></lightning-input>
+        <lightning-input label="Company" onchange={handleCompany}></lightning-input>
+
+        <br/>
+
+        <lightning-button 
+            label="Create Lead"
+            variant="brand"
+            onclick={createLead}>
+        </lightning-button>
+
+    </lightning-card>
+</template>

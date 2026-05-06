@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomTab xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Created by Lightning App Builder</description>
+    <flexiPage>Real_Estate_Inventory_Management_New</flexiPage>
+    <label>Real Estate Inventory Management - New</label>
+    <motif>Custom24: Building</motif>
+</CustomTab>

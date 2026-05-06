@@ -1,0 +1,26 @@
+<template>
+    <lightning-spinner if:false={projectTowerLst}>
+    </lightning-spinner>
+    <div style="margin-left: 5px;">
+    <lightning-card>
+        <template if:true={showTower}>
+            <div class="slds-p-bottom_medium slds-border_bottom slds-m-bottom_large">
+                <p>Select a Tower</p>
+            </div>
+            <div class="tower" >
+                <template if:true={projectTowerLst}>
+                    <template for:each={projectTowerLst} for:item="tower">
+                        <div key={tower.Id} class="reim-towers-list">
+                            <div style="margin-left: 85px; font-weight: 500;">
+                                <button class="slds-button" onclick={navToInventoryMgmt} data-record-id={tower.Id}>{tower.Tower_Name__c}</button>
+                            </div>
+                            <div class="slds-p-top_medium"><img src={imageUrl} alt="Clickable Image" class="towers-img"
+                                onclick={navToInventoryMgmt} data-record-id={tower.Id} /> </div>
+                        </div>
+                    </template>
+                </template>
+            </div>
+        </template>
+    </lightning-card>
+    </div>
+</template>

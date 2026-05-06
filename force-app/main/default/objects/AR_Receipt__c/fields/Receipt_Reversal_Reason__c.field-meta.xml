@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Receipt_Reversal_Reason__c</fullName>
+    <label>Receipt Reversal Reason</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Duplicate Receipt</fullName>
+                <default>false</default>
+                <label>Duplicate Receipt</label>
+            </value>
+            <value>
+                <fullName>Wrong Amount</fullName>
+                <default>false</default>
+                <label>Wrong Amount</label>
+            </value>
+            <value>
+                <fullName>Posted to Wrong Bank Account</fullName>
+                <default>false</default>
+                <label>Posted to Wrong Bank Account</label>
+            </value>
+            <value>
+                <fullName>Receipt Error Correction</fullName>
+                <default>false</default>
+                <label>Receipt Error Correction</label>
+            </value>
+            <value>
+                <fullName>Other</fullName>
+                <default>false</default>
+                <label>Other</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

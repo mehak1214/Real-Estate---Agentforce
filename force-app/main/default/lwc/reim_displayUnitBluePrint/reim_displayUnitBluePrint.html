@@ -1,0 +1,130 @@
+<template>
+    <lightning-card slot="actions">
+        <div slot="actions" style="margin-right: 8em ;">
+            <lightning-button label="Back" variant="Brand" size="Large" onclick={backFloorAndUnitsPage}
+                style="margin-right: 1em;"></lightning-button>
+
+            <lightning-button label="Home" variant="Brand" size="Large" onclick={homePage}></lightning-button>
+        </div>
+
+        <div class="slds-grid slds-grid_vertical-stretch ">
+            <div class="slds-col slds-size_3-of-12">
+                <div class="slds-box  filterList ">
+                    <div style="border-bottom: 1px solid #BDCDD6;">
+                        <span style="font-weight:bold;padding-bottom: 10px;"><b>Add-Ons</b></span>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-col slds-size_9-of-12">
+                <template for:each={filesList} for:item="item">
+                    <div key={item.id} class="img">
+                        <img key={item.Id} 
+                            src={item.VersionDataUrl} 
+                            onclick={previewimg}
+                            data-id={item.ContentDocumentId} 
+                            style="cursor:pointer" />
+                    </div>
+                </template>
+        
+                <template for:each={UnitDataForBP.data} for:item="unit">
+                    <div class="slds-text-heading_small text-bold" key={unit.Id}>
+                        <div style="margin-left: 5em; margin-right: auto;">
+                            <div class="slds-truncate slds-p-horizontal_small section" title="Section Title">Apartment Details
+                            </div>
+                            <div class="slds-grid">
+                                <div class="slds-col slds-size_1-of-2">
+                                    <div class="slds-grid">
+                                        <div class="slds-col slds-size_1-of-4">
+                                            <p>Unit Name : </p>
+                                        </div>
+                                        <div class="slds-col slds-size_2-of-4">
+                                            <p>{unit.Unit_Name__c}</p>
+                                        </div>
+                                    </div>
+                                    <div class="slds-grid">
+                                        <div class="slds-col slds-size_1-of-4">
+                                            <p>Unit Type : </p>
+                                        </div>
+                                        <div class="slds-col slds-size_2-of-4">
+                                            <p>{unit.Unit_Type__c}</p>
+                                        </div>
+                                    </div>
+                                    <div class="slds-grid">
+                                        <div class="slds-col slds-size_1-of-4">
+                                            <p>Unit Description : </p>
+                                        </div>
+                                        <div class="slds-col slds-size_2-of-4">
+                                            <p><lightning-formatted-rich-text
+                                                    value={unit.Unit_Description__c}></lightning-formatted-rich-text></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="slds-col slds-size_1-of-2">
+                                    <div class="slds-grid">
+                                        <div class="slds-col slds-size_1-of-4">
+                                            <p>Unit Status : </p>
+                                        </div>
+                                        <div class="slds-col slds-size_2-of-4">
+                                            <p>{unit.Unit_Status__c}</p>
+                                        </div>
+                                    </div>
+                                    <div class="slds-grid">
+                                        <div class="slds-col slds-size_1-of-4">
+                                            <p>Unit Size : </p>
+                                        </div>
+                                        <div class="slds-col slds-size_2-of-4">
+                                            <p>{unit.Unit_Size__c}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+        
+                            <div class="slds-truncate slds-p-horizontal_small section" title="Section Title">Apartment Area
+                                Details</div>
+                            <div class="slds-grid">
+                                <div class="slds-col slds-size_1-of-2">
+                                    <p>Carpet Area: {unit.Carpet_Area__c}</p>
+                                    <p>Balcony: {unit.Balcony__c}</p>
+                                </div>
+                                <div class="slds-col slds-size_1-of-2">
+                                    <p>Unit Bedrooms: {unit.Unit_Bedroom_Count__c}</p>
+                                    <p>Unit Bathrooms: {unit.Unit_Bathroom_Count__c}</p>
+                                </div>
+                            </div>
+        
+                            <div class="slds-truncate slds-p-horizontal_small section" title="Section Title">Tower Details
+                            </div>
+                            <div class="slds-grid">
+                                <div class="slds-col slds-size_1-of-2">
+                                    <p>Tower: {unit.Floor__r.Wing__r.Tower__r.Tower_Name__c}</p>
+                                    <p>Wing: {unit.Floor__r.Wing__r.Wing_Name__c}</p>
+                                </div>
+                                <div class="slds-col slds-size_1-of-2">
+                                    <p>Floor: {unit.Floor__r.Floor_Name__c}</p>
+                                </div>
+                            </div>
+        
+                            <div class="slds-truncate slds-p-horizontal_small section" title="Section Title">Pricing Details
+                            </div>
+                            <div class="slds-grid">
+                                <div class="slds-col slds-size_1-of-2">
+                                    <p>Unit Total Price: {unit.Total_Price__c}</p>
+                                </div>
+                                <div class="slds-col slds-size_1-of-2">
+                                    <p>Unit Price per Sq Ft: {unit.Price_Per_Sqft__c}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <template if:true={isAvailable}>
+                                <lightning-button label="Enquire" variant="Brand-Outline" size="Large"
+                                onclick={enquiry}></lightning-button>
+                            <lightning-button label="Book" variant="Brand" size="Large" onclick={booking}></lightning-button>
+                            </template>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </lightning-card>
+</template>

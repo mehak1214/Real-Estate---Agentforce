@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GlobalValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customValue>
+        <fullName>Abu Dhabi Commercial Bank</fullName>
+        <default>false</default>
+        <label>Abu Dhabi Commercial Bank</label>
+    </customValue>
+    <description>Mortgage/Bank Name Picklist</description>
+    <masterLabel>Bank Name</masterLabel>
+    <sorted>false</sorted>
+</GlobalValueSet>

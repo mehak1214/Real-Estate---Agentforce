@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Project_Location__c</fullName>
+    <description>Project Location</description>
+    <displayLocationInDecimal>true</displayLocationInDecimal>
+    <inlineHelpText>Enter Project Location in Latitude and Longitude</inlineHelpText>
+    <label>Project Location</label>
+    <required>false</required>
+    <scale>3</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Location</type>
+</CustomField>

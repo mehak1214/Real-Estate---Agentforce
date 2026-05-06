@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Final_Due_Date__c</fullName>
+    <formula>IF(TEXT( Instalment_Type__c ) == &apos;Fixed Date&apos;,  Cheque_Date__c ,
+IF(TEXT( Instalment_Type__c ) == &apos;Handover Event&apos; &amp;&amp; !ISBLANK(Handover_Date__c) &amp;&amp; Cheque_Date__c &gt;= Handover_Date__c, Cheque_Date__c, 
+IF(TEXT( Instalment_Type__c ) == &apos;Handover Event&apos; &amp;&amp; !ISBLANK(Handover_Date__c) &amp;&amp; Handover_Date__c &gt;= Cheque_Date__c, Handover_Date__c, 
+IF(TEXT( Instalment_Type__c ) == &apos;Milestone&apos; &amp;&amp; !ISBLANK( Milestone_Completion_Date__c ) &amp;&amp; Cheque_Date__c &gt;= Milestone_Completion_Date__c, Cheque_Date__c,
+IF(TEXT( Instalment_Type__c ) == &apos;Milestone&apos; &amp;&amp; !ISBLANK( Milestone_Completion_Date__c ) &amp;&amp; Milestone_Completion_Date__c &gt;= Cheque_Date__c, Milestone_Completion_Date__c,
+null)))))</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Final Due Date</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Date</type>
+</CustomField>

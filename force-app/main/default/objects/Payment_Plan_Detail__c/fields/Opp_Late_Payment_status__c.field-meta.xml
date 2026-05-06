@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Opp_Late_Payment_status__c</fullName>
+    <label>Opp Late Payment status</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>None</fullName>
+                <default>false</default>
+                <label>None</label>
+            </value>
+            <value>
+                <fullName>Collection Case</fullName>
+                <default>false</default>
+                <label>Collection Case</label>
+            </value>
+            <value>
+                <fullName>Over Due Notifications</fullName>
+                <default>false</default>
+                <label>Over Due Notifications</label>
+            </value>
+            <value>
+                <fullName>First Notice</fullName>
+                <default>false</default>
+                <label>First Notice</label>
+            </value>
+            <value>
+                <fullName>Second Notice</fullName>
+                <default>false</default>
+                <label>Second Notice</label>
+            </value>
+            <value>
+                <fullName>Termination Case</fullName>
+                <default>false</default>
+                <label>Termination Case</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>in02_Invoice_Percent__c</fullName>
+    <defaultValue>0.00</defaultValue>
+    <description>This will store installment 1 payment plan percent from booking unit</description>
+    <label>in02 Invoice Percent</label>
+    <precision>6</precision>
+    <required>false</required>
+    <scale>3</scale>
+    <trackTrending>false</trackTrending>
+    <type>Percent</type>
+</CustomField>

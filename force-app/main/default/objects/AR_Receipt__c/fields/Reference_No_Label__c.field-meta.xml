@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Reference_No_Label__c</fullName>
+    <externalId>false</externalId>
+    <formula>IF( CONTAINS(text(Payment_Type__c) , &quot;Cheque&quot;) , &quot;Cheque No&quot;,&quot;Reference No&quot;)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Reference No. Label</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Applied_Amount__c</fullName>
+    <label>Applied Amount</label>
+    <summarizedField>AR_Applied_For__c.Applied_Amount__c</summarizedField>
+    <summaryFilterItems>
+        <field>AR_Applied_For__c.Status__c</field>
+        <operation>equals</operation>
+        <value>Applied</value>
+    </summaryFilterItems>
+    <summaryForeignKey>AR_Applied_For__c.Receipt__c</summaryForeignKey>
+    <summaryOperation>sum</summaryOperation>
+    <trackTrending>false</trackTrending>
+    <type>Summary</type>
+</CustomField>

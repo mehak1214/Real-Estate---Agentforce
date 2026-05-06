@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SDReleaseAndUnblock</fullName>
+    <availability>online</availability>
+    <displayType>button</displayType>
+    <linkType>javascript</linkType>
+    <masterLabel>Unblock and Release</masterLabel>
+    <openType>onClickJavaScript</openType>
+    <protected>false</protected>
+    <url>{!REQUIRESCRIPT(&quot;/soap/ajax/32.0/connection.js&quot;)} 
+{!REQUIRESCRIPT(&quot;/soap/ajax/32.0/apex.js&quot;)} 
+
+var record = new sforce.SObject(&quot;Inventory__c&quot;); 
+var result = sforce.apex.execute(&apos;SDReleaseAndUnblock&apos;, &apos;sdRelUnblck&apos;,{objID: &quot;{!Inventory__c.Id}&quot;}); 
+console.log(&apos;-----result----&apos;+result);
+if(result == &apos;Error9&apos;){ 
+alert(&apos;You are not authorized to unblock and release this Unit.&apos;); 
+} 
+else if(result == &apos;Error8&apos;){ 
+alert(&apos;You can unblock and release only for Blocked inventory.&apos;); 
+} 
+else if(result == &apos;Error7&apos;){ 
+alert(&apos;You are not authorized to unblock this Unit.&apos;); 
+} 
+else if(result == &apos;Error6&apos;){ 
+alert(&apos;You can unblock unit only for Blocked inventory.&apos;); 
+} 
+else if(result == &apos;Success&apos;){ 
+alert(&apos;Successfully unblocked this unit&apos;); 
+location.reload(); 
+}</url>
+</WebLink>

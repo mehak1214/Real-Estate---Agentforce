@@ -1,0 +1,289 @@
+<apex:page controller="PriceSheetCreateController" action="{!PriceSheetCreate}" renderAs="pdf" applyBodyTag="false">
+    <html>
+        <head>
+            <style type="text/CSS" media="print">
+                @page{
+                size: 8.5in 11in;
+                margin-top: 80px;
+                margin-bottom: 50px;
+                margin-right: 25px;
+                margin-left: 25px;
+                @top-right{
+                content: element(header);
+                }
+                @bottom-right{
+                content: element(footer1);
+                }
+                }
+                div.header{
+                padding: 2px;
+                position: running(header);
+                }
+                div.footer1{
+                display: block;
+                padding-left: 600px;
+                padding-right: 5px;
+                height:30px;
+                position: running(footer1);
+                }
+                h3 {
+                font: bold .90em calibri;
+                text-align: center;
+                color: #a00000;
+                }
+                table {
+                border-collapse: collapse;
+                
+                }
+                table, th, td {
+                border: 1px solid black;
+                font:.90em calibri;
+                text-align: Left;
+                }
+                th{
+                background-color: #f2f2f2;
+                font:bold .90em calibri;
+                text-align: Left;
+                }
+            </style>
+        </head>
+    </html>
+    <apex:form >
+        <!--<apex:outputPanel rendered="{!!pdfMode}">
+            <apex:outputPanel rendered="{!lstPaymentPlanOption.size > 0}">
+                <apex:selectList size="1" value="{!paymentPlanId}">
+                    <apex:selectOptions value="{!lstPaymentPlanOption}"/>
+                </apex:selectList>
+                <apex:commandButton value="Generate Pricesheet" action="{!createPDF}"/>
+            </apex:outputPanel>
+            <apex:outputPanel rendered="{!lstPaymentPlanOption.size == 0}">
+                <div style="font-size:18px;color:red;">
+                    No Payment Plan is Created under this Quote.
+                </div>
+            </apex:outputPanel>
+        </apex:outputPanel>-->
+        
+        <apex:outputPanel rendered="{!pdfMode}">
+            <div class="header">
+              <!--  <div align ="right" >
+                    <apex:image url="{!$Resource.RaymondRealty}" height="30px" width="100px" />
+                </div>-->
+            </div>
+            <table width="90%" align="center" style="font:0.7em;">
+                <tr>
+                    <td style="height:20px;color:#ffffff; background-color:#000000; text-align:center; font:bold 1.2em Arial;" colspan="3">
+                        Raymond Realty - Price Sheet
+                    </td>
+                </tr>
+                <tr> 
+                    <th style="width:38%"> &nbsp; </th>
+                    <th style="width:45%"> Quotation Date</th>
+                    <th style="text-align:right ; width:17%">
+                        <apex:outputText value="{0,date,dd/MM/yy}">
+                            <apex:param value="{!today()}" />
+                        </apex:outputText> 
+                    </th>
+                </tr>
+                <tr>
+                    <th scope="rowgroup" rowspan="8"> Residence Details </th>
+                </tr>
+                <tr>
+                    <td>Project Name</td>
+                    <td style="text-align:right;">
+                        {!objPriceSheetWrapper.objQuote.Project__r.Name}
+                    </td>
+                </tr>
+                <tr>
+                    <td>Tower</td>
+                    <td style="text-align:right;">{!objPriceSheetWrapper.objQuote.Tower__r.Name}</td>
+                </tr>
+                <tr>
+                    <td> Floor No. / Floor Band </td>
+                    <td style="text-align:right;"> {!objPriceSheetWrapper.objQuote.Floor_No__c} </td>
+                </tr>    
+                <tr> 
+                    <td> Unit No.</td>
+                    <td style="text-align:right;"> {!objPriceSheetWrapper.objQuote.Appt__c}</td> 
+                </tr>    
+                <tr> 
+                    <td> Typology </td>
+                    <td style="text-align:right;">{!objPriceSheetWrapper.objSaleableUnit.Product2.Unit_Category__c}</td>
+                </tr>    
+                <tr>
+                    <td> RERA Carpet Area (sq. ft.) </td>
+                    <td style="text-align:right;">{!objPriceSheetWrapper.objSaleableUnit.Product2.Carpet_Area_RERA_Carpet__c} </td>
+                </tr>            
+                
+                <tr>
+                    <td> RERA Carpet Area (sq. m.) </td>
+                    <td style="text-align:right;">{!objPriceSheetWrapper.objSaleableUnit.Product2.Different_Unit_Area__c}</td>
+                </tr>  
+                <tr>
+                    <th scope="rowgroup" rowspan="5"> Agreement Value - Payable as per Payment Schedule </th>
+                </tr>
+                <tr>
+                    <td> Unit Cost</td>
+                    <td style="text-align:right;">
+                        <apex:outputText value="{0, number, ###,###,###}"> 
+                            <!--<apex:param value="{!ROUND(objPriceSheetWrapper.objSaleableUnit.UnitPrice*objPriceSheetWrapper.objSaleableUnit.Product2.Carpet_Area_RERA_Carpet__c + objPriceSheetWrapper.objSaleableUnit.Floor_Rise_Charges__c , 0)}"/>-->
+                            <apex:param value="{!ROUND(objPriceSheetWrapper.objQuote.Unit_Cost_With_Discount__c,0)}"/>
+                        </apex:outputText>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Premium Location Charges</td>
+                    <td style="text-align:right;">
+                        <apex:outputText value="{0,number, ###,###,###}"> 
+                            <apex:param value="{!ROUND(objPriceSheetWrapper.objSaleableUnit.Preferential_Location_charges__c , 0)}"/>
+                        </apex:outputText>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Infrastructure Development Charges</td>
+                    <td style="text-align:right;">
+                        <apex:outputText value="{0, number, ###,###,###}">  
+                            <apex:param value="{!ROUND(objPriceSheetWrapper.objSaleableUnit.Development_Charges__c, 0)}"/>
+                        </apex:outputText>  
+                    </td>   
+                </tr>
+                <tr>
+                    <td style="background-color: #fff2cc">Sub-Total 1: Agreement Value (AV)</td>
+                    <td style="background-color:  #fff2cc; text-align:right;">
+                        <apex:outputText value="{0, number, ###,###,###}"> 
+                            <apex:param value="{!ROUND(objPriceSheetWrapper.objQuote.TotalPrice,0)}"/>
+                        </apex:outputText>
+                    </td>
+                    <apex:variable var="subTotal1" value="{!ROUND(objPriceSheetWrapper.objQuote.TotalPrice,0)}"/>
+                </tr>
+                <tr>
+                    <th scope="rowgroup" rowspan="4"> Amounts payable prior to registration </th>
+                </tr>
+                <tr>
+                    <td>Estimated Stamp Duty*</td>
+                    <td style="text-align:right;">
+                        <apex:outputText value="{0, number, ###,###,###}"> 
+                            <apex:param value="{!CEILING(objPriceSheetWrapper.objQuote.Stamp_Duty__c *objPriceSheetWrapper.objQuote.Agreement_Value_w_o_Tax__c/10000)*100}"/>
+                        </apex:outputText>
+                    </td>
+                </tr>
+                <tr>
+                    <td> Estimated Registration Charges*</td>
+                    <td style="text-align:right;">
+                        <apex:outputText value="{0, number, ###,###,###}"> 
+                            <apex:param value="{!ROUND(objPriceSheetWrapper.objQuote.Registration__c,0)}"/>
+                        </apex:outputText>
+                    </td>   
+                </tr>
+                
+                <tr>
+                    <td style="background-color: #fff2cc">Sub-Total 2: SD, Registration &amp; Scanning Charge</td> 
+                    <td style="background-color: #fff2cc ; text-align:right;">
+                        <apex:outputText value="{0, number, ###,###,###}"> 
+                            <apex:param value="{!ROUND(CEILING(objPriceSheetWrapper.objQuote.Stamp_Duty__c *objPriceSheetWrapper.objQuote.Agreement_Value_w_o_Tax__c/10000)*100 + objPriceSheetWrapper.objQuote.Registration__c , 0)}"/>
+                        </apex:outputText>
+                    </td>
+                    <apex:variable var="subTotal2" value="{!ROUND(CEILING(objPriceSheetWrapper.objQuote.Stamp_Duty__c *objPriceSheetWrapper.objQuote.Agreement_Value_w_o_Tax__c/10000)*100 + objPriceSheetWrapper.objQuote.Registration__c , 0)}"/>
+                </tr>
+                <tr >
+                    <th rowspan="{!objPriceSheetWrapper.lstQuoteLine.size + 2}">
+                        Other Charges (payable at time of offer of possession)
+                    </th>
+                </tr>
+                
+                <!-- Right part of Other Charges Starts here-->
+                <apex:variable var="IndividualQuoteLineItems" value="{!0}"/>
+                <apex:repeat value="{!objPriceSheetWrapper.lstQuoteLine}" var="objQuoteLine">
+                    <tr>
+                        <td> {!objQuoteLine.Product2.Description} </td>
+                        <td style="text-align:right;"> 
+                            <apex:outputText value="{0,number}">   
+                                <apex:param value="{!ROUND(objQuoteLine.Sub_Total__c,0)}"/>
+                                <apex:variable var="IndividualQuoteLineItems" value="{!IndividualQuoteLineItems + ROUND(objQuoteLine.Sub_Total__c,0)}"/>
+                            </apex:outputText>
+                        </td>
+                    </tr>  
+                </apex:repeat>
+                <tr>
+                    <td style="background-color: #fff2cc">Sub-Total 3: Other Charges</td>     
+                    <td style="background-color: #fff2cc; text-align:right;" >
+                        <apex:outputText value="{0, number, ###,###,###}"> 
+                           <!--<apex:param value="{!ROUND(objPriceSheetWrapper.objQuote.Other_Charges__c,0)}"/>-->
+                           <apex:param value="{!IndividualQuoteLineItems}"/>
+                        </apex:outputText>
+                    </td> 
+                    <apex:variable var="subTotal3" value="{!IndividualQuoteLineItems}"/>
+                </tr>
+                <!-- Right part of Other Charges Ends here-->
+                <tr>
+                    <th scope="rowgroup" rowspan="4">GST - Payable as and when applicable</th>
+                    
+                </tr>
+                <tr>
+                    <td>GST on Agreement Value*(as per Govt. Policy)</td>
+                    <td style="text-align:right;"> 
+                        <apex:outputText value="{0, number, ###,###,###}"> 
+                            <apex:param value="{!IF(objPriceSheetWrapper.objQuote.Project__r.Name=='Aspirational', ROUND(objPriceSheetWrapper.objQuote.GST__c*2/3*objPriceSheetWrapper.objQuote.Agreement_Value_w_o_Tax__c/100,0),ROUND(objPriceSheetWrapper.objQuote.GST__c*objPriceSheetWrapper.objQuote.Agreement_Value_w_o_Tax__c/100,0))}"/>
+                        </apex:outputText>
+                    </td>   
+                </tr>
+                <tr>
+                    <td>GST on Other charges*</td>
+                    <td style="text-align:right;">{!ROUND(objPriceSheetWrapper.objQuote.Other_Charges_For_GST__c,0)}</td>   
+                </tr>
+                <tr>
+                    <td style="background-color: #fff2cc">Sub-Total 4: GST</td>
+                    <td style="background-color: #fff2cc ; text-align:right;">
+                        <apex:outputText value="{0, number, ###,###,###}"> 
+                            <apex:param value="{!IF(objPriceSheetWrapper.objQuote.Project__r.Name =='Aspirational', ROUND(objPriceSheetWrapper.objQuote.GST__c*2/3*objPriceSheetWrapper.objQuote.Agreement_Value_w_o_Tax__c/100 + objPriceSheetWrapper.objQuote.Other_Charges_For_GST__c, 0),ROUND(objPriceSheetWrapper.objQuote.GST__c*objPriceSheetWrapper.objQuote.Agreement_Value_w_o_Tax__c/100 + objPriceSheetWrapper.objQuote.Other_Charges_For_GST__c, 0))}"/>
+                        </apex:outputText>
+                    </td>   
+                    
+                    <apex:variable var="subTotal4" value="{!IF(objPriceSheetWrapper.objQuote.Project__r.Name =='Aspirational', ROUND(objPriceSheetWrapper.objQuote.GST__c*2/3*objPriceSheetWrapper.objQuote.Agreement_Value_w_o_Tax__c/100 + objPriceSheetWrapper.objQuote.Other_Charges_For_GST__c, 0),ROUND(objPriceSheetWrapper.objQuote.GST__c*objPriceSheetWrapper.objQuote.Agreement_Value_w_o_Tax__c/100 + objPriceSheetWrapper.objQuote.Other_Charges_For_GST__c, 0))}"/>
+                </tr>
+                <tr>
+                    <th scope="rowgroup" rowspan="2"> Total : (Sub-Total 1 to 4) </th> 
+                </tr>
+                <tr>
+                    <td style="background-color: #fff2cc"> Total Cost of Ownership (TCO) </td>
+                    <td style="background-color: #fff2cc; text-align:right;"> 
+                        <apex:outputText value="{0, number, ###,###,###}"> 
+                            <apex:param value="{!ROUND(objPriceSheetWrapper.objQuote.TotalPrice,0)}"/>
+                        </apex:outputText>
+                    </td>
+                </tr>
+            </table> 
+            <div style="font-size:0.6em; width:90%; margin:auto;" class="slds-p-left_medium">
+                <h5 style="text-align:center; color:#d8111b; font: bold 1.0em"> Terms &amp; Conditions </h5>
+                <apex:outputText escape="false" value="{!objPriceSheetWrapper.objQuote.Opportunity.Project__r.Terms_and_Conditions__c}" />
+            </div>
+            
+            <div class="footer1" style = "color:Gray;">
+                <b style="text-align: right;">Customer Signature</b>
+            </div>
+             
+            
+            <table style="page-break-before:always;width:80%;margin:auto">
+                <tr>
+                    <td style="height:25px;color:#ffffff; background-color:#000000; text-align:center; font:bold 1.2em Arial;" colspan="2">
+                        Payment Milestone
+                    </td>
+                </tr>
+                <tr>
+                    <th style="width:75%;">Milestone</th>
+                    <th style="text-align:center;">Percentage(%)</th>
+                </tr>
+                <apex:repeat value="{!lstPaymentLine}" var="objPaymentLineIter">                        
+                    <tr>
+                        <td> {!objPaymentLineIter.Title__c} </td>
+                        
+                        <td style="text-align:center;"> 
+                            <apex:outputText value="{0,number} {!IF(objPaymentLineIter.Value__c == null,  ' ','%')}">   
+                                <apex:param value="{!IF(objPaymentLineIter.Title__c =='Booking Amount', objPaymentLineIter.Amount_After_Tax__c ,objPaymentLineIter.Value__c)}"/>
+                            </apex:outputText>
+                        </td>
+                    </tr>
+                </apex:repeat>                
+            </table>
+        </apex:outputPanel>
+    </apex:form> 
+</apex:page>

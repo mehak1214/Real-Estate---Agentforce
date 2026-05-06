@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Booking_Unit__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <label>Booking Unit</label>
+    <referenceTo>Booking_Unit__c</referenceTo>
+    <relationshipLabel>Joint Owners</relationshipLabel>
+    <relationshipName>Joint_Owners</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

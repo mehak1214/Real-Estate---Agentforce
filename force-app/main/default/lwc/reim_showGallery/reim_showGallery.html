@@ -1,0 +1,63 @@
+<template>
+    <div class="slds-text-heading_large">Gallery</div>
+
+    <div class="slds-grid slds-grid_vertical-stretch">
+        <div class="slds-col slds-size_12-of-12">
+            <lightning-tabset class="reim-gal-tabs">
+                <template for:each={galleryValues} for:item="galleryVal">
+                    <lightning-tab key={galleryVal} label={galleryVal} onactive={handleGalleryChange}>   
+                        <div class="grid-container">
+                            
+                            <template for:each={mapData} for:item="item">
+                                <div key={item.value} class="grid-item">
+                                    <img 
+                                    key={item.value} 
+                                    src={item.VersionDataUrl} 
+                                    onclick={previewimg}
+                                    data-id={item.ContentDocumentId}
+                                    title={item.Title}                            
+                                    style="" />
+                                    <p key={item.value} > {item.Title} </p>
+
+                                </div>
+                                
+                            </template>
+                        </div>
+                    </lightning-tab>
+                </template>
+            </lightning-tabset>
+        </div>
+    </div>
+
+    <!-- <lightning-card title="Gallery" icon-name="utility:image">
+        <lightning-tabset>
+            <template for:each={galleryValues} for:item="galleryVal">
+                <lightning-tab key={galleryVal} label={galleryVal} onactive={handleGalleryChange}>
+
+                    <lightning-carousel disable-auto-scroll>
+                        <template for:each={mapData} for:item="item">
+                            <lightning-carousel-image 
+                                key={item.value} 
+                                src={item.VersionDataUrl} 
+                                header={item.value}
+                                href={item.VersionDataUrl}
+                                style="pointer-events: none;">
+                            </lightning-carousel-image>
+                        </template>
+                    </lightning-carousel> 
+
+                    <template for:each={mapData} for:item="item">
+                        <img 
+                            key={item.value} 
+                            src={item.VersionDataUrl} 
+                            onclick={previewimg}
+                            data-id={item.ContentDocumentId}
+                            title={item.value}                            
+                            style="" />
+                    </template>
+
+                </lightning-tab>
+            </template>
+        </lightning-tabset>
+    </lightning-card> -->
+</template>

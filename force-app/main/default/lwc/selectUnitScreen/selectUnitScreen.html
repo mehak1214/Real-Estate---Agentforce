@@ -1,0 +1,78 @@
+<template>
+    <!-- The title is now dynamic based on the view -->
+    <lightning-quick-action-panel header={cardTitle}>
+    <lightning-card title="" icon-name="standard:add">
+        <div class="slds-m-around_medium">
+            
+            <!-- Spinner is shown whenever isLoading is true, regardless of view -->
+            <template if:true={isLoading}>
+                <lightning-spinner alternative-text="Loading..." size="medium"></lightning-spinner>
+            </template>
+
+            <!-- View 1: Inventory Selection -->
+            <template if:true={showInventorySelection}>
+                <template if:true={units.length}>
+                    <lightning-datatable
+                        key-field="Id"
+                        data={units}
+                        columns={columns}
+                        onrowselection={handleRowSelection}
+                    >
+                    </lightning-datatable>
+                </template>
+
+                <template if:true={noUnitsFound}>
+                    <p>No inventory units found for this opportunity's account.</p>
+                </template>
+            </template>
+
+            <!-- View 2: Payment Plan Details -->
+            <template if:false={showInventorySelection}>
+                <h2 class="slds-text-heading_medium slds-m-bottom_medium">Payment Plan Details</h2>
+                <template if:true={paymentPlanDetails.length}>
+                    <lightning-datatable
+                        key-field="Id"
+                        data={paymentPlanDetails}
+                        columns={paymentPlanColumns}
+                        hide-checkbox-column
+                    >
+                    </lightning-datatable>
+                </template>
+                <!-- Message if no payment plans are found -->
+                <template if:true={noPaymentPlansFound}>
+                    <p>No default payment plan details found for the selected inventory.</p>
+                </template>
+            </template>
+
+            <!-- Error message shows in either view if an error exists -->
+            <template if:true={error}>
+                <div class="slds-text-color_error slds-m-top_medium">
+                    An error occurred: {error.body.message}
+                </div>
+            </template>
+        </div>
+
+        <!-- Footer buttons are now conditional -->
+        <div slot="footer">
+            <!-- Show these buttons on the inventory selection screen -->
+            <template if:true={showInventorySelection}>
+                <lightning-button
+                    label="Create Bookings"
+                    variant="brand"
+                    onclick={handleCreateBookings}
+                    disabled={disableButton}
+                ></lightning-button>&nbsp;
+                <lightning-button label="Cancel" variant="neutral" onclick={Cancel}>
+                </lightning-button>
+            </template>
+            <!-- Show this button on the payment plan screen -->
+            <template if:false={showInventorySelection}>
+                <lightning-button label="Back" variant="brand" onclick={Back}>
+                </lightning-button>&nbsp;
+                <lightning-button label="Finish" variant="brand" onclick={Cancel}>
+                </lightning-button>
+            </template>
+        </div>
+    </lightning-card>
+    </lightning-quick-action-panel>
+</template>

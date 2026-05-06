@@ -1,0 +1,341 @@
+<!-- Component to display all project list and details of project -->
+<template>   
+    <lightning-card class="projects-list-main">
+        <template if:true={displayAllProjects}>
+            <div class="slds-grid slds-grid_vertical-stretch ">
+                <div class="slds-col slds-size_12-of-12">
+                    <div class="slds-box slds-box_x-small ProjectList">
+                        <div class="slds-grid slds-grid_vertical-align-center">
+                            <div>
+                                <lightning-icon class="Allicon" icon-name='standard:multi_picklist' ></lightning-icon>  
+                            </div>
+                            <div class="slds-p-left_x-small">
+                                <span class="top-header-text">Project List</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>           
+            <div class="slds-grid slds-grid_vertical-stretch ">
+                <div class="slds-col slds-size_3-of-12">
+
+                    <div class="slds-box  filterList ">
+                        <div style="border-bottom: 1px solid #BDCDD6;">
+                            <span style="font-weight:bold;padding-bottom: 10px;">Filter By</span>
+                        </div>
+                        <lightning-combobox
+                            name="project Type"
+                            label="Project Type"
+                            value={selectedValueType}
+                            placeholder="All"
+                            options={typeOptions}
+                            onchange={handleChangeType}></lightning-combobox>
+                        <lightning-combobox
+                            name="status"
+                            label="Project Status"
+                            value={selectedValueStatus}
+                            placeholder="All"
+                            options={statusOptions}
+                            onchange={handleChangeStatus}></lightning-combobox>
+                        <lightning-combobox
+                            name="sizeType"
+                            label="Project Size Type"
+                            value={selectedValueSizeType}
+                            placeholder="All"
+                            options={sizeTypeOptions}
+                            onchange={handleChangeSizeType}></lightning-combobox>
+                    </div>
+
+                </div>
+
+                <div class="slds-col slds-size_9-of-12 projects-list-box">
+                    <div class="slds-text-body_regular">
+                        <div class="slds-text-heading_medium">Projects : <!--{totalProjects}-->{projectsCount_1}
+                        </div>
+                    </div>
+                    <div class="grid-container">
+                        <template if:true={showAll}>                            
+                            <template if:true={allProjectLst}>
+                                <template for:each={allProjectLst} for:item="proj">
+                                    <div class="grid-item" key={proj.id}>
+                                        <div class="image-container">
+
+                                            <img src={imageUrl} alt="Building Image"></div>
+                                            <div class="project-details">
+
+                                                <div class="slds-text-heading_small text-bold">{proj.Name}</div>
+                                                <div class="slds-text-heading_small"><a href="#"><i>{proj.Project_Address__c.city}, {proj.Project_Address__c.state} </i></a></div>
+                                                
+                                                <p style="margin:5px">Towers : {proj.towerCount}</p>
+                                                <p style="margin:5px">Total Units : {proj.unitCount}</p>
+
+                                                <lightning-button
+                                                    variant="Brand"
+                                                    label="View Details >"
+                                                    size="small"
+                                                    data-record-id={proj.Id}
+                                                    onclick={handleClick}></lightning-button>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </template>
+                            </template>
+                                                    <!-- Show projects based on project type value -->
+
+                            <template if:true={showType}>
+                                <template if:true={projectTypeFilterList}>
+                                    <template for:each={projectTypeFilterList} for:item="projType">
+                                        <div class="grid-item" key={projType.id}>
+                                            <div class="image-container">
+
+                                                <img src={imageUrl} alt="Building Image"></div>
+                                                <div class="project-details">
+                                                    <div class="slds-text-heading_small text-bold">{projType.Name}</div>
+                                                    <div class="slds-text-heading_small"><a href="#"><i>{projType.Project_Address__c.city}, {projType.Project_Address__c.state} </i></a></div>
+
+                                                    <p style="margin:5px">Towers : {projectTwrCount}</p>
+                                                    <p style="margin:5px">Total Units : {projectUnitCount}</p>
+
+                                                    <lightning-button
+                                                        variant="Brand"
+                                                        label="View Details >"
+                                                        size="small"
+                                                        data-record-id={projType.Id}
+                                                        onclick={handleClick}></lightning-button>
+                                                </div>
+
+                                            </div>
+                                        </template>
+                                    </template>
+                                </template>
+                                  <!-- Show projects based on project status value -->
+
+                                <template if:true={showStatus}>
+                                    <template if:true={projectStatusFilterList}>
+                                        <template for:each={projectStatusFilterList} for:item="projStatus">
+                                            <div class="grid-item" key={projStatus.id}>
+                                                <div class="image-container">
+
+                                                    <img src={imageUrl} alt="Building Image"></div>
+                                                    <div class="project-details">
+
+                                                        <div class="slds-text-heading_small text-bold">{projStatus.Name}</div>
+                                                        <div class="slds-text-heading_small"><a href="#"><i>{projStatus.Project_Address__c.city}, {projStatus.Project_Address__c.state} </i></a></div>
+
+                                                        <p style="margin:5px">Towers : {projectTwrCount}</p>
+                                                        <p style="margin:5px">Total Units : {projectUnitCount}</p>
+                                                        <lightning-button
+                                                            variant="Brand"
+                                                            label="View Details >"
+                                                            size="small"
+                                                            data-record-id={projStatus.Id}
+                                                            onclick={handleClick}></lightning-button>
+                                                    </div>
+                                                </div>
+                                            </template>
+                                        </template>
+                                    </template>
+                                     <!-- Show projects based on project size type value -->
+
+                                    <template if:true={showSizeType}>
+                                        <template if:true={projectSizeTypeFilterList}>
+                                            <template for:each={projectSizeTypeFilterList} for:item="projSizeType">
+                                                <div class="grid-item" key={projSizeType.id}>
+                                                    <div class="image-container">
+
+                                                        <img src={imageUrl} alt="Building Image"></div>
+                                                        <div class="project-details">
+
+                                                            <div class="slds-text-heading_small text-bold">{projSizeType.Name}</div>
+                                                            <div class="slds-text-heading_small"><a href="#"><i>{projSizeType.Project_Address__c.city}, {projSizeType.Project_Address__c.state} </i></a></div>
+
+                                                            <p style="margin:5px">Towers : {projectTwrCount}</p>
+                                                            <p style="margin:5px">Total Units : {projectUnitCount}</p>
+
+                                                            <lightning-button
+                                                                variant="Brand"
+                                                                label="View Details >"
+                                                                size="small"
+                                                                data-record-id={projSizeType.Id}
+                                                                onclick={handleClick}></lightning-button>
+                                                        </div>
+
+                                                    </div>
+                                                </template>
+                                            </template>
+                                        </template>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </template>
+                                     <!-- On click on view details button, redirect to detail page -->
+
+                        <template if:true={openDetailPage}>
+                            <div class="slds-grid slds-grid_vertical-stretch ">
+                                <div class="slds-col slds-size_12-of-12">
+                                    <div class="slds-box slds-box_x-small ProjectList">
+                                        <div class="slds-grid slds-grid_vertical-align-center">
+                                            <div>
+                                                <lightning-icon class="Allicon" icon-name='action:back' size="x-small" onclick={handleBackClick}></lightning-icon> 
+                                              
+                                            </div>
+                                            <div class="slds-p-left_x-small">
+                                                <span class="top-header-text">{projectName}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                          
+
+                            <lightning-tabset
+                                class="reim-tabs"
+                                variant="vertical"
+                                active-tab-value={activeTabValue}>
+                                <lightning-tab label="Project" value="1" onactive={handleActive} icon-name="utility:info">
+                                    <div class="container">
+                                        <div class="slds-grid slds-gutters">
+                                            <div class="slds-col slds-size_4-of-12">
+                                                <div class="image-container">
+                                                <lightning-formatted-rich-text value={projectImage} class="img100"></lightning-formatted-rich-text>
+                                                </div>
+                                            </div>
+                                            <div class="slds-col slds-size_8-of-12 project-details-box">
+                                                <div class="content-container">
+                                                    <div class="slds-text-heading_large">{projectName}</div>
+                                                    <div class="slds-p-top_small">
+                                                        <span class="slds-text-heading_small slds-p-right_small">{city}, {state}
+                                                        </span>
+                                                        <span>
+                                                            <lightning-button
+                                                                class="slds-button"
+                                                                label="View Location"
+                                                                title="View Location"
+                                                                onclick={handleOpenMap}
+                                                                icon-name="utility:checkin"></lightning-button>
+                                                        </span>
+                                                    </div>  
+                                                    <div class="slds-p-top_medium">
+                                                        <lightning-formatted-rich-text class="slds-text-title_bold" value={projectHeader}></lightning-formatted-rich-text>
+                                                        <lightning-formatted-rich-text class="slds-p-top_small" value={projectDescription}></lightning-formatted-rich-text>
+                                                    </div>                                                  
+                                                    
+                                                    <div class="units-box-details slds-p-top_medium">
+                                                        <div class="units-box-details-square info-bdr">                                                            
+                                                            <div class="slds-text-heading_large">{projectTwrCount}</div>
+                                                            <div class="slds-text-title_caps slds-p-top_small">Towers</div>                                                                                                                       
+                                                        </div>
+                                                        <div class="units-box-details-square disable-bdr">                                                            
+                                                            <div class="slds-text-heading_large">{projectUnitCount}</div>   
+                                                            <div class="slds-text-title_caps slds-p-top_small">Total Units</div>                                                                                                                       
+                                                        </div>
+                                                        <div class="units-box-details-square error-bdr">                                                            
+                                                            <div class="slds-text-heading_large">{projectSoldUnitCount}</div>
+                                                            <div class="slds-text-title_caps slds-p-top_small">Units Sold</div>                                                                                                                       
+                                                        </div>
+                                                        <div class="units-box-details-square success-bdr">                                                            
+                                                            <div class="slds-text-heading_large">{projectAvlUnitCount}</div>
+                                                            <div class="slds-text-title_caps slds-p-top_small">Units Available</div>                                                                                                                       
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        
+                                    </div>
+                                </lightning-tab>
+                               <!-- On click of Amenities tab, here we are calling child component 'reimShowAmenities' -->
+
+                                <lightning-tab label="Amenities" value="2" onactive={handleActive} icon-name="utility:topic">
+                                    <c-reim-show-amenities record-id={recordId}></c-reim-show-amenities>
+
+                                </lightning-tab>
+                                <!-- On click of Specifications tab, here we are calling child component 'reimShowSpecifications' -->
+
+                                <lightning-tab label="Specifications" value="3" onactive={handleActive} icon-name="utility:task">
+                                    <c-reim-show-specifications record-id={recordId}></c-reim-show-specifications>
+                                </lightning-tab>
+
+                                 <!-- On click of Location tab, using same component -->
+
+                                <lightning-tab label="Location" value="4" onactive={handleActive} icon-name="utility:checkin">
+                                    <div class="slds-col slds-size_9-of-12">
+                                        <lightning-combobox
+                                            name="Location "
+                                            label="Location "
+                                            value={value}
+                                            placeholder="Select NearBy Location "
+                                            options={options}
+                                            onchange={handleChange}></lightning-combobox>
+
+                                        <lightning-card
+                                            variant="Narrow"
+                                            title="Amenities  Map"
+                                            icon-name="standard:location">
+                                            <div class="slds-var-p-around_small">
+                                                <lightning-map
+                                                    map-markers={mapMarkers}
+                                                    markers-title={markersTitle}
+                                                    zoom-level="15"
+                                                    list-view="visible"
+                                                    center={center}></lightning-map>
+                                            </div>
+                                        </lightning-card>
+                                    </div>
+                                </lightning-tab>
+                                  <!-- On click of Floor Plan tab, here we are calling child component 'reimDisplauUnits' -->
+
+                                <lightning-tab label="Floor Plan" value="5" onactive={handleActive} icon-name="utility:location">
+                                    <c-reim-display-units record-id={recordId}></c-reim-display-units>
+                                </lightning-tab>
+                               <!-- On click of Watch Video Tab -->
+
+                                <lightning-tab label="Watch Video" value="6" onactive={handleActive} icon-name="utility:video">
+                                    <template for:each={Video} for:item="vid">
+                                        <div key={vid.id} onclick={handleVideoClick}>
+                                            <video width="320" height="240" controls>
+                                                <source src={vid.data} type="video/mp4">
+                                                </video>
+                                     <p>{vid.name}</p>
+                                    </div>                                    
+                                 </template>
+                                </lightning-tab>
+
+                                 <!-- On click of Gallery Tab -->
+
+                                <lightning-tab label="Gallery" value="7" onactive={handleActive} icon-name="utility:image">
+                                    <div class="gallery">
+                                        <lightning-tabset>
+                                            <template for:each={galleryValues} for:item="galleryVal">
+                                               
+                                                <lightning-tab key={galleryVal} label={galleryVal} onactive={handleGalleryChange} >
+                                                    
+                                                                
+                                                                        <lightning-carousel   disable-auto-scroll>
+                                                                            <template for:each={galleryData} for:item="galleryData">
+                                                                            <lightning-carousel-image 
+                                                                            key={galleryData.id}
+                                                                                src = {galleryData.data}
+                                                                                header = {galleryData.name}
+                                                                                
+                                                                                href = {galleryData.data}>
+                                                                            </lightning-carousel-image>
+                                                                        </template>
+
+                                                                            </lightning-carousel>
+                                                            
+                                                </lightning-tab>
+                                            </template>
+                                        </lightning-tabset>
+                                    </div>
+                                </lightning-tab>
+                            
+                            </lightning-tabset>
+
+                        </template>
+
+                    </lightning-card>
+
+                </template>

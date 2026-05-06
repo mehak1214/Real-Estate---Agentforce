@@ -1,0 +1,18 @@
+.filter-container {
+    background-color: #f0f0f0;
+    padding: 15px;
+    border-radius: 5px;
+    width: 250px;
+}
+
+.filter-title {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.filter-select {
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 10px;
+}

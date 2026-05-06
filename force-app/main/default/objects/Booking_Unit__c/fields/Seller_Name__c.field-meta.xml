@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Seller_Name__c</fullName>
+    <description>Before Project Migration changes :- 
+IF( RecordType.Name == &apos;Land&apos;, Inventory__r.Project__r.Seller_Name__c, Inventory__r.Property__r.Project__r.Seller_Name__c)</description>
+    <externalId>false</externalId>
+    <formula>IF( RecordType.Name == &apos;Land&apos;, Inventory__r.Project_Inv__r.Seller_Name__c, Inventory__r.Property_Inv__r.Project_Inv__r.Seller_Name__c)</formula>
+    <label>Seller Name</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

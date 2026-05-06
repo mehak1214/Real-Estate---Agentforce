@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
+    <labels>
+        <fullName>PPD_Email_Due_Date</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>PPD_Email_Due_Date</shortDescription>
+        <value>2025-07-22</value>
+    </labels>
+    <labels>
+        <fullName>Qualified_Lead_Assign_Profile_Name</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Qualified Lead Assign Profile Name</shortDescription>
+        <value>System Administrator</value>
+    </labels>
+    <labels>
+        <fullName>Web_Lead_Assign_Profile_Name</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Web Lead Assign Profile Name</shortDescription>
+        <value>Tele Caller</value>
+    </labels>
+</CustomLabels>

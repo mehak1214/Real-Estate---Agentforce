@@ -1,0 +1,65 @@
+<template>
+    <lightning-card>
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading"></lightning-spinner>
+        </template>
+        <template if:false={showJointOwners}>
+        <div slot="title" class="slds-text-align_center slds-text-heading_medium">
+            {cardTitle}
+        </div>
+        <div class="slds-grid slds-wrap slds-gutters slds-p-around_medium">
+            
+            <!-- ACCOUNT SECTION -->
+            <div class="slds-col slds-size_1-of-2">
+                <h3 class="slds-text-heading_small slds-m-bottom_small">Account Information</h3>
+                <lightning-record-edit-form
+                    object-api-name="Account"
+                    record-id={accountId}
+                    onsuccess={handleAccountSave}
+                    onerror={handleFormError}
+                    data-type="account">
+                    <template for:each={accountFields} for:item="field">
+                        <lightning-input-field key={field} field-name={field}></lightning-input-field>
+                    </template>
+                </lightning-record-edit-form>
+            </div>
+
+            <!-- OPPORTUNITY SECTION -->
+            <div class="slds-col slds-size_1-of-2">
+                <h3 class="slds-text-heading_small slds-m-bottom_small">Opportunity Information</h3>
+                <lightning-record-edit-form
+                    object-api-name="Opportunity"
+                    record-id={recordId}
+                    onsuccess={handleOpportunitySave}
+                    onerror={handleFormError}
+                    data-type="opportunity">
+                    <template for:each={opportunityFieldObjects} for:item="fieldObj">
+                        <lightning-input-field
+                            key={fieldObj.name}
+                            field-name={fieldObj.name}
+                            disabled={fieldObj.disabled}>
+                        </lightning-input-field>
+                    </template>
+                </lightning-record-edit-form>
+            </div>
+        </div>
+
+        <div class="slds-m-top_medium slds-align_absolute-center">
+            <lightning-button 
+                variant="brand" 
+                label="Save" 
+                onclick={handleSaveAll}>
+            </lightning-button>&nbsp;
+            <lightning-button label="Cancel" variant="brand" onclick={Cancel}>
+            </lightning-button>
+        </div>
+        </template>
+        <template if:true={showJointOwners}>
+            <div class="slds-p-around_medium">
+                <c-joint-owner-creation 
+                    booking-id={recordId} primary-acc-id={accountId}>
+                </c-joint-owner-creation>
+            </div>
+        </template>
+    </lightning-card>
+</template>

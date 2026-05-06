@@ -1,0 +1,674 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Typology__c</fullName>
+    <label>Unit Type</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>1 BED</fullName>
+                <default>false</default>
+                <label>1 BED</label>
+            </value>
+            <value>
+                <fullName>1 BED + Multi</fullName>
+                <default>false</default>
+                <label>1 BED + Multi</label>
+            </value>
+            <value>
+                <fullName>1 BED + O</fullName>
+                <default>false</default>
+                <label>1 BED + O</label>
+            </value>
+            <value>
+                <fullName>1BED + O + U +Pool+ 2 FullBath</fullName>
+                <default>false</default>
+                <label>1BED + O + U +Pool+ 2 FullBath</label>
+            </value>
+            <value>
+                <fullName>1 BED + Office</fullName>
+                <default>false</default>
+                <label>1 BED + Office</label>
+            </value>
+            <value>
+                <fullName>1 BED + POOL</fullName>
+                <default>false</default>
+                <label>1 BED + POOL</label>
+            </value>
+            <value>
+                <fullName>1 BED Condo</fullName>
+                <default>false</default>
+                <label>1 BED Condo</label>
+            </value>
+            <value>
+                <fullName>1 BED Deluxe</fullName>
+                <default>false</default>
+                <label>1 BED Deluxe</label>
+            </value>
+            <value>
+                <fullName>1 BED Executive</fullName>
+                <default>false</default>
+                <label>1 BED Executive</label>
+            </value>
+            <value>
+                <fullName>1 BED Executive + Pool</fullName>
+                <default>false</default>
+                <label>1 BED Executive + Pool</label>
+            </value>
+            <value>
+                <fullName>1 BED Executive + Pool + PT</fullName>
+                <default>false</default>
+                <label>1 BED Executive + Pool + PT</label>
+            </value>
+            <value>
+                <fullName>1 Bedroom</fullName>
+                <default>false</default>
+                <label>1 Bedroom</label>
+            </value>
+            <value>
+                <fullName>1 Bedroom + Study</fullName>
+                <default>false</default>
+                <label>1 Bedroom + Study</label>
+            </value>
+            <value>
+                <fullName>1 Bedroom Executive</fullName>
+                <default>false</default>
+                <label>1 Bedroom Executive</label>
+            </value>
+            <value>
+                <fullName>1 BED Type A</fullName>
+                <default>false</default>
+                <label>1 BED Type A</label>
+            </value>
+            <value>
+                <fullName>1 BED Type B</fullName>
+                <default>false</default>
+                <label>1 BED Type B</label>
+            </value>
+            <value>
+                <fullName>1 BED Type c</fullName>
+                <default>false</default>
+                <label>1 BED Type c</label>
+            </value>
+            <value>
+                <fullName>1 BHK + Multi</fullName>
+                <default>false</default>
+                <label>1 BHK + Multi</label>
+            </value>
+            <value>
+                <fullName>1 BHK + O</fullName>
+                <default>false</default>
+                <label>1 BHK + O</label>
+            </value>
+            <value>
+                <fullName>2 BED</fullName>
+                <default>false</default>
+                <label>2 BED</label>
+            </value>
+            <value>
+                <fullName>2 BED + O</fullName>
+                <default>false</default>
+                <label>2 BED + O</label>
+            </value>
+            <value>
+                <fullName>2 BED+O+Pool</fullName>
+                <default>false</default>
+                <label>2 BED+O+Pool</label>
+            </value>
+            <value>
+                <fullName>2 BED + O + Pool</fullName>
+                <default>false</default>
+                <label>2 BED + O + Pool</label>
+            </value>
+            <value>
+                <fullName>2 BED+Pool</fullName>
+                <default>false</default>
+                <label>2 BED+Pool</label>
+            </value>
+            <value>
+                <fullName>2 BED + POOL</fullName>
+                <default>false</default>
+                <label>2 BED + POOL</label>
+            </value>
+            <value>
+                <fullName>2 BED + Pool + Study</fullName>
+                <default>false</default>
+                <label>2 BED + Pool + Study</label>
+            </value>
+            <value>
+                <fullName>2 BED + S</fullName>
+                <default>false</default>
+                <label>2 BED + S</label>
+            </value>
+            <value>
+                <fullName>2 BED + S + Pool + PT</fullName>
+                <default>false</default>
+                <label>2 BED + S + Pool + PT</label>
+            </value>
+            <value>
+                <fullName>2 BED Condo</fullName>
+                <default>false</default>
+                <label>2 BED Condo</label>
+            </value>
+            <value>
+                <fullName>2 BED Condo+Pool</fullName>
+                <default>false</default>
+                <label>2 BED Condo+Pool</label>
+            </value>
+            <value>
+                <fullName>2 BED Executive</fullName>
+                <default>false</default>
+                <label>2 BED Executive</label>
+            </value>
+            <value>
+                <fullName>2 BED PLATINUM</fullName>
+                <default>false</default>
+                <label>2 BED PLATINUM</label>
+            </value>
+            <value>
+                <fullName>2 BED PREMIER</fullName>
+                <default>false</default>
+                <label>2 BED PREMIER</label>
+            </value>
+            <value>
+                <fullName>2 BED PRESTIGE</fullName>
+                <default>false</default>
+                <label>2 BED PRESTIGE</label>
+            </value>
+            <value>
+                <fullName>2 Bedroom</fullName>
+                <default>false</default>
+                <label>2 Bedroom</label>
+            </value>
+            <value>
+                <fullName>2 Bedroom + O</fullName>
+                <default>false</default>
+                <label>2 Bedroom + O</label>
+            </value>
+            <value>
+                <fullName>2 Bedroom + Pool</fullName>
+                <default>false</default>
+                <label>2 Bedroom + Pool</label>
+            </value>
+            <value>
+                <fullName>2 Bedroom + Study</fullName>
+                <default>false</default>
+                <label>2 Bedroom + Study</label>
+            </value>
+            <value>
+                <fullName>2 Bedroom Duplex</fullName>
+                <default>false</default>
+                <label>2 Bedroom Duplex</label>
+            </value>
+            <value>
+                <fullName>2 BED Type A</fullName>
+                <default>false</default>
+                <label>2 BED Type A</label>
+            </value>
+            <value>
+                <fullName>2 BED Type B</fullName>
+                <default>false</default>
+                <label>2 BED Type B</label>
+            </value>
+            <value>
+                <fullName>2 BED Type c</fullName>
+                <default>false</default>
+                <label>2 BED Type c</label>
+            </value>
+            <value>
+                <fullName>2 BHK + Pool + Study</fullName>
+                <default>false</default>
+                <label>2 BHK + Pool + Study</label>
+            </value>
+            <value>
+                <fullName>2 BHK Type - C</fullName>
+                <default>false</default>
+                <label>2 BHK Type - C</label>
+            </value>
+            <value>
+                <fullName>2 BHK Type - D</fullName>
+                <default>false</default>
+                <label>2 BHK Type - D</label>
+            </value>
+            <value>
+                <fullName>2 BHK Type - E</fullName>
+                <default>false</default>
+                <label>2 BHK Type - E</label>
+            </value>
+            <value>
+                <fullName>2 BHK Type - F</fullName>
+                <default>false</default>
+                <label>2 BHK Type - F</label>
+            </value>
+            <value>
+                <fullName>3 BED</fullName>
+                <default>false</default>
+                <label>3 BED</label>
+            </value>
+            <value>
+                <fullName>3 BED + POOL</fullName>
+                <default>false</default>
+                <label>3 BED + POOL</label>
+            </value>
+            <value>
+                <fullName>3 BED + U + Pool</fullName>
+                <default>false</default>
+                <label>3 BED + U + Pool</label>
+            </value>
+            <value>
+                <fullName>3 BED Condo+Pool</fullName>
+                <default>false</default>
+                <label>3 BED Condo+Pool</label>
+            </value>
+            <value>
+                <fullName>3 BED Penthouse+Pool</fullName>
+                <default>false</default>
+                <label>3 BED Penthouse+Pool</label>
+            </value>
+            <value>
+                <fullName>3 Bedroom</fullName>
+                <default>false</default>
+                <label>3 Bedroom</label>
+            </value>
+            <value>
+                <fullName>3 Bedroom + Pool</fullName>
+                <default>false</default>
+                <label>3 Bedroom + Pool</label>
+            </value>
+            <value>
+                <fullName>3 Bedroom + U + Pool</fullName>
+                <default>false</default>
+                <label>3 Bedroom + U + Pool</label>
+            </value>
+            <value>
+                <fullName>3 Bedroom + U + Pool + PT</fullName>
+                <default>false</default>
+                <label>3 Bedroom + U + Pool + PT</label>
+            </value>
+            <value>
+                <fullName>3 Bedroom Condo+Pool</fullName>
+                <default>false</default>
+                <label>3 Bedroom Condo+Pool</label>
+            </value>
+            <value>
+                <fullName>3 BED Sky Villa + Pool</fullName>
+                <default>false</default>
+                <label>3 BED Sky Villa + Pool</label>
+            </value>
+            <value>
+                <fullName>3 BED Type A</fullName>
+                <default>false</default>
+                <label>3 BED Type A</label>
+            </value>
+            <value>
+                <fullName>3 BED Type B</fullName>
+                <default>false</default>
+                <label>3 BED Type B</label>
+            </value>
+            <value>
+                <fullName>3 BED Type c</fullName>
+                <default>false</default>
+                <label>3 BED Type c</label>
+            </value>
+            <value>
+                <fullName>3 BHK + Pool + Maid</fullName>
+                <default>false</default>
+                <label>3 BHK + Pool + Maid</label>
+            </value>
+            <value>
+                <fullName>3 BHK Sky Villa + Pool</fullName>
+                <default>false</default>
+                <label>3 BHK Sky Villa + Pool</label>
+            </value>
+            <value>
+                <fullName>3 BHK Type - A</fullName>
+                <default>false</default>
+                <label>3 BHK Type - A</label>
+            </value>
+            <value>
+                <fullName>3 BHK Type - B</fullName>
+                <default>false</default>
+                <label>3 BHK Type - B</label>
+            </value>
+            <value>
+                <fullName>4 BED + POOL</fullName>
+                <default>false</default>
+                <label>4 BED + POOL</label>
+            </value>
+            <value>
+                <fullName>4 BED Duplex + Pool</fullName>
+                <default>false</default>
+                <label>4 BED Duplex + Pool</label>
+            </value>
+            <value>
+                <fullName>4 Bed Oceanic Villa</fullName>
+                <default>false</default>
+                <label>4 Bed Oceanic Villa</label>
+            </value>
+            <value>
+                <fullName>4 Bedroom</fullName>
+                <default>false</default>
+                <label>4 Bedroom</label>
+            </value>
+            <value>
+                <fullName>4 BED Sky Villa + Pool</fullName>
+                <default>false</default>
+                <label>4 BED Sky Villa + Pool</label>
+            </value>
+            <value>
+                <fullName>4 BHK Sky Villa + Pool</fullName>
+                <default>false</default>
+                <label>4 BHK Sky Villa + Pool</label>
+            </value>
+            <value>
+                <fullName>4 BHK Type - A</fullName>
+                <default>false</default>
+                <label>4 BHK Type - A</label>
+            </value>
+            <value>
+                <fullName>4 BHK Type - B</fullName>
+                <default>false</default>
+                <label>4 BHK Type - B</label>
+            </value>
+            <value>
+                <fullName>5 BED Sky Villa + Pool</fullName>
+                <default>false</default>
+                <label>5 BED Sky Villa + Pool</label>
+            </value>
+            <value>
+                <fullName>5 BHK Sky Villa + Pool</fullName>
+                <default>false</default>
+                <label>5 BHK Sky Villa + Pool</label>
+            </value>
+            <value>
+                <fullName>5 BHK Type - A</fullName>
+                <default>false</default>
+                <label>5 BHK Type - A</label>
+            </value>
+            <value>
+                <fullName>5 BHK Type - B</fullName>
+                <default>false</default>
+                <label>5 BHK Type - B</label>
+            </value>
+            <value>
+                <fullName>5 BHK Type - C</fullName>
+                <default>false</default>
+                <label>5 BHK Type - C</label>
+            </value>
+            <value>
+                <fullName>5 BHK Type - D</fullName>
+                <default>false</default>
+                <label>5 BHK Type - D</label>
+            </value>
+            <value>
+                <fullName>Duplex</fullName>
+                <default>false</default>
+                <label>Duplex</label>
+            </value>
+            <value>
+                <fullName>Duplex 2BED + O + Store + Pool</fullName>
+                <default>false</default>
+                <label>Duplex 2BED + O + Store + Pool</label>
+            </value>
+            <value>
+                <fullName>Duplex 3 BED + U + Pool</fullName>
+                <default>false</default>
+                <label>Duplex 3 BED + U + Pool</label>
+            </value>
+            <value>
+                <fullName>Duplex 3 BED + U + Pool + PT</fullName>
+                <default>false</default>
+                <label>Duplex 3 BED + U + Pool + PT</label>
+            </value>
+            <value>
+                <fullName>Duplex 3BED + U + Store + Pool</fullName>
+                <default>false</default>
+                <label>Duplex 3BED + U + Store + Pool</label>
+            </value>
+            <value>
+                <fullName>Duplex 3 Bedroom + U + Pool</fullName>
+                <default>false</default>
+                <label>Duplex 3 Bedroom + U + Pool</label>
+            </value>
+            <value>
+                <fullName>Duplex 3 Bedroom + U + Pool + PT</fullName>
+                <default>false</default>
+                <label>Duplex 3 Bedroom + U + Pool + PT</label>
+            </value>
+            <value>
+                <fullName>Executive Studio</fullName>
+                <default>false</default>
+                <label>Executive Studio</label>
+            </value>
+            <value>
+                <fullName>Flex 1 BED</fullName>
+                <default>false</default>
+                <label>Flex 1 BED</label>
+            </value>
+            <value>
+                <fullName>Flex 1 BHK</fullName>
+                <default>false</default>
+                <label>Flex 1 BHK</label>
+            </value>
+            <value>
+                <fullName>Flex Studio</fullName>
+                <default>false</default>
+                <label>Flex Studio</label>
+            </value>
+            <value>
+                <fullName>Garden Suite</fullName>
+                <default>false</default>
+                <label>Garden Suite</label>
+            </value>
+            <value>
+                <fullName>Hotel Room</fullName>
+                <default>false</default>
+                <label>Hotel Room</label>
+            </value>
+            <value>
+                <fullName>Mansion</fullName>
+                <default>false</default>
+                <label>Mansion</label>
+            </value>
+            <value>
+                <fullName>Nursery</fullName>
+                <default>false</default>
+                <label>Nursery</label>
+            </value>
+            <value>
+                <fullName>Office</fullName>
+                <default>false</default>
+                <label>Office</label>
+            </value>
+            <value>
+                <fullName>Others</fullName>
+                <default>false</default>
+                <label>Others</label>
+            </value>
+            <value>
+                <fullName>Parking</fullName>
+                <default>false</default>
+                <label>Parking</label>
+            </value>
+            <value>
+                <fullName>Penthouse</fullName>
+                <default>false</default>
+                <label>Penthouse</label>
+            </value>
+            <value>
+                <fullName>Platinum Studio</fullName>
+                <default>false</default>
+                <label>Platinum Studio</label>
+            </value>
+            <value>
+                <fullName>Plot</fullName>
+                <default>false</default>
+                <label>Plot</label>
+            </value>
+            <value>
+                <fullName>Premier 2 BHK Type - A</fullName>
+                <default>false</default>
+                <label>Premier 2 BHK Type - A</label>
+            </value>
+            <value>
+                <fullName>Premier 2 BHK Type - B</fullName>
+                <default>false</default>
+                <label>Premier 2 BHK Type - B</label>
+            </value>
+            <value>
+                <fullName>Presidential Studio</fullName>
+                <default>false</default>
+                <label>Presidential Studio</label>
+            </value>
+            <value>
+                <fullName>Presidential Suite</fullName>
+                <default>false</default>
+                <label>Presidential Suite</label>
+            </value>
+            <value>
+                <fullName>Presidential Suite Type - A</fullName>
+                <default>false</default>
+                <label>Presidential Suite Type - A</label>
+            </value>
+            <value>
+                <fullName>Presidential Suite Type - B</fullName>
+                <default>false</default>
+                <label>Presidential Suite Type - B</label>
+            </value>
+            <value>
+                <fullName>Presidential Suite W/O Pool</fullName>
+                <default>false</default>
+                <label>Presidential Suite W/O Pool</label>
+            </value>
+            <value>
+                <fullName>Restaurant</fullName>
+                <default>false</default>
+                <label>Restaurant</label>
+            </value>
+            <value>
+                <fullName>Retail</fullName>
+                <default>false</default>
+                <label>Retail</label>
+            </value>
+            <value>
+                <fullName>Rowhouse</fullName>
+                <default>false</default>
+                <label>Rowhouse</label>
+            </value>
+            <value>
+                <fullName>Service Residence</fullName>
+                <default>false</default>
+                <label>Service Residence</label>
+            </value>
+            <value>
+                <fullName>Shop</fullName>
+                <default>false</default>
+                <label>Shop</label>
+            </value>
+            <value>
+                <fullName>Showroom</fullName>
+                <default>false</default>
+                <label>Showroom</label>
+            </value>
+            <value>
+                <fullName>Simplex</fullName>
+                <default>false</default>
+                <label>Simplex</label>
+            </value>
+            <value>
+                <fullName>Storage</fullName>
+                <default>false</default>
+                <label>Storage</label>
+            </value>
+            <value>
+                <fullName>Storage Unit</fullName>
+                <default>false</default>
+                <label>Storage Unit</label>
+            </value>
+            <value>
+                <fullName>Studio</fullName>
+                <default>false</default>
+                <label>Studio</label>
+            </value>
+            <value>
+                <fullName>Studio + Pool</fullName>
+                <default>false</default>
+                <label>Studio + Pool</label>
+            </value>
+            <value>
+                <fullName>Studio Type A</fullName>
+                <default>false</default>
+                <label>Studio Type A</label>
+            </value>
+            <value>
+                <fullName>Studio Type B</fullName>
+                <default>false</default>
+                <label>Studio Type B</label>
+            </value>
+            <value>
+                <fullName>Studio Type C</fullName>
+                <default>false</default>
+                <label>Studio Type C</label>
+            </value>
+            <value>
+                <fullName>Suits</fullName>
+                <default>false</default>
+                <label>Suits</label>
+            </value>
+            <value>
+                <fullName>Townhouse</fullName>
+                <default>false</default>
+                <label>Townhouse</label>
+            </value>
+            <value>
+                <fullName>Warehouse</fullName>
+                <default>false</default>
+                <label>Warehouse</label>
+            </value>
+            <value>
+                <fullName>1 BHK Type - B</fullName>
+                <default>false</default>
+                <label>1 BHK Type - B</label>
+            </value>
+            <value>
+                <fullName>1 BHK Deluxe</fullName>
+                <default>false</default>
+                <label>1 BHK Deluxe</label>
+            </value>
+            <value>
+                <fullName>Flex Presidential Suite</fullName>
+                <default>false</default>
+                <label>Flex Presidential Suite</label>
+            </value>
+            <value>
+                <fullName>Flex Presidential Studio</fullName>
+                <default>false</default>
+                <label>Flex Presidential Studio</label>
+            </value>
+            <value>
+                <fullName>2 BHK Type - G</fullName>
+                <default>false</default>
+                <label>2 BHK Type - G</label>
+            </value>
+            <value>
+                <fullName>Flex Studio Type - A</fullName>
+                <default>false</default>
+                <label>Flex Studio Type - A</label>
+            </value>
+            <value>
+                <fullName>Flex 2 BED</fullName>
+                <default>false</default>
+                <label>Flex 2 BED</label>
+            </value>
+            <value>
+                <fullName>Flex 3 BED</fullName>
+                <default>false</default>
+                <label>Flex 3 BED</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

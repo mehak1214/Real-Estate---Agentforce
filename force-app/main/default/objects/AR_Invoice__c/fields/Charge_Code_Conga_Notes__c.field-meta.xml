@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Charge_Code_Conga_Notes__c</fullName>
+    <description>This new field is created to be used in Conga Template for Nakheel and DHRE</description>
+    <externalId>false</externalId>
+    <formula>IF( AND(ISPICKVAL(Source_System__c,&apos;Oracle EBS&apos;), Not(ISBLANK(Notes__c)))   ,Notes__c , Charge_Code__r.Description__c )</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Charge Code Conga Notes</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

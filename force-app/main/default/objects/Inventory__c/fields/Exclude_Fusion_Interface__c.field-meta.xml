@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Exclude_Fusion_Interface__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>This check box is implemented to mark it true when we dont want inventories FT to be posted to Oracle Fusion</description>
+    <label>Exclude Fusion Interface</label>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

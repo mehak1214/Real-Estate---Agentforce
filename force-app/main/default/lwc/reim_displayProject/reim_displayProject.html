@@ -1,0 +1,105 @@
+<template>
+    <lightning-spinner if:false={data}>
+    </lightning-spinner>
+    
+    <div class="slds-grid slds-grid_vertical-stretch">
+        <div class="slds-col slds-size_12-of-12">
+            <div class="slds-box slds-box_x-small ProjectList">
+                <div class="slds-grid slds-grid_vertical-align-center">
+                    <div class="slds-p-right_x-small">
+                        <lightning-button-icon icon-name="utility:back" size="large" alternative-text="Home"
+                            variant="border-inverse" title="Home" onclick={goBackHome}>></lightning-button-icon>
+                    </div>
+
+                    <div class="slds-p-left_x-small">
+                        <span class="top-header-text">{proj_Name}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <lightning-tabset class="reim-tabs" variant="vertical" active-tab-value={activeTabValue}>
+
+        <b></b><lightning-tab label="Project" value=1 icon-name="utility:company"></b>
+            <div class="container">
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col slds-size_4-of-12">
+                        <div class="image-container">
+                            <lightning-formatted-rich-text value={proj_Image}
+                                class="img100"></lightning-formatted-rich-text>
+                        </div>
+                    </div>
+                    <div class="slds-col slds-size_8-of-12 project-details-box">
+                        <div class="content-container">
+                            <div class="slds-text-heading_large">{proj_Name}</div>
+                            <div class="slds-p-top_small">
+                                <span class="slds-text-heading_small slds-p-right_small">{proj_City}, {proj_State}
+                                </span>
+                                <span>
+                                    <lightning-button class="slds-button" label="View Location" title="View Location"
+                                        icon-name="utility:checkin"></lightning-button>
+                                </span>
+                            </div>
+                            <div class="slds-p-top_medium">
+                                <lightning-formatted-rich-text class="slds-text-title_bold"
+                                    value={proj_Header}></lightning-formatted-rich-text>
+                                <lightning-formatted-rich-text class="slds-p-top_small"
+                                    value={proj_Description}></lightning-formatted-rich-text>
+                            </div>
+
+                            <div class="units-box-details slds-p-top_medium grid-container">
+                                <div class="units-box-details-square info-bdr grid-item">
+                                    <div class="slds-text-heading_large">{proj_TwrCount}</div>
+                                    <div class="slds-text-title_caps slds-p-top_small">Towers</div>
+                                </div>
+                                <div class="units-box-details-square disable-bdr  grid-item">
+                                    <div class="slds-text-heading_large">{proj_TotalUnitCount}</div>
+                                    <div class="slds-text-title_caps slds-p-top_small">Total Units</div>
+                                </div>
+                                <div class="units-box-details-square error-bdr  grid-item">
+                                    <div class="slds-text-heading_large">{proj_SoldUnitCount}</div>
+                                    <div class="slds-text-title_caps slds-p-top_small">Units Sold</div>
+                                </div>
+                                <div class="units-box-details-square success-bdr  grid-item">
+                                    <div class="slds-text-heading_large">{proj_AvlUnitCount}</div>
+                                    <div class="slds-text-title_caps slds-p-top_small">Units Available</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </lightning-tab>
+
+        <!-- On click of Amenities tab, here we are calling child component 'reimShowAmenities' -->
+        <lightning-tab label="Amenities" icon-name="utility:topic" value=2>
+            <c-reim_display-amenities record-id={recordId}></c-reim_display-amenities>
+        </lightning-tab>
+
+        <!-- On click of Specifications tab, here we are calling child component 'reimShowSpecifications' -->
+        <lightning-tab label="Specifications" icon-name="utility:task" value=3>
+            <c-reim_show-specifications record-id={recordId}></c-reim_show-specifications>
+        </lightning-tab>
+
+        <!-- On click of Location tab, using same component -->
+        <lightning-tab label="Location" icon-name="utility:checkin" value=4>
+            <c-reim_display-location record-id={recordId}></c-reim_display-location>
+        </lightning-tab>
+
+        <!-- On click of Floor tab, using same component -->
+        <lightning-tab label="Tower/Floor" icon-name="utility:location" value=5>
+            <c-reim_show-tower record-id={recordId}></c-reim_show-tower>
+        </lightning-tab>
+
+        <!-- On click of Videos tab, using same component -->
+        <lightning-tab label="Videos" icon-name="utility:video" value=6>
+            <c-reim_show-videos record-id={recordId}></c-reim_show-videos>
+        </lightning-tab>
+
+        <!-- On click of Gallery tab, using same component -->
+        <lightning-tab label="Gallery" icon-name="utility:image" value=7>
+            <c-reim_show-gallery record-id={recordId}></c-reim_show-gallery>
+        </lightning-tab>
+    </lightning-tabset>
+
+</template>

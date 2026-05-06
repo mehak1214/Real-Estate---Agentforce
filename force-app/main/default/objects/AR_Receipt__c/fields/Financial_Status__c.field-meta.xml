@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Financial_Status__c</fullName>
+    <label>Financial Status</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>UnReconciled</fullName>
+                <default>true</default>
+                <label>UnReconciled</label>
+            </value>
+            <value>
+                <fullName>Reconciled</fullName>
+                <default>false</default>
+                <label>Reconciled</label>
+            </value>
+            <value>
+                <fullName>Reversed</fullName>
+                <default>false</default>
+                <label>Reversed</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

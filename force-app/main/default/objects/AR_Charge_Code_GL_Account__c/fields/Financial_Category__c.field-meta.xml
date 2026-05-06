@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Financial_Category__c</fullName>
+    <label>Financial Category</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Trade receivable</fullName>
+                <default>false</default>
+                <label>Trade receivable</label>
+            </value>
+            <value>
+                <fullName>Customer Advances</fullName>
+                <default>false</default>
+                <label>Customer Advances</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

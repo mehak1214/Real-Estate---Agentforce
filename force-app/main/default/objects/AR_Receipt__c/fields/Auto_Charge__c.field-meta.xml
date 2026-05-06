@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Auto_Charge__c</fullName>
+    <formula>IF(
+    ISPICKVAL(SubType__c, &quot;Insufficient Funds (INF)&quot;)
+    || ISPICKVAL(SubType__c, &quot;Irregular Signature&quot;)
+    || ISPICKVAL(SubType__c, &quot;Closed Account&quot;)
+    || ISPICKVAL(SubType__c, &quot;Frozen Account&quot;)
+    || ISPICKVAL(SubType__c, &quot;Dormant Account&quot;)
+    || ISPICKVAL(SubType__c, &quot;Second Signature Required&quot;)
+    || ISPICKVAL(SubType__c, &quot;Amount in words and Numbers Differ&quot;)
+    || ISPICKVAL(SubType__c, &quot;Missing Signature&quot;)
+    || ISPICKVAL(SubType__c, &quot;Alteration on Item without Proper Endorsement&quot;)
+    || ISPICKVAL(SubType__c, &quot;Stale Cheque&quot;)
+    || ISPICKVAL(SubType__c, &quot;Special Item to be Represented&quot;)
+    &amp;&amp; ISPICKVAL( Reverse_Type__c , &quot;Return Cheque&quot;),
+    TRUE,
+    FALSE
+)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Auto Charge</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

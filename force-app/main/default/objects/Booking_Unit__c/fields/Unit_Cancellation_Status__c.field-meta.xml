@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Unit_Cancellation_Status__c</fullName>
+    <description>This field will be set to &quot;Cancellation/pending for Repricing&quot; upon initiation of cancellation approval workflow.</description>
+    <externalId>false</externalId>
+    <formula>IF(
+   AND(
+      TEXT(Booking_Unit_Status__c) = &quot;Sold&quot;,
+      Submitted_for_Cancellation__c
+   ),
+   &quot;Cancelled/pending for Repricing&quot;, 
+   TEXT(Booking_Unit_Status__c)
+)</formula>
+    <label>Unit Cancellation Status</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

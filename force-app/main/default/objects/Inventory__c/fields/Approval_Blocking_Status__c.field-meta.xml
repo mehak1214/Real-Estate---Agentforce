@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Approval_Blocking_Status__c</fullName>
+    <label>Approval Blocking Status</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Submitted by Sales Director</fullName>
+                <default>false</default>
+                <label>Submitted by Sales Director</label>
+            </value>
+            <value>
+                <fullName>Submitted by Sales Con</fullName>
+                <default>false</default>
+                <label>Submitted by Sales Con</label>
+            </value>
+            <value>
+                <fullName>Approved by DOS</fullName>
+                <default>false</default>
+                <label>Approved by DOS</label>
+            </value>
+            <value>
+                <fullName>Approved by HOS</fullName>
+                <default>false</default>
+                <label>Approved by HOS</label>
+            </value>
+            <value>
+                <fullName>Approved by CCO</fullName>
+                <default>false</default>
+                <label>Approved by CCO</label>
+            </value>
+            <value>
+                <fullName>Rejected by DOS</fullName>
+                <default>false</default>
+                <label>Rejected by DOS</label>
+            </value>
+            <value>
+                <fullName>Rejected by HOS</fullName>
+                <default>false</default>
+                <label>Rejected by HOS</label>
+            </value>
+            <value>
+                <fullName>Rejected by CCO</fullName>
+                <default>false</default>
+                <label>Rejected by CCO</label>
+            </value>
+            <value>
+                <fullName>Approved by CSO</fullName>
+                <default>false</default>
+                <label>Approved by CSO</label>
+            </value>
+            <value>
+                <fullName>Rejected by CSO</fullName>
+                <default>false</default>
+                <label>Rejected by CSO</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,161 @@
+:host {
+    --brand-red: #8B1D1D;
+    --border-gray: #E5E7EB;
+    --bg-gray: #F3F4F6;
+    --text-black: #111827;
+    display: block;
+    width: 100%;
+}
+
+.form-container {
+    font-family: 'Segoe UI', sans-serif;
+    display: flex;
+    justify-content: center;
+    padding: 0;
+}
+
+.card {
+    background: white;
+    border-radius: 20px;
+    padding: 32px;
+    width: 440px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.heading {
+    font-size: 1.2rem;
+    font-weight: 500;
+    margin-bottom: 24px;
+    color: var(--text-black);
+}
+
+.options-row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 32px;
+}
+
+/* Base Option Card */
+.option-card {
+    flex: 1;
+    border: 1px solid var(--border-gray);
+    border-radius: 12px;
+    padding: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.option-card:hover {
+    border-color: var(--brand-red);
+}
+
+/* Selected State */
+.option-card.selected {
+    border: 1.5px solid var(--brand-red);
+    background-color: #FFF9F9;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+}
+
+.card-label {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--text-black);
+}
+
+/* --- The Visible Radio Button --- */
+.radio-circle {
+    width: 22px;
+    height: 22px;
+    border: 1.5px solid var(--border-gray);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.selected .radio-circle {
+    border-color: var(--brand-red);
+}
+
+.radio-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: transparent; /* Hidden when not selected */
+}
+
+.selected .radio-dot {
+    background-color: var(--brand-red); /* Visible when selected */
+}
+
+/* Input Fields */
+.input-container { margin-bottom: 24px; }
+
+.field-label {
+    display: block;
+    font-size: 1.05rem;
+    margin-bottom: 12px;
+}
+
+.input-field {
+    width: 100%;
+    background: var(--bg-gray);
+    border: none;
+    padding: 14px 16px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+}
+
+.dual-input {
+    display: grid;
+    grid-template-columns: 1fr 2.5fr;
+    gap: 12px;
+}
+
+/* Button & Footer */
+.next-button {
+    width: 100%;
+    padding: 16px;
+    border-radius: 8px;
+    border: none;
+    background: #8B1D1D;
+    color: white;
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 24px;
+}
+
+.footer { text-align: center; font-size: 0.95rem;}
+.login-link { color: var(--brand-red); font-weight: bold; text-decoration: none; border-bottom: 2px solid var(--brand-red); }
+
+.error-container {
+    color: #ea001e;
+    font-size: 0.85rem;
+    margin-top: 1rem;
+    text-align: center;
+    font-weight: 600;
+    padding: 0.6rem;
+    background-color: #fff1f0;
+    border: 1px solid #ffccc7;
+    border-radius: 4px;
+    animation: shake 0.4s linear;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    50% { transform: translateX(4px); }
+    75% { transform: translateX(-4px); }
+}
+
+/* Optional: Highlight input fields when there is an error */
+.input-field-error {
+    border-color: #ea001e !important;
+    box-shadow: 0 0 0 1px #ea001e;
+}

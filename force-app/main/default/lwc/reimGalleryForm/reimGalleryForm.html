@@ -1,0 +1,22 @@
+<template>
+  <lightning-card >
+        <div class="slds-m-around_medium">
+
+          <lightning-combobox label="Choose Gallery for Images" value={galleryValue} options={galleryOptions}
+          onchange={handleGalleryChange}></lightning-combobox>
+
+            <lightning-input type="file" 
+            accept=".xlsx, .xls, .csv, .png, .doc, .docx, .pdf, .jpg, .mp4" 
+            label="Upload Images/Videos"
+             multiple 
+            onchange={openfileUpload}  ></lightning-input>
+        </div>
+        <template if:true={fileData}>
+          <template for:each={fileData} for:item="file">
+            <p key={file.filename}>{file.filename}{file.base64}</p>
+          </template>
+        </template>
+       
+        <lightning-button variant="brand" label="submit" title="Submit" onclick={handleClick} class="slds-m-left_x-small"></lightning-button>
+    </lightning-card>
+</template>

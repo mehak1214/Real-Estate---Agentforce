@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>CLP_Type__c</fullName>
+    <label>CLP Type</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>&quot;Exterior Finishing - (On completion of external plumbing, external Plaster, elevation,  terrace with waterproofing of the wing in which premises in located) &quot;</fullName>
+                <default>false</default>
+                <label>&quot;Exterior Finishing - (On completion of external plumbing, external Plaster, elevation,  terrace with waterproofing of the wing in which premises in located) &quot;</label>
+            </value>
+            <value>
+                <fullName>&quot;Internal Finishing - (on Completion of walls, internal plaster, flooring,doors windows of the Premises)&quot;</fullName>
+                <default>false</default>
+                <label>&quot;Internal Finishing - (on Completion of walls, internal plaster, flooring,doors windows of the Premises)&quot;</label>
+            </value>
+            <value>
+                <fullName>After 30 days of Booking</fullName>
+                <default>false</default>
+                <label>After 30 days of Booking</label>
+            </value>
+            <value>
+                <fullName>After 60 days of Booking (on Agreement)</fullName>
+                <default>false</default>
+                <label>After 60 days of Booking (on Agreement)</label>
+            </value>
+            <value>
+                <fullName>Apr-20</fullName>
+                <default>false</default>
+                <label>Apr-20</label>
+            </value>
+            <value>
+                <fullName>Apr-21</fullName>
+                <default>false</default>
+                <label>Apr-21</label>
+            </value>
+            <value>
+                <fullName>Apr-22</fullName>
+                <default>false</default>
+                <label>Apr-22</label>
+            </value>
+            <value>
+                <fullName>Booking Amount</fullName>
+                <default>false</default>
+                <label>Booking Amount</label>
+            </value>
+            <value>
+                <fullName>Booking Amount (Part II) - within 7 days from the Application</fullName>
+                <default>false</default>
+                <label>Booking Amount (Part II) - within 7 days from the Application</label>
+            </value>
+            <value>
+                <fullName>Completion of Excavation</fullName>
+                <default>false</default>
+                <label>Completion of Excavation</label>
+            </value>
+            <value>
+                <fullName>Completion of Plinth</fullName>
+                <default>false</default>
+                <label>Completion of Plinth</label>
+            </value>
+            <value>
+                <fullName>Final Booking Amount (Part III) - within 45 days from the Application</fullName>
+                <default>false</default>
+                <label>Final Booking Amount (Part III) - within 45 days from the Application</label>
+            </value>
+            <value>
+                <fullName>Final Booking Amount(Part III) - Within 60 days from the Application</fullName>
+                <default>false</default>
+                <label>Final Booking Amount(Part III) - Within 60 days from the Application</label>
+            </value>
+            <value>
+                <fullName>Final Booking Amount (Part III) - within 65 days from the Application</fullName>
+                <default>false</default>
+                <label>Final Booking Amount (Part III) - within 65 days from the Application</label>
+            </value>
+            <value>
+                <fullName>Final Booking Amount(Part III) - within 75 days from the Application</fullName>
+                <default>false</default>
+                <label>Final Booking Amount(Part III) - within 75 days from the Application</label>
+            </value>
+            <value>
+                <fullName>Final Booking Amount (Part III) - within 90 days from the Application</fullName>
+                <default>false</default>
+                <label>Final Booking Amount (Part III) - within 90 days from the Application</label>
+            </value>
+            <value>
+                <fullName>May-20</fullName>
+                <default>false</default>
+                <label>May-20</label>
+            </value>
+            <value>
+                <fullName>May-21</fullName>
+                <default>false</default>
+                <label>May-21</label>
+            </value>
+            <value>
+                <fullName>May-22</fullName>
+                <default>false</default>
+                <label>May-22</label>
+            </value>
+            <value>
+                <fullName>on completion of 10th Slab</fullName>
+                <default>false</default>
+                <label>on completion of 10th Slab</label>
+            </value>
+            <value>
+                <fullName>On Completion of 12th Slab</fullName>
+                <default>false</default>
+                <label>On Completion of 12th Slab</label>
+            </value>
+            <value>
+                <fullName>On Completion of 14th Slab</fullName>
+                <default>false</default>
+                <label>On Completion of 14th Slab</label>
+            </value>
+            <value>
+                <fullName>on completion of 15th Slab</fullName>
+                <default>false</default>
+                <label>on completion of 15th Slab</label>
+            </value>
+            <value>
+                <fullName>On Completion of 16th Slab</fullName>
+                <default>false</default>
+                <label>On Completion of 16th Slab</label>
+            </value>
+            <value>
+                <fullName>On Completion of 20th Slab</fullName>
+                <default>false</default>
+                <label>On Completion of 20th Slab</label>
+            </value>
+            <value>
+                <fullName>On Completion of 23th Slab</fullName>
+                <default>false</default>
+                <label>On Completion of 23th Slab</label>
+            </value>
+            <value>
+                <fullName>On Completion of 24th Slab</fullName>
+                <default>false</default>
+                <label>On Completion of 24th Slab</label>
+            </value>
+            <value>
+                <fullName>on completion of 25th Slab</fullName>
+                <default>false</default>
+                <label>on completion of 25th Slab</label>
+            </value>
+            <value>
+                <fullName>On Completion of 28th Slab</fullName>
+                <default>false</default>
+                <label>On Completion of 28th Slab</label>
+            </value>
+            <value>
+                <fullName>On Completion of 32nd Slab</fullName>
+                <default>false</default>
+                <label>On Completion of 32nd Slab</label>
+            </value>
+            <value>
+                <fullName>On Completion of 33th Slab</fullName>
+                <default>false</default>
+                <label>On Completion of 33th Slab</label>
+            </value>
+            <value>
+                <fullName>on completion of 35th Slab</fullName>
+                <default>false</default>
+                <label>on completion of 35th Slab</label>
+            </value>
+            <value>
+                <fullName>On Completion of 36th Slab</fullName>
+                <default>false</default>
+                <label>On Completion of 36th Slab</label>
+            </value>
+            <value>
+                <fullName>On Completion of 40th Slab</fullName>
+                <default>false</default>
+                <label>On Completion of 40th Slab</label>
+            </value>
+            <value>
+                <fullName>On Completion of 42nd Slab</fullName>
+                <default>false</default>
+                <label>On Completion of 42nd Slab</label>
+            </value>
+            <value>
+                <fullName>On Completion of 4th Slab</fullName>
+                <default>false</default>
+                <label>On Completion of 4th Slab</label>
+            </value>
+            <value>
+                <fullName>On Completion of 5th Slab</fullName>
+                <default>false</default>
+                <label>On Completion of 5th Slab</label>
+            </value>
+            <value>
+                <fullName>On Completion of 7th Slab</fullName>
+                <default>false</default>
+                <label>On Completion of 7th Slab</label>
+            </value>
+            <value>
+                <fullName>On Completion of 8th Slab</fullName>
+                <default>false</default>
+                <label>On Completion of 8th Slab</label>
+            </value>
+            <value>
+                <fullName>On Completion of blockwork</fullName>
+                <default>false</default>
+                <label>On Completion of blockwork</label>
+            </value>
+            <value>
+                <fullName>On completion of Lift, water pumps, electrical fittings, elector, mechanical and environment requirements, entrance lobby, plinth protection, paving of area appurtenant and all other requirements of the wing as mentioned in the Agreement</fullName>
+                <default>false</default>
+                <label>On completion of Lift, water pumps, electrical fittings, elector, mechanical and environment requirements, entrance lobby, plinth protection, paving of area appurtenant and all other requirements of the wing as mentioned in the Agreement</label>
+            </value>
+            <value>
+                <fullName>On Completion of plinth level (Dec-2018)</fullName>
+                <default>false</default>
+                <label>On Completion of plinth level (Dec-2018)</label>
+            </value>
+            <value>
+                <fullName>On completion of Sanitary fittings, staircase, lift well, lobbies up-to floor level of the Premises</fullName>
+                <default>false</default>
+                <label>On completion of Sanitary fittings, staircase, lift well, lobbies up-to floor level of the Premises</label>
+            </value>
+            <value>
+                <fullName>On Completion of Terrace Slab/Building Roof Top of the building in which Premises is located</fullName>
+                <default>false</default>
+                <label>On Completion of Terrace Slab/Building Roof Top of the building in which Premises is located</label>
+            </value>
+            <value>
+                <fullName>On Completion top Podium Slab</fullName>
+                <default>false</default>
+                <label>On Completion top Podium Slab</label>
+            </value>
+            <value>
+                <fullName>On Possession</fullName>
+                <default>false</default>
+                <label>On Possession</label>
+            </value>
+            <value>
+                <fullName>On Receipt of OC</fullName>
+                <default>false</default>
+                <label>On Receipt of OC</label>
+            </value>
+            <value>
+                <fullName>On Starting of Finishing activity</fullName>
+                <default>false</default>
+                <label>On Starting of Finishing activity</label>
+            </value>
+            <value>
+                <fullName>AUDA GEB and Legal</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>AUDA GEB and Legal</label>
+            </value>
+            <value>
+                <fullName>On commencement of excavation</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>On commencement of excavation</label>
+            </value>
+            <value>
+                <fullName>On completion of 2nd floor roof slab</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>On completion of 2nd floor roof slab</label>
+            </value>
+            <value>
+                <fullName>On completion of 4th floor roof slab</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>On completion of 4th floor roof slab</label>
+            </value>
+            <value>
+                <fullName>On completion of 6th floor roof slab</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>On completion of 6th floor roof slab</label>
+            </value>
+            <value>
+                <fullName>On completion of Finishing Work</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>On completion of Finishing Work</label>
+            </value>
+            <value>
+                <fullName>On completion of Ground floor roof slab</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>On completion of Ground floor roof slab</label>
+            </value>
+            <value>
+                <fullName>On completion of Plinth</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>On completion of Plinth</label>
+            </value>
+            <value>
+                <fullName>On completion of Top floor roof slab</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>On completion of Top floor roof slab</label>
+            </value>
+            <value>
+                <fullName>Registration Charges</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Registration Charges</label>
+            </value>
+            <value>
+                <fullName>Society Maintenance Deposit</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Society Maintenance Deposit</label>
+            </value>
+            <value>
+                <fullName>Stamp Duty Charges</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Stamp Duty Charges</label>
+            </value>
+            <value>
+                <fullName>Within 2 Months</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Within 2 Months</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

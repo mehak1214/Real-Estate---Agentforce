@@ -1,0 +1,147 @@
+<apex:page controller="MyCustomLookupController" id="Page" tabstyle="Opportunity" action="{!MyCustomLookupAction}" lightningStylesheets="true"   applyHtmlTag="true">
+    <head>
+        <apex:slds />
+    </head>
+    <style type="text/css">
+        .contentStyle { font-size:12px; }
+        .con{margin-left: auto ;margin-right: auto !important; text-align: center !important; }
+        .buttonStyle { background-color:green; margin-left: auto ;margin-right: auto !important; align:center !important; padding-top:10px; }
+        .activeTab {background-color: #B7A752; color:white; background-image:none}
+        .inactiveTab { background-color: #F3F3EC; color:black; background-image:none}
+        .NoRecord { font-size:11px;}
+    </style>
+    
+    <script type="text/javascript"> 
+    function openLookup(baseURL, width, modified, searchParam){
+        var originalbaseURL = baseURL;
+        var originalwidth = width;
+        var originalmodified = modified;
+        var originalsearchParam = searchParam;
+        
+        var lookupType = baseURL.substr(baseURL.length-3, 3);
+        if (modified == '1') baseURL = baseURL + searchParam;
+        
+        var isCustomLookup = false;
+        
+        // Following "001" is the lookup type for Account object so change this as per your standard or custom object
+        if(lookupType == "001"){
+            var urlArr = baseURL.split("&");
+            var txtId = '';
+            if(urlArr.length > 2) {
+                urlArr = urlArr[1].split('=');
+                txtId = urlArr[1];
+            }
+            
+            // Following is the url of Custom Lookup page. You need to change that accordingly
+            baseURL = "/apex/CustomAccountLookup?txt=" + txtId;
+            
+            // Following is the id of apex:form control "myForm". You need to change that accordingly
+            baseURL = baseURL + "&frm=" + escapeUTF("{!$Component.myForm}");
+            if (modified == '1') {
+                baseURL = baseURL + "&lksearch=" + searchParam;
+            }
+            
+            // Following is the ID of inputField that is the lookup to be customized as custom lookup
+            if(txtId.indexOf('Account') > -1 ){
+                isCustomLookup = true;
+            }
+        }
+        
+        
+        if(isCustomLookup == true){
+            openPopup(baseURL, "lookup", 350, 480, "width="+width+",height=480,toolbar=no,status=no,directories=no,menubar=no,resizable=yes,scrollable=no", true);
+        }
+        else {
+            if (modified == '1') originalbaseURL = originalbaseURL + originalsearchParam;
+            openPopup(originalbaseURL, "lookup", 350, 480, "width="+originalwidth+",height=480,toolbar=no,status=no,directories=no,menubar=no,resizable=yes,scrollable=no", true);
+        } 
+    }
+    </script>
+    
+    <div class="slds-p-around_medium">
+        <apex:sectionHeader title="Quote"  subtitle="Generate Price Sheet" />
+        
+        <apex:form id="myForm">  
+            <apex:PageBlock id="PageBlock" rendered="{!Loading}">	
+                <apex:outputLabel rendered="{!OptyBoolean}">	
+                    <apex:pageBlockSection columns="1" title="Select Opportunity">
+                        <div style="height:1rem;text-align: left;">
+                            <apex:inputField id="Account" value="{!quote1.OpportunityId}" >
+                                <apex:actionSupport event="onchange" reRender="PageBlock2"/>
+                            </apex:inputField>
+                        </div>
+                    </apex:pageBlockSection>
+                </apex:outputLabel>
+            </apex:PageBlock>
+            <apex:PageBlock id="PageBlock2" rendered="{!Loading}">		
+                <apex:pageBlockSection columns="1" title="Select Payment Plan">
+                    <div style="height:0.5rem;text-align: left;">
+                        <apex:selectList id="abc" value="{!selectedVal}" size="1" label="Select Plan Type"> 
+                            <apex:selectOptions value="{!getPlanType}" /> 
+                            <apex:actionSupport event="onchange"  >
+                                <apex:param name="selectedVal" value="{!getPlanType}" assignTo="{!selectedVal}"/> 
+                            </apex:actionSupport> 
+                        </apex:selectList>
+                        <br/>
+                        <apex:selectList id="def" value="{!selectedTower}" size="1" label="Select Plan Master" > 
+                            <apex:selectOptions value="{!getTowers}" /> 
+                            <apex:actionSupport event="onchange" >
+                                <apex:param name="selectedTower" value="{!getTowers}" assignTo="{!selectedTower}"/>
+                            </apex:actionSupport>    
+                        </apex:selectList>
+                    </div>
+                </apex:pageBlockSection>
+                <apex:pageBlockButtons location="Bottom">
+                    <apex:commandButton action="{!save}" value="Generate Price Sheet" styleClass="buttonStyle" ></apex:commandButton>
+                    <apex:commandButton action="{!cancel}" value="Cancel"></apex:commandButton>   
+                </apex:pageBlockButtons> 
+            </apex:PageBlock>
+            <apex:outputPanel id="tstpopup">
+                <apex:outputPanel styleClass="popupBackground" layout="block" rendered="{!displayPopUp}"/>
+                <apex:outputPanel styleClass="custPopup" layout="block" rendered="{!displayPopUp}">
+                    <apex:outputText value="{!Message}"></apex:outputText><br/><br/><br/>
+                    <apex:commandButton value="Ok" action="{!cancel}" status="st1" rerender="tstpopup"/>
+                </apex:outputPanel>
+            </apex:outputPanel>
+            <style type="text/css">
+                .custPopup{
+                background-color: white;
+                border-width: 2px;
+                border-style: solid;
+                z-index: 9999;
+                left: 50%;
+                padding:10px;
+                position: absolute;
+                /* These are the 3 css properties you will need to change so the popup
+                displays in the center of the screen. First set the width. Then set
+                margin-left to negative half of what the width is. You can add
+                the height property for a fixed size pop up if you want.*/
+                width: 500px;
+                margin-left: -250px;
+                top:100px;
+                } 
+                .popupBackground{
+                background-color:black;
+                opacity: 0.20;
+                filter: alpha(opacity = 20);
+                position: absolute;
+                width: 100%;
+                height: 120%;
+                top: 0;
+                left: 0;
+                z-index: 9998;
+                }
+            </style>
+            
+        </apex:form>
+        
+        
+         <apex:form >
+          <apex:pageBlock rendered="{!BacktoPage}">
+              <apex:pageMessages id="showmsg"></apex:pageMessages>
+    </apex:pageBlock>
+    </apex:form>
+   
+
+    </div>
+</apex:page>

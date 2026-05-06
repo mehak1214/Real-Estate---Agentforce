@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SharingRules xmlns="http://soap.sforce.com/2006/04/metadata">
+    <sharingCriteriaRules>
+        <fullName>Sharing_With_Brokerage_Portal_User</fullName>
+        <accessLevel>Edit</accessLevel>
+        <label>Sharing With Brokerage Portal User</label>
+        <sharedTo>
+            <group>Brokerage_Portal</group>
+        </sharedTo>
+        <criteriaItems>
+            <field>AgencyType__c</field>
+            <operation>notEqual</operation>
+            <value></value>
+        </criteriaItems>
+        <includeRecordsOwnedByAll>true</includeRecordsOwnedByAll>
+    </sharingCriteriaRules>
+    <sharingGuestRules>
+        <fullName>Give_access_to_guest_user</fullName>
+        <accessLevel>Read</accessLevel>
+        <label>Give access to guest user</label>
+        <sharedTo>
+            <guestUser>BrokerPortal</guestUser>
+        </sharedTo>
+        <criteriaItems>
+            <field>CreatedById</field>
+            <operation>notEqual</operation>
+            <value></value>
+        </criteriaItems>
+        <includeHVUOwnedRecords>false</includeHVUOwnedRecords>
+    </sharingGuestRules>
+</SharingRules>

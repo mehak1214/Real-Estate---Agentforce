@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Trigger_Amount_Match__c</fullName>
+    <formula>(Trigger_Amount__c == Unapplied_Amount__c) &amp;&amp; !ISBLANK(Trigger_Amount__c)</formula>
+    <label>Trigger Amount Match</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

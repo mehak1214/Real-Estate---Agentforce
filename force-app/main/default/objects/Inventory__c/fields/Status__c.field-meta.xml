@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Status__c</fullName>
+    <label>Status</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Awaiting for BD Approval</fullName>
+                <default>false</default>
+                <label>Awaiting for BD Approval</label>
+            </value>
+            <value>
+                <fullName>Available</fullName>
+                <default>false</default>
+                <label>Available</label>
+            </value>
+            <value>
+                <fullName>Booked</fullName>
+                <default>false</default>
+                <label>Booked</label>
+            </value>
+            <value>
+                <fullName>Sold</fullName>
+                <default>false</default>
+                <label>Sold</label>
+            </value>
+            <value>
+                <fullName>Reserved</fullName>
+                <default>false</default>
+                <label>Reserved</label>
+            </value>
+            <value>
+                <fullName>In Progress</fullName>
+                <default>false</default>
+                <label>In Progress</label>
+            </value>
+            <value>
+                <fullName>Not Available</fullName>
+                <default>false</default>
+                <label>Not Available</label>
+            </value>
+            <value>
+                <fullName>Blocked</fullName>
+                <default>false</default>
+                <label>Blocked</label>
+            </value>
+            <value>
+                <fullName>Rejected by BD</fullName>
+                <default>false</default>
+                <label>Rejected by BD</label>
+            </value>
+            <value>
+                <fullName>Merged</fullName>
+                <default>false</default>
+                <label>Merged</label>
+            </value>
+            <value>
+                <fullName>On Hold</fullName>
+                <default>false</default>
+                <label>On Hold</label>
+            </value>
+            <value>
+                <fullName>Cancellation in Progress</fullName>
+                <default>false</default>
+                <label>Cancellation in Progress</label>
+            </value>
+            <value>
+                <fullName>Excluded</fullName>
+                <default>false</default>
+                <label>Excluded</label>
+            </value>
+            <value>
+                <fullName>Resale in Progress</fullName>
+                <default>false</default>
+                <label>Resale in Progress</label>
+            </value>
+            <value>
+                <fullName>Unreleased</fullName>
+                <default>false</default>
+                <label>Unreleased</label>
+            </value>
+            <value>
+                <fullName>DeMerged</fullName>
+                <default>false</default>
+                <label>DeMerged</label>
+            </value>
+            <value>
+                <fullName>Under Termination</fullName>
+                <default>false</default>
+                <label>Under Termination</label>
+            </value>
+            <value>
+                <fullName>Terminated</fullName>
+                <default>false</default>
+                <label>Terminated</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

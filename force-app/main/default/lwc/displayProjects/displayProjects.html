@@ -1,0 +1,61 @@
+<template>
+    <lightning-card title="">
+        
+        <div class="slds-grid slds-gutters slds-grid_vertical-stretch ">
+            <div class="slds-col slds-size_12-of-12">
+<div class="slds-box  ProjectList">
+    <span><lightning-icon class ="icon" icon-name='standard:multi_picklist' alternative-text='multi_picklist' size='large' title='multi_picklist'></lightning-icon></span>
+    <span style="font-weight:bold;font-size: 25px;">Project List</span>
+                    </div>
+                    </div>
+                    </div>
+        <div class="slds-grid slds-gutters slds-grid_vertical-stretch ">
+            <div class="slds-col slds-size_4-of-12">
+
+                <div class="slds-box  filterList ">
+                    <div>
+                        <span style="font-weight:bold;padding-bottom: 10px;">Filter By</span>
+                    </div>
+                    <lightning-combobox name="project Type" label="Project Type" value={selectedValueType}
+                        placeholder="All" options={typeOptions} onchange={handleChangeType}>
+                    </lightning-combobox>
+                    <lightning-combobox name="status" label="Project Status" value={selectedValueStatus}
+                        placeholder="All" options={statusOptions} onchange={handleChangeStatus}>
+                    </lightning-combobox>
+                    <lightning-combobox name="sizeType" label="Project Size Type" value={selectedValueSizeType}
+                        placeholder="All" options={sizeTypeOptions} onchange={handleChangeSizeType}>
+                    </lightning-combobox>
+                </div>
+
+            </div>
+            
+            <div class="slds-col slds-size_8-of-12">
+                <div class="grid-container">
+                    <template if:true={projectLst}>
+                        <template for:each={projectLst} for:item="proj">
+                        <div class="grid-item" key={proj.id}>
+                            <div class="slds-col slds-size_1-of-2 Image">
+
+                                <img src={imageUrl} alt="Building Image" height="400px" width="600px">
+                            
+                            </div>
+                            <div class="slds-col slds-size_2-of-2">
+
+                                <p>{proj.Name}</p>
+                                <p>Towers   :   {projectTowerLst}</p>
+                            
+                            </div>
+                            
+                        </div>
+                    </template>
+                </template>
+                </div>
+               
+    
+    </div>
+
+        </div>
+
+    </lightning-card>
+
+</template>

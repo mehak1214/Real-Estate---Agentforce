@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>One_Word_Reason__c</fullName>
+    <label>One Word Reason</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>80Ib Issue</fullName>
+                <default>false</default>
+                <label>80Ib Issue</label>
+            </value>
+            <value>
+                <fullName>Already Booked Client</fullName>
+                <default>false</default>
+                <label>Already Booked Client</label>
+            </value>
+            <value>
+                <fullName>Asking More Discount</fullName>
+                <default>false</default>
+                <label>Asking More Discount</label>
+            </value>
+            <value>
+                <fullName>At Negotiation Stage</fullName>
+                <default>false</default>
+                <label>At Negotiation Stage</label>
+            </value>
+            <value>
+                <fullName>Awaiting Funds</fullName>
+                <default>false</default>
+                <label>Awaiting Funds</label>
+            </value>
+            <value>
+                <fullName>Balcony Needed</fullName>
+                <default>false</default>
+                <label>Balcony Needed</label>
+            </value>
+            <value>
+                <fullName>Bigger Carpet Area Required</fullName>
+                <default>false</default>
+                <label>Bigger Carpet Area Required</label>
+            </value>
+            <value>
+                <fullName>Booked with Resale / Competitor</fullName>
+                <default>false</default>
+                <label>Booked with Resale / Competitor</label>
+            </value>
+            <value>
+                <fullName>Budget Constraint</fullName>
+                <default>false</default>
+                <label>Budget Constraint</label>
+            </value>
+            <value>
+                <fullName>Builder Subvention</fullName>
+                <default>false</default>
+                <label>Builder Subvention</label>
+            </value>
+            <value>
+                <fullName>Business Loss / Job Loss Due To Covid</fullName>
+                <default>false</default>
+                <label>Business Loss / Job Loss Due To Covid</label>
+            </value>
+            <value>
+                <fullName>Call Back After 1 Month</fullName>
+                <default>false</default>
+                <label>Call Back After 1 Month</label>
+            </value>
+            <value>
+                <fullName>Call Back After 2 Months</fullName>
+                <default>false</default>
+                <label>Call Back After 2 Months</label>
+            </value>
+            <value>
+                <fullName>Call Back After 3 To 6 Months</fullName>
+                <default>false</default>
+                <label>Call Back After 3 To 6 Months</label>
+            </value>
+            <value>
+                <fullName>Channel Partner / Competitor / Want Barter Deal</fullName>
+                <default>false</default>
+                <label>Channel Partner / Competitor / Want Barter Deal</label>
+            </value>
+            <value>
+                <fullName>CSOP</fullName>
+                <default>false</default>
+                <label>CSOP</label>
+            </value>
+            <value>
+                <fullName>Decision Maker Absent</fullName>
+                <default>false</default>
+                <label>Decision Maker Absent</label>
+            </value>
+            <value>
+                <fullName>Deviation In Payment Schedule</fullName>
+                <default>false</default>
+                <label>Deviation In Payment Schedule</label>
+            </value>
+            <value>
+                <fullName>Different Payment Plan Required</fullName>
+                <default>false</default>
+                <label>Different Payment Plan Required</label>
+            </value>
+            <value>
+                <fullName>Discusssion With Family</fullName>
+                <default>false</default>
+                <label>Discusssion With Family</label>
+            </value>
+            <value>
+                <fullName>Disqualified</fullName>
+                <default>false</default>
+                <label>Disqualified</label>
+            </value>
+            <value>
+                <fullName>Family Issues</fullName>
+                <default>false</default>
+                <label>Family Issues</label>
+            </value>
+            <value>
+                <fullName>Floor Issue / Unit Issue</fullName>
+                <default>false</default>
+                <label>Floor Issue / Unit Issue</label>
+            </value>
+            <value>
+                <fullName>General Enquiry</fullName>
+                <default>false</default>
+                <label>General Enquiry</label>
+            </value>
+            <value>
+                <fullName>Layout Issue / Room Sizes Issue</fullName>
+                <default>false</default>
+                <label>Layout Issue / Room Sizes Issue</label>
+            </value>
+            <value>
+                <fullName>Litigation Issue / Status Quo</fullName>
+                <default>false</default>
+                <label>Litigation Issue / Status Quo</label>
+            </value>
+            <value>
+                <fullName>Loan Eligibilty Issue / Loan Not Yet Sanctioned</fullName>
+                <default>false</default>
+                <label>Loan Eligibilty Issue / Loan Not Yet Sanctioned</label>
+            </value>
+            <value>
+                <fullName>Location Issue / Nalla Issue</fullName>
+                <default>false</default>
+                <label>Location Issue / Nalla Issue</label>
+            </value>
+            <value>
+                <fullName>No Intention To Buy / Purchase Plan Postponed</fullName>
+                <default>false</default>
+                <label>No Intention To Buy / Purchase Plan Postponed</label>
+            </value>
+            <value>
+                <fullName>Not Contactable</fullName>
+                <default>false</default>
+                <label>Not Contactable</label>
+            </value>
+            <value>
+                <fullName>OCR Issue</fullName>
+                <default>false</default>
+                <label>OCR Issue</label>
+            </value>
+            <value>
+                <fullName>Out Of Station / Client Is Travelling</fullName>
+                <default>false</default>
+                <label>Out Of Station / Client Is Travelling</label>
+            </value>
+            <value>
+                <fullName>Price Correction Expected</fullName>
+                <default>false</default>
+                <label>Price Correction Expected</label>
+            </value>
+            <value>
+                <fullName>Scouting Properties / Comparing Products</fullName>
+                <default>false</default>
+                <label>Scouting Properties / Comparing Products</label>
+            </value>
+            <value>
+                <fullName>Vaastu Or View Issue</fullName>
+                <default>false</default>
+                <label>Vaastu Or View Issue</label>
+            </value>
+            <value>
+                <fullName>Visit Post Lockdown</fullName>
+                <default>false</default>
+                <label>Visit Post Lockdown</label>
+            </value>
+            <value>
+                <fullName>Wants RTMI / Early Possession</fullName>
+                <default>false</default>
+                <label>Wants RTMI / Early Possession</label>
+            </value>
+            <value>
+                <fullName>Working On Finance - Need 1 Or 2 Months To Arrange</fullName>
+                <default>false</default>
+                <label>Working On Finance - Need 1 Or 2 Months To Arrange</label>
+            </value>
+            <value>
+                <fullName>Working On Finances / Within 1 Month</fullName>
+                <default>false</default>
+                <label>Working On Finances / Within 1 Month</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Is_Created_Open__c</fullName>
+    <defaultValue>false</defaultValue>
+    <inlineHelpText>Indicated Credit Notes that are initially created as open</inlineHelpText>
+    <label>Is Created Open</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

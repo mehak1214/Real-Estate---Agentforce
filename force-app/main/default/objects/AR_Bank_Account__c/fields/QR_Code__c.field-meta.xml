@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>QR_Code__c</fullName>
+    <description>if(ISPICKVAL( Approval_Status__c , &apos;Approved&apos;), IMAGE(&apos;https://chart.googleapis.com/chart?chs=150x150&amp;cht=qr&amp;chl= https://dubaiproperties.my.site.com/updateLead/bankdetails/?type=newq%26Id=&apos;+CASESAFEID(Id),&apos;Scan&apos;),&apos;&apos;)</description>
+    <externalId>false</externalId>
+    <formula>if(ISPICKVAL( Approval_Status__c , &apos;Approved&apos;), IMAGE(&apos;https://api.qrserver.com/v1/create-qr-code/?size=100x100&amp;data=https://dubaiproperties.my.site.com/updateLead/&apos;+IF( ISPICKVAL( Property__r.Company__c , &apos;Nakheel&apos;),&apos;nklbankdetails&apos;,&apos;bankdetails&apos;)+&apos;/?type=newq%26Id=&apos;+CASESAFEID(Id),&apos;Scan&apos;),&apos;&apos;)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>QR Code</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

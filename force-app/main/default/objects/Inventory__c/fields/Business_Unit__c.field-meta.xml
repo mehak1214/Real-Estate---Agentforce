@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Business_Unit__c</fullName>
+    <label>Business Unit</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>MCCL: Meraas Canal Community</fullName>
+                <default>false</default>
+                <label>MCCL: Meraas Canal Community</label>
+            </value>
+            <value>
+                <fullName>MDL: Meraas Development</fullName>
+                <default>false</default>
+                <label>MDL: Meraas Development</label>
+            </value>
+            <value>
+                <fullName>CWR: CityWalk Residential 1</fullName>
+                <default>false</default>
+                <label>CWR: CityWalk Residential 1</label>
+            </value>
+            <value>
+                <fullName>BWR: Blue Waters Residential</fullName>
+                <default>false</default>
+                <label>BWR: Blue Waters Residential</label>
+            </value>
+            <value>
+                <fullName>MBNR: Meraas Bay and Residence</fullName>
+                <default>false</default>
+                <label>MBNR: Meraas Bay and Residence</label>
+            </value>
+            <value>
+                <fullName>PJHR: PJ Hotel Residential</fullName>
+                <default>false</default>
+                <label>PJHR: PJ Hotel Residential</label>
+            </value>
+            <value>
+                <fullName>JBAYR: Jumeira Bay Residential</fullName>
+                <default>false</default>
+                <label>JBAYR: Jumeira Bay Residential</label>
+            </value>
+            <value>
+                <fullName>PDLM: PDLM Residential</fullName>
+                <default>false</default>
+                <label>PDLM: PDLM Residential</label>
+            </value>
+            <value>
+                <fullName>LMNR: La Mer North Residential</fullName>
+                <default>false</default>
+                <label>LMNR: La Mer North Residential</label>
+            </value>
+            <value>
+                <fullName>LMBR: La Mer Branded Residence</fullName>
+                <default>false</default>
+                <label>LMBR: La Mer Branded Residence</label>
+            </value>
+            <value>
+                <fullName>MDN: MDN Real Estate</fullName>
+                <default>false</default>
+                <label>MDN: MDN Real Estate</label>
+            </value>
+            <value>
+                <fullName>RR: Remraam</fullName>
+                <default>false</default>
+                <label>RR: Remraam</label>
+            </value>
+            <value>
+                <fullName>MEL: Meraas Estates</fullName>
+                <default>false</default>
+                <label>MEL: Meraas Estates</label>
+            </value>
+            <value>
+                <fullName>1JBR: The One JBR</fullName>
+                <default>false</default>
+                <label>1JBR: The One JBR</label>
+            </value>
+            <value>
+                <fullName>ASIA: Asia Asia</fullName>
+                <default>false</default>
+                <label>ASIA: Asia Asia</label>
+            </value>
+            <value>
+                <fullName>BB: Business Bay</fullName>
+                <default>false</default>
+                <label>BB: Business Bay</label>
+            </value>
+            <value>
+                <fullName>BWL: Blue Waters</fullName>
+                <default>false</default>
+                <label>BWL: Blue Waters</label>
+            </value>
+            <value>
+                <fullName>CD: Creekfront Development</fullName>
+                <default>false</default>
+                <label>CD: Creekfront Development</label>
+            </value>
+            <value>
+                <fullName>CDP: Central Dubai Projects</fullName>
+                <default>false</default>
+                <label>CDP: Central Dubai Projects</label>
+            </value>
+            <value>
+                <fullName>DHRE2BTS: DHRE 2 BTS</fullName>
+                <default>false</default>
+                <label>DHRE2BTS: DHRE 2 BTS</label>
+            </value>
+            <value>
+                <fullName>DL: Dubai Land</fullName>
+                <default>false</default>
+                <label>DL: Dubai Land</label>
+            </value>
+            <value>
+                <fullName>DLR: Dubai Land Residences</fullName>
+                <default>false</default>
+                <label>DLR: Dubai Land Residences</label>
+            </value>
+            <value>
+                <fullName>DP: Dubai Properties</fullName>
+                <default>false</default>
+                <label>DP: Dubai Properties</label>
+            </value>
+            <value>
+                <fullName>DPLB: DPG Landbank</fullName>
+                <default>false</default>
+                <label>DPLB: DPG Landbank</label>
+            </value>
+            <value>
+                <fullName>DW: Dubai Wharf</fullName>
+                <default>false</default>
+                <label>DW: Dubai Wharf</label>
+            </value>
+            <value>
+                <fullName>ER: Estithmaar Realty FZ</fullName>
+                <default>false</default>
+                <label>ER: Estithmaar Realty FZ</label>
+            </value>
+            <value>
+                <fullName>GVL: Global Village</fullName>
+                <default>false</default>
+                <label>GVL: Global Village</label>
+            </value>
+            <value>
+                <fullName>JAH: J A Hills</fullName>
+                <default>false</default>
+                <label>JAH: J A Hills</label>
+            </value>
+            <value>
+                <fullName>JBL: Jumeira Bay</fullName>
+                <default>false</default>
+                <label>JBL: Jumeira Bay</label>
+            </value>
+            <value>
+                <fullName>JCDM: Jumeirah Central Development Management</fullName>
+                <default>false</default>
+                <label>JCDM: Jumeirah Central Development Management</label>
+            </value>
+            <value>
+                <fullName>JHD: Jumeirah Hills Development</fullName>
+                <default>false</default>
+                <label>JHD: Jumeirah Hills Development</label>
+            </value>
+            <value>
+                <fullName>JW: Jaddaf Waterfront</fullName>
+                <default>false</default>
+                <label>JW: Jaddaf Waterfront</label>
+            </value>
+            <value>
+                <fullName>LWN: Liwan</fullName>
+                <default>false</default>
+                <label>LWN: Liwan</label>
+            </value>
+            <value>
+                <fullName>MAK: Manazel Al Khor</fullName>
+                <default>false</default>
+                <label>MAK: Manazel Al Khor</label>
+            </value>
+            <value>
+                <fullName>NDP: North Dubailand Projects</fullName>
+                <default>false</default>
+                <label>NDP: North Dubailand Projects</label>
+            </value>
+            <value>
+                <fullName>ODP: ODP Development</fullName>
+                <default>false</default>
+                <label>ODP: ODP Development</label>
+            </value>
+            <value>
+                <fullName>P1DP: Phase 1 Dubai Park</fullName>
+                <default>false</default>
+                <label>P1DP: Phase 1 Dubai Park</label>
+            </value>
+            <value>
+                <fullName>SD: Sama Dubai</fullName>
+                <default>false</default>
+                <label>SD: Sama Dubai</label>
+            </value>
+            <value>
+                <fullName>SPV2: DP Land SPV 2</fullName>
+                <default>false</default>
+                <label>SPV2: DP Land SPV 2</label>
+            </value>
+            <value>
+                <fullName>TW: Towerside</fullName>
+                <default>false</default>
+                <label>TW: Towerside</label>
+            </value>
+            <value>
+                <fullName>WCE: Water Canal Estates</fullName>
+                <default>false</default>
+                <label>WCE: Water Canal Estates</label>
+            </value>
+            <value>
+                <fullName>MELS: MEL Land SPV</fullName>
+                <default>false</default>
+                <label>MELS: MEL Land SPV</label>
+            </value>
+            <value>
+                <fullName>SPV1: DP Land SPV 1</fullName>
+                <default>false</default>
+                <label>SPV1: DP Land SPV 1</label>
+            </value>
+            <value>
+                <fullName>SPV3: DP Land SPV 3</fullName>
+                <default>false</default>
+                <label>SPV3: DP Land SPV 3</label>
+            </value>
+            <value>
+                <fullName>DLO: Dubailand Oasis</fullName>
+                <default>false</default>
+                <label>DLO: Dubailand Oasis</label>
+            </value>
+            <value>
+                <fullName>LME: La Mer Estates</fullName>
+                <default>false</default>
+                <label>LME: La Mer Estates</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

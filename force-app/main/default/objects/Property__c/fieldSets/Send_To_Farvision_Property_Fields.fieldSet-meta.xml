@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FieldSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Send_To_Farvision_Property_Fields</fullName>
+    <description>This is used in trigger as soon as any of the fields mentioned in this set gets inserted/updated we are sending that record to Farvision.</description>
+    <displayedFields>
+        <field>Building_Name__c</field>
+        <isFieldManaged>false</isFieldManaged>
+        <isRequired>false</isRequired>
+    </displayedFields>
+    <displayedFields>
+        <field>Company__c</field>
+        <isFieldManaged>false</isFieldManaged>
+        <isRequired>false</isRequired>
+    </displayedFields>
+    <label>Send To Farvision Property Fields</label>
+</FieldSet>

@@ -1,0 +1,78 @@
+<apex:page controller="BlockPageController" action="{!BlockPageControllerAction}" docType="html-5.0" lightningStylesheets="true" tabstyle="Product2" standardStylesheets="true">
+    
+    <style type="text/css">
+       .contentStyle { font-size:12px; }
+.buttonStyle { background-color:green; text-align:center; padding-top:10px; }
+.activeTab {background-color: #B7A752; color:white; background-image:none}
+.inactiveTab { background-color: #F3F3EC; color:black; background-image:none}
+.NoRecord { font-size:11px;}
+</style>
+    
+    <script>
+    function showToast(s) {
+			alert(s);
+        }
+    </script>
+    <apex:sectionHeader title="Unit"  subtitle="Block / Hold" />
+    
+    <apex:form id="myForm">  
+        <apex:PageBlock id="PageBlock">		
+            <apex:pageBlockSection columns="1" title="Unit details">
+                <apex:outputText value="{!callfunc}" escape="false"></apex:outputText>
+                <apex:outputField id="ProdName" value="{!prod1.Name}"  />
+                <apex:outputField id="currentProdStatus" value="{!prod1.Unit_Status__c}" label="Current Unit status" />
+            </apex:pageBlockSection>
+             <apex:pageBlockSection columns="1" title="Unit block for Opportunity">
+                <!--<apex:selectList size="1" value="{!prod.Unit_Status__c}"  label="Unit Status"> 
+                    <apex:selectOptions value="{!selectedaccnamefields}"/>  
+                </apex:selectList>-->
+                  <apex:inputField id="Account" value="{!block.Opportunity__c}"  />
+                  <apex:inputField id="Action" value="{!block.Action__c}"  />
+                  <apex:inputField id="ReasonForBlocking" value="{!block.Reason_for_Blocking__c}"  />
+            </apex:pageBlockSection>
+            <center>
+        <apex:commandButton action="{!save}" value="Save" styleClass="buttonStyle" rerender="tstpopup"></apex:commandButton>
+        <apex:commandButton action="{!cancel}" value="Cancel" styleClass="buttonStyle"  immediate="tr	ue"></apex:commandButton>
+                </center> 
+             </apex:PageBlock>    
+        <apex:outputPanel id="tstpopup">
+                                                      <apex:outputPanel styleClass="popupBackground" layout="block" rendered="{!displayPopUp}"/>
+                                                         <apex:outputPanel styleClass="custPopup" layout="block" rendered="{!displayPopUp}">
+                                                             <apex:outputText value="{!Message}"></apex:outputText><br/><br/><br/>
+                                                            <apex:commandButton value="Ok" action="{!cancel}" status="st1" rerender="tstpopup"/>
+                                                         </apex:outputPanel>
+                                                     </apex:outputPanel>
+        <style type="text/css">
+        .custPopup{
+            background-color: white;
+            border-width: 2px;
+            border-style: solid;
+            z-index: 9999;
+            left: 50%;
+            padding:10px;
+            position: absolute;
+            /* These are the 3 css properties you will need to change so the popup
+            displays in the center of the screen. First set the width. Then set
+            margin-left to negative half of what the width is. You can add
+            the height property for a fixed size pop up if you want.*/
+            width: 500px;
+            margin-left: -250px;
+            top:100px;
+        } 
+        .popupBackground{
+            background-color:black;
+            opacity: 0.20;
+            filter: alpha(opacity = 20);
+            position: absolute;
+            width: 100%;
+            height: 120%;
+            top: 0;
+            left: 0;
+            z-index: 9998;
+        }
+        </style>
+    
+    </apex:form>
+    
+   
+</apex:page>

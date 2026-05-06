@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Is_Campaign_Changed__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>This field can be updated only by system administrator. Sometimes admins are getting request to change campaign after an unit is booked. To handle this, please check this checkbox and update the campaign.</description>
+    <label>Is Campaign Changed?</label>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

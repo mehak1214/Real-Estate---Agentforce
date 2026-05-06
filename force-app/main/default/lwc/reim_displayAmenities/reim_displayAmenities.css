@@ -1,0 +1,9 @@
+.reim-amenity .grid-container{
+  display: grid;
+  grid-template-columns: auto auto;
+  background-color: #ffffff;
+  padding: 5px;
+  text-align: left;
+  column-gap: 15px;
+  row-gap: 15px;
+}

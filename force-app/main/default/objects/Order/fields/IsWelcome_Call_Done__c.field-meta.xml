@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>IsWelcome_Call_Done__c</fullName>
+    <defaultValue>false</defaultValue>
+    <label>IsWelcome Call Done</label>
+    <trackHistory>true</trackHistory>
+    <type>Checkbox</type>
+</CustomField>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Validation_Wing_RecordType</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(
+$RecordType.Name = &quot;Wing&quot;,
+ISBLANK( Tower__c )
+)</errorConditionFormula>
+    <errorMessage>Please select a Tower</errorMessage>
+</ValidationRule>

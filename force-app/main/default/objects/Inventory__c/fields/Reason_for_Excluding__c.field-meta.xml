@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Reason_for_Excluding__c</fullName>
+    <label>Reason for Excluding</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Price revision</fullName>
+                <default>false</default>
+                <label>Price revision</label>
+            </value>
+            <value>
+                <fullName>Unit redesign</fullName>
+                <default>false</default>
+                <label>Unit redesign</label>
+            </value>
+            <value>
+                <fullName>Settlements</fullName>
+                <default>false</default>
+                <label>Settlements</label>
+            </value>
+            <value>
+                <fullName>Converted to BTL(Built To Lease)</fullName>
+                <default>false</default>
+                <label>Converted to BTL(Built To Lease)</label>
+            </value>
+            <value>
+                <fullName>Legal Issues</fullName>
+                <default>false</default>
+                <label>Legal Issues</label>
+            </value>
+            <value>
+                <fullName>Swap Case</fullName>
+                <default>false</default>
+                <label>Swap Case</label>
+            </value>
+            <value>
+                <fullName>Show Villa</fullName>
+                <default>false</default>
+                <label>Show Villa</label>
+            </value>
+            <value>
+                <fullName>Managment intruction</fullName>
+                <default>false</default>
+                <label>Managment intruction</label>
+            </value>
+            <value>
+                <fullName>Transferred</fullName>
+                <default>false</default>
+                <label>Transferred</label>
+            </value>
+            <value>
+                <fullName>Utility</fullName>
+                <default>false</default>
+                <label>Utility</label>
+            </value>
+            <value>
+                <fullName>Open Space</fullName>
+                <default>false</default>
+                <label>Open Space</label>
+            </value>
+            <value>
+                <fullName>Roads</fullName>
+                <default>false</default>
+                <label>Roads</label>
+            </value>
+            <value>
+                <fullName>Misc</fullName>
+                <default>false</default>
+                <label>Misc</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,281 @@
+<template>
+
+<div class="portal-background">
+
+<div class="main-container">
+
+    <!-- HEADER -->
+    <div class="header-card">
+        <div class="header-row">
+
+            <div>
+                <div class="header-title">
+                    My Team
+                </div>
+
+                <div class="header-sub">
+                    Manage your agency team members
+                </div>
+            </div>
+
+            <lightning-button
+                label="Add Team Member"
+                variant="brand"
+                onclick={openModal}>
+            </lightning-button>
+
+        </div>
+    </div>
+
+    <!-- TEAM MEMBERS / LAST 10 CASES -->
+<div class="cases-table">
+
+<table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_striped">
+
+<thead>
+<tr>
+<th>Name</th>
+<th>Email</th>
+<th>Stage</th>
+<th>Status</th>
+</tr>
+</thead>
+
+<tbody>
+
+<template for:each={cases} for:item="app">
+
+<tr key={app.Id}>
+
+<td>{app.Name}</td>
+
+<td>{app.Email}</td>
+
+<td>{app.Stage}</td>
+
+<td>{app.Status}</td>
+
+</tr>
+
+</template>
+
+</tbody>
+
+</table>
+
+</div>
+
+
+</div>
+
+
+<!-- MODAL -->
+<template if:true={showModal}>
+
+<section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open custom-modal">
+
+<div class="slds-modal__container">
+
+<!-- HEADER -->
+<header class="slds-modal__header modal-header">
+
+<h2 class="modal-title">Add Team Member</h2>
+
+<button class="close-btn" onclick={closeModal}>
+✕
+</button>
+
+</header>
+
+
+<!-- BODY -->
+<div class="slds-modal__content modal-body">
+
+<!-- STEP 1 : BASIC INFO -->
+<template if:true={isStep1}>
+
+<div class="form-grid">
+
+    <lightning-input
+        label="First Name"
+        name="firstName"
+        required
+        value={firstName}
+        onchange={handleChange}>
+    </lightning-input>
+
+    <lightning-input
+        label="Last Name"
+        name="lastName"
+        required
+        value={lastName}
+        onchange={handleChange}>
+    </lightning-input>
+
+    <lightning-input
+        label="Email"
+        name="email"
+        type="email"
+        required
+        value={email}
+        onchange={handleChange}>
+    </lightning-input>
+
+    <lightning-input
+        label="Phone"
+        name="phone"
+        type="tel"
+        required
+        value={phone}
+        onchange={handleChange}>
+    </lightning-input>
+
+    <lightning-input
+        label="National ID"
+        name="nationalId"
+        required
+        class="full-width"
+        value={nationalId}
+        onchange={handleChange}>
+    </lightning-input>
+
+</div>
+
+</template>
+
+
+<!-- STEP 2 : DOCUMENT UPLOAD -->
+<template if:true={isStep2}>
+
+<div class="documents-section">
+
+    <div class="tab-header">
+        <h2 class="tab-title">
+            <lightning-icon icon-name="utility:document" size="small"></lightning-icon>
+            Legal Documents
+        </h2>
+
+        <p class="tab-description">
+            Upload your legal documents.
+
+            <template if:true={caseId}>
+                <br><strong>Application ID:</strong> {caseId}
+            </template>
+        </p>
+    </div>
+
+    <div class="documents-header">
+
+        <h3 class="section-title">Upload Legal Documents</h3>
+
+        <button
+            type="button"
+            class="btn-add-doc"
+            onclick={addDocumentRow}>
+
+            <lightning-icon icon-name="utility:add" size="x-small"></lightning-icon>
+            Add Another Document
+
+        </button>
+
+    </div>
+
+    <template for:each={documentList} for:item="doc">
+
+        <div key={doc.id} class="document-row">
+
+            <div class="document-row-header">
+
+                <h4>{doc.displayNumber}</h4>
+
+                <button
+                    class="btn-remove-doc"
+                    data-id={doc.id}
+                    onclick={removeDocumentRow}
+                    if:true={doc.showRemove}>
+
+                    <lightning-icon icon-name="utility:delete" size="x-small"></lightning-icon>
+                    Remove
+
+                </button>
+
+            </div>
+
+            <div class="form-group">
+
+                <label class="form-label">
+                    Upload Document (PDF, JPG, PNG)
+                    <span class="required">*</span>
+                </label>
+
+                <input
+                    type="file"
+                    data-id={doc.id}
+                    onchange={handleFileUpload}>
+
+                <div if:true={doc.fileName} class="file-info">
+
+                    <lightning-icon icon-name="utility:attach" size="x-small"></lightning-icon>
+
+                    {doc.fileName}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </template>
+
+</div>
+
+</template>
+
+</div>
+
+
+<!-- FOOTER -->
+<footer class="slds-modal__footer modal-footer">
+
+<lightning-button
+    label="Cancel"
+    class="cancel-btn"
+    onclick={closeModal}>
+</lightning-button>
+
+<lightning-button
+    label="Previous"
+    onclick={handlePrevious}
+    if:true={isStep2}>
+</lightning-button>
+
+<lightning-button
+    label="Next"
+    variant="brand"
+    class="btn-save"
+    onclick={handleNext}
+    if:true={isStep1}>
+</lightning-button>
+
+<lightning-button
+label="Final Submit"
+variant="brand"
+class="btn-save"
+onclick={handleFinalSubmit}
+disabled={disableFinalSubmit}
+if:true={isStep2}>
+</lightning-button>
+
+</footer>
+
+</div>
+
+</section>
+
+<div class="slds-backdrop slds-backdrop_open"></div>
+
+</template>
+
+</div>
+
+</template>

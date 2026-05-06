@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Create_Partial_SR</fullName>
+    <availability>online</availability>
+    <displayType>link</displayType>
+    <linkType>javascript</linkType>
+    <masterLabel>Create Partial SR</masterLabel>
+    <openType>onClickJavaScript</openType>
+    <protected>false</protected>
+    <url>{!REQUIRESCRIPT(&quot;/soap/ajax/33.0/connection.js&quot;)}
+{!REQUIRESCRIPT(&quot;/soap/ajax/33.0/apex.js&quot;)} 
+
+  var bUnit = new sforce.SObject(&quot;Booking_Unit__c&quot;);
+  if(&apos;{!Booking_Unit__c.Booking_Unit_Status__c}&apos; == &apos;Sold&apos;){
+	window.open(&apos;/apex/BUnitCreateSRPage?id={!Booking_Unit__c.Id}&amp;type=partial&apos;,&apos;_self&apos;);
+        /*
+        bUnit.Id = &apos;{!Booking_Unit__c.Id}&apos;;
+	bUnit.Create_Partial_SR__c = true;
+
+	var result = sforce.connection.update([bUnit]);
+	if(result[0].getBoolean(&quot;success&quot;))
+	{
+   		alert(&apos;Partial SR created&apos;);
+   		window.location.reload();
+	}
+	else{
+  		alert(&apos;Error : &apos;+result);
+	}*/
+  }
+  else
+  	alert(&apos;Unit must be marked sold!&apos;);</url>
+</WebLink>

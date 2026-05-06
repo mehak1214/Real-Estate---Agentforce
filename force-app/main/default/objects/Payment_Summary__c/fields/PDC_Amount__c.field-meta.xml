@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>PDC_Amount__c</fullName>
+    <defaultValue>0.0</defaultValue>
+    <description>This field will store PDC Amount corresponding to the PDC installment code selected. This will be integrated from Yardi</description>
+    <label>PDC Amount</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackTrending>false</trackTrending>
+    <type>Currency</type>
+</CustomField>

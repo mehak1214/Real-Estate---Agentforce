@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ESVF_Status__c</fullName>
+    <label>ESVF Status</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>First Visit</fullName>
+                <default>false</default>
+                <label>First Visit</label>
+            </value>
+            <value>
+                <fullName>Re-Visit 1</fullName>
+                <default>false</default>
+                <label>Re-Visit 1</label>
+            </value>
+            <value>
+                <fullName>Re-Visit 2</fullName>
+                <default>false</default>
+                <label>Re-Visit 2</label>
+            </value>
+            <value>
+                <fullName>Re-Visit 3</fullName>
+                <default>false</default>
+                <label>Re-Visit 3</label>
+            </value>
+            <value>
+                <fullName>Re-Visit 4</fullName>
+                <default>false</default>
+                <label>Re-Visit 4</label>
+            </value>
+            <value>
+                <fullName>Re-Visit 5 &amp; More</fullName>
+                <default>false</default>
+                <label>Re-Visit 5 &amp; More</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

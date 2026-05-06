@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Test_Update__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Renamed as Common Area Flag from Test Update. Updated the field label for Nexus Migration</description>
+    <label>Common Area Flag</label>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

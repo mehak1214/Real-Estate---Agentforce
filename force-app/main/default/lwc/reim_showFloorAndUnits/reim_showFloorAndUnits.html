@@ -1,0 +1,90 @@
+<template>
+    <lightning-card slot="actions">
+        <lightning-spinner if:true={isLoading}></lightning-spinner>
+        <div slot="actions" style="margin-right: 8em ;">
+            <lightning-button label="Back" variant="Brand" size="Large" onclick={backTwrPage}
+                style="margin-right: 1em;"></lightning-button>
+            <lightning-button label="Home" variant="Brand" size="Large" onclick={homePage}></lightning-button>
+        </div>
+        <div class="slds-grid slds-grid_vertical-stretch" style="margin-top: 3em;">
+            <div class="slds-col slds-size_3-of-12">
+                <div class="slds-box  filterList ">
+                    <div style="border-bottom: 1px solid #BDCDD6;">
+                        <span style="font-weight:bold;padding-bottom: 10px;"><b>Filter By</b></span>
+                    </div>
+                    <lightning-combobox name="tower" label="Tower" value={value} placeholder={selectedtowerName}
+                        options={towerOptions} onchange={handleTowerChange}></lightning-combobox>
+
+                    <lightning-combobox name="wing" label="Wing" value={selectedWing}
+                        options={wingOptions} onchange={handleWingChange}></lightning-combobox>
+
+                    <lightning-combobox name="unitSize" label="Size Type" value={selectedunitSize}
+                        options={unitSizeOptions} onchange={handleUnitSizeChange}></lightning-combobox>
+
+                    <lightning-combobox name="facing" label="Facing" value={selectedFacing}
+                        options={facingOptions} onchange={handleFacingChange}></lightning-combobox>
+
+                    <lightning-combobox name="vastu" label="Vastu" value={selectedVastu}
+                        options={vastuOptions} onchange={handleVastuChange}></lightning-combobox>
+
+                    <lightning-combobox name="unitStatus" label="Unit Status" value={selectedUnitStatus}
+                         options={unitStatusOptions}
+                        onchange={handleUnitStatusChange}></lightning-combobox>
+                </div>
+            </div>
+
+            <div class="slds-col slds-size_9-of-12">
+                <div class="slds-grid">
+                    <div class="slds-col" style="margin-left: 2em; font-size: large; display: inline-block;">
+                        {selectedtowerName} : Only
+                        {availableUnitsPerTwr} Units Available </div><br />
+                    <div class="slds-grid slds-gutters grid">
+                        <div class="slds-col Available">
+                            <span>Available</span>
+                        </div>
+                        <div class="slds-col Hold">
+                            <span>Hold</span>
+                        </div>
+                        <div class="slds-col Booked">
+                            <span>Booked</span>
+                        </div>
+                        <div class="slds-col Sold">
+                            <span>Sold</span>
+                        </div>
+                        <div class="slds-col Refuge" style="color: white;">
+                            <span>Refuge</span>
+                        </div>
+                    </div>
+                </div>
+                <div style="margin-top: 5em;">
+                    <div class="container reim-floorbg">
+                        <table cellspacing="0" cellpadding="0" class="floor-main-table" align="center">
+                            <template if:true={staticUnitsData}>
+                                <template for:each={staticUnitsData} for:item="mapKey" for:index="index">
+                                    <tr key={mapKey.floorId}>
+                                        <th scope="col">
+                                            <div class="floor custom-box" data-id={mapKey.floorId}
+                                                data-name={mapKey.floorId} onclick={handleFloorClick}>
+                                                Floor {mapKey.floorName}
+                                            </div>
+                                        </th>
+                                        <template for:each={mapKey.units} for:item="unit">
+                                            <td scope="col" key={unit.Id}>
+                                                <div style={unit.Style} class={unit.Unit_Status__c} data-id={unit.Id}
+                                                    onclick={handleUnitClick}>
+                                                    {unit.Unit_Name__c}
+                                                </div>
+                                            </td>
+                                        </template>
+                                    </tr>
+                                </template>
+                            </template>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </lightning-card>
+
+</template>

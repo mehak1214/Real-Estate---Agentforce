@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Order_Type__c</fullName>
+    <description>New Field for Meraas Migration</description>
+    <label>Order Type</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Launch Sales</fullName>
+                <default>false</default>
+                <label>Launch Sales</label>
+            </value>
+            <value>
+                <fullName>Tempo Sales</fullName>
+                <default>false</default>
+                <label>Tempo Sales</label>
+            </value>
+            <value>
+                <fullName>Merging</fullName>
+                <default>false</default>
+                <label>Merging</label>
+            </value>
+            <value>
+                <fullName>Upgrade</fullName>
+                <default>false</default>
+                <label>Upgrade</label>
+            </value>
+            <value>
+                <fullName>Downgrade</fullName>
+                <default>false</default>
+                <label>Downgrade</label>
+            </value>
+            <value>
+                <fullName>Consolidation</fullName>
+                <default>false</default>
+                <label>Consolidation</label>
+            </value>
+            <value>
+                <fullName>Reinstatement</fullName>
+                <default>false</default>
+                <label>Reinstatement</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

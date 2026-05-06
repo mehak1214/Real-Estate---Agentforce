@@ -1,0 +1,26 @@
+<template>
+    <lightning-spinner if:false={amenitiesLst}>
+    </lightning-spinner>
+    <div class="slds-text-heading_large">Amenities</div>
+    <p class="slds-text-heading_small"><lightning-formatted-rich-text value={specificationHeader}></lightning-formatted-rich-text></p>
+    <div class="reim-amenity slds-p-top_medium">
+        <div class="grid-container">
+            <template for:each={amenitiesLst} for:item="Amenity">
+                <div key={Amenity.Id} class="grid-item">
+                    <div class="slds-grid slds-gutters">
+                        <div class="slds-col">
+                            <lightning-formatted-rich-text 
+                            value={Amenity.Amenity_Image__c}
+                            class="amenity-img"></lightning-formatted-rich-text>
+                        </div>
+                        <div class="slds-col slds-m-vertical_small">
+                            <div class="slds-text-title_caps text-bold">{Amenity.Amenity_Title__c}</div>
+                            <p> <lightning-formatted-rich-text value={Amenity.Amenity_Description__c} ></lightning-formatted-rich-text></p>
+                        </div>
+                    </div>
+                            
+                </div>
+            </template>
+    </div>
+</div>
+</template>

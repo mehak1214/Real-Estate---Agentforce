@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Check_Second_Booking</fullName>
+    <active>false</active>
+    <errorConditionFormula>Backend_Second_booking__c = true</errorConditionFormula>
+    <errorMessage>This is a second booking. You cannot create quotes for this Opportunity</errorMessage>
+</ValidationRule>

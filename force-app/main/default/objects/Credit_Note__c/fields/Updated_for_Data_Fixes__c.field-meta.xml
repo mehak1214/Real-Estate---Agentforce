@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Updated_for_Data_Fixes__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Flag will be checked on records Updated for Data Fixes</description>
+    <inlineHelpText>Flag will be checked on records Updated for Data Fixes</inlineHelpText>
+    <label>Updated for Data Fixes</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

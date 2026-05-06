@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Current_residence_ownership__c</fullName>
+    <label>Current residence ownership</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Rented</fullName>
+                <default>false</default>
+                <label>Rented</label>
+            </value>
+            <value>
+                <fullName>Owned</fullName>
+                <default>false</default>
+                <label>Owned</label>
+            </value>
+            <value>
+                <fullName>Parental / Joint family</fullName>
+                <default>false</default>
+                <label>Parental / Joint family</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

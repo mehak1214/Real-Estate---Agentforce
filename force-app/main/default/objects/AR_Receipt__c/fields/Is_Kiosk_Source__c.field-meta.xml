@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Is_Kiosk_Source__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>SFAR-153 : Temporary fix for Vipin&apos;s Kiosk usage report : If the source is Kiosk, this is true.</description>
+    <label>Is Kiosk Source?</label>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

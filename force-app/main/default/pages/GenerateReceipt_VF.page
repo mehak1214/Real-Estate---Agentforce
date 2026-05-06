@@ -1,0 +1,90 @@
+<apex:page standardStylesheets="false" renderAs="pdf" controller="GenerateReceiptController">
+    
+    <body>
+        <div class= "errormsg1">
+            <!-- <apex:pagemessages id="pgmsg"></apex:pagemessages> -->
+            <!--    <apex:outputLabel value="{!errormsg}" id="pgmsg1" escape="false">
+</apex:outputLabel><br/>
+<apex:outputLabel value="{!errormsg2}" id="pgmsg2" escape="false">
+</apex:outputLabel> -->
+        </div>
+        <apex:outputPanel >    
+            <apex:form >
+                <apex:pageBlock >
+                    <div>
+                       
+                        <table style="width:100%;border-collapse: collapse;">
+                            <tr>
+                                <td Style="text-align:left;border:1px solid black;width:75%;height:30px;font-size:13px" colspan="3">&nbsp;Customer Name :&nbsp;{!pList[0].Opportunity__r.Account.Name}</td>
+                                <!-- <td Style="text-align:left;border:1px solid black;width:25%;height:30px;font-size:13px" colspan="1">&nbsp;Invoice No :&nbsp;{!pList[0].Document_Number__c}</td> -->
+                            </tr>
+                            <tr>
+                                <td Style="text-align:left;border:1px solid black;width:25%;height:30px;font-size:13px" colspan="1">&nbsp;Customer Code :&nbsp;</td>
+                                <td Style="text-align:left;border:1px solid black;width:75%;height:30px;font-size:13px" colspan="2">&nbsp;Project :&nbsp;</td>
+                               <!-- <td Style="text-align:left;border:1px solid black;width:33%;height:30px;font-size:13px" colspan="1">&nbsp;Invoice Date :&nbsp;{!pList[0].Demand_Letter_Date__c}</td> -->
+                                <!--   <td Style="text-align:left;border:1px solid black;width:33%;height:30px;font-size:13px" colspan="1">&nbsp;Last date of payment :&nbsp;{!pList[0].Due_Date__c}</td> -->
+                                <!-- <td Style="text-align:left;border:1px solid black;width:33%;height:30px;font-size:13px" colspan="1">&nbsp;Last date of payment :&nbsp;<apex:outputText value="{0,date,dd'/'MM'/'yyyy}"><apex:param value="{!pList[0].Due_Date__c}" /> 
+</apex:outputText></td> -->
+                            </tr>
+                            <tr>
+                                <td Style="text-align:left;border:1px solid black;width:33%;height:30px;font-size:13px" colspan="1">&nbsp;Unit Details :&nbsp;{!pList[0].Opportunity__r.Product_Saleable__r.Material_Code__c}</td>
+                                <td Style="text-align:left;border:1px solid black;width:33%;height:30px;font-size:13px" colspan="1">&nbsp;Tower :&nbsp;{!pList[0].Opportunity__r.Tower__r.Name}</td>
+                                <td Style="text-align:left;border:1px solid black;width:33%;height:30px;font-size:13px" colspan="1">&nbsp;Unit :&nbsp;{!pList[0].Opportunity__r.Product_Saleable__r.Name}</td>
+                            </tr>
+                        </table>
+                        <br/>
+                        
+                        <table style="width:100%;border-collapse: collapse;border:1px">
+                            <tr>
+                                <td Style="text-align:left;border:1px solid black;width:50%;height:30px;font-size:13px">&nbsp;Payment Name: &nbsp;{!plist[0].Name}</td>
+                                <td Style="text-align:left;border:1px solid black;width:50%;height:30px;font-size:13px">&nbsp;Amount: &nbsp;{!plist[0].Amount__c}</td>
+                            </tr>
+                            <tr>
+                                <td Style="text-align:left;border:1px solid black;width:50%;height:30px;font-size:13px">&nbsp;Posting Date:&nbsp;
+                                    <apex:outputText value="{0,date,dd'/'MM'/'yyyy}"><apex:param value="{!plist[0].Posting_Date__c}" /> </apex:outputText>
+                                </td>
+                                <td Style="text-align:left;border:1px solid black;width:50%;height:30px;font-size:13px">&nbsp;Status: &nbsp;{!plist[0].Status__c}</td>
+                            </tr>
+                            <tr>
+                                <td Style="text-align:left;border:1px solid black;width:50%;height:30px;font-size:13px">&nbsp;Assignment:&nbsp;{!plist[0].Assignment__c}</td>
+                                <td Style="text-align:left;border:1px solid black;width:50%;height:30px;font-size:13px">&nbsp;Bank Name:&nbsp;{!plist[0].Bank_Name__c}</td>
+                            </tr>
+                            <tr>
+                                <td Style="text-align:left;border:1px solid black;width:50%;height:30px;font-size:13px">&nbsp;Clearing Document Number:&nbsp;{!plist[0].Clearing_Document_Number__c}</td>
+                                <td Style="text-align:left;border:1px solid black;width:50%;height:30px;font-size:13px">&nbsp;Assignment No: &nbsp;{!plist[0].Cheque_No__c}</td>
+                            </tr>
+                            <tr>
+                                <td Style="text-align:left;border:1px solid black;width:50%;height:30px;font-size:13px">&nbsp;Customer Receipt Number:&nbsp;{!plist[0].Customer_Receipt_Number__c}</td>
+                                <td Style="text-align:left;border:1px solid black;width:50%;height:30px;font-size:13px">&nbsp;Cheque Clearing Date: &nbsp;
+                                    <apex:outputText value="{0,date,dd'/'MM'/'yyyy}"><apex:param value="{!plist[0].Cheque_Clearing_Date__c}" /></apex:outputText>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td Style="text-align:left;border:1px solid black;width:50%;height:30px;font-size:13px">&nbsp;Document Number:&nbsp;{!plist[0].Document_Number__c}</td>
+                                <td Style="text-align:left;border:1px solid black;width:50%;height:30px;font-size:13px">&nbsp;Document Clearing Date: &nbsp;
+                                    <apex:outputText value="{0,date,dd'/'MM'/'yyyy}"><apex:param value="{!plist[0].Document_Clearing_Date__c}"/></apex:outputText>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td Style="text-align:left;border:1px solid black;width:50%;height:30px;font-size:13px">&nbsp;Tax Amount:&nbsp;{!plist[0].Tax_Amount__c}</td>
+                                <td Style="text-align:left;border:1px solid black;width:50%;height:30px;font-size:13px">&nbsp;Tax Code: &nbsp;{!plist[0].Tax_Code__c}</td>
+                            </tr>
+                            <tr>
+                                <td Style="text-align:left;border:1px solid black;width:50%;height:30px;font-size:13px">&nbsp;Sp GL Indicator:&nbsp;{!plist[0].Sp_GL_Indicator__c}</td>
+                                <td Style="text-align:left;border:1px solid black;width:50%;height:30px;font-size:13px">&nbsp;Sp GL Indicator Code: &nbsp;{!plist[0].Sp_GL_Indicator_Code__c}</td>
+                            </tr>
+                            <tr>
+                                <td Style="text-align:left;border:1px solid black;width:50%;height:30px;font-size:13px">&nbsp;Reversal Doc:&nbsp;{!plist[0].Reversal_Doc__c}</td>
+                                <td Style="text-align:left;border:1px solid black;width:50%;height:30px;font-size:13px">&nbsp;Reversal Reason: &nbsp;{!plist[0].Reversal_Reason__c}</td>
+                            </tr>
+                            <tr>
+                                <td Style="text-align:left;border:1px solid black;width:50%;height:30px;font-size:13px">&nbsp;Reversal Reason Code:&nbsp;{!plist[0].Reversal_Reason_Code__c}</td>
+                                <td Style="text-align:left;border:1px solid black;width:50%;height:30px;font-size:13px"></td>
+                            </tr>
+                        </table>
+                    </div>
+                </apex:pageBlock>
+            </apex:form>
+        </apex:outputPanel>  
+    </body>
+</apex:page>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ARC_Exclude_From_Progression__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Exclude inventory from being considered in the ARC progression.</description>
+    <label>Exclude From Progression</label>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

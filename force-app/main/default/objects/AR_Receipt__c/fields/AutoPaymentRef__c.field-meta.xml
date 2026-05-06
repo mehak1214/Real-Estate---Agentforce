@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AutoPaymentRef__c</fullName>
+    <externalId>false</externalId>
+    <formula>IF(CONTAINS(TEXT(Payment_Type__c), &apos;Cash&apos;), &apos;CASH&apos;,
+IF(CONTAINS(TEXT(Payment_Type__c), &apos;Card&apos;), &apos;CARD&apos;,
+IF(CONTAINS(TEXT(Payment_Type__c), &apos;Cheque&apos;), &apos;CHQ&apos;, 
+IF(CONTAINS(TEXT(Payment_Type__c), &apos;Real Connect Payments&apos;), &apos;RCL&apos;, 
+IF(CONTAINS(TEXT(Payment_Type__c), &apos;Payment Links&apos;), &apos;PL&apos;, &apos;&apos;) ) ) ))</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>AutoPaymentRef</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

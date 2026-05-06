@@ -1,0 +1,92 @@
+<template>
+    <div class="form-container">
+        <div class="card">
+            <h1 class="heading">Type of Establishment</h1>
+
+            <div class="options-row">
+                <div class={uaeClass} onclick={handleSelection} data-id="UAE">
+                    <div class="card-header">
+                        <div class="icon-placeholder">
+                            <img src={uaeUrl} alt="UAE">
+                        </div>
+                        <div class="radio-circle">
+                            <div class="radio-dot"></div>
+                        </div>
+                    </div>
+                    <div class="card-label">UAE</div>
+                </div>
+
+                <div class={intlClass} onclick={handleSelection} data-id="International">
+                    <div class="card-header">
+                        <div class="icon-placeholder">
+                            <img src={intUrl} alt="International">
+                        </div>
+                        <div class="radio-circle">
+                            <div class="radio-dot"></div>
+                        </div>
+                    </div>
+                    <div class="card-label">International</div>
+                </div>
+            </div>
+
+            <div class="input-container">
+                <template if:true={isUAE}>
+                    <label class="field-label">Trade License Number</label>
+                    <input
+                        type="text"
+                        class="input-field"
+                        placeholder="Enter Trade License Number"
+                        data-field="uaeLicense"
+                        value={uaeLicense}
+                        onchange={handleInputChange}>
+                </template>
+
+                <template if:false={isUAE}>
+                    <label class="field-label">
+                        Commercial License Number<span class="required">*</span>
+                    </label>
+
+                    <div class="dual-input">
+                        <div class="select-wrapper">
+                            <lightning-combobox
+                                key={comboKey}
+                                class="input-field select-field"
+                                data-field="country"
+                                placeholder="Country"
+                                value={country}
+                                options={countryOptions}
+                                onchange={handleInputChange}
+                                variant="label-hidden">
+                            </lightning-combobox>
+                        </div>
+
+                        <input
+                            type="text"
+                            class="input-field"
+                            placeholder="Enter Number"
+                            data-field="intlLicense"
+                            value={intlLicense}
+                            onchange={handleInputChange}>
+                    </div>
+                </template>
+            </div>
+
+            <template if:true={errorMessage}>
+                <div class="error-container">
+                    {errorMessage}
+                </div>
+            </template>
+
+            <button
+                class="next-button"
+                onclick={handleRegister}>
+                Next
+            </button>
+
+            <div class="footer">
+                <span style="color: black;">Have an Account? </span>
+                <a href="#" class="login-link">Partner Login</a>
+            </div>
+        </div>
+    </div>
+</template>

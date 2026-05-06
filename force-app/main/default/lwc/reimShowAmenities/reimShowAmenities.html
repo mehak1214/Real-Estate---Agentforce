@@ -1,0 +1,23 @@
+<template>
+   
+   <lightning-card>
+    <div class="Amenity">
+        <div class="slds-text-heading_large">Amenities</div>
+        <div class="slds-text-heading_small">Enjoy perfect Combination of Indoor and Outdoor.</div>
+        <table>
+            <tbody>
+                <template for:each={amenitiesLst} for:item="Amenity">
+                    
+                    <tr key={Amenity.Id}>
+                        <td>{Amenity.Amenity_Title__c}</td>
+                        <td>
+                            <lightning-formatted-rich-text value={Amenity.Amenity_Description__c}></lightning-formatted-rich-text>
+                        </td>
+                    </tr>
+                </template>
+            </tbody>
+        </table>
+
+    </div>
+   </lightning-card>
+</template>

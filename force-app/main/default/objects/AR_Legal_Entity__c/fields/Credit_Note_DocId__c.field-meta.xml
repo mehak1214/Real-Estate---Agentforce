@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Credit_Note_DocId__c</fullName>
+    <externalId>false</externalId>
+    <formula>IF(CONTAINS( Operating_Unit__r.Name,&apos;Meraas&apos;),
+&apos;a0CTX00000XxW7q&apos;,
+IF(CONTAINS(Operating_Unit__r.Name,&apos;Shamal&apos;),
+&apos;a0CTX00000XxW7q&apos;,
+IF(CONTAINS(Operating_Unit__r.Name,&apos;Nakheel&apos;),
+&apos;a0CTX00001DwuVs&apos;,
+IF(CONTAINS(Operating_Unit__r.Name,&apos;Meydan&apos;),
+&apos;a0CTX00001hz5Kr&apos;,
+IF(CONTAINS(Operating_Unit__r.Name,&apos;District One&apos;),
+&apos;a0CTX00001hz5Kr&apos;,
+IF(CONTAINS(Operating_Unit__r.Name,&apos;DPG&apos;),
+&apos;a0CTX00000XxjMg&apos;,
+IF(CONTAINS(Operating_Unit__r.Name,&apos;DHRE&apos;),&apos;a0CTX00000XxW0x&apos;,&apos;&apos;)
+))))))</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Credit Note DocId</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GlobalValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customValue>
+        <fullName>Financial_Transaction_Action_Type</fullName>
+        <default>false</default>
+        <label>Financial_Transaction_Action_Type</label>
+    </customValue>
+    <customValue>
+        <fullName>Test</fullName>
+        <default>false</default>
+        <label>Test</label>
+    </customValue>
+    <masterLabel>Financial_Transaction_Action_Type</masterLabel>
+    <sorted>false</sorted>
+</GlobalValueSet>

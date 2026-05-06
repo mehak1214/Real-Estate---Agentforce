@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Reversal_Type__c</fullName>
+    <defaultValue>&apos;Not Reversed&apos;</defaultValue>
+    <description>To store the reversal type</description>
+    <label>Reversal Type</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Complete Reversal</fullName>
+                <default>false</default>
+                <label>Complete Reversal</label>
+            </value>
+            <value>
+                <fullName>Partial Reversal</fullName>
+                <default>false</default>
+                <label>Partial Reversal</label>
+            </value>
+            <value>
+                <fullName>Not Reversed</fullName>
+                <default>true</default>
+                <label>Not Reversed</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

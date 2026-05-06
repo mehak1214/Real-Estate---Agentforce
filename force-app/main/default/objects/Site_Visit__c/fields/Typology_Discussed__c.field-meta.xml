@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Typology_Discussed__c</fullName>
+    <label>Typology Discussed</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>3 BHK</fullName>
+                <default>false</default>
+                <label>3 BHK</label>
+            </value>
+            <value>
+                <fullName>4 BHK</fullName>
+                <default>false</default>
+                <label>4 BHK</label>
+            </value>
+            <value>
+                <fullName>Eden</fullName>
+                <default>false</default>
+                <label>Eden</label>
+            </value>
+            <value>
+                <fullName>Eden Jodi</fullName>
+                <default>false</default>
+                <label>Eden Jodi</label>
+            </value>
+            <value>
+                <fullName>Haven</fullName>
+                <default>false</default>
+                <label>Haven</label>
+            </value>
+            <value>
+                <fullName>Haven Jodi</fullName>
+                <default>false</default>
+                <label>Haven Jodi</label>
+            </value>
+            <value>
+                <fullName>Haven with Balcony</fullName>
+                <default>false</default>
+                <label>Haven with Balcony</label>
+            </value>
+            <value>
+                <fullName>Nest</fullName>
+                <default>false</default>
+                <label>Nest</label>
+            </value>
+            <value>
+                <fullName>Nest &amp; Haven Jodi</fullName>
+                <default>false</default>
+                <label>Nest &amp; Haven Jodi</label>
+            </value>
+            <value>
+                <fullName>Nest Jodi</fullName>
+                <default>false</default>
+                <label>Nest Jodi</label>
+            </value>
+            <value>
+                <fullName>UNO</fullName>
+                <default>false</default>
+                <label>UNO</label>
+            </value>
+            <value>
+                <fullName>UNO Jodi</fullName>
+                <default>false</default>
+                <label>UNO Jodi</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

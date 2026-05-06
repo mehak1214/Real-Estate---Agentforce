@@ -1,0 +1,91 @@
+<template>
+
+<section role="dialog" class="slds-modal slds-fade-in-open custom-modal">
+
+<div class="slds-modal__container">
+
+    <!-- HEADER -->
+    <header class="modal-header">
+        <h2>Create Lead</h2>
+
+        <button class="close-btn" onclick={closeModal}>
+            ✕
+        </button>
+    </header>
+
+    <!-- BODY -->
+    <div class="modal-body">
+
+        <div class="form-grid">
+
+            <div class="form-field">
+                <lightning-input 
+                    label="First Name"
+                    data-field="FirstName">
+                </lightning-input>
+            </div>
+
+            <div class="form-field">
+                <lightning-input 
+                    label="Last Name" 
+                    data-field="LastName">
+                </lightning-input>
+            </div>
+
+            <div class="form-field">
+                <lightning-input 
+                    label="Email"
+                    data-field="Email">
+                </lightning-input>
+            </div>
+
+            <div class="form-field">
+                <lightning-input 
+                    label="Phone"
+                    data-field="Phone">
+                </lightning-input>
+            </div>
+
+            <div class="form-field">
+                <lightning-input 
+                    label="Purchaser"
+                    data-field="Purchaser__c">
+                </lightning-input>
+            </div>
+
+            <div class="form-field">
+                <lightning-input 
+                    label="Type of Interest"
+                    data-field="Type_of_Interest__c">
+                </lightning-input>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="modal-footer">
+
+        <lightning-button 
+            label="Cancel"
+            class="cancel-btn"
+            onclick={closeModal}>
+        </lightning-button>
+
+        <lightning-button 
+            label="Save Lead"
+            variant="brand"
+            class="submit-btn"
+            onclick={saveLead}>
+        </lightning-button>
+
+    </footer>
+
+</div>
+
+</section>
+
+<div class="slds-backdrop slds-backdrop_open"></div>
+
+</template>

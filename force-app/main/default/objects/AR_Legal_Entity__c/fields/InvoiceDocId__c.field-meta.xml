@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>InvoiceDocId__c</fullName>
+    <externalId>false</externalId>
+    <formula>IF(CONTAINS( Operating_Unit__r.Name,&apos;Meraas&apos;),
+&apos;a0CTX0000052ndI&apos;,
+IF(CONTAINS(Operating_Unit__r.Name,&apos;Shamal&apos;),
+&apos;a0CTX0000052ndI&apos;,
+IF(CONTAINS(Operating_Unit__r.Name,&apos;Nakheel&apos;),
+&apos;a0CTX00001Dx6sx&apos;,
+IF(CONTAINS(Operating_Unit__r.Name,&apos;Meydan&apos;),
+&apos;a0CTX00001hz00a&apos;,
+IF(CONTAINS(Operating_Unit__r.Name,&apos;District One&apos;),
+&apos;a0CTX00001hz00a&apos;,
+IF(CONTAINS(Operating_Unit__r.Name,&apos;Limitless&apos;),
+&apos;a0CTX00001ygPq9&apos;,
+IF(CONTAINS(Operating_Unit__r.Name,&apos;DPG BTS&apos;),
+&apos;a0CTX0000052mcx&apos;,
+IF(CONTAINS(Operating_Unit__r.Name,&apos;DPG Land&apos;),
+&apos;a0CTX00000aWONf&apos;,
+IF(CONTAINS(Operating_Unit__r.Name,&apos;DHRE&apos;),&apos;a0CTX0000052rGn&apos;,&apos;&apos;)
+))))))))</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>InvoiceDocId</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

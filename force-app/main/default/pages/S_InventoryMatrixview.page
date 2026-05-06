@@ -1,0 +1,674 @@
+<apex:page showHeader="false" sidebar="false" controller="S_InventoryMatrix" docType="html-5.0" >
+    <html>
+        <head>
+            <title>Inventory Module | Stetig Consulting</title>
+            <!--fonts-->
+            <link href='http://fonts.googleapis.com/css?family=Francois+One' rel='stylesheet' type='text/css'/>
+            <link href='http://fonts.googleapis.com/css?family=Cabin:400,500,600,700' rel='stylesheet' type='text/css'/>
+            <link href='http://fonts.googleapis.com/css?family=Audiowide' rel='stylesheet' type='text/css'/>
+           <!-- <link href='https://github.com/salesforce-ux/design-system.git' rel='stylesheet' type='text/css'/>-->
+            <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+            <link href="{!$Resource.bootstrap}" rel="stylesheet" type="text/css" media="all" />
+            <link href="{!$Resource.style}" rel="stylesheet" type="text/css" media="all" />
+            <!-- for-mobile-apps -->
+            <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+            <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+            <meta name="keywords" content="soccer Responsive web template, Bootstrap Web Templates, Flat Web Templates, Andriod Compatible web template, 
+                    Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyErricsson, Motorola web design" />
+            <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+            <!-- //for-mobile-apps  -->
+            <!-- js -->
+            <script src="{!$Resource.JQuery1}"></script>
+            <!-- js -->
+            <script type="text/javascript">
+                    $(document).ready(function(){
+                    //alert('Hii');
+                    //  $("#table_id td:contains('Open')").css('background-color','#66FF66');
+                    $("#table_id td:contains('Available')").css('background-color','#66FF66');
+                    $("#table_id td:contains('Sold')").css('background-color','#e60000');
+                    $("#table_id td:contains('Booked')").css('background-color','#0066CC');
+                    $("#table_id td:contains('Hold')").css('background-color','#bf8040'); 
+                    $("#table_id td:contains('Management Blocked')").css('background-color','#666600');
+                    $("#table_id td:contains('Partner Share')").css('background-color','#0066CC');
+                    $("#table_id td:contains('Blocked by Mgmt')").css('background-color','#FFFF00');
+                    $("#table_id td:contains('Blocked by Sales Head')").css('background-color','#ff8400');
+                    $("#table_id td:contains('Refuge')").css('background-color','#969696');
+                    $("#table_id td:contains('Cancelled Unit- AFS')").css('background-color','#49a5a5');
+                    
+                    $("#table_id td:contains('To be Released')").css('background-color','#f283ff'); // OLD Color Code:  #FFFF00
+                    $("#table_id td:contains('Under Cancellation')").css('background-color','#ff0091');// OLD Color Code:  #4682B4
+                    $("#table_id td:contains('Shifting /Cancellation in Process')").css('background-color','#FF9933');
+                }); 
+            
+            
+            </script>
+            <script>
+                       
+           
+            
+          
+            </script>
+            
+            
+            <script>
+            var optyid =  "{!$CurrentPage.parameters.oppid}";
+            var projectId=  "{!$CurrentPage.parameters.optyProject}";   
+            
+            </script>
+            <style type="text/css">                
+                .SlectBox{font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;color:#444;font-size:13px;}
+                .SlectBox p,div,ul,li{padding:0px; margin:0px;}
+            </style>
+            <style>
+                
+               .resultstable3, table {                
+                //width:50%;
+                margin: 0 auto; 
+                table-layout: fixed;
+                }
+
+               .resultstable3 th{
+                text-align: left;
+                background-color : #F8F8F8  ;
+                border: 1px solid black;
+                left: 0;
+                width: 50px !important;
+                }
+                
+               .resultstable3 td {
+                border: 1px solid white;                
+                overflow: hidden;
+                }                
+                .resultstable table { 
+    //width: 100%;
+    cellpadding:0px;
+    background : white;
+    border:3px solid white;
+    border-spacing: 0px;
+    border-collapse: separate;
+    font-size: 1em;
+                /* margin-left:auto;
+                margin-right:auto;*/
+    
+}
+.resultstable td{
+    padding: 2px;
+    border:2px solid white;
+    cursor: pointer;
+}
+                
+                /*   .resultstable,table { 
+                //width: 100%;
+                cellpadding:0px;
+                background : white;
+                border:5px solid white;
+                border-spacing: 0px;
+                border-collapse: separate;
+                font-size: 1em;
+                margin-left:auto;
+                margin-right:auto;                
+                }*/
+                .resultstable th{
+                text-align: left;
+            
+                border: 1px solid black;
+                left: 0;
+                width: 15px !important;
+                z-index: 999;
+                background: #fff !important;
+                }
+                /* .resultstable td{
+                padding: 3px;
+                border:2px solid white;
+                width: 10px !important;
+                cursor: pointer;
+                }*/
+                
+                .resultstable1,table { 
+                /* //width: 100%;*/
+                cellpadding:0px;
+                table-layout: fixed;
+                background : white;
+                border:3px solid white;
+                border-spacing: 0px;
+                border-collapse: separate;
+                font-size: 1em;
+                /*margin-left:auto;
+                margin-right:auto;*/
+                
+                }
+                .resultstable1 th{
+                text-align: left;
+                position: sticky;
+                border: 1px solid black;
+                left: 0;
+                width: 15px !important;
+                background: #fff !important;
+                }
+                .resultstable1 td{
+                padding: 3px;
+                border:2px solid white;
+                width: 1px !important;
+                cursor: pointer;
+                }
+                
+                
+                .abc input
+                { 
+                background : white;
+                }
+                .xyz
+                { 
+                display: none;
+                }
+                .abc , span{
+                
+                margin-right:1%;
+                }
+                
+                .divbutton{
+                height: 75px;
+                border-right-width: 80px;  
+                }
+                .Sold{
+                background-color : #e60000;
+                color : #e60000;
+                }
+                .Available{
+                background-color : #66FF66;
+                }
+                .Booked{
+                background-color : #0066CC;
+                }
+                .Hold{
+                background-color : #bf8040;
+                }
+                .Management Blocked{
+                background-color : #666600;
+                }
+                .Refuge{
+                background-color : #404040;
+                }
+                .Welcome {
+                background-color : #ff8400;
+                }
+                .CRM {
+                background-color : #FF9933;
+                }
+                
+            </style>
+            <style>
+                .towerdisplay table,td,tr,th {
+                align:center; 
+                color: black; 
+                padding : 10px;
+                border: 1px solid black;
+                }
+                .towerdisplay table{
+                width:50%;
+                margin: auto auto;
+                }
+                
+                #buttonBlock input{
+                display:none;
+                }
+                #bold_cell1:hover #buttonBlock input{
+                display:block;
+                }
+            </style>
+            
+           <script>
+            
+            function myFunction(s) {
+                var x = document.getElementById(s);
+                if (x.style.visibility === "hidden" /*x.style.display === "none"*/) {
+                     x.style.visibility= "visible";
+                    // x.style.display = "block";
+                } else {
+                      x.style.visibility= "hidden";
+                    //x.style.display = "none";
+                }
+            }
+            function myFunctionMouseOut(s) {
+                var x = document.getElementById(s);
+                if (x.style.display === "block") {
+                    x.style.display = "none";
+                } 
+            }
+            
+            </script>
+            <!--show buttons on hover -->
+            <script>
+            function calc()
+            { 
+                //alert('hi in calc');
+                $("#table_id td:contains('Sold')").css('background-color','#e60000');
+                $("#table_id td:contains('Booked')").css('background-color','#0066CC');
+                $("#table_id td:contains('Available')").css('background-color','#66FF66');  
+                $("#table_id td:contains('Hold')").css('background-color','#bf8040'); 
+                $("#table_id td:contains('Management Blocked')").css('background-color','#0066CC');
+                $("#table_id td:contains('Partner Share')").css('background-color','#0066CC');
+                $("#table_id td:contains('Blocked w/o Token')").css('background-color','#FFFF00');
+                $("#table_id td:contains('Refuge')").css('background-color','#404040');
+                $("#table_id td:contains('Podium')").css('background-color','#91A0A0');
+                $("#table_id td:contains('Floor')").css('background-color','#F4A460');
+                $("#table_id td:contains('Welcome Call Pending')").css('background-color','#ff8400'); 
+                $("#table_id td:contains('BIP - RM Verification')").css('background-color','#0066CC'); 
+                $("#table_id td:contains('Shifting /Cancellation in Process')").css('background-color','#FF9933');                                                                                                        
+            }
+                
+          
+            
+            </script>
+            <style>
+                      span.circle {
+                                 /* background: #ff9999;   */  /*#e3e3e3;*/
+                        border-radius: 50%;
+                        -moz-border-radius: 50%;
+                        -webkit-border-radius: 50%;
+                        color: #000000;
+                        display: inline-block;
+                          text-align: center;
+                                 margin-left: auto;
+                  margin-right: auto;
+                        font-weight: bold;
+                        line-height: 40px;
+                       align-items: center;
+                        width: 40px;
+                      }
+                                 
+                                  span.circle1 {
+                           background: #e3e3e3;
+                        border-radius: 50%;
+                        -moz-border-radius: 50%;
+                        -webkit-border-radius: 50%;
+                        color: #000000;
+                        display: inline-block;
+                          text-align: center;
+                                 margin-left: auto;
+                  margin-right: auto;
+                        font-weight: bold;
+                        line-height: 80px;
+                       align-items: center;
+                        width: 80px;
+                      }
+                p.ex1 { display: inline;}
+                
+                tabletd{
+                width : 11% !important;
+                table-layout: fixed !important; 
+                width: 200px !important; 
+                align-text:center !important;
+                
+                }
+                .btn {
+                //display:inline-block;
+                // padding:1px;
+                /* margin-bottom:0;
+                font-size:14px;
+                font-weight:400;
+                line-height:1.42857143;
+                text-align:center;
+                white-space:nowrap;
+                vertical-align:middle;
+                -ms-touch-action:manipulation;
+                touch-action:manipulation;
+                cursor:pointer;-webkit-user-select:none;*/
+                }
+                
+                .tableDash{
+                min-height : 15px;
+                }
+               
+</style>
+        </head>
+        <body>
+            <a href="/home/home.jsp">
+                <img src="{!$Resource.Home}" style="float:left; width:8%; height:8%;"/>
+            </a>   
+            &nbsp; &nbsp; &nbsp;
+            
+            <apex:form rendered="{!If(selectedTower !=null,true,false)}">
+                <a href="/apex/S_InventoryMatrixview">
+                    <img src="{!$Resource.newback}" style="float:right; width:8%; height:8%;"/>
+                </a>
+            </apex:form>
+            <img src="{!$Resource.InventoryLengendNew}" style="float:right; width:50%;"/>
+            <br/>
+            <br/>
+            <div style="float:right"></div>
+            <br/>
+            <script>
+            function test(s)
+            {
+                alert('s :: '+s);
+                // document.getElementById(s).style.display='block';
+            }
+            
+            $("span.menu").click(function(){
+                $(".top-menu ul").slideToggle("slow" , function(){
+                });
+            });
+            </script>
+            <script src="{!$Resource.jquery2}"></script>
+            <script>
+                $(function () {
+                    $("#slider").responsiveSlides({
+                        auto: true,
+                        speed: 300,
+                        timeout: 10000,
+                        manualControls: '#slider3-pager',
+                    });
+                });
+            </script>
+            <!-- //banner -->
+            <!-- //content-bottom -->
+            <div class="error">
+                <div class="container">
+                    <div align="center" class="error-main" style="font-size:1em;">
+                        <!--class="error-main"-->
+                        <apex:form id="formid">
+                            <!--  <div align="center" style="font-size:1em;"><apex:selectList id="abc2" value="{!SelectedProjectId}" size="1"><apex:selectOptions value="{!getClients}" /><apex:actionSupport event="onchange"><apex:param name="SelectedProjectId" value="{!getClients}" assignTo="{!SelectedProjectId}"/></apex:actionSupport></apex:selectList></div><br></br>-->
+                            <apex:selectList id="abc" value="{!selectedVal}" size="1">
+                                <apex:selectOptions value="{!getProjects}" />
+                                <apex:actionSupport event="onchange"  >
+                                    <apex:param name="selectedVal" value="{!getProjects}" assignTo="{!selectedVal}" />
+                                </apex:actionSupport>
+                            </apex:selectList>
+                            &nbsp;
+                               
+                            
+                            <apex:selectList id="def" value="{!selectedTower}" size="1">
+                                <apex:selectOptions value="{!getTowers}" />
+                                <apex:actionSupport event="onchange" >
+                                    <apex:param name="selectedTower" value="{!getTowers}" assignTo="{!selectedTower}"/>
+                                </apex:actionSupport>
+                            </apex:selectList>
+                              &nbsp;
+                            <apex:selectList id="abc2" value="{!selectedFloorBand}" size="1">
+                                    <apex:selectOptions value="{!getFloorBands}" />
+                                <apex:actionSupport event="onchange" >
+                                    <apex:param name="selectedFloorBand" value="{!getFloorBands}" assignTo="{!selectedFloorBand}"/>
+                                </apex:actionSupport>
+                            </apex:selectList>         
+                              &nbsp;
+                            <apex:commandButton styleClass="btn-primary btn-lg" value="View / Hide Dashboard" action="{!ShowDashboard}" reRender="ChartDetails"  />
+                            
+                            <div class="abc">
+                                <span>
+                                    <input class="xyz" type="checkbox" id="1bhk" value="{!onebhk}" checked="true" onchange="calc();"/>
+                                </span>
+                                <span>
+                                    <input class="xyz" type="checkbox" id="2bhk" value="{!twobhk}" checked="true" onchange="calc();"/>
+                                </span>
+                                <span>
+                                    <input class="xyz" type="checkbox" id="3bhk" value="{!threebhk}" checked="true" onchange="calc();"/>
+                                </span>
+                                <span>
+                                    <input class="xyz" type="checkbox" id="4bhk" value="{!fourbhk}" checked="true" onchange="calc();"/>
+                                </span>
+                            </div>
+                            <br/>
+                        </apex:form>
+                    </div>
+                </div>
+               
+                <!--Facet Loading cycle Starts Here--->
+                <apex:actionStatus id="st1">
+                    <apex:facet name="start">
+                        <div class="fadeMe"> &nbsp; </div>
+                        <div style="position: fixed ; left: 0; top: 0; bottom: 0; right: 0; z-index: 1;background-color: rgba(178, 180, 184, 0.4);;">
+                            <div style="margin: 17% 44%;">
+                                <img src="{!$Resource.car}" style="width:150px;" />
+                                <span style="padding:5px 10px;z-index: -1001;font-size:16px;color:#333;position: relative;bottom: 45px;left: 23px;">Please Wait...</span>
+                            </div>
+                        </div>
+                    </apex:facet>
+                </apex:actionStatus>
+                
+              <apex:outputPanel id="ChartDetails">
+              <apex:outputPanel Id="Chart" title="Inventory Summary" rendered="{!isRendered}" onmouseover=""> 
+                 
+                  <apex:pageBlock >
+                      <apex:form ><center><p style="font-size: 15px;">Inventory Summary</p></center>
+                         <!-- <apex:commandButton style="margin-left: 15px;" value="Refresh Dashboard"  reRender="ChartDetails"  />
+                  {!getfilter}-->
+                          
+                           
+                          
+                 <apex:pageBlockSection columns="2" >
+                         <!-- <analytics:reportChart reportId="00ON00000019ktdMAA" size="small"  
+                                             filter="{!getfilter}" showRefreshButton="false" cacheResults="false" />        <!--filter="[{column:'Product2.Project__c',operator:'equals',value:'{!selectedVal}'}]"    filter="{!serialiseString}" --> 
+                             <!--  <analytics:reportChart reportId="00ON0000001G1dsMAC" size="small"
+                                             filter="{!getfilter}" showRefreshButton="false" cacheResults="false" />
+                     <analytics:reportChart reportId="00ON0000001G1eRMAS" size="small"  
+                                             filter="{!getfilter}" showRefreshButton="false" cacheResults="false" /> -->
+<apex:pageblocksectionitem >
+                     <table   style="text-align: center !important;" >
+                          <tr style="text-align: center !important;"  >
+                              <th style="align-text:center !important;min-width:150px;"><center>Status</center></th>
+                              <th style="align-text:center !important;min-width:80px;"><center>Unit</center></th>
+                              <th style="align-text:center !important;min-width:80px;"><center>SQFT</center></th>
+                              <th style="align-text:center !important;min-width:80px;"><center>SQM</center></th>
+                         </tr>
+                      <tr >
+                      <td style="background-color:#f283ff;align-text:center !important; " class="tabletd">To be Released</td>
+                           <td style="background-color:#f283ff">{!To_be_Released}</td>
+                          <td style="background-color:#f283ff">{!To_be_Releasedsqft}</td>
+                          <td style="background-color:#f283ff">{!To_be_Releasedsqm}</td>
+                         </tr>
+                         <tr>
+                               <td  style="background-color:#66FF66;align-text:center !important; " class="tabletd">Available for Sale</td>
+                             <td style="background-color:#66FF66;min-width:75 !important;">{!Available_for_Sale}</td>
+                             <td style="background-color:#66FF66;min-width:75;">{!Available_for_Salesqft}</td>
+                          <td style="background-color:#66FF66;min-width:75px;">{!Available_for_Salesqm}</td>
+                         </tr>
+                         <tr>
+                          <td style="background-color:#FFFF00;align-text:center !important; " class="tabletd">Blocked by Mgmt</td> 
+                               <td style="background-color:#FFFF00">{!Blocked_by_Mgmt}</td> 
+                             <td style="background-color:#FFFF00">{!Blocked_by_Mgmtsqft}</td>
+                          <td style="background-color:#FFFF00">{!Blocked_by_Mgmtsqm}</td>
+                         </tr>
+                          <tr>
+                         <td style="background-color:#ff8400;align-text:center !important; " class="tabletd">Blocked by Sales Head</td>
+                              <td style="background-color:#ff8400">{!Blocked_by_Sales_Head}</td>
+                               <td style="background-color:#ff8400">{!Blocked_by_Sales_Headsqft}</td>
+                          <td style="background-color:#ff8400">{!Blocked_by_Sales_Headsqm}</td>
+                         </tr>
+                          	<tr>
+                          <td style="background-color:#969696;align-text:center !important; "  class="tabletd">Refuge</td>
+                                 <td style="background-color:#969696">{!Refuge}</td>
+                                  <td style="background-color:#969696">{!Refugesqft}</td>
+                          <td style="background-color:#969696">{!Refugesqm}</td>
+                         </tr>
+                          <tr>
+                               <td style="background-color:#e60000;align-text:center !important; " class="tabletd">Sold_status</td>
+                           <td style="background-color:#e60000">{!Sold_status}</td>
+                                <td style="background-color:#e60000">{!Sold_statussqft}</td>
+                          <td style="background-color:#e60000">{!Sold_statussqm}</td>
+                         </tr>
+                          <tr>
+                              <td style="background-color:#49a5a5;align-text:center !important; " class="tabletd">Cancellation Available for Use</td>
+                               <td style="background-color:#49a5a5">{!Cancellation_Available_for_Use}</td>
+                              <td style="background-color:#49a5a5">{!Cancellation_Available_for_Usesqft}</td>
+                          <td style="background-color:#49a5a5">{!Cancellation_Available_for_Usesqm}</td>
+                         </tr>
+                           <tr>
+                          <td style="background-color:#ff0091;align-text:center !important; " class="tabletd">Under Cancellation</td>
+                                <td style="background-color:#ff0091">{!Under_Cancellation}</td>
+                                <td style="background-color:#ff0091">{!Under_Cancellationsqft}</td>
+                          <td style="background-color:#ff0091">{!Under_Cancellationsqm}</td>
+                         </tr>
+                          <tr>
+							 <td style="background-color:#bf8040;align-text:center !important; " class="tabletd">Hold</td>  
+                               <td style="background-color:#bf8040">{!Hold}</td>
+                               <td style="background-color:#bf8040">{!Holdsqft}</td>
+                          <td style="background-color:#bf8040">{!Holdsqm}</td>
+                         </tr>
+                           <tr style="text-align: center !important;background-color:#f2f2f2;">
+							 <th ><center>Total</center></th>  
+                               <th ><center>{!totalUnit}</center></th>
+                               <th ><center>{!totalsqft}</center></th>
+                          <th ><center>{!totalsqmt}</center></th>
+                         </tr>
+                       
+                      </table>
+                     </apex:pageblocksectionitem>
+                     <apex:pageblocksectionitem >
+                         
+                         <table  style="text-align:center;border: 1px solid white;">
+                             <tr > 
+                                 <th rowspan="7" style="text-align:center;vertical-align: middle;background-color:#ccccff;"> Haven</th> 
+                                     <tr>
+                                         <th style="background-color:#09FAF6;">Band</th>
+                                         <th style="background-color:#66FF66">Open</th>
+                                         <th style="background-color:#FFFF00">Blocked</th>
+                                         <th style="background-color:#e60000">Sold</th>
+                             		</tr>
+                                     <tr>
+                                         <td style="background-color:#09FAF6;">1-10</td>
+                             			<td style="background-color:#66FF66">{!Haven_open_1_to_10}</td>
+                                         <td style="background-color:#FFFF00">{!Haven_NA_1_to_10}</td>
+                                         <td style="background-color:#e60000">{!Haven_Sold_1_to_10}</td>
+                             		</tr>
+                                     <tr>
+                                         <td style="background-color:#09FAF6;">11-20</td>
+                             			<td style="background-color:#66FF66">{!Haven_open_11_to_20}</td>
+                                         <td style="background-color:#FFFF00">{!Haven_NA_11_to_20}</td>
+                                         <td style="background-color:#e60000">{!Haven_Sold_11_to_20}</td>
+                             		</tr>
+                                     <tr>
+                                         <td style="background-color:#09FAF6;">21-30</td>
+                             			<td style="background-color:#66FF66">{!Haven_open_21_to_30}</td>
+                                         <td style="background-color:#FFFF00">{!Haven_NA_21_to_30}</td>
+                                         <td style="background-color:#e60000">{!Haven_Sold_21_to_30}</td>
+                             		</tr>
+                             		<tr>
+                                         <td style="background-color:#09FAF6;">31+</td>
+                             			<td style="background-color:#66FF66">{!Haven_open_31_plus}</td>
+                                         <td style="background-color:#FFFF00">{!Haven_NA_31_plus}</td>
+                                         <td style="background-color:#e60000">{!Haven_Sold_31_plus}</td>
+                             		</tr>
+                              <tr>
+                                 <td style="background-color: #d9d9d9;">Sub Total</td>
+                                 <td style="background-color:#66FF66">{!Haven_Total_Open} </td>
+                                 <td style="background-color:#FFFF00">{!Haven_NA_Open} </td>
+                                 <td style="background-color:#e60000">{!Haven_Sold_Open }</td>
+                             </tr>
+                             
+                             <th rowspan="7"  style="text-align:center;vertical-align: middle;background-color:#ccccff;"> Nest</th>
+                              <tr>  
+                                         <th style="background-color:#09FAF6;">Band</th>
+                                         <th style="background-color:#66FF66">Open</th>
+                                         <th style="background-color:#FFFF00">Blocked</th>
+                                         <th style="background-color:#e60000">Sold</th>
+                             		</tr>
+                                     <tr>
+                                         <td style="background-color:#09FAF6;">1-10</td>
+                             			<td style="background-color:#66FF66">{!Nest_open_1_to_10}</td>
+                                         <td style="background-color:#FFFF00">{!Nest_NA_1_to_10} </td>
+                                         <td style="background-color:#e60000">{!Nest_Sold_1_to_10}</td>
+                             		</tr>
+                                     <tr>
+                                         <td style="background-color:#09FAF6;">11-20</td>
+                             			<td style="background-color:#66FF66">{!Nest_open_11_to_20}</td>
+                                         <td style="background-color:#FFFF00">{! Nest_NA_11_to_20 }</td>
+                                         <td style="background-color:#e60000">{!Nest_Sold_11_to_20}</td>
+                             		</tr>
+                                     <tr>
+                                         <td style="background-color:#09FAF6;">21-30</td>
+                             			<td style="background-color:#66FF66">{!Nest_open_21_to_30}</td>
+                                         <td style="background-color:#FFFF00">{! Nest_NA_21_to_30 }</td>
+                                         <td style="background-color:#e60000">{!Nest_Sold_21_to_30}</td>
+                             		</tr>
+                             		<tr>
+                                         <td style="background-color:#09FAF6;">31+</td>
+                             			<td style="background-color:#66FF66">{!Nest_open_31_plus}</td>
+                                         <td style="background-color:#FFFF00">{!Nest_NA_31_plus }</td>
+                                         <td style="background-color:#e60000">{!Nest_Sold_31_plus }</td>
+                             		</tr>
+                             <tr>
+                                 <td style="background-color: #d9d9d9;">Sub Total</td>
+                                 <td style="background-color:#66FF66">{!Nest_Total_Open}</td>
+                                 <td style="background-color:#FFFF00">{!Nest_NA_Open}</td>  
+                                 <td style="background-color:#e60000">{!Nest_Sold_Open} </td>
+                             </tr>
+                             <tr>
+                                 <td style="background-color:#f2f2f2;" colspan="2">Grand Total</td>
+                                 <td style="background-color:#66FF66">{!totalOpen}</td>
+                                 <td style="background-color:#FFFF00">{!totalBlocked}</td>  
+                                 <td style="background-color:#e60000">{!totalSold} </td>
+                             </tr>
+                             </tr>
+                         </table> 
+                     </apex:pageblocksectionitem>
+                  </apex:pageBlockSection> 
+                          
+                              </apex:form>
+                      </apex:pageBlock>
+             </apex:outputPanel>
+                </apex:outputPanel>
+                
+                <!--<button onmouseover="myFunction('myDIV')">Click Me</button>
+                
+                <div id="myDIV">
+                    This is my DIV element.
+                </div>-->
+                
+                <!--Facet Loading cycle Ends Here--->
+                 <div  id='testX' style="overflow-x:scroll; text-align: center; align:center;">
+                    <table id="table_id"  border="1" class="resultstable3" >
+                        <apex:repeat value="{!floorDescSeqList}" var="floorNo" >
+                            <tr >
+                               <td bgcolor="#09FAF6" >{!floorNo}</td>
+                                <apex:repeat value="{!JMap[floorNo]}" var="J">
+                                        <td id="ppp" style="text-align :center;min-width:85px;" onClick="myFunction('{!J.Id}');" ><!-- class="divbutton"  onmouseout="myFunctionMouseOut('{!J.Id}')"-->
+                                           <!-- <span style= "font-size: 20px;font-weight: normal;font-family:Arial, Helvetica, sans-serif;">-->
+                                                <a  href="/{!J.Id}" target="_blank"  onblur="LookupHoverDetail.getHover('{!J.Id}').hide();" onfocus="LookupHoverDetail.getHover('{!J.Id}', '/{!J.Id}/m?retURL=%2F{!J.Id}&isAjaxRequest=1').show();" onmouseout="LookupHoverDetail.getHover('{!J.Id}').hide();" onmouseover="LookupHoverDetail.getHover('{!J.Id}', '/{!J.Id}/m?retURL=%2F{!J.Id}&isAjaxRequest=1').show();" style="color: black;text-decoration: none;font-size: 13px;font-weight: normal;font-family:Arial, Helvetica, sans-serif;">{!J.Tower__r.Name}-{!J.Floor_No__c}{!J.Appt__c}</a>
+                                            <span style="display : none;font-size: 1px !important;">{!J.Unit_Status__c}</span> 
+                                            <!--</span>-->
+                                           
+                                            <apex:form >     
+                                                 <div  id="{!J.Id}" style="visibility: hidden;height:15px" ><!--display:none;-->
+                                                <apex:outputLabel rendered="{!if(J.Unit_Status__c != 'Sold' ,true,false)}" >                                                  
+                                                    <apex:commandButton action="{!saveQuoteProduct}" oncomplete="{!DirectURL}"  value="Quote">
+                                                        <apex:param name="PID" value="{!J.Id}" assignTo="{!PID}" />
+                                                    </apex:commandButton>
+                                                    <!--<apex:commandLink action="{!saveQuoteProduct}" oncomplete="{!DirectURL}" type="image/png" title="Create Quote" >
+                                                           <apex:param name="PID" value="{!J.Id}" assignTo="{!PID}" />
+                                                         <apex:image id="theImage" value="{!$Resource.logoQuote}" width="25px" height="25px"/>
+                                                     </apex:commandlink>-->
+                                                </apex:outputLabel>                                                 
+                                                     
+                                                <apex:outputLabel rendered="{!if(J.Unit_Status__c == 'Available for Sale' ,true,false)}">
+                                                    <!--&& OptyID != null-->
+                                                    <apex:commandButton action="{!block_hold}" value="Block" status="st1" rerender="tstpopup">
+                                                        <apex:param name="ProdId" assignTo="{!ProdId}" value="{!J.Id}" />
+                                                    </apex:commandButton>
+                                                    <!--<apex:commandLink action="{!block_hold}" type="image/png" title="Block/Hold" style="text-align:right;" >
+                                                 <apex:param name="ProdId" assignTo="{!ProdId}" value="{!J.Id}" />
+                                                         <apex:image id="theImage1" value="{!$Resource.logoBlock}" width="25px" height="25px"/>
+                                                     </apex:commandlink>-->
+                                                </apex:outputLabel>
+                                                     </div>
+                                            </apex:form>
+                                        </td>
+                                </apex:repeat>
+                            </tr>
+                        </apex:repeat>
+                    </table>
+                </div>
+                <!--</apex:pageblock>-->
+            </div>
+            <!--footer-->
+            <div class="footer"> 
+                <div class="container">
+                    <div class="copywrite">
+                        <p>© 2020 All Rights Reserved Design by www.stetig.in </p>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </body>
+    </html>
+</apex:page>

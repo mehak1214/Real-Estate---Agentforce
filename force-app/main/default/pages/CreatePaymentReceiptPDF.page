@@ -1,0 +1,66 @@
+<apex:page renderAs="PDF" showHeader="false"  sidebar="false" showQuickActionVfHeader="false" standardStylesheets="false" applyHtmlTag="false" controller="CreatePaymentReceiptPDFController" applyBodyTag="false" >
+    
+    <apex:form >
+        
+        <apex:outputPanel rendered="true">
+            
+            <div class="header">
+                
+                <div align ="right" >
+                    <apex:image url="{!$Resource.RaymondRealty}" height="30px" width="100px" />
+                </div>
+            </div>
+            <table width="90%" align="center" style="font:0.7em;">
+                <tr>
+                    <td style="height:20px;color:#ffffff; background-color:#000000; text-align:center; font:bold 1.2em Arial;" colspan="3">
+                        Raymond Realty - Price Sheet
+                    </td>
+                </tr>
+                <tr>
+                    <td>Wrapper -</td>
+                    <td style="text-align:right;">
+                        {!objPaymentWrapper}
+                    </td>
+                </tr>
+            </table>
+            
+        </apex:outputPanel>
+        
+        
+        <!--
+        <apex:outputPanel rendered="true">
+            <div class="header">
+                <div align ="right" >
+                    <apex:image url="{!$Resource.RaymondRealty}" height="30px" width="100px" />
+                </div>
+            </div>
+            
+            <div class="form-group row mt-4">
+                <label for="wrap" class="col-md-2 col-sm-12 col-form-label">Wrapper - {!objPaymentReceiptWrapper}</label>
+                <div class="col-md-4 col-sm-12">
+                    <apex:outputPanel >
+                        <apex:outputText value="{!objPaymentReceiptWrapper}" id="wrap" />
+                    </apex:outputPanel>
+                </div>
+                
+                <label for="wrapObj" class="col-md-2 col-sm-12 col-form-label">Wrapper Obj - {!objPaymentReceiptWrapper.objPayment}</label>
+                <div class="col-md-4 col-sm-12">
+                    <apex:outputPanel >
+                        <apex:outputText value="{!objPaymentReceiptWrapper.objPayment}" id="wrapObj" />
+                    </apex:outputPanel>
+                </div>
+                
+                <label for="wrapObjVal" class="col-md-2 col-sm-12 col-form-label">Wrapper Obj Val - {!objPaymentReceiptWrapper.objPayment.Name}</label>
+                <div class="col-md-4 col-sm-12">
+                    <apex:outputPanel >
+                        <apex:outputText value="{!objPaymentReceiptWrapper.objPayment.Name}" id="wrapObjVal" />
+                    </apex:outputPanel>
+                </div>
+            </div>
+            
+                       
+        </apex:outputPanel>
+        -->
+        
+    </apex:form> 
+</apex:page>

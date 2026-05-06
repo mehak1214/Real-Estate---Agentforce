@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Bank_Account__c</fullName>
+    <label>Bank Account</label>
+    <lookupFilter>
+        <active>true</active>
+        <filterItems>
+            <field>AR_Bank_Account__c.Account_Type__c</field>
+            <operation>equals</operation>
+            <value>Escrow</value>
+        </filterItems>
+        <isOptional>false</isOptional>
+    </lookupFilter>
+    <referenceTo>AR_Bank_Account__c</referenceTo>
+    <relationshipLabel>Virtual Bank Accounts</relationshipLabel>
+    <relationshipName>Virtual_Bank_Accounts</relationshipName>
+    <relationshipOrder>0</relationshipOrder>
+    <reparentableMasterDetail>false</reparentableMasterDetail>
+    <trackTrending>false</trackTrending>
+    <type>MasterDetail</type>
+    <writeRequiresMasterRead>false</writeRequiresMasterRead>
+</CustomField>

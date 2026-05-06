@@ -1,0 +1,92 @@
+.tower {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Adjust the number of columns as needed */
+    gap: 20px;
+    border-color: transparent;
+  }
+  .floor{
+    width: 70px;
+    height: 40px;
+    background-color: #C2E8FF;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 40px;
+  }
+  
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: menu;
+  }
+  .box {
+    
+    /* width: 200px; */
+    height: 70px;
+    margin: 0;
+  padding: 0;
+    background-color: #F6FFDE;
+    /* margin-bottom: 10px; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  .box:hover {
+    background-color: white;
+    border-left: 4px solid blue;
+  }
+  .grid-container {
+    display: grid;
+    /* grid-template-columns: 1fr; */
+    grid-template-rows: auto;
+    grid-template-areas: "main";
+    background-color: white;
+    margin-top: 10px;
+    /* padding: 10px;*/
+    margin-right: 10px; 
+  }
+  .ListHeader{
+    font-weight: bold;
+    font-size: 15px;
+  }
+
+.img{
+  height: 400px;
+  max-width: 350px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.section{
+  background-color: rgb(204, 201, 201);
+  width: 90%;
+}
+p{
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+.ProjectList {
+  background-color: var(--lwc-brandAccessible);
+  color: white;
+}
+.grid-container {
+  display: grid;
+  grid-template-columns: auto auto auto ;
+  gap: 10px;
+  background-color: white;
+  padding: 10px;
+}
+.grid-item {
+  background-color: rgb(249, 249, 250);
+  text-align: center;
+  padding: 20px 0;
+}
+
+img {
+  border-radius: 8px;
+}
+.filterBox{
+  padding: 20px;
+}

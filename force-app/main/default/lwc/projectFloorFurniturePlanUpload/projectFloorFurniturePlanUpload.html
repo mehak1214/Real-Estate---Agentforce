@@ -1,0 +1,201 @@
+<template>
+    <lightning-modal-header>
+        <article class="slds-card">
+            <div class="slds-card__header slds-grid">
+                <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                    <lightning-icon icon-name="doctype:image" alternative-text="Image file" title="Image"></lightning-icon>
+                    <div style="margin: 1rem;" class="slds-media__body">
+                        <h2 class="slds-card__header-title">
+                        <span>Unit Layout Document Management</span>
+                        </h2>
+                    </div>
+                </header>
+            </div>
+        </article>
+    </lightning-modal-header>
+
+    <lightning-modal-body> 
+         <div class="slds-p-around_medium">
+
+        <!-- Property / Building Picker -->
+        <lightning-record-picker
+            label="Select Property / Building"
+            placeholder="Search..."
+            object-api-name="BuildingSection__c"
+            value={buildId}
+            onchange={handleRecordPickerClick}>
+        </lightning-record-picker>
+
+        <br/>
+
+        <!-- File Upload -->
+        <!-- File Upload -->
+        <div class="slds-form-element">
+            <label class="slds-form-element__label">Upload Files</label>
+                <div class="slds-form-element__control">
+                    <input 
+                        type="file"
+                        multiple
+                        accept=".jpg,.jpeg,.png"
+                        onchange={handleFiles}
+                        class="slds-input custom-file-input"
+                        id="fileInput"
+                    />
+                </div>
+                <div class="slds-form-element__help">
+                    Note: <br/>
+                    • Only PNG and JPEG/JPG files are allowed<br/>
+                    • Floor Plans: Must end with _UL suffix (e.g., ASPZ-F02-201_UL)<br/>
+                    • Furniture Plans: Must end with _FS suffix (e.g., Flex Studio_FS)<br/>
+                    • Uploading a new file type (PNG/JPEG) will replace existing files
+                </div>
+        </div>
+
+        <!-- ERROR DISPLAY - Entire section only shows when errors exist -->
+        <template if:true={hasValidationErrors}>
+            <div class="slds-m-top_medium">
+                <div class="slds-notify slds-notify_alert slds-theme_error" role="alert">
+                    <span class="slds-assistive-text">error</span>
+                    <h2 class="slds-text-heading_small">Validation Errors ({validationErrors.length}):</h2>
+                    <ul class="slds-m-top_x-small">
+                        <template for:each={validationErrors} for:item="error">
+                            <li key={error.fileName} class="slds-m-bottom_xx-small">
+                                <strong>{error.fileName}:</strong> {error.message}
+                            </li>
+                        </template>
+                    </ul>
+                </div>
+            </div>
+        </template>
+
+        <!-- Upload Progress -->
+        <template if:true={uploading}>
+            <div class="slds-m-top_medium">
+                <lightning-progress-bar 
+                    value={currentBatch} 
+                    max={totalBatches}>
+                </lightning-progress-bar>
+
+                <p class="slds-m-top_small">
+                    Processing batch {currentBatch} of {totalBatches}...
+                </p>
+                
+                <!-- Show batch job ID if available during upload -->
+                <template if:true={currentBatchJobId}>
+                    <p class="slds-text-color_weak slds-m-top_xx-small slds-text-body_small">
+                        Batch Job ID: {currentBatchJobId}
+                    </p>
+                </template>
+            </div>
+        </template>
+
+        <!-- Summary Section -->
+        <template if:true={summary}>
+            <div class="slds-m-top_medium slds-box slds-box_small">
+                <h3 class="slds-text-heading_small slds-m-bottom_small">Upload Summary</h3>
+                <p><strong>Total Files:</strong> {summary.totalFiles}</p>
+                
+                <!-- View Summary Button -->
+                <div class="slds-m-top_small">
+                    <lightning-button
+                        label="View Summary"
+                        onclick={handleViewSummary}
+                        disabled={isViewSummaryDisabled}
+                        variant="brand"
+                        class="slds-m-top_x-small">
+                    </lightning-button>
+                    
+                    <!-- Status Messages -->
+                    <div class="slds-m-top_x-small">
+                        <template if:true={showUploadCompleteMessage}>
+                            <p class="slds-text-color_weak slds-text-body_small">
+                                Upload complete. Click "View Summary" to see detailed results.
+                            </p>
+                        </template>
+                        
+                        <template if:true={showPleaseUploadMessage}>
+                            <p class="slds-text-color_weak slds-text-body_small">
+                                Please select files and upload to see summary.
+                            </p>
+                        </template>
+                        
+                        <template if:true={uploading}>
+                            <p class="slds-text-color_weak slds-text-body_small">
+                                Upload in progress. Please wait...
+                            </p>
+                        </template>
+                        
+                        <!-- Show batch job ID if available -->
+                        <template if:true={showBatchJobIdInfo}>
+                            <p class="slds-text-color_weak slds-m-top_xx-small slds-text-body_small">
+                                <lightning-icon icon-name="utility:clock" size="x-small" class="slds-m-right_xx-small"></lightning-icon>
+                                Batch Job ID: {currentBatchJobId}
+                            </p>
+                        </template>
+                    </div>
+                    
+                    <!-- Loading Indicator for Summary -->
+                    <template if:true={isLoadingSummary}>
+                        <div class="slds-m-top_small">
+                            <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+                            <span class="slds-m-left_small slds-text-body_small">Loading summary...</span>
+                        </div>
+                    </template>
+                </div>
+                
+                <!-- Summary Details Section -->
+                <template if:true={showSummaryDetails}>
+                    <div class="slds-m-top_medium slds-border_top slds-p-top_medium">
+                        <div class="slds-grid slds-grid_align-spread slds-m-bottom_small">
+                            <h4 class="slds-text-heading_small">Batch Processing Details</h4>
+                            <lightning-button-icon
+                                icon-name="utility:close"
+                                variant="border-filled"
+                                size="small"
+                                alternative-text="Hide summary"
+                                title="Hide summary"
+                                onclick={handleHideSummary}>
+                            </lightning-button-icon>
+                        </div>
+                        
+                        <!-- Summary Content -->
+                        <div class="slds-box slds-box_x-small slds-theme_default">
+                            <div class="slds-text-longform">
+                                <div class="slds-p-around_x-small">
+                                    <template if:true={batchSummary}>
+                                        <pre class="slds-text-color_default" style="white-space: pre-wrap; word-wrap: break-word; font-family: inherit; font-size: 0.875rem; line-height: 1.5; margin: 0;">
+                                            {batchSummary}
+                                        </pre>
+                                    </template>
+                                    <template if:false={batchSummary}>
+                                        <p class="slds-text-color_weak">No summary details available.</p>
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Information Footer -->
+                        <div class="slds-m-top_x-small slds-text-body_small slds-text-color_weak">
+                            <lightning-icon icon-name="utility:info" size="x-small" class="slds-m-right_xx-small"></lightning-icon>
+                            This summary shows the processing results for the current batch operation.
+                        </div>
+                        
+                        <!-- Batch Job ID in Summary -->
+                        <template if:true={currentBatchJobId}>
+                            <div class="slds-m-top_x-small slds-text-body_small">
+                                <lightning-icon icon-name="utility:summarydetail" size="x-small" class="slds-m-right_xx-small"></lightning-icon>
+                                <strong>Batch Reference:</strong> {currentBatchJobId}
+                            </div>
+                        </template>
+                    </div>
+                </template>
+            </div>
+        </template>
+    </div>
+    
+    </lightning-modal-body>
+
+    <lightning-modal-footer>
+        <lightning-button label="OK" onclick={handleOkay} variant="brand"></lightning-button>
+    </lightning-modal-footer>
+</template>

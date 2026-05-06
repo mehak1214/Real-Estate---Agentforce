@@ -1,0 +1,220 @@
+<apex:page standardStylesheets="false" renderAs="pdf" controller="taxInvoiceController">
+    
+     <body>
+        <div class= "errormsg1">
+              <!-- <apex:pagemessages id="pgmsg"></apex:pagemessages> -->
+         <!--    <apex:outputLabel value="{!errormsg}" id="pgmsg1" escape="false">
+            </apex:outputLabel><br/>
+            <apex:outputLabel value="{!errormsg2}" id="pgmsg2" escape="false">
+             </apex:outputLabel> -->
+        </div>
+    <apex:outputPanel >    
+    <apex:form >
+		<apex:pageBlock >
+            <div>
+                
+                <table style="width:100%;border-collapse: collapse;">
+                    <tr>
+                    	<td Style="text-align:left;border:1px solid black;width:75%;height:30px;font-size:13px" colspan="2">&nbsp;Customer Code :&nbsp;{!pList[0].Customer_Code__c}</td>
+                        <td Style="text-align:left;border:1px solid black;width:25%;height:30px;font-size:13px" colspan="1">&nbsp;Invoice No :&nbsp;{!pList[0].Document_Number__c}</td>
+                    </tr>
+                    <tr>
+                    	<td Style="text-align:left;border:1px solid black;width:33%;height:30px;font-size:13px" colspan="1">&nbsp;Project :&nbsp;{!pList[0].Opportunity__r.Project__r.Name}</td>
+                        <td Style="text-align:left;border:1px solid black;width:33%;height:30px;font-size:13px" colspan="1">&nbsp;Invoice Date :&nbsp;{!pList[0].Demand_Letter_Date__c}</td>
+                     <!--   <td Style="text-align:left;border:1px solid black;width:33%;height:30px;font-size:13px" colspan="1">&nbsp;Last date of payment :&nbsp;{!pList[0].Due_Date__c}</td> -->
+                        <td Style="text-align:left;border:1px solid black;width:33%;height:30px;font-size:13px" colspan="1">&nbsp;Last date of payment :&nbsp;<apex:outputText value="{0,date,dd'/'MM'/'yyyy}"><apex:param value="{!pList[0].Due_Date__c}" /> 
+</apex:outputText></td>
+                    </tr>
+                    <tr>
+                    	<td Style="text-align:left;border:1px solid black;width:33%;height:30px;font-size:13px" colspan="1">&nbsp;Unit Details :&nbsp;{!pList[0].Opportunity__r.Product_Saleable__r.Material_Code__c}</td>
+                        <td Style="text-align:left;border:1px solid black;width:33%;height:30px;font-size:13px" colspan="1">&nbsp;Tower :&nbsp;{!pList[0].Opportunity__r.Tower__r.Name}</td>
+                        <td Style="text-align:left;border:1px solid black;width:33%;height:30px;font-size:13px" colspan="1">&nbsp;Unit :&nbsp;{!pList[0].Opportunity__r.Product_Saleable__r.Name}</td>
+                    </tr>
+                </table>
+                <table style="width:100%;border-collapse: collapse;">      
+                    <tr>
+                        <td Style="text-align:left;border-left:1px solid black;border-right:1px solid black;height:20px;font-size:13px" >&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td Style="text-align:left;border-left:1px solid black;border-right:1px solid black;height:22px;font-size:14px" >&nbsp;To,</td>
+                    </tr>
+                    <tr>
+                        <td Style="text-align:left;border-left:1px solid black;border-right:1px solid black;height:22px;font-size:14px" >&nbsp;Customer Name :&nbsp;&nbsp;{!pList[0].Opportunity__r.Account.Name}</td>
+                    </tr>
+                    <tr>
+                        <td Style="text-align:left;border-left:1px solid black;border-right:1px solid black;height:22px;font-size:14px" >&nbsp;Customer Address :&nbsp;&nbsp;{!pList[0].Opportunity__r.Account.Customer_Address__c}</td>
+                    </tr>
+                    <tr>
+                        <td Style="text-align:left;border-left:1px solid black;border-right:1px solid black;height:22px;font-size:14px" >&nbsp;City and Pincode :&nbsp;&nbsp;{!pList[0].Opportunity__r.Account.City_O__c}, {!pList[0].Opportunity__r.Account.Pincode__c}</td>
+                    </tr>
+                    <tr>
+                        <td Style="text-align:left;border-left:1px solid black;border-right:1px solid black;height:22px;font-size:14px;">&nbsp;State :{!pList[0].Opportunity__r.Account.State_Province__c}</td>
+                    </tr>
+                    <tr>
+                        <td Style="text-align:left;border-left:1px solid black;border-right:1px solid black;height:22px;font-size:14px;">&nbsp;Country :{!pList[0].Opportunity__r.Account.Country__c}</td>
+                    </tr>
+                    <tr>
+                        <td Style="text-align:left;border-left:1px solid black;border-right:1px solid black;height:22px;font-size:14px;">&nbsp;Mobile No :{!pList[0].Opportunity__r.Account.PersonMobilePhone}</td>
+                    </tr>
+                    <tr>
+                        <td Style="text-align:left;border-left:1px solid black;border-right:1px solid black;height:22px;font-size:14px;">&nbsp;GSTIN No :</td>
+                    </tr>
+                    <tr>
+                        <td Style="text-align:left;border-left:1px solid black;border-right:1px solid black;height:20px;font-size:13px" >&nbsp;</td>
+                    </tr>
+                </table>
+                <table style="width:100%;border-collapse: collapse;">
+                    <tr>
+                    	<td Style="text-align:left;border:1px solid black;width:100%;height:40px;font-size:14px" colspan="2">&nbsp;Subject : {!pList[0].Opportunity__r.Project__r.Name}{!pList[0].Opportunity__r.Product_Saleable__r.Name}&nbsp;Demand letter towards {!pList[0].Name}.</td>
+                    </tr>
+                    <tr>
+                    	<td Style="text-align:left;border:1px solid black;width:80%;height:24px;font-size:14px" colspan="1">&nbsp;Particulars</td>
+                        <td Style="text-align:center;border:1px solid black;width:20%;height:24px;font-size:14px" colspan="1">&nbsp;Amount</td>
+                    </tr>
+                    <tr>
+                    	<td Style="text-align:left;border:1px solid black;width:80%;height:24px;font-size:14px" colspan="1">&nbsp;Previous Outstanding</td>
+                        <td Style="text-align:center;border:1px solid black;width:20%;height:24px;font-size:14px" colspan="1">{!pList[0].Previous_Outstanding__c}</td>
+                    </tr>
+                    <tr>
+                    	<td Style="text-align:left;border:1px solid black;width:80%;height:24px;font-size:14px" colspan="1">&nbsp;Advance Received</td>
+                        <td Style="text-align:center;border:1px solid black;width:20%;height:24px;font-size:14px" colspan="1">{!pList[0].Advanced_Received__c}</td>
+                    </tr>
+                </table>
+                <table style="width:100%;border-collapse: collapse;">
+                    <tr>
+                    	<td Style="text-align:center;border:1px solid black;width:28%;height:40px;font-size:14px" colspan="1">Amount Due Towards</td>
+                        <td Style="text-align:center;border:1px solid black;width:44%;height:40px;font-size:14px" colspan="1">NEFT / RTGS / Bank Details</td>
+                        <td Style="text-align:center;border:1px solid black;width:28%;height:40px;font-size:14px" colspan="1">Total Payable</td>
+                    </tr>
+                    <tr>
+                    	<td Style="text-align:left;border:1px solid black;width:28%;height:40px;font-size:13px" colspan="1">&nbsp;Base Value</td>
+                        <td Style="text-align:center;border:1px solid black;width:44%;height:40px;font-size:9px" colspan="1"><apex:outputText style="margin-left:0px;padding:0px;" escape="false" value="{!pList[0].Opportunity__r.Tower__r.NEFT_RTGS_Bank_Details__c}"/></td>
+                        <td Style="text-align:center;border:1px solid black;width:28%;height:40px;font-size:13px" colspan="1">{!AmountAV}</td>
+                    </tr>
+                    <tr>
+                    	<td Style="text-align:left;border:1px solid black;width:28%;height:40px;font-size:13px" colspan="1">&nbsp;GST</td>
+                        <td Style="text-align:center;border:1px solid black;width:44%;height:40px;font-size:9px" colspan="1"><apex:outputText style="margin:0px;padding:0px;" escape="false" value="{!pList[0].Opportunity__r.Tower__r.Bank_Details_GST__c}"/></td>
+                        <td Style="text-align:center;border:1px solid black;width:28%;height:40px;font-size:13px" colspan="1">{!AmountGST}</td>
+                    </tr>
+                    <tr>
+                    	<td Style="text-align:left;border:1px solid black;width:28%;height:40px;font-size:13px" colspan="1">&nbsp;TDS</td>
+                        <td Style="text-align:center;border:1px solid black;width:44%;height:40px;font-size:9px" colspan="1">Signed 16B form should be submitted immediately on the TDS payment or before the end of month in which tax is deductible</td>
+                        <td Style="text-align:center;border:1px solid black;width:28%;height:40px;font-size:13px" colspan="1">{!AmountTDS}</td>
+                    </tr>
+                    <tr>
+                    	<td Style="text-align:center;border:1px solid black;width:66%;height:28px;font-size:14px" colspan="2">Total</td>
+                        <td Style="text-align:center;border:1px solid black;width:33%;height:28px;font-size:14px" colspan="1">{!TotalAmt}</td>
+                    </tr>
+                </table>
+                <table style="width:100%;border-collapse: collapse;">
+                    <tr>
+                        <td Style="text-align:left;border-left:1px solid black;border-right:1px solid black;height:20px;font-size:10px" >&nbsp;</td>
+                    </tr>
+              		<tr>
+                        <td Style="text-align:left;border-left:1px solid black;border-right:1px solid black;height:25px;font-size:12px" >&nbsp;As per Government notification, it is mandatory to quote PAN numbers in all demand note cum invoices. In view of the same, the PAN numbers &nbsp;of all applicants are recorded below:</td>
+                    </tr>
+                    <tr>
+                        <td Style="text-align:left;border-left:1px solid black;border-right:1px solid black;height:10px;font-size:10px" >&nbsp;</td>
+                    </tr>
+                </table>
+                <table style="width:100%;border-collapse: collapse;">
+                    <tr>
+                        <td Style="text-align:center;border:1px solid black;width:22%;height:40px;font-size:13px" colspan="1">Name of Applicant 1 :</td>
+                        <td Style="text-align:center;border:1px solid black;width:11%;height:40px;font-size:13px" colspan="1">PAN No:</td>
+                        <td Style="text-align:center;border:1px solid black;width:22%;height:40px;font-size:13px" colspan="1">Name of Applicant 2 :</td>
+                        <td Style="text-align:center;border:1px solid black;width:11%;height:40px;font-size:13px" colspan="1">PAN No:</td>
+                        <td Style="text-align:center;border:1px solid black;width:22%;height:40px;font-size:13px" colspan="1">Name of Applicant 3 :</td>
+                        <td Style="text-align:center;border:1px solid black;width:11%;height:40px;font-size:13px" colspan="1">PAN No:</td>
+                    </tr>
+                    <tr>
+                        <td Style="text-align:center;border:1px solid black;width:22%;height:40px;font-size:13px" colspan="1">{!pList[0].Opportunity__r.Account.Name}</td>
+                        <td Style="text-align:center;border:1px solid black;width:11%;height:40px;font-size:13px" colspan="1">{!pList[0].Opportunity__r.Account.PAN_No__c}</td>
+                        <td Style="text-align:center;border:1px solid black;width:22%;height:40px;font-size:13px" colspan="1">{!app2Name}</td>
+                        <td Style="text-align:center;border:1px solid black;width:11%;height:40px;font-size:13px" colspan="1">{!app2pan}</td>
+                        <td Style="text-align:center;border:1px solid black;width:22%;height:40px;font-size:13px" colspan="1">{!app3Name}</td>
+                        <td Style="text-align:center;border:1px solid black;width:11%;height:40px;font-size:13px" colspan="1">{!app3pan}</td>
+                    </tr>
+                </table>
+                <table style="width:100%;border-collapse: collapse;">
+                    <tr>
+                        <td Style="text-align:left;border-left:1px solid black;border-right:1px solid black;height:20px;font-size:10px" >&nbsp;</td>
+                    </tr>
+              		<tr>
+                        <td Style="text-align:left;border-left:1px solid black;border-right:1px solid black;height:25px;font-size:14px" >&nbsp;Assuring you of best and prompt services at all times. Thanking You</td>
+                    </tr>
+                    <tr>
+                        <td Style="text-align:left;border-left:1px solid black;border-right:1px solid black;height:25px;font-size:14px" >&nbsp;Your's Sincerely,</td>
+                    </tr>
+                    <tr>
+                        <td Style="text-align:left;border-left:1px solid black;border-right:1px solid black;height:25px;font-size:14px" >&nbsp;For Raymond Limited</td>
+                    </tr>
+                    <tr>
+                        <td Style="text-align:left;border-left:1px solid black;border-right:1px solid black;height:25px;font-size:14px" >&nbsp;@@@@</td>
+                    </tr>
+                    <tr>
+                        <td Style="text-align:left;border-left:1px solid black;border-right:1px solid black;height:25px;font-size:14px" >&nbsp;Authorised Signatory</td>
+                    </tr>
+                    <tr>
+                        <td Style="text-align:left;border-left:1px solid black;border-right:1px solid black;height:25px;font-size:14px" >&nbsp;Please ignore this letter if payment is already done.</td>
+                    </tr>
+                    <tr>
+                        <td Style="text-align:left;border-left:1px solid black;border-right:1px solid black;height:25px;font-size:10px" >&nbsp;</td>
+                    </tr>
+                </table>
+                <!--  <div  style="page-break-before: always;"></div> -->
+                  
+                <table style="width:100%;border-collapse: collapse;">
+                    <tr>
+                        <td Style="text-align:left;border-left:1px solid black;border-right:1px solid black;height:20px;font-size:10px" >&nbsp;</td>
+                    </tr>
+              		<tr>
+                        <td Style="text-align:left;border-left:1px solid black;border-right:1px solid black;height:25px;font-size:13px" >&nbsp;In case of any queries, please connect with your Relationship Manager.</td>
+                    </tr>
+                    <tr>
+                        <td Style="text-align:left;border-left:1px solid black;border-right:1px solid black;height:25px;font-size:13px" >&nbsp;• Please mention your name and Apartment details on the reverse of each Cheque/demand draft and send the payment to our below mentioned Sales Office address addressing to your Relationship Manager.</td>
+                    </tr>
+                    <tr>
+                        <td Style="text-align:left;border-left:1px solid black;border-right:1px solid black;height:25px;font-size:13px" >&nbsp;• Kindly make the payment on or before the due date to avoid interest as applicable.</td>
+                    </tr>
+                    <tr>
+                        <td Style="text-align:left;border-left:1px solid black;border-right:1px solid black;height:25px;font-size:13px" >&nbsp;• In case you have availed a loan from a Bank/Finance Institution; kindly ensure that the payment reaches us before the due date.</td>
+                    </tr>
+                    <tr>
+                        <td Style="text-align:left;border-left:1px solid black;border-right:1px solid black;height:25px;font-size:13px" >&nbsp;• In case of the delayed payment, interest will be applicable at the prevailing rate of State Bank of India Highest Marginal Cost of Lending Rate plus 2% (two percent), on the Sale Consideration paid.</td>
+                    </tr>
+                    <tr>
+                        <td Style="text-align:left;border-left:1px solid black;border-right:1px solid black;height:25px;font-size:13px" >&nbsp;• As per provision of Sec 194 IA of the Income Tax Act 1961, TDS @ 1% should be deducted by the purchaser at the time of making payment of sale consideration. TDS so deducted should be deposited to the Government Account through any of the authorized bank branches. Kindly submit original acknowledged copy of payment Challan, form 26QB and 16B ,immediately of the TDS Payment or before the end of month in which tax is deductible.</td> 
+                    </tr>
+                    <tr>
+                        <td Style="text-align:left;border-left:1px solid black;border-right:1px solid black;height:25px;font-size:13px" >&nbsp;• In case of an online payment through RTGS/NEFT or any other online mode of payment, please share the Bank and Branch name , transaction reference number, date of transaction, and amount deposited with your Relationship Manager. We will credit the respective payment only once the said transaction reference number is received from you.</td> 
+                    </tr>
+                    <tr>
+                        <td Style="text-align:left;border-left:1px solid black;border-right:1px solid black;height:25px;font-size:13px" >&nbsp;• In case you have deposited a Post Dated Cheque with us,the same shall be presented by us on the date mentioned on cheque.</td>
+                    </tr>
+                    <tr>
+                        <td Style="text-align:left;border-left:1px solid black;border-right:1px solid black;height:25px;font-size:13px" >&nbsp;• Kindly ignore this communication if the said payment has already been made.</td>
+                    </tr>
+                    <tr>
+                        <td Style="text-align:left;border-left:1px solid black;border-right:1px solid black;height:40px;font-size:10px" >&nbsp;</td>
+                    </tr>
+                </table>
+                <table style="width:100%;border-collapse: collapse;">
+                    <tr>
+                        <td Style="text-align:left;border-left:1px solid black;border-right:1px solid black;height:25px;font-size:14px" >&nbsp;PAN No :</td>
+                    </tr>
+                    <tr>
+                        <td Style="text-align:left;border-left:1px solid black;border-right:1px solid black;height:25px;font-size:14px" >&nbsp;GSTN No :</td>
+                    </tr>
+                    <tr>
+                        <td Style="text-align:left;border-left:1px solid black;border-right:1px solid black;height:25px;font-size:14px" >&nbsp;RERA No :</td>
+                    </tr>
+                    <tr>
+                        <td Style="text-align:left;border:1px solid black;border-top:none;height:20px;font-size:10px" >&nbsp;</td>
+                    </tr>
+                </table>
+            </div>
+        </apex:pageBlock>
+    </apex:form>
+  </apex:outputPanel>  
+  </body>
+</apex:page>

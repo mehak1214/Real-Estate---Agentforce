@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FieldSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>KYC_Ownership</fullName>
+    <description>Used in FieldSetController class</description>
+    <displayedFields>
+        <field>Share__c</field>
+        <isFieldManaged>false</isFieldManaged>
+        <isRequired>false</isRequired>
+    </displayedFields>
+    <label>KYC Ownership</label>
+</FieldSet>

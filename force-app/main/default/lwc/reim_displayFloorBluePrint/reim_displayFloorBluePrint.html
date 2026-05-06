@@ -1,0 +1,81 @@
+<template>
+    <lightning-spinner if:false={filesList}>
+    </lightning-spinner>
+    <lightning-card>
+        <div class="slds-grid slds-grid_vertical-stretch" style="margin-top: 3em;">
+            <div class="slds-col slds-size_3-of-12">
+                <div class="slds-box  filterList " style="pointer-events: none; opacity: 0.6;">
+                    <div style="border-bottom: 1px solid #BDCDD6;">
+                        <span style="font-weight:bold;padding-bottom: 10px;"><b>Filter By</b></span>
+                    </div>
+                    <lightning-combobox name="tower" label="Tower" value={value} placeholder={selectedtowerName}
+                        options={towerOptions} onchange={handleTowerChange}></lightning-combobox>
+
+                    <lightning-combobox name="wing" label="Wing" value={selectedWing} placeholder="All"
+                        options={wingOptions} onchange={handleWingChange}></lightning-combobox>
+
+                    <lightning-combobox name="unitSize" label="Size Type" value={selectedunitSize} placeholder="All"
+                        options={unitSizeOptions} onchange={handleUnitSizeChange}></lightning-combobox>
+
+                    <lightning-combobox name="facing" label="Facing" value={selectedFacing} placeholder="All"
+                        options={facingOptions} onchange={handleFacingChange}></lightning-combobox>
+
+                    <lightning-combobox name="vastu" label="Vastu" value={selectedVastu} placeholder="All"
+                        options={vastuOptions} onchange={handleVastuChange}></lightning-combobox>
+
+                    <lightning-combobox name="unitStatus" label="Unit Status" value={selectedUnitStatus}
+                        placeholder="All" options={unitStatusOptions}
+                        onchange={handleUnitStatusChange}></lightning-combobox>
+                </div>
+            </div>
+            <div class="slds-col slds-size_9-of-12">
+                <div style="margin-right: 8em ;">
+                    <div class="slds-grid slds-gutters grid">
+                        <lightning-button label="Back" variant="Brand" size="Large" style="margin-right: 1em;"
+                            onclick={backFloorAndUnitsPage}></lightning-button>
+                        <lightning-button label="Home" variant="Brand" size="Large"
+                            onclick={backToHome}></lightning-button>
+                        <div class="slds-col Available">
+                            <span>Available</span>
+                        </div>
+                        <div class="slds-col Hold">
+                            <span>Hold</span>
+                        </div>
+                        <div class="slds-col Booked">
+                            <span>Booked</span>
+                        </div>
+                        <div class="slds-col Sold">
+                            <span>Sold</span>
+                        </div>
+                        <div class="slds-col Refuge" style="color: white;">
+                            <span>Refuge</span>
+                        </div>
+                    </div>
+                </div>
+                <div> FLOOR PLAN : {unitsOnFloor}</div>
+
+                <template for:each={filesList} for:item="item">
+                    <div key={item.id} class="img">
+                        <img key={item.Id} src={item.VersionDataUrl} onclick={previewimg}
+                            data-id={item.ContentDocumentId} style="cursor:pointer" />
+                    </div>
+                </template>
+                <div class="slds-truncate slds-p-horizontal_small section" title="Section Title"
+                    style="margin-left: 4em;"><b> {selectedFloorName} Floor - Unit</b> </div>
+                <div class="slds-grid gridd">
+                    <template for:each={FloorDataForBP.data} for:item="item">
+                        <div key={item.id}>
+                            <div class="slds-grid slds-gutters">
+                                <div class="slds-col">
+                                    <div class={item.Unit_Status__c} data-id={item.Id} onclick={handleUnitClick}>
+                                        {item.Unit_Name__c}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </div>
+
+    </lightning-card>
+</template>

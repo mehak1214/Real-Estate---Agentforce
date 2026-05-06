@@ -1,0 +1,134 @@
+<template>
+    <lightning-card>
+        <div class="slds-grid slds-gutters slds-grid_vertical-stretch ">
+            <div class="slds-col slds-size_12-of-12">
+                <div class="slds-box  ProjectName">
+                    <span>
+        <lightning-icon
+            class="icon"
+            variant='inverse'
+            icon-name='utility:back'
+            alternative-text='Back'
+            title='Back'
+            onclick={handleBackClick}></lightning-icon>
+    </span>
+                    <span>
+                        <lightning-icon
+                            class="icon"
+                            size='large'
+                            icon-name='custom:custom24'
+                            alternative-text='custom24'
+                            title='custom24'></lightning-icon>
+                    </span>
+                    <span class="project-name">{projectName}</span>
+                </div>
+            </div>
+        </div>
+
+       <lightning-tabset class="tab" variant="vertical" active-tab-value={activeTabValue} >
+                <lightning-tab label="Project" value="1" onactive={handleActive}>
+                    <div class="container">
+                        <div class="image-container">
+                          <lightning-formatted-rich-text value={projectImage} style="height: 300px;"></lightning-formatted-rich-text>
+                        </div>
+                        <div class="content-container">
+                          <h6 style="font-weight: bold;">{projectName}</h6>
+                          <div style="margin-top: 10px;">
+                            <span style="font-size: 15px;">{city}, {state} </span>
+                            <span>
+                              <lightning-button 
+                                class="slds-button"
+                                label="View Location"
+                                title="View Location"
+                                onclick={handleOpenMap}
+                                icon-name="utility:checkin">
+                              </lightning-button>
+                            </span>
+                          </div>
+                          <lightning-formatted-rich-text style="font-weight:bold;font-size: 15px;padding:10px" value={projectHeader}></lightning-formatted-rich-text>
+                          <lightning-formatted-rich-text value={projectDescription}></lightning-formatted-rich-text>
+                          <div class="grid-container unit">
+                            <div class="grid-item units">
+                              <p>{projectTwrCount}</p>
+                              <p>Towers</p>
+                            </div>
+                            <div class="grid-item units">
+                              <p>{projectUnitCount}</p>
+                              <p>Total Units</p>
+                            </div>
+                            <div class="grid-item units">
+                              <p>{projectSoldUnitCount}</p>
+                              <p>Units Sold</p>
+                            </div>
+                            <div class="grid-item units">
+                              <p>{projectAvlUnitCount}</p>
+                              <p>Units Available</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                </lightning-tab>
+                <lightning-tab label="Amenities" value="2" onactive={handleActive}>
+                  <div class="Amenity">
+
+                    <table>
+                        <tbody>
+                            <template for:each={amenitiesLst} for:item="Amenity">
+                                <tr key={Amenity.Id}>
+                                    <td>{Amenity.Amenity_Title__c}</td>
+                                    <td><lightning-formatted-rich-text value={Amenity.Amenity_Description__c}></lightning-formatted-rich-text></td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                        </div>                </lightning-tab>
+                <lightning-tab label="Specifications" value="3" onactive={handleActive}>
+                  <c-reim-show-specifications record-id={recordId} ></c-reim-show-specifications> 
+                </lightning-tab>
+                <lightning-tab label="Location" value="4" onactive={handleActive}>
+                    <div class="slds-col slds-size_9-of-12">
+                        <lightning-combobox
+                            name="Location "
+                            label="Location "
+                            value={value}
+                            placeholder="Select NearBy Location "
+                            options={options}
+                            onchange={handleChange}></lightning-combobox>
+
+                        <lightning-card
+                            variant="Narrow"
+                            title="Amenities  Map"
+                            icon-name="standard:location">
+                            <div class="slds-var-p-around_small">
+                                <lightning-map
+                                    map-markers={mapMarkers}
+                                    markers-title={markersTitle}
+                                    zoom-level="15"
+                                    list-view="visible"
+                                    center={center}></lightning-map>
+                            </div>
+                        </lightning-card>
+                    </div>              
+                  </lightning-tab>
+                <lightning-tab label="Floor Plan" value="5" onactive={handleActive}>
+                    <c-reim-display-units record-id={recordId} ></c-reim-display-units>
+                </lightning-tab>
+                <lightning-tab label="Watch Video" value="6" onactive={handleActive}>
+                    IN WATCH VIDEO
+                </lightning-tab>
+                <lightning-tab label="Gallery" value="7" onactive={handleActive}>
+                   IN GALLERY
+                </lightning-tab>
+                    </lightning-tabset>
+                   
+       
+
+    </lightning-card>
+</template>

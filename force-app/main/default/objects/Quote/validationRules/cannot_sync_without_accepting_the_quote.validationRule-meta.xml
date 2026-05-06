@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>cannot_sync_without_accepting_the_quote</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(NOT(IsPickval(Status , &apos;Accepted&apos;)),NOT(IsPickval(Status , &apos;Denied&apos;)), (IsSyncing = True))</errorConditionFormula>
+    <errorMessage>Please accept the quote before syncing</errorMessage>
+</ValidationRule>

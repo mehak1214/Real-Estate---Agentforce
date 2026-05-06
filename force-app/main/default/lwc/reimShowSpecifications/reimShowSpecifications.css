@@ -1,0 +1,37 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: menu;
+  }
+  .box {
+    
+    /* width: 200px; */
+    height: 70px;
+    margin: 0;
+  padding: 0;
+    background-color: #F6FFDE;
+    /* margin-bottom: 10px; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  .box:hover {
+    background-color: white;
+    border-left: 4px solid blue;
+  }
+  .grid-container {
+    display: grid;
+    /* grid-template-columns: 1fr; */
+    grid-template-rows: auto;
+    grid-template-areas: "main";
+    background-color: white;
+    margin-top: 10px;
+    /* padding: 10px;*/
+    margin-right: 10px; 
+  }
+  .ListHeader{
+    font-weight: bold;
+    font-size: 15px;
+  }

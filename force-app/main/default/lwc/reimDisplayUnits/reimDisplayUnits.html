@@ -1,0 +1,196 @@
+<template>
+    <lightning-card>
+        
+
+                
+                            <!-- <lightning-combobox name="Select Tower" label="Select Tower"
+                            value={selectedTowerValue} placeholder="All" options={tower}
+                            onchange={handleChangeTower}> </lightning-combobox> <lightning-combobox
+                            name="Select Wing" label="Select Wing" value={selectedWingValue}
+                            placeholder="All" options={wing} onchange={handleChangeWing}>
+                            </lightning-combobox> -->
+                            
+                            <template if:true={showTower}>
+                                <div class="slds-p-bottom_medium slds-border_bottom slds-m-bottom_large">
+                                    <p>Select Tower</p>
+                                  </div>
+    
+                                <div class="tower">
+                                    <template if:true={projectTowerLst}>
+                                        <template for:each={projectTowerLst} for:item="tower">
+                                            <div key={tower.Id} class="reim-towers-list">    
+                                                <div>
+                                                    <button class="slds-button" onclick={handleTowerClick} data-record-id={tower.Id} data-unique-code={tower.UniqueCode__c}>{tower.Tower_Name__c}</button> 
+                                                </div>
+                                                <div class="slds-p-top_medium"><img src={imageUrl} alt="Clickable Image" class="towers-img" onclick={handleTowerClick} data-record-id={tower.Id} data-unique-code={tower.UniqueCode__c}/>  </div>
+                                                                                          
+                                            </div>
+                                        </template>
+                                    </template>
+                                </div>
+                            </template>
+
+                   
+
+                <template if:true={openTower}>
+                    <div class="slds-p-bottom_medium slds-border_bottom slds-m-bottom_large">
+                        <div class="slds-grid">
+                            <div class="slds-col">Tower 1 - Only 52 Units Available </div>
+                            <div class="slds-col">
+                                <div class="slds-grid slds-grid_align-end units-labels-wrap">
+                                    <div class="slds-col">
+                                        <div class="unit-label-box color-available"></div>
+                                        <span>Available</span>
+                                    </div>
+                                    <div class="slds-col">
+                                        <div class="unit-label-box color-hold"></div>
+                                        <span>Hold</span>
+                                    </div>
+                                    <div class="slds-col">
+                                        <div class="unit-label-box color-booked"></div>
+                                        <span>Booked</span>
+                                    </div>
+                                    <div class="slds-col">
+                                        <div class="unit-label-box color-sold"></div>
+                                        <span>Sold</span>
+                                    </div>
+                                    <div class="slds-col">
+                                        <div class="unit-label-box color-refuge"></div>
+                                        <span>Refuge Area</span>
+                                    </div>
+                                  </div>
+                            </div>
+                        </div>
+
+                       
+
+                      </div>
+
+                    <div class="container reim-floorbg">
+                        <table cellspacing="0" cellpadding="0" class="floor-main-table" align="center">
+                        <template if:true={floorUnitMap}>
+                        
+                            <template for:each={floorUnitMap} for:item="floorEntry">
+                                <tr key={floorEntry.floorName}>
+                                    <th scope="col">
+                                        <div class="floor custom-box" data-id={floorEntry.floorName} onclick={handleKeyClick}>
+                                            {floorEntry.floorName}
+                                        </div>
+                                    </th>
+                                    <template for:each={floorEntry.units} for:item="unit">
+                                        <td scope="col" key={unit.unitName}>
+                                            <div class={unit.unitStatus} data-id={unit.unitName} onclick={handleUnitClick}>
+                                                {unit.unitName}
+                                            </div>
+                                        </td>
+                                    </template>
+                                </tr>
+                            </template>
+                        </template>
+                    </table>
+                    </div>
+
+                </template>
+
+                <template if:true={openFloorRecord}>
+
+                    <div class="container">
+                        <!-- <template if:true={openFloorLst}> -->
+                        <div class="floorPlanImage">
+                          <template if:true={openFloorLst}>
+                            Floor Image
+                            <lightning-formatted-rich-text value={floorImage} style="height: 500px;"></lightning-formatted-rich-text>
+                        </template>
+                        </div>
+                        <div>
+
+                            <h1>{floorNameOnClick} Units</h1>
+
+                            <template for:each={openFloorLst} for:item="floor">
+                                <span key={floor.Id}>
+                                    <div class={floor.Unit_Status__c} onclick={handleUnitClick1} data-record-name={floor.Unit_Name__c}>{floor.Unit_Name__c}</div>
+
+
+                                </span>
+                            </template>
+
+                        </div>
+                        <!-- </template> -->
+
+                    </div>
+
+                </template>
+
+                <template if:true={openUnitRecord}>
+
+                    <div class="slds-text-heading_medium">Unit Details</div>
+                    <template for:each={openUnitLst} for:item="unit">
+                        <div class="slds-text-heading_small text-bold" key={unit.Id}># {unit.Unit_Name__c}</div>
+                    </template>
+                    
+                    <div class="container unit-open-box">
+                        <template if:true={openUnitLst}>
+                            
+                            <div class="unitPlanImage w100 txt-center">
+                                <lightning-formatted-rich-text value={unitImage} class=""></lightning-formatted-rich-text>
+                            </div>
+                            <div>
+                              
+                                <table>
+                                    <tbody>
+                                      <template for:each={openUnitLst} for:item="unit">
+                                        <tr key={unit.Id}>
+                                            <td class="unit-row-heading">Unit Details</td>
+                                            
+                                        </tr>
+                                        <tr key={unit.Id} >
+                                            
+                                          <td class="unit-cell">Unit Name: {unit.Unit_Name__c}</td>
+                                          <td class="unit-cell">Unit Type: {unit.Unit_Type__c}</td>
+                                          <td class="unit-cell">Unit Status: {unit.Unit_Status__c}</td>
+                                           <td class="unit-cell">Unit Size: {unit.Unit_Size__c}</td>
+                                           <td class="unit-cell">Unit Description: <lightning-formatted-rich-text value={unit.Unit_Description__c}></lightning-formatted-rich-text></td>
+                                        </tr>
+                                        <tr key={unit.Id}>
+                                            <td class="unit-row-heading">Details</td>
+                                            
+                                        </tr>
+                                        <tr key={unit.Id}>
+                                            <td class="unit-cell">Carpet Area: {unit.Carpet_Area__c}</td>
+                                            <td class="unit-cell">Balcony: {unit.Balcony__c}</td>
+
+                                            <td class="unit-cell">Unit Bedrooms: {unit.Unit_Bedroom_Count__c}</td>
+                                            <td class="unit-cell">Unit Bathrooms: {unit.Unit_Bathroom_Count__c}</td>
+                                          </tr>
+                                          <tr key={unit.Id}>
+                                            <td class="unit-row-heading">Building</td>
+                                            
+                                        </tr>
+                                        <tr key={unit.Id}>
+                                            <td class="unit-cell">Tower: {unit.Floor__r.Wing__r.Tower__r.Tower_Name__c}</td>
+                                            <td class="unit-cell">Wing: {unit.Floor__r.Wing__r.Wing_Name__c}</td>
+                                          <td class="unit-cell">Floor: {unit.Floor__r.Floor_Name__c}</td>
+                                        </tr>
+                                        <tr key={unit.Id}>
+                                            <td class="unit-row-heading">Total Value</td>
+                                            
+                                        </tr>
+                                       <tr key={unit.Id}>
+                                          <td class="unit-cell">Unit Total Price: {unit.Total_Price__c}</td>
+                                          <td class="unit-cell"></td>
+                                          <td class="unit-cell">Unit Price per Sq Ft: {unit.Price_Per_Sqft__c}</td>
+                                        </tr>
+                                        
+                                       
+                                      </template>
+                                    </tbody>
+                                  </table>
+
+                            </div>
+                        </template>
+                    </div>
+
+                </template>
+
+    </lightning-card>
+</template>

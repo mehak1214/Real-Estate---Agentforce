@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Unit_Category__c</fullName>
+    <label>Unit Category</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>1 BHK</fullName>
+                <default>false</default>
+                <label>1 BHK</label>
+            </value>
+            <value>
+                <fullName>2BHK Apex</fullName>
+                <default>false</default>
+                <label>2BHK Apex</label>
+            </value>
+            <value>
+                <fullName>2BHK Crest</fullName>
+                <default>false</default>
+                <label>2BHK Crest</label>
+            </value>
+            <value>
+                <fullName>2 BHK Haven</fullName>
+                <default>false</default>
+                <label>2 BHK Haven</label>
+            </value>
+            <value>
+                <fullName>2 BHK Nest</fullName>
+                <default>false</default>
+                <label>2 BHK Nest</label>
+            </value>
+            <value>
+                <fullName>3 BHK</fullName>
+                <default>false</default>
+                <label>3 BHK</label>
+            </value>
+            <value>
+                <fullName>3 BHK Bliss</fullName>
+                <default>false</default>
+                <label>3 BHK Bliss</label>
+            </value>
+            <value>
+                <fullName>3BHK Elite</fullName>
+                <default>false</default>
+                <label>3BHK Elite</label>
+            </value>
+            <value>
+                <fullName>3BHK Eterna</fullName>
+                <default>false</default>
+                <label>3BHK Eterna</label>
+            </value>
+            <value>
+                <fullName>3 BHK Joy</fullName>
+                <default>false</default>
+                <label>3 BHK Joy</label>
+            </value>
+            <value>
+                <fullName>4.5 BHK</fullName>
+                <default>false</default>
+                <label>4.5 BHK</label>
+            </value>
+            <value>
+                <fullName>4 BHK</fullName>
+                <default>false</default>
+                <label>4 BHK</label>
+            </value>
+            <value>
+                <fullName>4 BHK Nirvana</fullName>
+                <default>false</default>
+                <label>4 BHK Nirvana</label>
+            </value>
+            <value>
+                <fullName>Buzz</fullName>
+                <default>false</default>
+                <label>Buzz</label>
+            </value>
+            <value>
+                <fullName>Duplex</fullName>
+                <default>false</default>
+                <label>Duplex</label>
+            </value>
+            <value>
+                <fullName>Epitome</fullName>
+                <default>false</default>
+                <label>Epitome</label>
+            </value>
+            <value>
+                <fullName>Glitz</fullName>
+                <default>false</default>
+                <label>Glitz</label>
+            </value>
+            <value>
+                <fullName>Other Charges</fullName>
+                <default>false</default>
+                <label>Other Charges</label>
+            </value>
+            <value>
+                <fullName>Parking</fullName>
+                <default>false</default>
+                <label>Parking</label>
+            </value>
+            <value>
+                <fullName>Penthouse</fullName>
+                <default>false</default>
+                <label>Penthouse</label>
+            </value>
+            <value>
+                <fullName>Retail</fullName>
+                <default>false</default>
+                <label>Retail</label>
+            </value>
+            <value>
+                <fullName>Sky Suite</fullName>
+                <default>false</default>
+                <label>Sky Suite</label>
+            </value>
+            <value>
+                <fullName>Steller</fullName>
+                <default>false</default>
+                <label>Steller</label>
+            </value>
+            <value>
+                <fullName>Commercial</fullName>
+                <default>false</default>
+                <label>Commercial</label>
+            </value>
+            <value>
+                <fullName>2 BHK - Compact</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>2 BHK - Compact</label>
+            </value>
+            <value>
+                <fullName>2 BHK - Large</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>2 BHK - Large</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

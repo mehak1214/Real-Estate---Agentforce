@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Specification_Type__c</fullName>
+    <label>Specification Type</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Villa</fullName>
+                <default>false</default>
+                <label>Villa</label>
+            </value>
+            <value>
+                <fullName>Town House</fullName>
+                <default>false</default>
+                <label>Town House</label>
+            </value>
+            <value>
+                <fullName>Cluster Home</fullName>
+                <default>false</default>
+                <label>Cluster Home</label>
+            </value>
+            <value>
+                <fullName>Apartment</fullName>
+                <default>false</default>
+                <label>Apartment</label>
+            </value>
+            <value>
+                <fullName>Mansion</fullName>
+                <default>false</default>
+                <label>Mansion</label>
+            </value>
+            <value>
+                <fullName>Town House 3BD(M) G+2</fullName>
+                <default>false</default>
+                <label>Town House 3BD(M) G+2</label>
+            </value>
+            <value>
+                <fullName>Town House 3BD G+2</fullName>
+                <default>false</default>
+                <label>Town House 3BD G+2</label>
+            </value>
+            <value>
+                <fullName>Town Houses</fullName>
+                <default>false</default>
+                <label>Town Houses</label>
+            </value>
+            <value>
+                <fullName>Town House 3BC(M) G+2</fullName>
+                <default>false</default>
+                <label>Town House 3BC(M) G+2</label>
+            </value>
+            <value>
+                <fullName>Villa 6BR-L G+2</fullName>
+                <default>false</default>
+                <label>Villa 6BR-L G+2</label>
+            </value>
+            <value>
+                <fullName>Villa 5BR-L G+2</fullName>
+                <default>false</default>
+                <label>Villa 5BR-L G+2</label>
+            </value>
+            <value>
+                <fullName>Town House 3BC G+2</fullName>
+                <default>false</default>
+                <label>Town House 3BC G+2</label>
+            </value>
+            <value>
+                <fullName>Town House 3BB G+1</fullName>
+                <default>false</default>
+                <label>Town House 3BB G+1</label>
+            </value>
+            <value>
+                <fullName>Town House 3BA(M) G+1</fullName>
+                <default>false</default>
+                <label>Town House 3BA(M) G+1</label>
+            </value>
+            <value>
+                <fullName>Town House 3BA G+1</fullName>
+                <default>false</default>
+                <label>Town House 3BA G+1</label>
+            </value>
+            <value>
+                <fullName>Town House 3BB(M) G+1</fullName>
+                <default>false</default>
+                <label>Town House 3BB(M) G+1</label>
+            </value>
+            <value>
+                <fullName>Villa 5BR-L(M) G+2</fullName>
+                <default>false</default>
+                <label>Villa 5BR-L(M) G+2</label>
+            </value>
+            <value>
+                <fullName>Villa 6BR-L(M) G+2</fullName>
+                <default>false</default>
+                <label>Villa 6BR-L(M) G+2</label>
+            </value>
+            <value>
+                <fullName>Villa 6BR-M G+2</fullName>
+                <default>false</default>
+                <label>Villa 6BR-M G+2</label>
+            </value>
+            <value>
+                <fullName>Villa 6BR-M(M) G+2</fullName>
+                <default>false</default>
+                <label>Villa 6BR-M(M) G+2</label>
+            </value>
+            <value>
+                <fullName>Villa 5BR-M G+2</fullName>
+                <default>false</default>
+                <label>Villa 5BR-M G+2</label>
+            </value>
+            <value>
+                <fullName>J-6BR</fullName>
+                <default>false</default>
+                <label>J-6BR</label>
+            </value>
+            <value>
+                <fullName>I-6BR</fullName>
+                <default>false</default>
+                <label>I-6BR</label>
+            </value>
+            <value>
+                <fullName>H-5BR</fullName>
+                <default>false</default>
+                <label>H-5BR</label>
+            </value>
+            <value>
+                <fullName>G-5BR(M)</fullName>
+                <default>false</default>
+                <label>G-5BR(M)</label>
+            </value>
+            <value>
+                <fullName>G-5BR</fullName>
+                <default>false</default>
+                <label>G-5BR</label>
+            </value>
+            <value>
+                <fullName>H-5BR(M)</fullName>
+                <default>false</default>
+                <label>H-5BR(M)</label>
+            </value>
+            <value>
+                <fullName>L-7BR</fullName>
+                <default>false</default>
+                <label>L-7BR</label>
+            </value>
+            <value>
+                <fullName>K-7BR</fullName>
+                <default>false</default>
+                <label>K-7BR</label>
+            </value>
+            <value>
+                <fullName>K-7BR(M)</fullName>
+                <default>false</default>
+                <label>K-7BR(M)</label>
+            </value>
+            <value>
+                <fullName>J-6BR(M)</fullName>
+                <default>false</default>
+                <label>J-6BR(M)</label>
+            </value>
+            <value>
+                <fullName>I-6BR(M)</fullName>
+                <default>false</default>
+                <label>I-6BR(M)</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

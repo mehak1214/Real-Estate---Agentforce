@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Request_for_Unit_Block</fullName>
+    <availability>online</availability>
+    <displayType>button</displayType>
+    <linkType>javascript</linkType>
+    <masterLabel>Unit Blocking by Sales Consultant</masterLabel>
+    <openType>onClickJavaScript</openType>
+    <protected>false</protected>
+    <url>{!REQUIRESCRIPT(&quot;/soap/ajax/36.0/connection.js&quot;)} 
+{!REQUIRESCRIPT(&quot;/soap/ajax/36.0/apex.js&quot;)} 
+
+try{ 
+var excptioncommnts = prompt(&quot;Please enter your comments&quot;, &quot;&quot;); 
+var dys = prompt(&quot;No. of days unit should be blocked for&quot;,); 
+var noofdays = parseInt(dys); 
+
+if(excptioncommnts === &quot;&quot; || dys === &quot;&quot;){ 
+alert(&apos;Please make sure to enter comments and no. of days&apos;); 
+} 
+
+else if (Number(dys)){ 
+excptioncommnts = excptioncommnts.substring(0,254); 
+var result = sforce.apex.execute(&apos;SendtoApproval&apos;,&apos;inventoryBlockApproval&apos;,{objID: &quot;{!Inventory__c.Id}&quot;,cmments: excptioncommnts,blockedtill : noofdays}); 
+alert(result); 
+location.reload(); 
+} 
+
+else{ 
+alert(&apos;Please provide a valid value for no. of days&apos;); 
+} 
+
+} 
+catch(err){ 
+txt=&quot;There was an error on this page.\n\n&quot;; 
+txt+=&quot;Error description: &quot; + err.description + &quot;\n\n&quot;; 
+txt+=&quot;Click OK to continue.\n\n&quot;; 
+alert(txt); 
+}</url>
+</WebLink>

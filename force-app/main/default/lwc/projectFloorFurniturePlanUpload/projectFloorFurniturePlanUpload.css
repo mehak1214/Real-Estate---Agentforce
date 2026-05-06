@@ -1,0 +1,119 @@
+.slds-box_x-small {
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    background-color: #f3f2f2;
+    border: 1px solid #dddbda;
+}
+
+pre {
+    font-family: 'Salesforce Sans', Arial, sans-serif;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    margin: 0;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.slds-list_ordered {
+    counter-reset: ordered-counter;
+}
+
+.slds-list_ordered li {
+    position: relative;
+    padding-left: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.slds-list_ordered li:before {
+    content: counter(ordered-counter) ".";
+    counter-increment: ordered-counter;
+    position: absolute;
+    left: 0;
+    font-weight: bold;
+}
+
+.slds-theme_default {
+    background-color: #f3f2f2;
+    border-color: #dddbda;
+}
+
+.slds-text-longform {
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+/* Style for the file input - REMOVED ID SELECTOR */
+.custom-file-input {
+    padding: 0.5rem;
+    border: 1px solid #dddbda;
+    border-radius: 0.25rem;
+    background-color: white;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.custom-file-input:hover {
+    border-color: #1b96ff;
+}
+
+.custom-file-input:focus {
+    outline: none;
+    border-color: #1b96ff;
+    box-shadow: 0 0 3px #0176d3;
+}
+
+/* Add some custom styling for better visual feedback */
+.slds-form-element__control {
+    position: relative;
+}
+
+.custom-file-wrapper {
+    position: relative;
+    display: block;
+}
+
+/* Optional: Style for when files are selected */
+.custom-file-input:not(:placeholder-shown) {
+    border-color: #2e844a;
+    background-color: #f3f2f2;
+}
+
+/* Make the file input button more visible */
+.custom-file-input::-webkit-file-upload-button {
+    visibility: hidden;
+}
+
+.custom-file-input::before {
+    content: 'Choose Files';
+    display: inline-block;
+    background: #0176d3;
+    color: white;
+    border-radius: 0.25rem;
+    padding: 0.5rem 1rem;
+    outline: none;
+    white-space: nowrap;
+    cursor: pointer;
+    font-weight: 400;
+    font-size: 0.875rem;
+    margin-right: 1rem;
+}
+
+.custom-file-input:hover::before {
+    background: #014486;
+}
+
+.custom-file-input:active::before {
+    background: #032d60;
+}
+
+/* Add some spacing and alignment */
+.slds-form-element__label {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.slds-form-element__help {
+    color: #706e6b;
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+}

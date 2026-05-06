@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SalesCon_Com__c</fullName>
+    <description>This field is populated when the booking unit status become sold.</description>
+    <inlineHelpText>This field data used to send Yardi</inlineHelpText>
+    <label>Sales Consultant Commission</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackTrending>false</trackTrending>
+    <type>Currency</type>
+</CustomField>

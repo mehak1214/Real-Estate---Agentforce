@@ -1,0 +1,32 @@
+<template>
+    <div class="slds-text-heading_large">Watch Video</div>
+
+    <div class="slds-grid slds-grid_vertical-stretch riem-vid-gal">
+        <div class="slds-col slds-size_12-of-12">
+            <div class="grid-container">
+                <template for:each={mapData} for:item="item">
+                    <div key={item.value} class="grid-item"> 
+                        <strong>FileName - </strong>{item.value}
+                            <video width="100%" height="auto" controls="controls">
+                                <source src={item.key} type="video/mp4" />
+                            </video>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </div>
+
+<!--     
+    <lightning-card title="Watch Video" icon-name="utility:video">
+        <template for:each={mapData} for:item="item">
+            <div key={item.value}>
+                <div class="slds-col slds-large-size_4-of-12 slds-medium-size_4-of-12 slds-size_12-of-12" style="margin-bottom: 3em;">
+                    <strong>FileName - </strong>{item.value}
+                    <video width="600" height="400" controls="controls">
+                        <source src={item.key} type="video/mp4" />
+                    </video>
+            </div>
+            </div>
+        </template>
+    </lightning-card> -->
+</template>

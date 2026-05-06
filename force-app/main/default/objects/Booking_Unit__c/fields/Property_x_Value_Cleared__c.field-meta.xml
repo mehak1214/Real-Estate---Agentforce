@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Property_x_Value_Cleared__c</fullName>
+    <defaultValue>false</defaultValue>
+    <inlineHelpText>This field is integrated with Yardi</inlineHelpText>
+    <label>Property x Value Cleared(DO NOT USE)</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

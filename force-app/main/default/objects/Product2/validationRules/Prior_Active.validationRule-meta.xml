@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Prior_Active</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(
+    IsActive = FALSE,
+    TEXT( Unit_Status__c ) = &apos;Cancelled Unit- AFS&apos;
+)</errorConditionFormula>
+    <errorDisplayField>IsActive</errorDisplayField>
+    <errorMessage>Test</errorMessage>
+</ValidationRule>

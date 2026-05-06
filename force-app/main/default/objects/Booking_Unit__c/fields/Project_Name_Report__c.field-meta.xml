@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Project_Name_Report__c</fullName>
+    <externalId>false</externalId>
+    <formula>IF(RecordType.Name != &apos;Land&apos;,IF(NOT(ISBLANK(Inventory__r.Property_Inv__r.Project_Name_Report__c)), Inventory__r.Property_Inv__r.Project_Name_Report__c,Inventory__r.Project_Inv__r.Name),Inventory__r.Project_Inv__r.Name)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Project Name Report</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

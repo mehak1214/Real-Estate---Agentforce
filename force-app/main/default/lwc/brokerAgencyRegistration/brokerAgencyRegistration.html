@@ -1,0 +1,741 @@
+<template>
+    <div class="container">
+        <!-- Loading Overlay -->
+        <template if:true={isLoading}>
+            <div class="loading-overlay">
+                <div class="loading-spinner">
+                    <div class="spinner"></div>
+                    <p>Saving Information...</p>
+                </div>
+            </div>
+        </template>
+
+        <!-- Header -->
+        <div class="header">
+            <div class="header-content">
+                <h1 class="title">Real Estate</h1>
+                <div class="header-subtitle">
+                    <span class="badge">{applicationType}</span>
+                    <template if:true={isExistingApplication}>
+                        <span class="existing-badge">Existing</span>
+                    </template>
+                </div>
+                <div class="reference-info">
+                    <strong>Application Reference Number:</strong> 
+                    <span class="reference-number">{commercialLicenseNumber}</span>
+                    <span class={statusBadgeClass}>{applicationStatus}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs Navigation -->
+        <div class="tabs-navigation">
+            <div class="tabs-wrapper">
+                <template for:each={computedTabs} for:item="tab">
+                    <div 
+                        key={tab.id}
+                        class={tab.className}
+                        data-tab={tab.id}
+                        onclick={handleTabClick}
+                    >
+                        <lightning-icon 
+                            icon-name={tab.icon} 
+                            size="x-small"
+                            class="tab-icon"
+                        ></lightning-icon>
+                        <span class="tab-label">{tab.label}</span>
+                        <div class="tab-indicator" if:true={tab.completed}>✓</div>
+                    </div>
+                </template>
+            </div>
+        </div>
+
+        <!-- Main Content - Only show active tab -->
+        <div class="main-content">
+            <!-- Agency Information Tab -->
+            <template if:true={showAgencyInfo}>
+                <div class="tab-content active">
+                    <div class="tab-header">
+                        <h2 class="tab-title">
+                            <lightning-icon icon-name="utility:company" size="small"></lightning-icon>
+                            Agency Information
+                        </h2>
+                        <p class="tab-description">
+                            Kindly provide your agency details to proceed to the next step and complete your registration.
+                        </p>
+                    </div>
+
+                    <div class="form-container">
+                    <lightning-record-edit-form
+                            data-id="agencyInfo"
+                            object-api-name="BrokerApplication__c"
+                            onsuccess={handleSuccess}
+                            onsubmit={handleSubmit}
+                            onerror={handleError}>
+                            
+                            <div class="form-section">
+                                <lightning-input-field
+                                    field-name="Name"
+                                    value={commercialLicenseNumber}
+                                    class="hidden-field"
+                                ></lightning-input-field>
+
+                                <lightning-input-field
+                                    field-name="TypeofEstablishment__c"
+                                    value={typeOfEstablishment}
+                                    class="hidden-field"
+                                ></lightning-input-field>
+
+                                <div class="form-grid-2col">
+                                    <!-- Commercial License Number -->
+                                    <div class="form-group">
+                                        <lightning-input-field
+                                            field-name="CommercialLicenseNumber__c"
+                                            value={commercialLicenseNumber}
+                                            onchange={handleInputChange}
+                                            class="form-input-field"
+                                            required
+                                        ></lightning-input-field>
+                                    </div>
+                                    
+                                    <!-- Commercial License Expiry Date -->
+                                    <div class="form-group">
+                                        <lightning-input-field
+                                            field-name="CommercialLicenseExpiryDate__c"
+                                            value={commercialLicenseExpiryDate}
+                                            type="date"
+                                            onchange={handleInputChange}
+                                            class="form-input-field"
+                                            required
+                                        ></lightning-input-field>
+                                    </div>
+
+                                    <!-- Agency Type -->
+                                    <div class="form-group">
+                                        <lightning-input-field
+                                            field-name="AgencyType__c"
+                                            value={agencyType}
+                                            onchange={handleInputChange}
+                                            class="form-input-field"
+                                            required
+                                        ></lightning-input-field>
+                                    </div>
+
+                                    <!-- Company Name -->
+                                    <div class="form-group">
+                                        <lightning-input-field
+                                            field-name="CompanyName__c"
+                                            value={companyName}
+                                            onchange={handleInputChange}
+                                            class="form-input-field"
+                                            required
+                                        ></lightning-input-field>
+                                    </div>
+                                </div>
+                            </div>
+                        </lightning-record-edit-form>
+                    </div>
+                </div>
+            </template>
+
+            <!-- Agency Address Tab -->
+            <template if:true={showAgencyAddress}>
+                <div class="tab-content active">
+                    <div class="tab-header">
+                        <h2 class="tab-title">
+                            <lightning-icon icon-name="utility:location" size="small"></lightning-icon>
+                            Agency Address
+                        </h2>
+                        <p class="tab-description">
+                            Provide your official business address for communication and verification.
+                        </p>
+                    </div>
+
+                    <div class="form-container">
+                    <lightning-record-edit-form
+                        data-id="agencyAddress"
+                        object-api-name="BrokerApplication__c"
+                    >
+                            <div class="form-section">
+                                <div class="form-grid-2col">
+                                    <!-- Address Line 01 -->
+                                    <div class="form-group">
+                                        <lightning-input-field
+                                            field-name="AddressLine01__c"
+                                            value={addressLine01}
+                                            onchange={handleInputChange}
+                                            class="form-input-field"
+                                            required
+                                        ></lightning-input-field>
+                                    </div>
+
+                                    <!-- Address Line 02 -->
+                                    <div class="form-group">
+                                        <lightning-input-field
+                                            field-name="AddressLine02__c"
+                                            value={addressLine02}
+                                            onchange={handleInputChange}
+                                            class="form-input-field"
+                                        ></lightning-input-field>
+                                    </div>
+
+                                    <!-- Country -->
+                                    <div class="form-group">
+                                        <lightning-input-field
+                                            field-name="Country__c"
+                                            value={country}
+                                            onchange={handleInputChange}
+                                            class="form-input-field"
+                                            required
+                                        ></lightning-input-field>
+                                    </div>
+
+                                    <!-- State -->
+                                    <div class="form-group">
+                                        <lightning-input-field
+                                            field-name="State__c"
+                                            value={state}
+                                            onchange={handleInputChange}
+                                            class="form-input-field"
+                                            required
+                                        ></lightning-input-field>
+                                    </div>
+
+                                    <!-- City -->
+                                    <div class="form-group">
+                                        <lightning-input-field
+                                            field-name="City__c"
+                                            value={city}
+                                            onchange={handleInputChange}
+                                            class="form-input-field"
+                                            required
+                                        ></lightning-input-field>
+                                    </div>
+                                </div>
+                            </div>
+                        </lightning-record-edit-form>
+                    </div>
+                </div>
+            </template>
+
+            <!-- Bank Details Tab -->
+            <template if:true={showBankDetails}>
+                <div class="tab-content active">
+                    <div class="tab-header">
+                        <h2 class="tab-title">
+                            <lightning-icon icon-name="utility:currency" size="small"></lightning-icon>
+                            Bank Details
+                        </h2>
+                        <p class="tab-description">
+                            Provide your company's bank account information for transactions.
+                        </p>
+                    </div>
+
+                    <div class="form-container">
+                    <lightning-record-edit-form
+                        data-id="bankDetails"
+                        object-api-name="BrokerApplication__c"
+                        >
+                            <div class="form-section">
+                                <div class="form-grid-2col">
+                                    <!-- Bank Name -->
+                                    <div class="form-group">
+                                        <lightning-input-field
+                                            field-name="BankNameValue__c"
+                                            value={bankName}
+                                            onchange={handleInputChange}
+                                            class="form-input-field"
+                                            required
+                                        ></lightning-input-field>
+                                    </div>
+
+                                    <!-- Account Number -->
+                                    <div class="form-group">
+                                        <lightning-input-field
+                                            field-name="Account_Number__c"
+                                            value={accountNumber}
+                                            onchange={handleInputChange}
+                                            class="form-input-field"
+                                            required
+                                        ></lightning-input-field>
+                                    </div>
+
+                                    <!-- Bank Country -->
+                                    <div class="form-group">
+                                        <lightning-input-field
+                                            field-name="BankCountry__c"
+                                            value={bankCountry}
+                                            onchange={handleInputChange}
+                                            class="form-input-field"
+                                            required
+                                        ></lightning-input-field>
+                                    </div>
+
+                                    <!-- Bank Branch Address -->
+                                    <div class="form-group">
+                                        <lightning-input-field
+                                            field-name="BankBranchAddress__c"
+                                            value={bankBranchAddress}
+                                            onchange={handleInputChange}
+                                            class="form-input-field"
+                                            required
+                                        ></lightning-input-field>
+                                    </div>
+
+                                    <!-- Swift code -->
+                                    <div class="form-group">
+                                        <lightning-input-field
+                                            field-name="SwiftCode__c"
+                                            value={swiftCode}
+                                            onchange={handleInputChange}
+                                            class="form-input-field"
+                                            required
+                                        ></lightning-input-field>
+                                    </div>
+                                </div>
+                            </div>
+                        </lightning-record-edit-form>
+                    </div>
+                </div>
+            </template>
+
+            <!-- Company Personnel Tab -->
+            <template if:true={showCompanyPersonnel}>
+                <div class="tab-content active">
+                    <div class="tab-header">
+                        <h2 class="tab-title">
+                            <lightning-icon icon-name="utility:user" size="small"></lightning-icon>
+                            Company Personnel
+                        </h2>
+                        <p class="tab-description">
+                            Kindly provide your company personnel details to proceed to the next step and complete your registration.
+                        </p>
+                    </div>
+
+                    <div class="form-container">
+                        <!-- Internal Tab Navigation for Company Personnel -->
+                        <div class="internal-tabs-navigation">
+                            <div class="internal-tabs-wrapper">
+                                <div 
+                                    class={agencyAdminTabClass}
+                                    data-tab="agencyAdmin"
+                                    onclick={handleInternalTabClick}
+                                >
+                                    <lightning-icon 
+                                        icon-name="utility:user" 
+                                        size="x-small"
+                                        class="internal-tab-icon"
+                                    ></lightning-icon>
+                                    <span class="internal-tab-label">Agency Admin</span>
+                                </div>
+                                <div 
+                                    class={partnerOwnerTabClass}
+                                    data-tab="partnerOwner"
+                                    onclick={handleInternalTabClick}
+                                >
+                                    <lightning-icon 
+                                        icon-name="utility:client" 
+                                        size="x-small"
+                                        class="internal-tab-icon"
+                                    ></lightning-icon>
+                                    <span class="internal-tab-label">Partner Owner</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Agency Admin Section -->
+                        <template if:true={showAgencyAdmin}>
+                            <div class="internal-tab-content active">
+                                <lightning-record-edit-form
+                                    data-formtype="agencyAdmin"
+                                    object-api-name="BrokerApplicant__c"
+                                    onsuccess={handleApplicantSuccess}
+                                    onsubmit={handleApplicantSubmit}
+                                >
+                                    <div class="form-section">
+                                        <div class="section-header">
+                                            <h3 class="section-title">Agency Admin</h3>
+                                            <p class="form-help">The Agency Admin is responsible for managing the agency's account on the platform. This person will handle day-to-day operations, user access and platform-related communication.</p>
+                                        </div>
+                                        
+                                        <div class="form-grid-2col">
+                                            <!-- Title -->
+                                            <div class="form-group">
+                                                <lightning-input-field
+                                                    field-name="Title__c"
+                                                    value={agencyAdminTitle}
+                                                    onchange={handleInputChange}
+                                                    class="form-input-field"
+                                                    required
+                                                ></lightning-input-field>
+                                            </div>
+
+                                            <!-- First Name -->
+                                            <div class="form-group">
+                                                <lightning-input-field
+                                                    field-name="FirstName__c"
+                                                    value={agencyAdminFirstName}
+                                                    onchange={handleInputChange}
+                                                    class="form-input-field"
+                                                    required
+                                                ></lightning-input-field>
+                                            </div>
+
+                                            <!-- Middle Name -->
+                                            <div class="form-group">
+                                                <lightning-input-field
+                                                    field-name="MiddleName__c"
+                                                    value={agencyAdminMiddleName}
+                                                    onchange={handleInputChange}
+                                                    class="form-input-field"
+                                                ></lightning-input-field>
+                                            </div>
+
+                                            <!-- Last Name -->
+                                            <div class="form-group">
+                                                <lightning-input-field
+                                                    field-name="LastName__c"
+                                                    value={agencyAdminLastName}
+                                                    onchange={handleInputChange}
+                                                    class="form-input-field"
+                                                    required
+                                                ></lightning-input-field>
+                                            </div>
+
+                                            <!-- Email -->
+                                            <div class="form-group">
+                                                <lightning-input-field
+                                                    field-name="Email__c"
+                                                    value={agencyAdminEmail}
+                                                    type="email"
+                                                    onchange={handleInputChange}
+                                                    class="form-input-field"
+                                                    required
+                                                ></lightning-input-field>
+                                            </div>
+
+                                            <!-- Phone Number -->
+                                            <div class="form-group">
+                                                <lightning-input-field
+                                                    field-name="PhoneNumber__c"
+                                                    value={agencyAdminPhone}
+                                                    type="tel"
+                                                    onchange={handleInputChange}
+                                                    class="form-input-field"
+                                                    required
+                                                ></lightning-input-field>
+                                            </div>
+
+                                            <!-- Passport Number -->
+                                            <div class="form-group">
+                                                <lightning-input-field
+                                                    field-name="PassportNumber__c"
+                                                    value={agencyAdminPassportNumber}
+                                                    onchange={handleInputChange}
+                                                    class="form-input-field"
+                                                    required
+                                                ></lightning-input-field>
+                                            </div>
+
+                                            <!-- Passport Expiry Date -->
+                                            <div class="form-group">
+                                                <lightning-input-field
+                                                    field-name="PassportExpiryDate__c"
+                                                    value={agencyAdminPassportExpiryDate}
+                                                    type="date"
+                                                    onchange={handleInputChange}
+                                                    class="form-input-field"
+                                                    required
+                                                ></lightning-input-field>
+                                            </div>
+
+                                            <!-- Date of Birth -->
+                                            <div class="form-group">
+                                                <lightning-input-field
+                                                    field-name="DateOfBirth__c"
+                                                    value={agencyAdminDateOfBirth}
+                                                    type="date"
+                                                    onchange={handleInputChange}
+                                                    class="form-input-field"
+                                                    required
+                                                ></lightning-input-field>
+                                            </div>
+
+                                            <!-- Hidden field for relationship -->
+                                            <lightning-input-field
+                                                field-name="BrokerApplication__c"
+                                                value={actualRecordId}
+                                                class="hidden-field"
+                                            ></lightning-input-field>
+                                        </div>
+                                    </div>
+                                </lightning-record-edit-form>
+                            </div>
+                        </template>
+
+                        <!-- Partner Owner Section -->
+                        <template if:true={showPartnerOwner}>
+                            <div class="internal-tab-content active">
+                                <lightning-record-edit-form
+                                    data-formtype="partnerOwner"
+                                    object-api-name="BrokerApplicant__c"
+                                    onsuccess={handleApplicantSuccess}
+                                    onsubmit={handleApplicantSubmit}
+                                >
+                                    <div class="form-section">
+                                        <div class="section-header">
+                                            <h3 class="section-title">Partner Owner</h3>
+                                        </div>
+                                        
+                                        <div class="form-grid-2col">
+                                            <!-- Title -->
+                                            <div class="form-group">
+                                                <lightning-input-field
+                                                    field-name="Title__c"
+                                                    value={partnerOwnerTitle}
+                                                    onchange={handleInputChange}
+                                                    class="form-input-field"
+                                                    required
+                                                ></lightning-input-field>
+                                            </div>
+
+                                            <!-- First Name -->
+                                            <div class="form-group">
+                                                <lightning-input-field
+                                                    field-name="FirstName__c"
+                                                    value={partnerOwnerFirstName}
+                                                    onchange={handleInputChange}
+                                                    class="form-input-field"
+                                                    required
+                                                ></lightning-input-field>
+                                            </div>
+
+                                            <!-- Middle Name -->
+                                            <div class="form-group">
+                                                <lightning-input-field
+                                                    field-name="MiddleName__c"
+                                                    value={partnerOwnerMiddleName}
+                                                    onchange={handleInputChange}
+                                                    class="form-input-field"
+                                                ></lightning-input-field>
+                                            </div>
+
+                                            <!-- Last Name -->
+                                            <div class="form-group">
+                                                <lightning-input-field
+                                                    field-name="LastName__c"
+                                                    value={partnerOwnerLastName}
+                                                    onchange={handleInputChange}
+                                                    class="form-input-field"
+                                                    required
+                                                ></lightning-input-field>
+                                            </div>
+
+                                            <!-- Email -->
+                                            <div class="form-group">
+                                                <lightning-input-field
+                                                    field-name="Email__c"
+                                                    value={partnerOwnerEmail}
+                                                    type="email"
+                                                    onchange={handleInputChange}
+                                                    class="form-input-field"
+                                                    required
+                                                ></lightning-input-field>
+                                            </div>
+
+                                            <!-- Phone Number -->
+                                            <div class="form-group">
+                                                <lightning-input-field
+                                                    field-name="PhoneNumber__c"
+                                                    value={partnerOwnerPhone}
+                                                    type="tel"
+                                                    onchange={handleInputChange}
+                                                    class="form-input-field"
+                                                    required
+                                                ></lightning-input-field>
+                                            </div>
+
+                                            <!-- Passport Number -->
+                                            <div class="form-group">
+                                                <lightning-input-field
+                                                    field-name="PassportNumber__c"
+                                                    value={partnerOwnerPassportNumber}
+                                                    onchange={handleInputChange}
+                                                    class="form-input-field"
+                                                    required
+                                                ></lightning-input-field>
+                                            </div>
+
+                                            <!-- Passport Expiry Date -->
+                                            <div class="form-group">
+                                                <lightning-input-field
+                                                    field-name="PassportExpiryDate__c"
+                                                    value={partnerOwnerPassportExpiryDate}
+                                                    type="date"
+                                                    onchange={handleInputChange}
+                                                    class="form-input-field"
+                                                    required
+                                                ></lightning-input-field>
+                                            </div>
+
+                                            <!-- Date of Birth -->
+                                            <div class="form-group">
+                                                <lightning-input-field
+                                                    field-name="DateOfBirth__c"
+                                                    value={partnerOwnerDateOfBirth}
+                                                    type="date"
+                                                    onchange={handleInputChange}
+                                                    class="form-input-field"
+                                                    required
+                                                ></lightning-input-field>
+                                            </div>
+
+                                            <!-- Hidden field for relationship -->
+                                            <lightning-input-field
+                                                field-name="BrokerApplication__c"
+                                                value={actualRecordId}
+                                                class="hidden-field"
+                                            ></lightning-input-field>
+                                        </div>
+                                    </div>
+                                </lightning-record-edit-form>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </template>
+
+            <!-- Legal Documents Tab -->
+            <template if:true={showLegalDocs}>
+                <div class="tab-content active">
+                    <div class="tab-header">
+                        <h2 class="tab-title">
+                            <lightning-icon icon-name="utility:document" size="small"></lightning-icon>
+                            Legal Documents
+                        </h2>
+                        <p class="tab-description">
+                            Upload your legal documents. Files will be attached to your Broker Application.
+                            <template if:true={actualRecordId}>
+                                <br><strong>Application ID:</strong> {actualRecordId}
+                            </template>
+                        </p>
+                    </div>
+
+                    <div class="form-container">
+                        <div class="documents-section">
+                            <div class="documents-header">
+                                <h3 class="section-title">Upload Legal Documents</h3>
+                                <button type="button" class="btn-add-doc" onclick={addDocumentRow}>
+                                    <lightning-icon icon-name="utility:add" size="x-small"></lightning-icon>
+                                    Add Another Document
+                                </button>
+                            </div>
+                            
+                            <div class="upload-info" if:true={actualRecordId}>
+                                <lightning-icon icon-name="utility:info" size="x-small"></lightning-icon>
+                                Files will be attached to Broker Application: {actualRecordId}
+                            </div>
+                            
+                            <div class="upload-warning" if:false={actualRecordId}>
+                                <lightning-icon icon-name="utility:warning" size="x-small"></lightning-icon>
+                                Please complete previous tabs first to create a Broker Application.
+                            </div>
+                            
+                            <template for:each={documentList} for:item="doc">
+                                <div key={doc.id} class="document-row">
+                                    <div class="document-row-header">
+                                        <h4>{doc.displayNumber}</h4>
+                                        <button 
+                                            type="button" 
+                                            class="btn-remove-doc" 
+                                            data-id={doc.id}
+                                            onclick={removeDocumentRow}
+                                            if:true={doc.showRemove}
+                                        >
+                                            <lightning-icon icon-name="utility:delete" size="x-small"></lightning-icon>
+                                            Remove
+                                        </button>
+                                    </div>
+                                    
+                                    <div class="form-grid-1col">
+                                        <!-- File Upload Only -->
+                                        <div class="form-group">
+    <label class="form-label">Upload Document (PDF, JPG, PNG, max 5MB) <span class="required">*</span></label>
+    
+    <!-- For existing documents -->
+    <template if:true={doc.isExisting}>
+        <div class="existing-file-info">
+            <div class="file-info">
+                <lightning-icon icon-name="utility:attach" size="x-small"></lightning-icon>
+                {doc.fileName}
+                <span class="file-size" if:true={doc.fileSize}>({doc.fileSize})</span>
+            </div>
+        </div>
+        <div class="existing-doc-info">
+            <lightning-icon icon-name="utility:check" size="x-small"></lightning-icon>
+            <span>Previously uploaded document</span>
+        </div>
+    </template>
+    
+    <!-- For new documents or to replace existing ones -->
+    <template if:false={doc.isExisting}>
+        <div class="file-upload-container">
+            <input 
+                type="file"
+                class="slds-input file-input"
+                data-id={doc.id}
+                onchange={handleFileUpload}
+                accept=".pdf,.jpg,.jpeg,.png"
+                required
+            />
+            <div if:true={doc.fileName} class="file-info">
+                <lightning-icon icon-name="utility:attach" size="x-small"></lightning-icon>
+                {doc.fileName}
+                <span class="file-size" if:true={doc.fileSize}>({doc.fileSize})</span>
+            </div>
+            <div if:false={doc.fileName} class="file-placeholder">
+                <lightning-icon icon-name="utility:upload" size="x-small"></lightning-icon>
+                <span if:true={actualRecordId}>Click to choose a file</span>
+                <span if:false={actualRecordId}>Complete previous tabs first</span>
+            </div>
+        </div>
+    </template>
+    
+    <div class="form-help">Supported formats: PDF, JPG, PNG. Maximum file size: 5MB</div>
+</div>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <button 
+                class="btn-exit" 
+                onclick={handleExit}
+                disabled={isLoading}
+            >
+                <lightning-icon icon-name="utility:close" size="x-small"></lightning-icon>
+                Exit without Saving
+            </button>
+            
+            <button 
+                class="btn-save" 
+                onclick={handleSaveAndProceed}
+                disabled={isLoading}
+            >
+                <template if:true={isLoading}>
+                    <span class="btn-spinner"></span>
+                </template>
+                <template if:false={isLoading}>
+                    <lightning-icon icon-name="utility:save" size="x-small"></lightning-icon>
+                </template>
+                Save & Proceed
+            </button>
+        </div>
+    </div>
+</template>

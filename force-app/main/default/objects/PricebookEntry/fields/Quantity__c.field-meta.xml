@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Quantity__c</fullName>
+    <externalId>false</externalId>
+    <formula>IF(ISPICKVAL(Product2.Family, &apos;Saleable Unit&apos;),  Product2.Saleable_Area__c , IF(ISPICKVAL( Product2.Family, &apos;Parking&apos;), 1, IF( AND(ISPICKVAL(Calculation_Type__c, &apos;Per sq ft&apos;),ISPICKVAL( Product2.Family, &apos;Other Charges&apos;)),2,1)))</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Quantity</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

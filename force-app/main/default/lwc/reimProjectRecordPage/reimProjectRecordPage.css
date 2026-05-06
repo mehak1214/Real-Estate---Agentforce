@@ -1,0 +1,103 @@
+.slds-box{
+  background-color: #8B1874;
+}
+
+.icon{
+  background-color: #8B1874;
+  margin-right: 10px;
+  color: white;
+}
+.project-name {
+  /* font-weight: bold; */
+  font-size: 20px;
+  background-color: #8B1874;
+  color:white;
+}
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: menu;
+  }
+  
+  .box {
+    
+    /* width: 200px; */
+    height: 70px;
+    margin: 0;
+  padding: 0;
+    background-color: #F6FFDE;
+    /* margin-bottom: 10px; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  .box:hover {
+    background-color: white;
+    border-left: 4px solid blue;
+  }
+  .grid-container {
+    display: grid;
+    /* grid-template-columns: 1fr; */
+    grid-template-rows: auto;
+    grid-template-areas: "main";
+    background-color: white;
+    margin-top: 10px;
+    /* padding: 10px;*/
+    margin-right: 10px; 
+  }
+
+  .item1 {
+    grid-area: main;
+    height: 100%;
+  }
+  .item2{
+    grid-area: right;
+    margin-top: 15px;
+    
+  }
+  
+
+  .ListHeader{
+    font-weight: bold;
+    font-size: 15px;
+  }
+  .unit{
+    display: grid;
+  grid-template-columns: repeat(4, 1fr); /* Adjust the number of columns as needed */
+  gap: 20px;
+  width:fit-content;
+  }
+  .units {
+    
+    background-color: white;
+    border: 1px solid #3A98B9;
+    padding: 20px;
+  }
+  .custom-map-container lightning-map button {
+    background-color: #f0f0f0;
+}
+.slds-button{
+  border-color: transparent;
+}
+.slds-button:hover{
+  background-color: cornflowerblue;
+}
+.tab{
+    height: 600px; 
+}
+/*Project Tab*/
+.container {
+  display: flex;
+  flex-direction: row;
+}
+
+/* .image-container {
+  
+} */
+
+.content-container {
+  flex: 1;
+  padding-left: 10px; 
+}

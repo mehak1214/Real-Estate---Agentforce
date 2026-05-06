@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Wing__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <description>Lookup to show Wing when record Type is Floor. Self Lookup</description>
+    <inlineHelpText>Select Wing</inlineHelpText>
+    <label>Wing</label>
+    <lookupFilter>
+        <active>true</active>
+        <filterItems>
+            <field>Module__c.RecordType.Name</field>
+            <operation>equals</operation>
+            <value>Wing</value>
+        </filterItems>
+        <isOptional>false</isOptional>
+    </lookupFilter>
+    <referenceTo>Module__c</referenceTo>
+    <relationshipLabel>Floors</relationshipLabel>
+    <relationshipName>Modules1</relationshipName>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

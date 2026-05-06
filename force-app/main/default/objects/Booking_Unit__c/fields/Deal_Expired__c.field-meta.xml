@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Deal_Expired__c</fullName>
+    <description>AND(
+NOT( ISNULL( Lock_Till__c ) ),
+Lock_Till__c &lt; NOW())</description>
+    <formula>AND(
+NOT( ISNULL( Lock_Till__c ) ),
+Lock_Till__c &lt; NOW(),Token_BU__c == null)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Deal Expired</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

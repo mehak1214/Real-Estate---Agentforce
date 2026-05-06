@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Validation_for_Company_Name</fullName>
+    <active>false</active>
+    <errorConditionFormula>AND( ISPICKVAL( Purchaser__c , &apos;Individual&apos;), NOT(CONTAINS(Company, LastName))
+)</errorConditionFormula>
+    <errorDisplayField>Company</errorDisplayField>
+    <errorMessage>Company Name should contain  Last Name</errorMessage>
+</ValidationRule>

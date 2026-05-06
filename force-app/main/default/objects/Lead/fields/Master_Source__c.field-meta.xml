@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Master_Source__c</fullName>
+    <label>Master Source</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Employee Referral</fullName>
+                <default>false</default>
+                <label>Employee Referral</label>
+            </value>
+            <value>
+                <fullName>Print</fullName>
+                <default>false</default>
+                <label>Print</label>
+            </value>
+            <value>
+                <fullName>Paper Insert</fullName>
+                <default>false</default>
+                <label>Paper Insert</label>
+            </value>
+            <value>
+                <fullName>Radio</fullName>
+                <default>false</default>
+                <label>Radio</label>
+            </value>
+            <value>
+                <fullName>Outdoor/Hoarding</fullName>
+                <default>false</default>
+                <label>Outdoor/Hoarding</label>
+            </value>
+            <value>
+                <fullName>Digital</fullName>
+                <default>false</default>
+                <label>Digital</label>
+            </value>
+            <value>
+                <fullName>Direct Walk-In</fullName>
+                <default>false</default>
+                <label>Direct Walk-In</label>
+            </value>
+            <value>
+                <fullName>SMS</fullName>
+                <default>false</default>
+                <label>SMS</label>
+            </value>
+            <value>
+                <fullName>Realty Expo</fullName>
+                <default>false</default>
+                <label>Realty Expo</label>
+            </value>
+            <value>
+                <fullName>Activation</fullName>
+                <default>false</default>
+                <label>Activation</label>
+            </value>
+            <value>
+                <fullName>Telecalling</fullName>
+                <default>false</default>
+                <label>Telecalling</label>
+            </value>
+            <value>
+                <fullName>Collaterals</fullName>
+                <default>false</default>
+                <label>Collaterals</label>
+            </value>
+            <value>
+                <fullName>TV</fullName>
+                <default>false</default>
+                <label>TV</label>
+            </value>
+            <value>
+                <fullName>Content/Blogs</fullName>
+                <default>false</default>
+                <label>Content/Blogs</label>
+            </value>
+            <value>
+                <fullName>Loyalty Program</fullName>
+                <default>false</default>
+                <label>Loyalty Program</label>
+            </value>
+            <value>
+                <fullName>Channel Partner</fullName>
+                <default>false</default>
+                <label>Channel Partner</label>
+            </value>
+            <value>
+                <fullName>Direct Contact</fullName>
+                <default>false</default>
+                <label>Direct Contact</label>
+            </value>
+            <value>
+                <fullName>Networking</fullName>
+                <default>false</default>
+                <label>Networking</label>
+            </value>
+            <value>
+                <fullName>Sales Event</fullName>
+                <default>false</default>
+                <label>Sales Event</label>
+            </value>
+            <value>
+                <fullName>Existing Customer Referral</fullName>
+                <default>false</default>
+                <label>Existing Customer Referral</label>
+            </value>
+            <value>
+                <fullName>School Referral</fullName>
+                <default>false</default>
+                <label>School Referral</label>
+            </value>
+            <value>
+                <fullName>Raymond Retail</fullName>
+                <default>false</default>
+                <label>Raymond Retail</label>
+            </value>
+            <value>
+                <fullName>Other Referral</fullName>
+                <default>false</default>
+                <label>Other Referral</label>
+            </value>
+            <value>
+                <fullName>Management</fullName>
+                <default>false</default>
+                <label>Management</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

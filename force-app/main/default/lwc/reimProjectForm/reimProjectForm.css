@@ -1,0 +1,12 @@
+.projectForm{
+    background-color: #F6FFDE;
+}
+.two-column-layout {
+    display: flex;
+    justify-content: space-between;
+}
+
+.column {
+    flex: 1;
+    margin-right: 1rem;
+}

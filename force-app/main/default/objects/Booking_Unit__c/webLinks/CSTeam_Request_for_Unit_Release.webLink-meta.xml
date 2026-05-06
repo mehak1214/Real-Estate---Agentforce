@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>CSTeam_Request_for_Unit_Release</fullName>
+    <availability>online</availability>
+    <displayType>button</displayType>
+    <linkType>javascript</linkType>
+    <masterLabel>Initiate Unit Release</masterLabel>
+    <openType>onClickJavaScript</openType>
+    <protected>false</protected>
+    <url>{!REQUIRESCRIPT(&quot;/soap/ajax/32.0/connection.js&quot;)}
+{!REQUIRESCRIPT(&quot;/soap/ajax/32.0/apex.js&quot;)}
+
+try{
+if( &quot;{!Booking_Unit__c.Booking_Unit_Status__c}&quot; != &quot;Sold&quot;){
+alert(&quot;Please use this on a sold unit&quot;);
+}
+else{
+var excptioncommnts = prompt(&quot;Please enter your comments&quot;, &quot;&quot;);
+
+if(excptioncommnts === null){
+
+}else{
+if(excptioncommnts === &quot;&quot;){
+alert(&apos;Please enter comments and try again.&apos;);
+}
+else{
+excptioncommnts = excptioncommnts.substring(0,254);
+var result = sforce.apex.execute(&apos;SendtoApprovalCSTeam&apos;,&apos;objApproval&apos;,{objID: &quot;{!Booking_Unit__c.Id}&quot;,processname: &quot;bucancel&quot;,objectname : &quot;Booking_Unit__c&quot;,commts : excptioncommnts});
+alert(result);
+location.reload();
+}
+}
+}}
+catch(err) {
+txt=&quot;There was an error on this page.\n\n&quot;;
+txt+=&quot;Error description: &quot; + err.description + &quot;\n\n&quot;;
+txt+=&quot;Click OK to continue.\n\n&quot;;
+alert(txt);
+}</url>
+</WebLink>

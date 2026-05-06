@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>PP_Related_GFA__c</fullName>
+    <formula>IF((Charge_Code_Name__c = &apos;GFAInv&apos; || Charge_Code_Name__c = &apos;GFA-VAT&apos;) &amp;&amp;  !ISBLANK( Payment_Plan_Detail__c ) , true, false)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>PP Related GFA</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

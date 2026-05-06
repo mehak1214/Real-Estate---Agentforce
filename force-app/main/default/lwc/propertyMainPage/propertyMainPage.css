@@ -1,0 +1,39 @@
+.container {
+    text-align: center;
+    padding: 20px;
+}
+
+.section-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.section-subtitle {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.image-grid {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.image-item {
+    text-align: center;
+    width: 30%;
+}
+
+.image-item img {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
+
+.image-label {
+    margin-top: 10px;
+    font-size: 14px;
+    font-weight: bold;
+}

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GlobalValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customValue>
+        <fullName>DLP Service Category</fullName>
+        <default>false</default>
+        <label>DLP Service Category</label>
+    </customValue>
+    <customValue>
+        <fullName>Test</fullName>
+        <default>false</default>
+        <label>Test</label>
+    </customValue>
+    <masterLabel>DLP Service Category</masterLabel>
+    <sorted>false</sorted>
+</GlobalValueSet>

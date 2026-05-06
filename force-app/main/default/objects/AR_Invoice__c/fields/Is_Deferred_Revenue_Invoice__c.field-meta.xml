@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Is_Deferred_Revenue_Invoice__c</fullName>
+    <description>Formula field to determine if an Invoice is deferred or not.</description>
+    <formula>AND(NOT(ISBLANK(Start_Date__c)), NOT(ISBLANK(End_Date__c)))</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Is Deferred Revenue Invoice?</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

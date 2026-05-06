@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Finishing__c</fullName>
+    <label>Finishing Color</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Option 1</fullName>
+                <default>false</default>
+                <label>Option 1</label>
+            </value>
+            <value>
+                <fullName>Option 2</fullName>
+                <default>false</default>
+                <label>Option 2</label>
+            </value>
+            <value>
+                <fullName>Option 3</fullName>
+                <default>false</default>
+                <label>Option 3</label>
+            </value>
+            <value>
+                <fullName>Light Option</fullName>
+                <default>false</default>
+                <label>Light Option</label>
+            </value>
+            <value>
+                <fullName>Dark Option</fullName>
+                <default>false</default>
+                <label>Dark Option</label>
+            </value>
+            <value>
+                <fullName>No Option chosen</fullName>
+                <default>false</default>
+                <label>No Option chosen</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Latest_PreSales_Call_Status__c</fullName>
+    <label>Last PreSales Call Status</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Follow Up</fullName>
+                <default>false</default>
+                <label>Follow Up</label>
+            </value>
+            <value>
+                <fullName>Lost</fullName>
+                <default>false</default>
+                <label>Lost</label>
+            </value>
+            <value>
+                <fullName>No Show</fullName>
+                <default>false</default>
+                <label>No Show</label>
+            </value>
+            <value>
+                <fullName>Open</fullName>
+                <default>false</default>
+                <label>Open</label>
+            </value>
+            <value>
+                <fullName>Visit Confirmed</fullName>
+                <default>false</default>
+                <label>Visit Confirmed</label>
+            </value>
+            <value>
+                <fullName>Visit Done</fullName>
+                <default>false</default>
+                <label>Visit Done</label>
+            </value>
+            <value>
+                <fullName>Visit Proposed</fullName>
+                <default>false</default>
+                <label>Visit Proposed</label>
+            </value>
+            <value>
+                <fullName>Booking Done</fullName>
+                <default>false</default>
+                <label>Booking Done</label>
+            </value>
+            <value>
+                <fullName>TMC</fullName>
+                <default>false</default>
+                <label>TMC</label>
+            </value>
+            <value>
+                <fullName>TMD</fullName>
+                <default>false</default>
+                <label>TMD</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

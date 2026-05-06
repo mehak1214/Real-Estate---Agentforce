@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Payment_Type__c</fullName>
+    <label>Payment Type</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Cheque</fullName>
+                <default>false</default>
+                <label>Cheque</label>
+            </value>
+            <value>
+                <fullName>Card</fullName>
+                <default>false</default>
+                <label>Card</label>
+            </value>
+            <value>
+                <fullName>Cash</fullName>
+                <default>false</default>
+                <label>Cash</label>
+            </value>
+            <value>
+                <fullName>Bank Transfer</fullName>
+                <default>false</default>
+                <label>Bank Transfer</label>
+            </value>
+            <value>
+                <fullName>Real Connect Payments</fullName>
+                <default>false</default>
+                <label>Real Connect Payments</label>
+            </value>
+            <value>
+                <fullName>Payment Links</fullName>
+                <default>false</default>
+                <label>Payment Links</label>
+            </value>
+            <value>
+                <fullName>Direct Cash Deposit</fullName>
+                <default>false</default>
+                <label>Direct Cash Deposit</label>
+            </value>
+            <value>
+                <fullName>Direct Cheque Deposit</fullName>
+                <default>false</default>
+                <label>Direct Cheque Deposit</label>
+            </value>
+            <value>
+                <fullName>Manager Cheque</fullName>
+                <default>false</default>
+                <label>Manager Cheque</label>
+            </value>
+            <value>
+                <fullName>NOS Services</fullName>
+                <default>false</default>
+                <label>NOS Services</label>
+            </value>
+            <value>
+                <fullName>PDC</fullName>
+                <default>false</default>
+                <label>PDC</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

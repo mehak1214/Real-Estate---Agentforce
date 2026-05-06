@@ -1,0 +1,21 @@
+<template>
+    <lightning-card title="Projects" icon-name="standard:account">
+        <div class="slds-p-horizontal_small">
+            <h2>Projects : {projects.length}</h2>
+            <div class="grid">
+                <template for:each={projects} for:item="project">
+                    <lightning-card key={project.Id} class="card">
+                        <img src={buildingImage} alt="Building" class="building-img"/>
+                        <h3>{project.Name}</h3>
+                        <p class="location">{project.Location}</p>
+                        <p><strong>Towers:</strong> {project.Towers}</p>
+                        <p><strong>Total Units:</strong> {project.TotalUnits}</p>
+                        <div class="slds-m-top_small">
+                            <lightning-button label="View Details" variant="brand"></lightning-button>
+                        </div>
+                    </lightning-card>
+                </template>
+            </div>
+        </div>
+    </lightning-card>
+</template>

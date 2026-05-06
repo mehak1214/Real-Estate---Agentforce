@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Total_Units_Available__c</fullName>
+    <description>This field provides us the available units</description>
+    <label>Total Units Available</label>
+    <summaryFilterItems>
+        <field>Module__c.RecordTypeId</field>
+        <operation>equals</operation>
+        <value>Unit</value>
+    </summaryFilterItems>
+    <summaryFilterItems>
+        <field>Module__c.Unit_Status__c</field>
+        <operation>equals</operation>
+        <value>Available</value>
+    </summaryFilterItems>
+    <summaryForeignKey>Module__c.Project__c</summaryForeignKey>
+    <summaryOperation>count</summaryOperation>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Summary</type>
+</CustomField>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Template_ID__c</fullName>
+    <description>IF(OwnerId != null,&apos;a0C1v000012OV15&apos;, CASE( Property_Name__c ,
+&apos;Mudon M - Arabella III&apos;, &apos;a0C0Y000007ijEW&apos;, &apos;Mudon Views – Tower 5&apos;, &apos;a0C0Y000007iq4o&apos;,
+&apos;Serena – Casa Dora&apos;, &apos;a0C0Y000007iq5S&apos;, &apos;Villanova - La Quinta&apos;, &apos;a0C0Y000007iq5r&apos;, &apos;Mudon Views – Tower 4&apos;, &apos;a0C0Y000007iq4B&apos;, &apos;1/JBR&apos;, &apos;a0C0Y000007iq6L&apos;, &apos;Remraam - Al Ramth - Building Cluster Number 5&apos;, &apos;a0C0Y000007iq6a&apos;, &apos;Remraam - Al Ramth - Building Cluster Number 7&apos;, &apos;a0C0Y000007iq6a&apos;,
+&apos;Remraam - Al Ramth - Building Cluster Number 9&apos;, &apos;a0C0Y000007iq6a&apos;, &apos;Remraam - Al Ramth - Building Cluster Number 11&apos;, &apos;a0C0Y000007iq6a&apos;, &apos;Remraam - Al Ramth - Building Cluster Number 13&apos;, &apos;a0C0Y000007iq6a&apos;,
+&apos;Remraam - Al Ramth - Building Cluster Number 15&apos;, &apos;a0C0Y000007iq6a&apos;, &apos;Serena-Casa Viva&apos;, &apos;a0C0Y000007iq6x&apos;, &apos;Villanova - Amaranta&apos;, &apos;a0C0Y00000JWRBa&apos;, &apos;Villanova - Amaranta PA16&apos;, &apos;a0C0Y00000CfyQQ&apos;, &apos;Bellevue Towers - Tower 2&apos;, &apos;a0C0Y00000HCrtP&apos;, &apos;Bellevue Towers - Tower 1&apos;, &apos;a0C0Y00000HCrtP&apos;, &apos;Marasi Riverside&apos;, &apos;a0C0Y00000CgDPo&apos;,</description>
+    <externalId>false</externalId>
+    <formula>IF( TEXT(Inventory__r.Property_Inv__r.Company__c) == &apos;Meraas&apos; , &apos;a0CTX000001kd1m&apos;,
+IF( TEXT(Inventory__r.Property_Inv__r.Company__c) == &apos;Nakheel&apos;, &apos;a0CTX00001Dts4E&apos;,
+IF( TEXT(Inventory__r.Property_Inv__r.Company__c) == &apos;Meydan&apos;, &apos;a0CTX00001hgzdS&apos;,
+IF( TEXT(Inventory__r.Property_Inv__r.Company__c) == &apos;District One&apos;, &apos;a0CTX00001hgzdS&apos;,
+IF( TEXT(Inventory__r.Property_Inv__r.Company__c) == &apos;DH&apos;, &apos;a0CTX000001ldnH&apos;,
+IF(TEXT(Inventory__r.Property_Inv__r.Company__c) == &apos;DP&apos;, &apos;a0CTX000001ldnH&apos;, &apos;&apos;) ) ))))</formula>
+    <inlineHelpText>&apos;Dubai Wharf - Tower 2&apos;,&apos;a0C0Y00000HDvpO&apos;,
+&apos;Dubai Wharf - Tower 3&apos;,&apos;a0C0Y00000HDvpO&apos;,
+&apos;Serena - Bella Casa&apos;,&apos;a0C0Y00000HE0g0&apos;,
+&apos;Manazel Al Khor&apos;,&apos;a0C0Y00000HE58S&apos;,
+&apos;Marasi Water Homes&apos;,&apos;a0C0Y00000JWU1o&apos;,
+&apos;Riverside&apos;,&apos;a0C0Y00000Pz8YH&apos;,
+&apos;Villanova - Amaranta 3&apos;,&apos;a0C0Y00000YgIHg&apos;,
+&apos;a0C0Y000007ijEW&apos;))
+
+&apos;a0C5q000003A38P&apos;
+// Naga Backup Formula 
+IF(Inventory__r.Property__r.Project__r.Project_Name__c  = &apos;Lamaa - Madinat Jumeirah Living&apos;,&apos;a0C5q0000045Zd1&apos;, &apos;a0C5q000003A38P&apos;)</inlineHelpText>
+    <label>Template ID</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

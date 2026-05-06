@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Payment_Group__c</fullName>
+    <externalId>false</externalId>
+    <formula>IF(CONTAINS(TEXT(Payment_Type__c), &apos;Cash&apos;),  
+&apos;CASH&apos;, 
+IF(CONTAINS(TEXT(Payment_Type__c), &apos;Cheque&apos;),
+&apos;CHEQUES AND MANAGERS CHEQUE&apos;,
+IF(CONTAINS(TEXT(Payment_Type__c), &apos;Card&apos;),
+ &apos;CARD&apos;,
+ &apos;OTHERS&apos;) ) )</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Payment Group</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

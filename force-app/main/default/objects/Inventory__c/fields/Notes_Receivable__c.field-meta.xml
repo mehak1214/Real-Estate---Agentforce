@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Notes_Receivable__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <label>Notes Receivable</label>
+    <referenceTo>AR_GL_Account__c</referenceTo>
+    <relationshipName>Inventory1</relationshipName>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+  <types>
+    <members>ComponentEvent</members>
+    <members>ComponentTester</members>
+    <members>PaymentForm</members>
+    <members>forgotPassword</members>
+    <members>loginForm</members>
+    <members>selfRegister</members>
+    <members>setExpId</members>
+    <members>setStartUrl</members>
+    <name>AuraDefinitionBundle</name>
+  </types>
+  <version>66.0</version>
+</Package>

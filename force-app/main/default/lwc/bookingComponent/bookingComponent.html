@@ -1,0 +1,45 @@
+<template>
+    <lightning-card title="Create Booking">
+
+        <div class="slds-p-around_medium">
+
+            <!-- Project -->
+            <lightning-combobox
+                label="Project"
+                value={projectId}
+                options={projectOptions}
+                onchange={handleProjectChange}
+                required>
+            </lightning-combobox>
+
+            <!-- Property -->
+            <lightning-combobox
+                label="Property"
+                value={propertyId}
+                options={propertyOptions}
+                onchange={handlePropertyChange}
+                disabled={isPropertyDisabled}
+                required>
+            </lightning-combobox>
+
+            <!-- Unit -->
+            <lightning-combobox
+                label="Unit"
+                value={unitId}
+                options={unitOptions}
+                onchange={handleUnitChange}
+                disabled={isUnitDisabled}
+                required>
+            </lightning-combobox>
+
+            <br/>
+
+            <lightning-button 
+                label="Create Booking"
+                variant="brand"
+                onclick={handleSave}>
+            </lightning-button>
+
+        </div>
+    </lightning-card>
+</template>

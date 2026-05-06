@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Thw_RECEIPT_ID__c</fullName>
+    <externalId>false</externalId>
+    <formula>IF( Parent_Receipt__c != null , Parent_Receipt__r.Receipt_ID__c,  Receipt_ID__c )</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Thw RECEIPT ID</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

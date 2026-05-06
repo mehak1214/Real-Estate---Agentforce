@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Intercompany__c</fullName>
+    <formula>IF(
+    Inventory__r.RecordType.Name = &apos;Plot(Land)&apos;,
+    IF(
+        Bank_Account__r.Legal_Entity__c = Inventory__r.Project_Inv__r.Legal_Entity_CL__c,
+        false,
+        true
+    ),
+    IF(
+        Inventory__r.RecordType.Name = &apos;Unit&apos;,
+        IF(
+             Bank_Account__r.Legal_Entity__c  = Inventory__r.Property_Inv__r.Project_Inv__r.Legal_Entity_CL__c ,
+            false,
+            true
+        ),
+         IF(Bank_Account__r.Legal_Entity__c  =  Issued_To__c , false, true) 
+    )
+)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Intercompany</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

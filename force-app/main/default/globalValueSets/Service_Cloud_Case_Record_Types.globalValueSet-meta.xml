@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GlobalValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customValue>
+        <fullName>Service_Cloud_Case_Record_Types</fullName>
+        <default>false</default>
+        <label>Service_Cloud_Case_Record_Types</label>
+    </customValue>
+    <customValue>
+        <fullName>Test</fullName>
+        <default>false</default>
+        <label>Test</label>
+    </customValue>
+    <masterLabel>Service_Cloud_Case_Record_Types</masterLabel>
+    <sorted>false</sorted>
+</GlobalValueSet>

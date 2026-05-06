@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Configuration_interested_in__c</fullName>
+    <label>Configuration interested in</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>1 BHK</fullName>
+                <default>false</default>
+                <label>1 BHK</label>
+            </value>
+            <value>
+                <fullName>2 BHK</fullName>
+                <default>false</default>
+                <label>2 BHK</label>
+            </value>
+            <value>
+                <fullName>3 BHK</fullName>
+                <default>false</default>
+                <label>3 BHK</label>
+            </value>
+            <value>
+                <fullName>4 BHK</fullName>
+                <default>false</default>
+                <label>4 BHK</label>
+            </value>
+            <value>
+                <fullName>Duplex</fullName>
+                <default>false</default>
+                <label>Duplex</label>
+            </value>
+            <value>
+                <fullName>Online 1 BHK</fullName>
+                <default>false</default>
+                <label>Online 1 BHK</label>
+            </value>
+            <value>
+                <fullName>Online 2 BHK</fullName>
+                <default>false</default>
+                <label>Online 2 BHK</label>
+            </value>
+            <value>
+                <fullName>5 BHK</fullName>
+                <default>false</default>
+                <label>5 BHK</label>
+            </value>
+            <value>
+                <fullName>6 BHK</fullName>
+                <default>false</default>
+                <label>6 BHK</label>
+            </value>
+            <value>
+                <fullName>2BHK Apex</fullName>
+                <default>false</default>
+                <label>2BHK Apex</label>
+            </value>
+            <value>
+                <fullName>2BHK Crest</fullName>
+                <default>false</default>
+                <label>2BHK Crest</label>
+            </value>
+            <value>
+                <fullName>3BHK Elite</fullName>
+                <default>false</default>
+                <label>3BHK Elite</label>
+            </value>
+            <value>
+                <fullName>3BHK Eterna</fullName>
+                <default>false</default>
+                <label>3BHK Eterna</label>
+            </value>
+            <value>
+                <fullName>Retail</fullName>
+                <default>false</default>
+                <label>Retail</label>
+            </value>
+            <value>
+                <fullName>2 Bed Haven</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>2 Bed Haven</label>
+            </value>
+            <value>
+                <fullName>2 Bed Nest</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>2 Bed Nest</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

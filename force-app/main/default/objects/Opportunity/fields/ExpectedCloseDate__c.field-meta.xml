@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ExpectedCloseDate__c</fullName>
+    <formula>IF(
+   AND(
+       Project__r.Name == &apos;The Address BY GS - Bandra&apos;,
+       ISBLANK(First_ESVF_DateTime__c)
+   ),
+   CreatedDate + 60,
+   IF(
+      AND(
+          Project__r.Name != &apos;The Address BY GS - Bandra&apos;,
+          ISBLANK(First_ESVF_DateTime__c)
+      ),
+      CreatedDate + 45,
+      IF(
+         AND(
+             Project__r.Name == &apos;The Address BY GS - Bandra&apos;,
+             NOT(ISBLANK(First_ESVF_DateTime__c))
+         ),
+         First_ESVF_DateTime__c + 60,
+         First_ESVF_DateTime__c + 45
+      )
+   )
+)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Expected Closure Date</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Date</type>
+</CustomField>

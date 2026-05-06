@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Ownership_Sub_Category__c</fullName>
+    <label>Ownership Sub Category</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <controllingField>Ownership_Type__c</controllingField>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>single family villa</fullName>
+                <default>false</default>
+                <label>single family villa</label>
+            </value>
+            <value>
+                <fullName>Retail</fullName>
+                <default>false</default>
+                <label>Retail</label>
+            </value>
+            <value>
+                <fullName>Commercial</fullName>
+                <default>false</default>
+                <label>Commercial</label>
+            </value>
+            <value>
+                <fullName>Industrial</fullName>
+                <default>false</default>
+                <label>Industrial</label>
+            </value>
+            <value>
+                <fullName>Labour camp</fullName>
+                <default>false</default>
+                <label>Labour camp</label>
+            </value>
+            <value>
+                <fullName>Community facilities</fullName>
+                <default>false</default>
+                <label>Community facilities</label>
+            </value>
+        </valueSetDefinition>
+        <valueSettings>
+            <controllingFieldValue>Single Ownership Property</controllingFieldValue>
+            <valueName>single family villa</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Single Ownership Property</controllingFieldValue>
+            <valueName>Retail</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Single Ownership Property</controllingFieldValue>
+            <valueName>Commercial</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Single Ownership Property</controllingFieldValue>
+            <valueName>Industrial</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Single Ownership Property</controllingFieldValue>
+            <valueName>Labour camp</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Single Ownership Property</controllingFieldValue>
+            <valueName>Community facilities</valueName>
+        </valueSettings>
+    </valueSet>
+</CustomField>

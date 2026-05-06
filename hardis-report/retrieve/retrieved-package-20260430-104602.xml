@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+  <types>
+    <members>Lead.Project_Costing_Mandatory_for_Booking</members>
+    <members>Lead.Validation_for_Company_Name</members>
+    <members>Module__c.Validation_Floor_RecordType</members>
+    <members>Module__c.Validation_Unit_RecordType</members>
+    <members>Module__c.Validation_Wing_RecordType</members>
+    <members>Payment__c.ISNEW</members>
+    <members>Product2.Prior_Active</members>
+    <members>Quote.Check_Max_Quote_Count</members>
+    <members>Quote.Check_Second_Booking</members>
+    <members>Quote.Discount_Can_not_Exceed_15_Lakhs</members>
+    <members>Quote.Product_in_Hold_for_other_customer_Error</members>
+    <members>Quote.Quote_Already_synced_and_accepted</members>
+    <members>Quote.cannot_sync_without_accepting_the_quote</members>
+    <members>QuoteLineItem.Discount_Cannot_be_more_than_2</members>
+    <members>Site_Visit__c.Cannot_Edit_SV</members>
+    <members>Site_Visit__c.Next_Follow_Up_Date_Mandatory</members>
+    <members>Site_Visit__c.Reason_For_Lost_Mandatory</members>
+    <members>blocking__c.Unblock_access_only_access_to</members>
+    <name>ValidationRule</name>
+  </types>
+  <version>66.0</version>
+</Package>

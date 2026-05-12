@@ -30,11 +30,21 @@ public with sharing class BookingController {
     public static Id createBookingUnit(Id opportunityId, Id projectId, Id propertyId, Id unitId){
         Booking_Unit__c booking = new Booking_Unit__c();
         booking.Opportunity__c = opportunityId;
+
         //booking.Project__c = projectId;
         //booking.Property__c = propertyId;
-        booking.Unit__c = unitId;
 
+        booking.Unit__c = unitId;
+        booking.Name = 'Booking Unit - ' + formatIsoDate(Date.today());
         insert booking;
         return booking.Id;
+    }
+
+
+
+     private static String formatIsoDate(Date value) {
+        String month = String.valueOf(value.month()).leftPad(2, '0');
+        String day = String.valueOf(value.day()).leftPad(2, '0');
+        return value.year() + '-' + month + '-' + day;
     }
 }

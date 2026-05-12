@@ -3,9 +3,11 @@ public with sharing class BookingTriggerHandler {
     public static void activateBookingAndUpdateUnit(List<Booking_Unit__c> bookingList){
         List<Booking_Unit__c> bookingsToUpdate = new List<Booking_Unit__c>();
         List<Unit__c> unitsToUpdate = new List<Unit__c>();
+        List<Opportunity> opportunitiesToUpdate = new List<Opportunity>();
         Set<Id> unitIds = new Set<Id>();
+        Set<Id> oppIds = new Set<Id>();
 
-        // Collect unit IDs only for records that should be auto-updated
+        // Collect unit IDs and opportunity IDs for records that should be auto-updated
         for(Booking_Unit__c b : bookingList){
             // Only auto-update if:
             // 1. Unit__c is not null
@@ -16,6 +18,9 @@ public with sharing class BookingTriggerHandler {
                && (b.Skip_Booking_Automation__c == null || b.Skip_Booking_Automation__c == false)){
                 
                 unitIds.add(b.Unit__c);
+                if(b.Opportunity__c != null){
+                    oppIds.add(b.Opportunity__c);
+                }
                 bookingsToUpdate.add(new Booking_Unit__c(
                     Id = b.Id,
                     Booking_Status__c = 'Active'
@@ -33,12 +38,25 @@ public with sharing class BookingTriggerHandler {
             }
         }
 
+        // Fetch Opportunities and update StageName to 'Sold'
+        if(!oppIds.isEmpty()){
+            for(Opportunity opp : [SELECT Id, StageName FROM Opportunity WHERE Id IN :oppIds]){
+                opportunitiesToUpdate.add(new Opportunity(
+                    Id = opp.Id,
+                    StageName = 'Sold'
+                ));
+            }
+        }
+
         // Update records
         if(!bookingsToUpdate.isEmpty()){
             update bookingsToUpdate;
         }
         if(!unitsToUpdate.isEmpty()){
             update unitsToUpdate;
+        }
+        if(!opportunitiesToUpdate.isEmpty()){
+            update opportunitiesToUpdate;
         }
     }
 

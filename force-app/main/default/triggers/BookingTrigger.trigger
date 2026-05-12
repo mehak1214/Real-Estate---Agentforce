@@ -1,8 +1,9 @@
 trigger BookingTrigger on Booking_Unit__c (after insert, after update) {
 
-    // After Insert: Set Active status and update Unit to Sold
+    // After Insert: Set Active status and update Unit to Sold, then create Payment Plan Details
     if(Trigger.isInsert){
         BookingTriggerHandler.activateBookingAndUpdateUnit(Trigger.new);
+        BookingTriggerHandler.createPaymentPlanDetails(Trigger.new);
     }
 
     List<Booking_Unit__c> eligibleBookings = new List<Booking_Unit__c>();

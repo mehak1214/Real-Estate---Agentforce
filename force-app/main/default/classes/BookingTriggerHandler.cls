@@ -126,4 +126,124 @@ public with sharing class BookingTriggerHandler {
             insert salesOrdersToInsert;
         }
     }
+
+    public static void createPaymentPlanDetails(List<Booking_Unit__c> bookingList){
+        Set<Id> inventoryIds = new Set<Id>();
+        Set<Id> oppIds = new Set<Id>();
+        Map<Id, Booking_Unit__c> bookingMap = new Map<Id, Booking_Unit__c>();
+
+        // Collect inventory and opportunity IDs
+        for(Booking_Unit__c b : bookingList){
+            if(b.Inventory__c != null && b.Opportunity__c != null){
+                inventoryIds.add(b.Inventory__c);
+                oppIds.add(b.Opportunity__c);
+                bookingMap.put(b.Id, b);
+            }
+        }
+
+        if(inventoryIds.isEmpty() || oppIds.isEmpty()){
+            return;
+        }
+
+        // Fetch Inventory records with their Property details
+        Map<Id, Inventory__c> invMap = new Map<Id, Inventory__c>(
+            [SELECT Id, Property_Inv__c 
+             FROM Inventory__c 
+             WHERE Id IN :inventoryIds]
+        );
+
+        Set<Id> propertyIds = new Set<Id>();
+        for(Inventory__c inv : invMap.values()){
+            if(inv.Property_Inv__c != null){
+                propertyIds.add(inv.Property_Inv__c);
+            }
+        }
+
+        if(propertyIds.isEmpty()){
+            return;
+        }
+
+        // Fetch default Payment Plan Masters linked to properties
+        Map<Id, List<Payment_Plan_Master__c>> propertyToPPMMap = new Map<Id, List<Payment_Plan_Master__c>>();
+        for(Payment_Plan_Master__c ppm : [
+            SELECT Id, Property_Inv__c 
+            FROM Payment_Plan_Master__c 
+            WHERE Property_Inv__c IN :propertyIds 
+            AND isDefault__c = TRUE
+        ]){
+            if(!propertyToPPMMap.containsKey(ppm.Property_Inv__c)){
+                propertyToPPMMap.put(ppm.Property_Inv__c, new List<Payment_Plan_Master__c>());
+            }
+            propertyToPPMMap.get(ppm.Property_Inv__c).add(ppm);
+        }
+
+        if(propertyToPPMMap.isEmpty()){
+            return;
+        }
+
+        // Collect all Payment Plan Master IDs
+        Set<Id> ppmIds = new Set<Id>();
+        for(List<Payment_Plan_Master__c> ppmList : propertyToPPMMap.values()){
+            for(Payment_Plan_Master__c ppm : ppmList){
+                ppmIds.add(ppm.Id);
+            }
+        }
+
+        // Fetch Payment Plan Details from the masters
+        List<Payment_Plan_Detail__c> masterDetails = [
+            SELECT Id, Payment_Plan_Master__c, Seq__c, Percent__c, Amount__c 
+            FROM Payment_Plan_Detail__c 
+            WHERE Payment_Plan_Master__c IN :ppmIds
+            ORDER BY Payment_Plan_Master__c, Seq__c
+        ];
+
+        if(masterDetails.isEmpty()){
+            return;
+        }
+
+        // Create new Payment Plan Details linked to Opportunities
+        List<Payment_Plan_Detail__c> newDetails = new List<Payment_Plan_Detail__c>();
+
+        for(Booking_Unit__c booking : bookingList){
+            if(!bookingMap.containsKey(booking.Id)){
+                continue;
+            }
+
+            Inventory__c inv = invMap.get(booking.Inventory__c);
+            if(inv == null || inv.Property_Inv__c == null){
+                continue;
+            }
+
+            // Get the payment plans for this property
+            List<Payment_Plan_Master__c> propertyPlans = propertyToPPMMap.get(inv.Property_Inv__c);
+            if(propertyPlans == null || propertyPlans.isEmpty()){
+                continue;
+            }
+
+            // For each master plan, copy its details
+            for(Payment_Plan_Master__c ppm : propertyPlans){
+                for(Payment_Plan_Detail__c detail : masterDetails){
+                    if(detail.Payment_Plan_Master__c == ppm.Id){
+                        Payment_Plan_Detail__c newDetail = new Payment_Plan_Detail__c(
+                            Opportunity__c = booking.Opportunity__c,
+                            Booking_Unit__c = booking.Id,
+                            Payment_Plan_Master__c = ppm.Id,
+                            Seq__c = detail.Seq__c,
+                            Percent__c = detail.Percent__c,
+                            Amount__c = detail.Amount__c
+                        );
+                        newDetails.add(newDetail);
+                    }
+                }
+            }
+        }
+
+        if(!newDetails.isEmpty()){
+            try {
+                insert newDetails;
+            } catch (Exception e) {
+                System.debug('Error creating Payment Plan Details: ' + e.getMessage());
+            }
+        }
+    }
 }

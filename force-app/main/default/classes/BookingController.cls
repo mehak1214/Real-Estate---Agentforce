@@ -30,7 +30,6 @@ public with sharing class BookingController {
     public static Id createBookingUnit(Id opportunityId, Id projectId, Id propertyId, Id unitId){
         Booking_Unit__c booking = new Booking_Unit__c();
         booking.Opportunity__c = opportunityId;
-        booking.opportunity__r.StageName = 'Booked';
         //booking.Project__c = projectId;
         //booking.Property__c = propertyId;
         booking.Unit__c = unitId;

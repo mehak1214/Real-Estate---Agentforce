@@ -44,6 +44,7 @@ public with sharing class BulkPDCController {
         }
         
         List<AR_Post_Dated_Cheque__c> toInsert = new List<AR_Post_Dated_Cheque__c>();
+        Id accId = [SELECT AccountId FROM Opportunity WHERE Id = :oppId].AccountId;
         
         for(Integer i = 0; i < pdcs.size(); i++) {
             PDCWrapper p = pdcs[i];
@@ -62,7 +63,8 @@ public with sharing class BulkPDCController {
                 Amount__c = p.amount,
                 Cheque_Date__c = p.chequeDate,
                 Charge_Type__c = p.chargeType,
-                Status__c = 'Unapplied'
+                Status__c = 'Unapplied',
+                Account__c = accId
             );
             
             toInsert.add(newPDC);

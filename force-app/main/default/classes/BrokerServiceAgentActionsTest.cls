@@ -135,7 +135,7 @@ public class BrokerServiceAgentActionsTest {
         List<Map<String, Object>> result = BrokerServiceAgentActions.getBrokerCases(acc.Id);
         Test.stopTest();
 
-        Assert.isGreaterThan(result.size(), 0, 'Should return at least one case');
+        Assert.isTrue(result.size() > 0, 'Should return at least one case');
     }
 
     @isTest

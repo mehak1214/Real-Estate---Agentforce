@@ -46,6 +46,7 @@ config:
     agent_template: "SvcCopilotTmpl__AgentforceServiceAgent"
     developer_name: "Broker_Service_Agent"
     description: "AI-powered assistant for real estate brokers managing cases, leads, payments, and performance tracking"
+    default_agent_user: "broker_service_agent@00dhn000007eq1d936390563.ext"
 
 variables:
     broker_id: mutable string
@@ -162,6 +163,7 @@ subagent CaseManagement:
             outputs:
                 "cases": list[object]
                     description: "List of broker cases"
+                    complex_data_type_name: "@apexClassType/c__BrokerServiceAgentCaseQueryActions$BrokerCase"
 
         UpdateCaseStatus:
             label: "Update Case Status"
@@ -219,6 +221,7 @@ subagent PaymentManagement:
             outputs:
                 "payment_details": list[object]
                     description: "Payment plan details"
+                    complex_data_type_name: "@apexClassType/c__BrokerServiceAgentPaymentActions$PaymentDetail"
 
 # ============================================================================
 # LEAD MANAGEMENT SUBAGENT
@@ -319,6 +322,7 @@ subagent CommissionStatus:
             outputs:
                 "commission_data": object
                     description: "Commission information"
+                    complex_data_type_name: "@apexClassType/c__BrokerServiceAgentCommissionActions$CommissionData"
 
 # ============================================================================
 # PERFORMANCE TRACKING SUBAGENT
@@ -359,6 +363,7 @@ subagent PerformanceTracking:
             outputs:
                 "performance_data": object
                     description: "Performance metrics"
+                    complex_data_type_name: "@apexClassType/c__BrokerServiceAgentPerformanceActions$PerformanceData"
 
 # ============================================================================
 # HELP AND FAQ SUBAGENT

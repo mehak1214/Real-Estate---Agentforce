@@ -39,9 +39,14 @@ public with sharing class BrokerServiceAgentCaseActions {
         public String priority;
     }
 
+    public class CaseCreateResponse {
+        @InvocableVariable(label='Case ID')
+        public Id case_id;
+    }
+
     @InvocableMethod(label='Create Support Case' description='Creates a new support case')
-    public static List<Id> createCaseFromAgent(List<CaseCreateRequest> requests) {
-        List<Id> caseIds = new List<Id>();
+    public static List<CaseCreateResponse> createCaseFromAgent(List<CaseCreateRequest> requests) {
+        List<CaseCreateResponse> responses = new List<CaseCreateResponse>();
         try {
             List<Case> casesToInsert = new List<Case>();
             for (CaseCreateRequest req : requests) {
@@ -63,11 +68,13 @@ public with sharing class BrokerServiceAgentCaseActions {
             }
             insert casesToInsert;
             for (Case c : casesToInsert) {
-                caseIds.add(c.Id);
+                CaseCreateResponse response = new CaseCreateResponse();
+                response.case_id = c.Id;
+                responses.add(response);
             }
         } catch (Exception e) {
             System.debug('Error creating case: ' + e.getMessage());
         }
-        return caseIds;
+        return responses;
     }
 }

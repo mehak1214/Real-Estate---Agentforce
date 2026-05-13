@@ -25,9 +25,14 @@ public with sharing class BrokerServiceAgentCaseQueryActions {
         public DateTime createdDate;
     }
 
+    public class BrokerCasesResponse {
+        @InvocableVariable(label='Cases')
+        public List<BrokerCase> cases;
+    }
+
     @InvocableMethod(label='Get My Cases' description='Retrieves all broker cases')
-    public static List<List<BrokerCase>> getBrokerCases(List<BrokerRequest> requests) {
-        List<List<BrokerCase>> allResponses = new List<List<BrokerCase>>();
+    public static List<BrokerCasesResponse> getBrokerCases(List<BrokerRequest> requests) {
+        List<BrokerCasesResponse> allResponses = new List<BrokerCasesResponse>();
         
         for (BrokerRequest req : requests) {
             List<BrokerCase> cases = new List<BrokerCase>();
@@ -52,7 +57,10 @@ public with sharing class BrokerServiceAgentCaseQueryActions {
             } catch (Exception e) {
                 System.debug('Error fetching cases: ' + e.getMessage());
             }
-            allResponses.add(cases);
+
+            BrokerCasesResponse response = new BrokerCasesResponse();
+            response.cases = cases;
+            allResponses.add(response);
         }
         return allResponses;
     }

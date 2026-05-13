@@ -28,9 +28,14 @@ public with sharing class BrokerServiceAgentCommissionActions {
         public Date nextPayoutDate;
     }
 
+    public class CommissionResponse {
+        @InvocableVariable(label='Commission Data')
+        public CommissionData commission_data;
+    }
+
     @InvocableMethod(label='Get Commission Status' description='Views commission and payout details')
-    public static List<CommissionData> getCommissionStatus(List<BrokerRequest> requests) {
-        List<CommissionData> responses = new List<CommissionData>();
+    public static List<CommissionResponse> getCommissionStatus(List<BrokerRequest> requests) {
+        List<CommissionResponse> responses = new List<CommissionResponse>();
         
         for (BrokerRequest req : requests) {
             CommissionData data = new CommissionData();
@@ -66,7 +71,10 @@ public with sharing class BrokerServiceAgentCommissionActions {
             } catch (Exception e) {
                 System.debug('Error fetching commission: ' + e.getMessage());
             }
-            responses.add(data);
+
+            CommissionResponse response = new CommissionResponse();
+            response.commission_data = data;
+            responses.add(response);
         }
         return responses;
     }

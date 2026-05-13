@@ -23,9 +23,14 @@ public with sharing class BrokerServiceAgentLeadActions {
         public Id brokerId;
     }
 
+    public class LeadCreateResponse {
+        @InvocableVariable(label='Lead ID')
+        public Id lead_id;
+    }
+
     @InvocableMethod(label='Create Lead' description='Creates a new lead')
-    public static List<Id> createLeadFromAgent(List<LeadCreateRequest> requests) {
-        List<Id> leadIds = new List<Id>();
+    public static List<LeadCreateResponse> createLeadFromAgent(List<LeadCreateRequest> requests) {
+        List<LeadCreateResponse> responses = new List<LeadCreateResponse>();
         try {
             List<Lead> leadsToInsert = new List<Lead>();
             
@@ -50,11 +55,13 @@ public with sharing class BrokerServiceAgentLeadActions {
             
             insert leadsToInsert;
             for (Lead lead : leadsToInsert) {
-                leadIds.add(lead.Id);
+                LeadCreateResponse response = new LeadCreateResponse();
+                response.lead_id = lead.Id;
+                responses.add(response);
             }
         } catch (Exception e) {
             System.debug('Error creating lead: ' + e.getMessage());
         }
-        return leadIds;
+        return responses;
     }
 }

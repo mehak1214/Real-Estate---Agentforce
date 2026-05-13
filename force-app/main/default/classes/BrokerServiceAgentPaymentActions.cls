@@ -22,9 +22,14 @@ public with sharing class BrokerServiceAgentPaymentActions {
         public Integer sequence;
     }
 
+    public class PaymentPlanResponse {
+        @InvocableVariable(label='Payment Details')
+        public List<PaymentDetail> payment_details;
+    }
+
     @InvocableMethod(label='Get Payment Plan Details' description='Retrieves payment schedule')
-    public static List<List<PaymentDetail>> getPaymentPlanDetails(List<PaymentPlanRequest> requests) {
-        List<List<PaymentDetail>> allResponses = new List<List<PaymentDetail>>();
+    public static List<PaymentPlanResponse> getPaymentPlanDetails(List<PaymentPlanRequest> requests) {
+        List<PaymentPlanResponse> allResponses = new List<PaymentPlanResponse>();
         
         for (PaymentPlanRequest req : requests) {
             List<PaymentDetail> details = new List<PaymentDetail>();
@@ -47,7 +52,10 @@ public with sharing class BrokerServiceAgentPaymentActions {
             } catch (Exception e) {
                 System.debug('Error fetching payment plan: ' + e.getMessage());
             }
-            allResponses.add(details);
+
+            PaymentPlanResponse response = new PaymentPlanResponse();
+            response.payment_details = details;
+            allResponses.add(response);
         }
         return allResponses;
     }

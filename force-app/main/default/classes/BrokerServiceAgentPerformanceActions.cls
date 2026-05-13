@@ -25,9 +25,14 @@ public with sharing class BrokerServiceAgentPerformanceActions {
         public Boolean incentiveEligible;
     }
 
+    public class PerformanceResponse {
+        @InvocableVariable(label='Performance Data')
+        public PerformanceData performance_data;
+    }
+
     @InvocableMethod(label='Get Performance Metrics' description='Views sales KPIs and ranking')
-    public static List<PerformanceData> getBrokerPerformance(List<BrokerRequest> requests) {
-        List<PerformanceData> responses = new List<PerformanceData>();
+    public static List<PerformanceResponse> getBrokerPerformance(List<BrokerRequest> requests) {
+        List<PerformanceResponse> responses = new List<PerformanceResponse>();
         
         for (BrokerRequest req : requests) {
             PerformanceData data = new PerformanceData();
@@ -63,7 +68,10 @@ public with sharing class BrokerServiceAgentPerformanceActions {
             } catch (Exception e) {
                 System.debug('Error fetching performance: ' + e.getMessage());
             }
-            responses.add(data);
+
+            PerformanceResponse response = new PerformanceResponse();
+            response.performance_data = data;
+            responses.add(response);
         }
         return responses;
     }

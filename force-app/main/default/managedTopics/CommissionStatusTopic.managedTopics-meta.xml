@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ManagedTopics xmlns="http://soap.sforce.com/2006/04/metadata">
+    <managedTopic>
+        <name>Commission Status</name>
+        <description>Display commission and payout details</description>
+        <topicChannels>
+            <channel>Broker Service Agent</channel>
+        </topicChannels>
+        <subtopics>
+            <subtopic>
+                <name>View Commission</name>
+                <description>Show total commission earned</description>
+            </subtopic>
+            <subtopic>
+                <name>Payout Status</name>
+                <description>Check commission payout status and due date</description>
+            </subtopic>
+        </subtopics>
+    </managedTopic>
+</ManagedTopics>

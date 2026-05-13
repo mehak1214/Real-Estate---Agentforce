@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ManagedTopics xmlns="http://soap.sforce.com/2006/04/metadata">
+    <managedTopic>
+        <name>Case Management</name>
+        <description>Allow brokers to create and track support cases</description>
+        <topicChannels>
+            <channel>Broker Service Agent</channel>
+        </topicChannels>
+        <subtopics>
+            <subtopic>
+                <name>Create Case</name>
+                <description>Create a new support case</description>
+            </subtopic>
+            <subtopic>
+                <name>View Cases</name>
+                <description>List all support cases</description>
+            </subtopic>
+            <subtopic>
+                <name>Update Case Status</name>
+                <description>Change case status</description>
+            </subtopic>
+        </subtopics>
+    </managedTopic>
+</ManagedTopics>

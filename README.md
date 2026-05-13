@@ -1,18 +1,85 @@
-# Salesforce DX Project: Next Steps
+# 🚀 Broker Service Agent - Agentforce Builder Implementation
 
-Now that you’ve created a Salesforce DX project, what’s next? Here are some documentation resources to get you started.
+## 📖 Complete Guide
 
-## How Do You Plan to Deploy Your Changes?
+Follow this step-by-step guide to implement your Broker Service Agent:
 
-Do you want to deploy a set of changes, or create a self-contained application? Choose a [development model](https://developer.salesforce.com/tools/vscode/en/user-guide/development-models).
+### **→ [AGENTFORCE_BUILDER_STEPS.md](AGENTFORCE_BUILDER_STEPS.md)**
 
-## Configure Your Salesforce DX Project
+---
 
-The `sfdx-project.json` file contains useful configuration information for your project. See [Salesforce DX Project Configuration](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ws_config.htm) in the _Salesforce DX Developer Guide_ for details about this file.
+## ⚡ Quick Summary
 
-## Read All About It
+This guide covers implementing a complete Agentforce agent with:
 
-- [Salesforce Extensions Documentation](https://developer.salesforce.com/tools/vscode/)
-- [Salesforce CLI Setup Guide](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_intro.htm)
-- [Salesforce DX Developer Guide](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_intro.htm)
-- [Salesforce CLI Command Reference](https://developer.salesforce.com/docs/atlas.en-us.sfdx_cli_reference.meta/sfdx_cli_reference/cli_reference.htm)
+✅ **7 Apex Actions:**
+- Create support cases
+- View payment schedules
+- Create leads
+- Check commission status
+- View sales performance
+- List cases
+- Update case status
+
+✅ **5 Topics:** Case Management, Payments, Leads, Commission, Performance
+
+✅ **10 Phases:** From creation to deployment (~2 hours total)
+
+---
+
+## 📋 What You Need
+
+Before starting:
+- [ ] Salesforce org with Agentforce license
+- [ ] Admin access
+- [ ] Apex code deployed: `BrokerServiceAgentActions.cls`
+- [ ] Unit tests passing
+
+---
+
+## 🎯 Getting Started
+
+1. Open **[AGENTFORCE_BUILDER_STEPS.md](AGENTFORCE_BUILDER_STEPS.md)**
+2. Follow **Phase 1** through **Phase 10** in order
+3. ~2 hours total
+4. Agent goes live!
+
+---
+
+## 📊 Implementation Timeline
+
+| Phase | Task | Time |
+|-------|------|------|
+| 1 | Create Agent | 5 min |
+| 2 | Instructions | 10 min |
+| 3 | Topics | 15 min |
+| 4 | Actions | 30 min |
+| 5 | Prompts | 5 min |
+| 6 | Guard Rails | 10 min |
+| 7 | Escalation | 5 min |
+| 8 | Test | 10 min |
+| 9 | Publish | 5 min |
+| 10 | Assign Users | 10 min |
+| **TOTAL** | | **~105 min** |
+
+---
+
+## ✅ Success
+
+Agent is working when:
+- ✅ Brokers see agent in app launcher
+- ✅ Suggested prompts work
+- ✅ All 7 actions respond correctly
+- ✅ No data leaks between brokers
+
+---
+
+## 🚀 Start Now
+
+**→ Open [AGENTFORCE_BUILDER_STEPS.md](AGENTFORCE_BUILDER_STEPS.md) and follow Phase 1!**
+
+---
+
+**Last Updated**: May 13, 2026  
+**Approach**: Agentforce Builder (Visual UI)  
+**Estimated Time**: 2 hours

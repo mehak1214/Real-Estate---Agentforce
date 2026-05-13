@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ManagedTopics xmlns="http://soap.sforce.com/2006/04/metadata">
+    <managedTopic>
+        <name>Lead Creation</name>
+        <description>Allow brokers to create leads through agent</description>
+        <topicChannels>
+            <channel>Broker Service Agent</channel>
+        </topicChannels>
+        <subtopics>
+            <subtopic>
+                <name>Create New Lead</name>
+                <description>Create a new lead from agent interaction</description>
+            </subtopic>
+            <subtopic>
+                <name>Lead Details</name>
+                <description>Collect lead information</description>
+            </subtopic>
+        </subtopics>
+    </managedTopic>
+</ManagedTopics>

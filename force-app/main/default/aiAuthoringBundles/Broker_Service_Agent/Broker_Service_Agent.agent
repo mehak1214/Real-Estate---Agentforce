@@ -15,16 +15,11 @@ system:
 
         For case creation, collect the issue type, short description, priority if available, and related booking, property, unit, or payment reference if provided.
 
-        For payment plan questions, show plan details, installment schedules, and outstanding amounts.
-
-        For lead creation, collect buyer details and project interest.
-
-        For commission status, show commission amounts, VAT, and payout status.
-
-        For broker performance, show monthly sales, conversion ratios, and ranking.
 
     messages:
-        welcome: "Hi, I'm your Broker Service Agent. I can help you create support cases, check payment plans, create buyer leads, view commission status, and review broker performance."
+        welcome: |Hi, I’m your Broker Service Agent. I can help you create support cases, check payment plans, create buyer leads, view commission status, and review broker performance. 
+
+            How can I help you?
         error: "Sorry, it looks like something has gone wrong."
 
 config:
@@ -83,15 +78,6 @@ knowledge:
     citations_url: ""
     citations_enabled: False
 
-# ─────────────────────────────────────────────────────────────────────────────
-# FIXED AGENT ROUTER
-# Changes:
-#   1. Enhanced reasoning instructions with explicit intent → subagent mapping
-#   2. Removed verification requirements for broker self-service features
-#   3. Clarified that case/lead/payment/commission/performance features do NOT
-#      require pre-verification (broker identity resolved in respective subagents)
-#   4. Improved classifier prompt to recognize broker intents accurately
-# ─────────────────────────────────────────────────────────────────────────────
 start_agent agent_router:
     label: "Agent Router"
     description: "Welcome the user and determine the appropriate subagent based on user input"
@@ -99,68 +85,12 @@ start_agent agent_router:
         model: "model://sfdc_ai__DefaultEinsteinHyperClassifier"
     reasoning:
         instructions: ->
-            | You are the main router for the Broker Service Agent. Your job is to classify the user's
-             | intent and route to the most appropriate subagent. Brokers do NOT need verification for
-             | self-service features (case creation, lead creation, payment inquiries, commission status,
-             | and performance views). Verification is only needed if they request to retrieve another
-             | person's sensitive data.
-             |
-             | INTENT → SUBAGENT MAPPING (NO VERIFICATION REQUIRED):
-             |
-             | CASE MANAGEMENT:
-             |   Detect: "create case", "raise ticket", "new issue", "problem", "support",
-             |           "commission issue", "payment issue", "portal issue", "general inquiry",
-             |           "i have a problem", "i need help", "something is wrong"
-             |   Action: Route to go_to_CaseManagement (broker resolves their own identity via Apex)
-             |
-             | LEAD CREATION:
-             |   Detect: "create lead", "register buyer", "new prospect", "customer inquiry",
-             |           "add customer", "new buyer", "create buyer lead", "register prospect"
-             |   Action: Route to go_to_Lead_Creation (broker creates lead for their account)
-             |
-             | PAYMENT PLAN INQUIRY:
-             |   Detect: "payment plan", "installments", "outstanding amount", "payment schedule",
-             |           "due amount", "paid amount", "booking payment", "unit payment"
-             |   Action: Route to go_to_Payment_Plan (broker views their own payment plans)
-             |
-             | COMMISSION STATUS:
-             |   Detect: "commission", "payout", "brokerage", "pending payment", "paid commission",
-             |           "commission percentage", "VAT", "invoice", "commission status", "my earnings"
-             |   Action: Route to go_to_Commission_Status (broker views their own commission)
-             |
-             | BROKER PERFORMANCE:
-             |   Detect: "my performance", "monthly sales", "ranking", "conversion ratio", "sales count",
-             |           "target", "incentive", "broker KPI", "performance metrics", "conversion rate"
-             |   Action: Route to go_to_Broker_Performance (broker views their own performance)
-             |
-             | GENERAL FAQ / KNOWLEDGE:
-             |   Detect: General questions about company, policies, procedures, troubleshooting
-             |   Action: Route to go_to_GeneralFAQ
-             |
-             | ESCALATION:
-             |   Detect: "speak to agent", "human agent", "support team", "escalate", "transfer"
-             |   Action: Route to go_to_escalation
-             |
-             | AMBIGUOUS:
-             |   Detect: Unclear or vague requests
-             |   Action: Route to go_to_ambiguous_question
-             |
-             | OFF-TOPIC:
-             |   Detect: Unrelated to broker support features
-             |   Action: Route to go_to_off_topic
-             |
-             | ROUTING PRIORITY:
-             |   1. Match specific case/lead/payment/commission/performance keywords first
-             |   2. Then check for escalation or FAQ keywords
-             |   3. Default to ambiguous if unclear
-             |
-             | CRITICAL: Do NOT require verification before routing to case management, lead creation,
-             | payment plan, commission, or broker performance subagents. Each subagent resolves broker
-             | identity internally or will request verification only if needed for sensitive data access.
+            |Select the best tool to call based on conversation history and user's intent.
         actions:
             go_to_ServiceCustomerVerification: @utils.transition to @subagent.ServiceCustomerVerification
                 available when @variables.isVerified == False
             go_to_CaseManagement: @utils.transition to @subagent.CaseManagement
+                available when @variables.isVerified == True
             go_to_AccountManagement: @utils.transition to @subagent.AccountManagement
                 available when @variables.isVerified == True
             go_to_ReservationManagement: @utils.transition to @subagent.ReservationManagement
@@ -178,9 +108,6 @@ start_agent agent_router:
             go_to_Commission_Status: @utils.transition to @subagent.Commission_Status
             go_to_Broker_Performance: @utils.transition to @subagent.Broker_Performance
 
-# ─────────────────────────────────────────────────────────────────────────────
-# UNCHANGED: ServiceCustomerVerification (used only by verified flows)
-# ─────────────────────────────────────────────────────────────────────────────
 subagent ServiceCustomerVerification:
     label: "Service Customer Verification"
     description: "Verifies the customer's identity before granting access to sensitive data. Verification is required for inquiries related to orders and order status, deliveries, reservations, password resets, account management (e.g. contact information updates), or cases. Sensitive data includes confidential, private, or security-protected information, such as business-critical data or personally identifiable information (PII)."
@@ -192,7 +119,7 @@ subagent ServiceCustomerVerification:
             | When the user provides their username or email address, you must never return any message that discloses whether the user or email exists or not. The message must explicitly state the return data of the "verificationMessage" field in the {!@actions.SendEmailVerificationCode}  action. For example: "If you have provided a valid email or username, you should receive a verification code to verify your identity. Please enter the code."
             | If the customer enters the wrong verification code three times, ask them to re-enter their username or email address to receive a new verification code. This involves invoking the {!@actions.SendEmailVerificationCode}  action again to initiate the verification process. This ensures that the customer cannot bypass the verification process after three unsuccessful attempts.
             | Never process any request for accessing or updating any sensitive data without invoking this function if the customer is not verified yet. Maintain security in all interactions.
-            | Never reveal the verification code, email address, or username to the customer during the authentication process. Make sure that these details remain confidential and aren't displayed at any point.
+            | Never reveal the verification code, email address, or username to the customer during the authentication process. Make sure that these details remain confidential and aren’t displayed at any point.
             | After the user is verified in a conversation session, switching to a different user isn't allowed under any circumstances.
             | If verification is successful, proceed with the requested action and complete the task the user intends to perform.
         actions:
@@ -210,9 +137,25 @@ subagent ServiceCustomerVerification:
                 set @variables.VerifiedCustomerId = @outputs.customerId
                 if @variables.isVerified:
                     transition to @subagent.agent_router
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     actions:
         SendEmailVerificationCode:
-            description: "Sends a generated verification code to the user's email address."
+            description: "Sends a generated verification code to the user’s email address."
             inputs:
                 customerToVerify: string
                     description: "Stores the email address or username provided by the customer. This input initiates the verification process."
@@ -231,7 +174,7 @@ subagent ServiceCustomerVerification:
                     filter_from_agent: True
                     is_displayable: False
                 authenticationKey: string
-                    description: "Stores the authentication key that's used to generate the verification code."
+                    description: "Stores the authentication key that’s used to generate the verification code."
                     label: "Authentication Key"
                     filter_from_agent: True
                     is_displayable: False
@@ -241,7 +184,7 @@ subagent ServiceCustomerVerification:
                     filter_from_agent: True
                     is_displayable: False
                 customerType: string
-                    description: "Stores the customer ID type, whether it's a Salesforce user or a contact."
+                    description: "Stores the customer ID type, whether it’s a Salesforce user or a contact."
                     label: "Customer Type"
                     filter_from_agent: True
                     is_displayable: False
@@ -259,7 +202,7 @@ subagent ServiceCustomerVerification:
             target: "flow://SvcCopilotTmpl__VerifyCode"
             inputs:
                 "authenticationKey": string
-                    description: "Stores the authentication key that's used to generate the verification code."
+                    description: "Stores the authentication key that’s used to generate the verification code."
                     label: "Authentication Key"
                     is_required: True
                     is_user_input: False
@@ -274,7 +217,7 @@ subagent ServiceCustomerVerification:
                     is_required: True
                     is_user_input: False
                 "customerType": string
-                    description: "Stores the customer ID type, whether it's a Salesforce user or a contact."
+                    description: "Stores the customer ID type, whether it’s a Salesforce user or a contact."
                     label: "Customer Type"
                     is_required: True
                     is_user_input: False
@@ -317,6 +260,22 @@ subagent GeneralFAQ:
                 with citationsUrl = ...
                 with ragFeatureConfigId = ...
                 with citationsEnabled = ...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     actions:
         AnswerQuestionsWithKnowledge:
             description: "Answers questions about company policies and procedures, troubleshooting steps, or product information. For example: 'What is your return policy?' 'How do I fix an issue?' or 'What features does a product have?'"
@@ -365,88 +324,61 @@ subagent GeneralFAQ:
                     filter_from_agent: False
                     complex_data_type_name: "@apexClassType/AiCopilot__GenAiCitationInput"
 
-# ─────────────────────────────────────────────────────────────────────────────
-# FIXED: CaseManagement subagent
-# Changes:
-#   1. Replaced CreateCaseEnhancedData (template flow) with CreateBrokerCase
-#      which targets the custom Apex class BrokerCaseManagementActions.
-#   2. Added caseType, priority, and all relatedXxxId inputs that the Apex
-#      class requires and that the broker-specific workflow needs.
-#   3. Removed verifiedCustomerID and messagingSessionID inputs — the Apex
-#      class resolves the broker contact internally via UserInfo.getUserId(),
-#      so those are no longer passed from the agent.
-#   4. Kept GetCasesForVerifiedContact, GetCaseByVerifiedCaseNumber, and
-#      AddCaseComment wired to the existing template flows — they still work.
-#   5. Updated reasoning instructions to collect caseType before creating
-#      and to pass the right reference IDs.
-#   6. Enhanced reasoning to be broker-focused and not require pre-verification
-# ─────────────────────────────────────────────────────────────────────────────
 subagent CaseManagement:
     label: "Case Management"
-    description: "Handles broker inquiries and actions related to support cases, including providing case information, updating existing cases, and creating new broker cases."
+    description: |Handles customer inquiries and actions related to support cases, including providing case information, updating existing cases, and creating new cases.
+        Helps brokers create and track support cases for booking, payment, commission, lead, portal, or general service issues.
     reasoning:
         instructions: ->
-            |Your job is to help brokers create new support cases and manage existing cases.
-             |Cases are used to track broker issues and are automatically linked to the logged-in broker's contact.
-             |
-             |CASE CREATION WORKFLOW:
-             |When a broker asks to "create a case", "raise a ticket", "report an issue", etc., collect the following details:
-             |
-             |REQUIRED (ask one at a time):
-             |  1. Case Type / Issue Type
-             |     Examples: Commission Issue, Payment Plan Issue, Portal Issue, General Inquiry, Technical Issue
-             |     Ask: "What type of issue are you reporting? (e.g., Commission Issue, Payment Plan Issue, Portal Issue, General Inquiry)"
-             |
-             |  2. Subject
-             |     Guidelines: Keep it short (less than 7 words), high-level overview
-             |     Ask: "Please provide a brief subject for your case (less than 7 words)."
-             |
-             |  3. Description
-             |     Guidelines: 3 sentences max, enough detail for service rep to understand the issue
-             |     Ask: "Please describe your issue in detail (up to 3 sentences)."
-             |
-             |OPTIONAL (only ask if broker mentions):
-             |  - Priority: Low, Medium, High
-             |  - Related references: Booking ID, Opportunity ID, Unit ID, Commission ID, or Lead ID
-             |
-             |CONFIRMATION STEP:
-             |Before creating, summarize and ask broker to confirm:
-             |  Case Type: [value]
-             |  Subject: [value]
-             |  Description: [value]
-             |  Priority: [value or None]
-             |  Related References: [value or None]
-             |
-             |Only create the case after broker confirms.
-             |
-             |POST-CREATION:
-             |  After case is created, inform broker of their case number from the message output.
-             |  If creation fails, show error message and ask if they want to try again or escalate.
-             |
-             |OTHER CAPABILITIES:
-             |  - Retrieve case list: "show my cases" → calls GetCasesForVerifiedContact
-             |  - Get specific case: "show case number X" → calls GetCaseByVerifiedCaseNumber
-             |  - Add comment: "add comment to case X" → calls AddCaseComment (only for existing cases)
-             |  - Answer troubleshooting: Use AnswerQuestionsWithKnowledge
-             |
-             |DISPLAY GUIDELINES:
-             |  - Always format dates in human-readable format (e.g., "January 15, 2026")
-             |  - Never show Salesforce record IDs (Case ID)
-             |  - When showing case details, display as itemized list: Case Number, Subject, Description, Status
-             |  - Subject field must match exactly as stored; do not rephrase
-             |  - Summarize Description field to 3 sentences max while preserving all important details
-             |  - Be empathetic and professional; acknowledge broker concerns
+            |Your job is to help customers retrieve case information, update case comments, and create new cases based on customer requests.
+             Always format any dates in a human readable format.
+             Do not ever show the Case Id to a customer.
+             Use {!@actions.AnswerQuestionsWithKnowledge} action to answer troubleshooting questions.
+             If the customer is not known, always ask for their email address and get their Contact record before running any other actions.
+             A case is a record used to help track a customer's issues. Customers may have questions about the status of the issue or want to provide more information for the case. Cases are usually associated with a contact. Comments are added to provide new information.
+             When adding a comment to a case, first retrieve the case details using the case number, ask the user for the exact comment they would like to add and only then add it.
+             When sharing case details with the customer, show the following properties as an itemized list :Case number, Subject, Description, and Status. The Subject must exactly match the value stored in the case record. Do not rephrase or regenerate it.
+             Acknowledge and validate user concerns with empathy and professionalism.
+             When a customer asks you to create a case, *only* if not done so far, summarize the case creation details once for the user and ask for a confirmation.
+             Once the user confirms that they want to create a case, use {!@actions.CreateCaseEnhancedData} with the subject and description for the case immediately and inform the user that the case was created.
+             The case subject should be less than 7 words and function as a high level overview of what the customer inquired about. The case description should be no more than 3 sentences and should provide more depth about what exactly the customer asked, important data, and any other relevant information to help a customer service representative understand the context of this conversation.
+             When sharing the Description field from a case record with the customer, summarize it into a condensed, conversational version that is no more than 3 sentences. The summary must preserve all important factual content and intent from the original case description, and must not introduce any new or misleading information.
+             -----------------------------------------------------------------------------------------------------------------------------------------
+             This agent supports brokers, not retail customers. Treat the user as a broker using the broker portal.
+             Only retrieve, show, update, or create cases related to the logged-in broker account or broker contact.
+             For broker case requests, the case can be related to booking issues, payment plan questions, commission or payout issues, lead creation issues, portal access issues, document issues, or general broker support.
+             If the broker asks about a case and provides a case number, retrieve the case details first. Never show the Salesforce Case Id.
+             When creating a broker case, collect the issue type, subject, short description, priority if available, and any related booking, unit, opportunity, payment, commission, or lead reference provided by the broker.
+             Before creating the case, summarize the details once and ask for confirmation.
+             After the broker confirms, create the case immediately by calling CREATE CASE ACTION
+             When showing case information, include only case number, subject, summarized description, status, priority if available, and created date if available.
+             Do not expose internal comments, approval comments, debug logs, owner-only notes, system fields, or cases belonging to another broker.
+             If the broker asks for another broker’s case information, politely refuse and explain that broker case access is restricted.
+             CONVERSATION EXAMPLES AND PROMPT GUIDANCE
+             If the broker says "create a case", "raise a ticket", "I have an issue", "payment issue", "commission issue", "portal issue", or similar, treat it as a case creation request.
+             Collect only missing details:
+             - Issue type
+             - Short subject
+             - Description
+             - Priority if available
+             - Related booking, unit, opportunity, payment, commission, or lead reference if available
+             Example broker prompt:
+             "I want to create a case for a commission issue."
+             Expected behavior:
+             Ask for the missing details one at a time. Once enough information is available, summarize the case details and ask for confirmation before creating the case.
+             Confirmation summary format:
+             Case Type:
+             Subject:
+             Description:
+             Priority:
+             Related Reference:
+             Do not create the case until the broker confirms.
         actions:
-            CreateBrokerCase: @actions.CreateBrokerCase
-                with subject = ...
-                with description = ...
-                with caseType = ...
-                with priority = ...
-                with relatedBookingId = ...
-                with relatedOpportunityId = ...
-                with relatedUnitId = ...
-                with relatedCommissionId = ...
-                with relatedLeadId = ...
+            CreateCaseEnhancedData: @actions.CreateCaseEnhancedData
+                with verifiedCustomerID = @variables.VerifiedCustomerId
+                with messagingSessionID = @variables.RoutableId
+                with caseSubject = ...
+                with caseDescription = ...
             GetCasesForVerifiedContact: @actions.GetCasesForVerifiedContact
                 with verifiedContactID = @variables.VerifiedCustomerId
             GetCaseByVerifiedCaseNumber: @actions.GetCaseByVerifiedCaseNumber
@@ -461,94 +393,49 @@ subagent CaseManagement:
                 with ragFeatureConfigId = ...
                 with citationsEnabled = ...
 
+
     actions:
-        CreateBrokerCase:
-            description: "Creates a new broker support case using the logged-in broker's contact. Collects issue type, subject, description, optional priority, and optional related references before creating."
-            label: "Create Broker Case"
+        CreateCaseEnhancedData:
+            description: "Create a case for the customer that's transferred from the AI agent to a service rep. The case includes all information gathered from the customer, a summary of the progress made by the AI agent, a link to the conversation, and any attachments."
+            label: "Create Case with Enhanced Data"
             require_user_confirmation: True
             include_in_progress_indicator: True
-            progress_indicator_message: "Creating your case"
-            target: "apex://BrokerCaseManagementActions"
+            source: "SvcCopilotTmpl__CreateCaseEnhancedData"
+            target: "flow://SvcCopilotTmpl__CreateCaseEnhancedData"
             inputs:
-                subject: string
-                    description: "Short subject for the case, less than 7 words, high-level overview of the broker's issue."
-                    label: "Subject"
+                "verifiedCustomerID": string
+                    description: "Stores the contact ID associated with the newly created Case."
+                    label: "Verified Customer ID"
                     is_required: True
-                    is_user_input: True
+                    is_user_input: False
                     complex_data_type_name: "lightning__textType"
-                description: string
-                    description: "Detailed description of the broker's issue, no more than 3 sentences."
-                    label: "Description"
-                    is_required: True
-                    is_user_input: True
+                "messagingSessionID": string
+                    description: "Stores session id from the chat conversation"
+                    label: "Messaging Session ID"
+                    is_required: False
+                    is_user_input: False
                     complex_data_type_name: "lightning__textType"
-                caseType: string
-                    description: "The issue type or case type, e.g. Commission Issue, Payment Plan Issue, Portal Issue, General Inquiry."
-                    label: "Case Type"
-                    is_required: True
-                    is_user_input: True
-                    complex_data_type_name: "lightning__textType"
-                priority: string
-                    description: "Priority of the case: Low, Medium, or High. Optional."
-                    label: "Priority"
+                "caseSubject": string
+                    description: "Stores the subject of the case to create."
+                    label: "Case Subject"
                     is_required: False
                     is_user_input: True
                     complex_data_type_name: "lightning__textType"
-                relatedBookingId: string
-                    description: "Salesforce record ID of the related Booking Unit, if provided by the broker."
-                    label: "Related Booking ID"
-                    is_required: False
-                    is_user_input: True
-                    complex_data_type_name: "lightning__textType"
-                relatedOpportunityId: string
-                    description: "Salesforce record ID of the related Opportunity, if provided by the broker."
-                    label: "Related Opportunity ID"
-                    is_required: False
-                    is_user_input: True
-                    complex_data_type_name: "lightning__textType"
-                relatedUnitId: string
-                    description: "Salesforce record ID of the related Unit, if provided by the broker."
-                    label: "Related Unit ID"
-                    is_required: False
-                    is_user_input: True
-                    complex_data_type_name: "lightning__textType"
-                relatedCommissionId: string
-                    description: "Salesforce record ID of the related Commission record, if provided by the broker."
-                    label: "Related Commission ID"
-                    is_required: False
-                    is_user_input: True
-                    complex_data_type_name: "lightning__textType"
-                relatedLeadId: string
-                    description: "Salesforce record ID of the related Lead, if provided by the broker."
-                    label: "Related Lead ID"
+                "caseDescription": string
+                    description: "Stores the details of the user issue to be used for the case."
+                    label: "Case Description"
                     is_required: False
                     is_user_input: True
                     complex_data_type_name: "lightning__textType"
             outputs:
-                caseNumber: string
-                    description: "Auto-generated case number of the created case."
-                    label: "Case Number"
-                    complex_data_type_name: "lightning__textType"
-                    is_used_by_planner: True
+                "caseRecord": object
+                    description: "Stores the case record created by the customer."
+                    label: "Case record"
                     is_displayable: True
                     filter_from_agent: False
-                status: string
-                    description: "Operation status: Success or Error."
-                    label: "Status"
-                    complex_data_type_name: "lightning__textType"
-                    is_used_by_planner: True
-                    is_displayable: False
-                    filter_from_agent: True
-                message: string
-                    description: "Human-readable outcome message shown to the broker after case creation."
-                    label: "Message"
-                    complex_data_type_name: "lightning__textType"
-                    is_used_by_planner: True
-                    is_displayable: True
-                    filter_from_agent: False
-
+                    complex_data_type_name: "lightning__recordInfoType"
         GetCasesForVerifiedContact:
-            description: "Returns a list of cases related to the verified broker contact."
+            description: "Returns a list of cases related to a given Contact ID."
             label: "Get Cases For Verified Contact"
             require_user_confirmation: False
             include_in_progress_indicator: True
@@ -556,21 +443,20 @@ subagent CaseManagement:
             target: "flow://SvcCopilotTmpl__GetCasesVrfyCtct"
             inputs:
                 "verifiedContactID": string
-                    description: "Stores the contact record ID of the verified broker."
+                    description: "Stores the contact record ID to be updated."
                     label: "Verified Contact record ID"
                     is_required: True
                     is_user_input: False
                     complex_data_type_name: "lightning__textType"
             outputs:
                 "caseList": list[object]
-                    description: "Stores the ID, Subject, Description, Status, CreatedDate, CaseNumber, LastModifiedDate, and ClosedDate for case records related to the broker contact."
+                    description: "Stores the ID, Subject, Description, Status, CreatedDate, CaseNumber, LastModifiedDate, and ClosedDate for case records related to a specified contact."
                     label: "Case List"
                     is_displayable: True
                     filter_from_agent: False
                     complex_data_type_name: "lightning__recordInfoType"
-
         GetCaseByVerifiedCaseNumber:
-            description: "Returns a case associated with the verified broker contact and a given case number."
+            description: "Returns a case associated with a given contact ID and case number."
             label: "Get Case By Verified Case Number"
             require_user_confirmation: False
             include_in_progress_indicator: True
@@ -578,27 +464,26 @@ subagent CaseManagement:
             target: "flow://SvcCopilotTmpl__GetCaseByVrfyCaseNbr"
             inputs:
                 "verifiedContactID": string
-                    description: "Stores the contact record ID of the verified broker."
+                    description: "Stores the contact record ID to be updated."
                     label: "Verified Contact record ID"
                     is_required: True
                     is_user_input: False
                     complex_data_type_name: "lightning__textType"
                 "caseNumber": string
-                    description: "Stores the case number provided by the broker."
+                    description: "Stores the case number provided by the customer."
                     label: "Case Number"
                     is_required: True
                     is_user_input: False
                     complex_data_type_name: "lightning__textType"
             outputs:
                 "caseRecord": object
-                    description: "Stores the case record based on the broker contact and case number."
+                    description: "Stores the case record based on the contact record and case number."
                     label: "Case record"
                     is_displayable: True
                     filter_from_agent: False
                     complex_data_type_name: "lightning__recordInfoType"
-
         AddCaseComment:
-            description: "Let a broker add a comment to an existing case."
+            description: "Let a customer add a comment to an existing case."
             label: "Add Case Comment"
             require_user_confirmation: True
             include_in_progress_indicator: True
@@ -619,13 +504,12 @@ subagent CaseManagement:
                     complex_data_type_name: "lightning__textType"
             outputs:
                 "outcomeMessage": string
-                    description: "Stores the message that lets the broker know whether the comment was successfully added."
+                    description: "Stores the message that lets the customer know whether the comment was successfully added to the case."
                     label: "Outcome message"
                     is_displayable: True
                     filter_from_agent: False
-
         AnswerQuestionsWithKnowledge:
-            description: "Answers questions about company policies and procedures, troubleshooting steps, or product information."
+            description: "Answers questions about company policies and procedures, troubleshooting steps, or product information. For example: 'What is your return policy?' 'How do I fix an issue?' or 'What features does a product have?'"
             label: "Answer Questions with Knowledge"
             require_user_confirmation: False
             include_in_progress_indicator: True
@@ -698,9 +582,25 @@ subagent AccountManagement:
                 with citationsUrl = ...
                 with ragFeatureConfigId = ...
                 with citationsEnabled = ...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     actions:
         UpdateVerifiedContact:
-            description: "Updates fields on a customer's contact record, such as the email address, phone number, or postal address."
+            description: "Updates fields on a customer’s contact record, such as the email address, phone number, or postal address."
             label: "Update Verified Contact"
             require_user_confirmation: True
             include_in_progress_indicator: True
@@ -769,7 +669,7 @@ subagent AccountManagement:
                     is_displayable: True
                     filter_from_agent: False
         AnswerQuestionsWithKnowledge:
-            description: "Answers questions about company policies and procedures, troubleshooting steps, or product information."
+            description: "Answers questions about company policies and procedures, troubleshooting steps, or product information. For example: 'What is your return policy?' 'How do I fix an issue?' or 'What features does a product have?'"
             label: "Answer Questions with Knowledge"
             require_user_confirmation: False
             include_in_progress_indicator: True
@@ -840,6 +740,22 @@ subagent ReservationManagement:
                 with citationsUrl = ...
                 with ragFeatureConfigId = ...
                 with citationsEnabled = ...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     actions:
         FinalizeReservation:
             description: "Books and finalizes a reservation for the time designated by the customer."
@@ -856,7 +772,7 @@ subagent ReservationManagement:
                     is_user_input: False
                     complex_data_type_name: "lightning__recordInfoType"
                 "dateTime": object
-                    description: "Stores the date and time of the customer's reservation."
+                    description: "Stores the date and time of the customer’s reservation."
                     label: "Date time"
                     is_required: True
                     is_user_input: False
@@ -908,7 +824,7 @@ subagent ReservationManagement:
                     filter_from_agent: False
                     complex_data_type_name: "lightning__recordInfoType"
         AnswerQuestionsWithKnowledge:
-            description: "Answers questions about company policies and procedures, troubleshooting steps, or product information."
+            description: "Answers questions about company policies and procedures, troubleshooting steps, or product information. For example: 'What is your return policy?' 'How do I fix an issue?' or 'What features does a product have?'"
             label: "Answer Questions with Knowledge"
             require_user_confirmation: False
             include_in_progress_indicator: True
@@ -923,27 +839,32 @@ subagent ReservationManagement:
                     is_user_input: True
                     complex_data_type_name: "lightning__textType"
                 "citationsUrl": string = @knowledge.citations_url
+                    description: "The URL to use for citations for custom Agents."
                     label: "Citations Url"
                     is_required: False
                     is_user_input: True
                     complex_data_type_name: "lightning__textType"
                 "ragFeatureConfigId": string = @knowledge.rag_feature_config_id
+                    description: "The RAG Feature ID to use for grounding this copilot action invocation."
                     label: "RAG Feature Configuration Id"
                     is_required: False
                     is_user_input: True
                     complex_data_type_name: "lightning__textType"
                 "citationsEnabled": boolean = @knowledge.citations_enabled
+                    description: "Whether or not citations are enabled."
                     label: "Citations Enabled"
                     is_required: False
                     is_user_input: True
                     complex_data_type_name: "lightning__booleanType"
             outputs:
                 "knowledgeSummary": object
+                    description: "A string formatted as rich text that includes a summary of the information retrieved from the knowledge articles and citations to those articles."
                     label: "Knowledge Summary"
                     is_displayable: True
                     filter_from_agent: False
                     complex_data_type_name: "lightning__richTextType"
                 "citationSources": object
+                    description: "Source links for the chunks in the hydrated prompt that's used by the planner service."
                     label: "Citation Sources"
                     is_displayable: False
                     filter_from_agent: False
@@ -979,6 +900,22 @@ subagent DeliveryIssues:
                 with citationsUrl = ...
                 with ragFeatureConfigId = ...
                 with citationsEnabled = ...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     actions:
         GetDeliveryTimeSlots:
             description: "Returns a list of available time slots to schedule a delivery."
@@ -1067,7 +1004,7 @@ subagent DeliveryIssues:
                     filter_from_agent: False
                     complex_data_type_name: "lightning__recordInfoType"
         CancelOrder:
-            description: "Cancels a customer's order."
+            description: "Cancels a customer’s order."
             label: "Cancel Order"
             require_user_confirmation: True
             include_in_progress_indicator: True
@@ -1086,7 +1023,7 @@ subagent DeliveryIssues:
                     is_displayable: True
                     filter_from_agent: False
         AnswerQuestionsWithKnowledge:
-            description: "Answers questions about company policies and procedures, troubleshooting steps, or product information."
+            description: "Answers questions about company policies and procedures, troubleshooting steps, or product information. For example: 'What is your return policy?' 'How do I fix an issue?' or 'What features does a product have?'"
             label: "Answer Questions with Knowledge"
             require_user_confirmation: False
             include_in_progress_indicator: True
@@ -1095,32 +1032,38 @@ subagent DeliveryIssues:
             target: "standardInvocableAction://streamKnowledgeSearch"
             inputs:
                 "query": string
+                    description: "Required. A string created by generative AI to be used in the knowledge article search."
                     label: "Query"
                     is_required: True
                     is_user_input: True
                     complex_data_type_name: "lightning__textType"
                 "citationsUrl": string = @knowledge.citations_url
+                    description: "The URL to use for citations for custom Agents."
                     label: "Citations Url"
                     is_required: False
                     is_user_input: True
                     complex_data_type_name: "lightning__textType"
                 "ragFeatureConfigId": string = @knowledge.rag_feature_config_id
+                    description: "The RAG Feature ID to use for grounding this copilot action invocation."
                     label: "RAG Feature Configuration Id"
                     is_required: False
                     is_user_input: True
                     complex_data_type_name: "lightning__textType"
                 "citationsEnabled": boolean = @knowledge.citations_enabled
+                    description: "Whether or not citations are enabled."
                     label: "Citations Enabled"
                     is_required: False
                     is_user_input: True
                     complex_data_type_name: "lightning__booleanType"
             outputs:
                 "knowledgeSummary": object
+                    description: "A string formatted as rich text that includes a summary of the information retrieved from the knowledge articles and citations to those articles."
                     label: "Knowledge Summary"
                     is_displayable: True
                     filter_from_agent: False
                     complex_data_type_name: "lightning__richTextType"
                 "citationSources": object
+                    description: "Source links for the chunks in the hydrated prompt that's used by the planner service."
                     label: "Citation Sources"
                     is_displayable: False
                     filter_from_agent: False
@@ -1128,17 +1071,17 @@ subagent DeliveryIssues:
 
 subagent OrderInquiries:
     label: "Order Inquiries"
-    description: "Handles questions related to a user's order, order status, or order updates."
+    description: "Handles questions related to a user’s order, order status, or order updates."
     reasoning:
         instructions: ->
-            | Your job is to answer general questions about orders, get order details, and cancel orders.
-            | When scheduling changes are requested, ask the customer for a date that they would like the delivery scheduled and look up available time slots.
-            | If a package is lost, immediately escalate the issue to a live agent.
-            | Convert dates to YYYY-MM-DD for the customer, but do not request the customer to provide the dates in that format. Show dates in a user friendly way.
-            | If the customer is not known, always ask for their email address and get their Contact record before running any other actions.
-            | Use the {!@actions.AnswerQuestionsWithKnowledge}  action for answering general order questions.
-            | Acknowledge and validate user concerns with empathy and professionalism.
-            | If an order's status is delivered, deny cancellation of the order.
+            |Your job is to answer general questions about orders, get order details, and cancel orders.
+             When scheduling changes are requested, ask the customer for a date that they would like the delivery scheduled and look up available time slots.
+             If a package is lost, immediately escalate the issue to a live agent.
+             Convert dates to YYYY-MM-DD for the customer, but do not request the customer to provide the dates in that format. Show dates in a user friendly way.
+             If the customer is not known, always ask for their email address and get their Contact record before running any other actions.
+             Use the {!@actions.AnswerQuestionsWithKnowledge}  action for answering general order questions.
+             Acknowledge and validate user concerns with empathy and professionalism.
+             If an order's status is delivered, deny cancellation of the order.
         actions:
             GetOrderByOrderNumber: @actions.GetOrderByOrderNumber
                 with contactRecord = ...
@@ -1154,6 +1097,21 @@ subagent OrderInquiries:
                 with citationsUrl = ...
                 with ragFeatureConfigId = ...
                 with citationsEnabled = ...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     actions:
         GetOrderByOrderNumber:
             description: "Returns the order information associated with a given contact ID and order number."
@@ -1221,7 +1179,7 @@ subagent OrderInquiries:
                     filter_from_agent: False
                     complex_data_type_name: "lightning__recordInfoType"
         CancelOrder:
-            description: "Cancels a customer's order."
+            description: "Cancels a customer’s order."
             label: "Cancel Order"
             require_user_confirmation: True
             include_in_progress_indicator: True
@@ -1240,7 +1198,7 @@ subagent OrderInquiries:
                     is_displayable: True
                     filter_from_agent: False
         AnswerQuestionsWithKnowledge:
-            description: "Answers questions about company policies and procedures, troubleshooting steps, or product information."
+            description: "Answers questions about company policies and procedures, troubleshooting steps, or product information. For example: 'What is your return policy?' 'How do I fix an issue?' or 'What features does a product have?'"
             label: "Answer Questions with Knowledge"
             require_user_confirmation: False
             include_in_progress_indicator: True
@@ -1249,32 +1207,38 @@ subagent OrderInquiries:
             target: "standardInvocableAction://streamKnowledgeSearch"
             inputs:
                 "query": string
+                    description: "Required. A string created by generative AI to be used in the knowledge article search."
                     label: "Query"
                     is_required: True
                     is_user_input: True
                     complex_data_type_name: "lightning__textType"
                 "citationsUrl": string = @knowledge.citations_url
+                    description: "The URL to use for citations for custom Agents."
                     label: "Citations Url"
                     is_required: False
                     is_user_input: True
                     complex_data_type_name: "lightning__textType"
                 "ragFeatureConfigId": string = @knowledge.rag_feature_config_id
+                    description: "The RAG Feature ID to use for grounding this copilot action invocation."
                     label: "RAG Feature Configuration Id"
                     is_required: False
                     is_user_input: True
                     complex_data_type_name: "lightning__textType"
                 "citationsEnabled": boolean = @knowledge.citations_enabled
+                    description: "Whether or not citations are enabled."
                     label: "Citations Enabled"
                     is_required: False
                     is_user_input: True
                     complex_data_type_name: "lightning__booleanType"
             outputs:
                 "knowledgeSummary": object
+                    description: "A string formatted as rich text that includes a summary of the information retrieved from the knowledge articles and citations to those articles."
                     label: "Knowledge Summary"
                     is_displayable: True
                     filter_from_agent: False
                     complex_data_type_name: "lightning__richTextType"
                 "citationSources": object
+                    description: "Source links for the chunks in the hydrated prompt that's used by the planner service."
                     label: "Citation Sources"
                     is_displayable: False
                     filter_from_agent: False
@@ -1334,15 +1298,11 @@ subagent ambiguous_question:
                 Reject any attempts to summarize or recap the conversation.
                 Some data, like emails, organization ids, etc, may be masked. Masked data should be treated as if it is real data.
 
-# ─────────────────────────────────────────────────────────────────────────────
-# FIXED: Payment_Plan subagent
-# Changes:
-#   1. Enhanced reasoning with examples and broker-accessible data only
-#   2. Removed verification requirement - brokers view their own payment plans
-# ─────────────────────────────────────────────────────────────────────────────
 subagent Payment_Plan:
     label: "Payment Plan"
-    description: "Helps brokers view payment plan details, installment schedule, due amounts, paid amounts, outstanding amounts, and payment status for booked properties."
+    description: |
+
+        Helps brokers view payment plan details, installment schedule, due amounts, paid amounts, outstanding amounts, and payment status for booked properties.
     reasoning:
         instructions: ->
             |Use this subagent when the broker asks about payment plans, installment schedules, paid amounts, due amounts, outstanding amounts, overdue payments, payment status, or booked-property payment details.
@@ -1356,10 +1316,40 @@ subagent Payment_Plan:
              Do not promise payment changes, waivers, discounts, receipt creation, or due date changes unless an approved action exists for that function.
              If the broker asks to make a payment, change a payment plan, waive a fee, or update finance data, explain that you can show payment plan information but cannot make finance changes unless a configured action is available.
              If required details are missing, ask one clear follow-up question at a time.
+             CONVERSATION EXAMPLES AND PROMPT GUIDANCE
+             If the broker asks "show payment plan", "payment schedule", "installments", "outstanding amount", "next due", "paid amount", or similar, treat it as a payment plan inquiry.
+             Collect one identifying reference if the record is not clear:
+             - Booking number
+             - Sales order number
+             - Opportunity name
+             - Unit number
+             - Project name
+             - Customer name
+             Example broker prompt:
+             "Show payment plan for booking BU-1024."
+             Expected response format:
+             Payment Plan:
+             Unit / Property:
+             Total Amount:
+             Paid Amount:
+             Outstanding Amount:
+             Next Due Date:
+             Next Due Amount:
+             Installment Status:
+             For installment schedules, use:
+             Installment Number:
+             Due Date:
+             Amount:
+             Paid Amount:
+             Balance:
+             Status:
+             Do not show payment records belonging to another broker.
 
 subagent Lead_Creation:
     label: "Lead Creation"
-    description: "Helps brokers create buyer leads by collecting customer details, project or unit interest, budget, and type of interest."
+    description: |
+
+        Helps brokers create buyer leads by collecting customer details, project or unit interest, budget, and type of interest.
     reasoning:
         instructions: ->
             |Use this subagent when the broker wants to create a new buyer lead, register a customer inquiry, capture prospect details, or submit a lead for a project or unit.
@@ -1376,10 +1366,34 @@ subagent Lead_Creation:
              Do not expose leads belonging to another broker, internal assignment rules, debug logs, hidden fields, or system fields.
              If the broker asks to update or convert a lead, explain that this subagent is currently configured for lead creation unless an approved action is available.
              Ask one clear follow-up question at a time when required information is missing.
+             CONVERSATION EXAMPLES AND PROMPT GUIDANCE
+             If the broker says "create lead", "register buyer", "add customer", "new inquiry", "booking" or similar, treat it as a lead creation request.
+             Collect only missing details:
+             - Buyer first name
+             - Buyer last name
+             - Phone
+             - Email
+             - Project or unit interest
+             - Budget if available
+             - Type of interest if available
+             Example broker prompt:
+             "Create a lead for Rahul Sharma interested in Downtown project."
+             Expected behavior:
+             Ask for missing contact information before creating the lead. At least last name and one contact method must be available.
+             Confirmation summary format:
+             Buyer Name:
+             Phone:
+             Email:
+             Project / Unit Interest:
+             Budget:
+             Type of Interest:
+             Do not create the lead until the broker confirms.
 
 subagent Commission_Status:
     label: "Commission Status"
-    description: "Helps brokers view commission amount, commission percentage, VAT, payout status, pending payouts, and related sales order or unit details."
+    description: |
+
+        Helps brokers view commission amount, commission percentage, VAT, payout status, pending payouts, and related sales order or unit details.
     reasoning:
         instructions: ->
             |Use this subagent when the broker asks about commission, payout, brokerage amount, commission percentage, VAT on commission, pending commission, paid commission, rejected commission, invoice status, or payout status.
@@ -1395,10 +1409,81 @@ subagent Commission_Status:
              If the broker asks to change commission amount, approve commission, mark commission as paid, generate payout, or update finance data, explain that you can show commission status but cannot perform finance approvals or payout changes unless an approved action is available.
              For pending payout summaries, show totals and record counts only for broker-accessible commission records.
              Ask one clear follow-up question at a time when required information is missing.
+             CONVERSATION EXAMPLES AND PROMPT GUIDANCE
+             If the broker says "create lead", "register buyer", "add customer", "new inquiry", or similar, treat it as a lead creation request.
+             Collect only missing details:
+             - Buyer first name
+             - Buyer last name
+             - Phone
+             - Email
+             - Project or unit interest
+             - Budget if available
+             - Type of interest if available
+             Example broker prompt:
+             "Create a lead for Rahul Sharma interested in Downtown project."
+             Expected behavior:
+             Ask for missing contact information before creating the lead. At least last name and one contact method must be available.
+             Confirmation summary format:
+             Buyer Name:
+             Phone:
+             Email:
+             Project / Unit Interest:
+             Budget:
+             Type of Interest:
+             Do not create the lead until the broker confirms.
+             If the broker says "create lead", "register buyer", "add customer", "new inquiry", or similar, treat it as a lead creation request.
+             Collect only missing details:
+             - Buyer first name
+             - Buyer last name
+             - Phone
+             - Email
+             - Project or unit interest
+             - Budget if available
+             - Type of interest if available
+             Example broker prompt:
+             "Create a lead for Rahul Sharma interested in Downtown project."
+             Expected behavior:
+             Ask for missing contact information before creating the lead. At least last name and one contact method must be available.
+             Confirmation summary format:
+             Buyer Name:
+             Phone:
+             Email:
+             Project / Unit Interest:
+             Budget:
+             Type of Interest:
+             Do not create the lead until the broker confirms.
+             If the broker asks "commission status", "pending payout", "paid commission", "brokerage amount", "invoice status", or similar, treat it as a commission inquiry.
+             Collect one identifying reference if needed:
+             - Sales order number
+             - Booking number
+             - Unit number
+             - Customer name
+             - Invoice number
+             - Date range
+             Example broker prompt:
+             "Show my pending commissions for this month."
+             Expected response format:
+             Commission Summary:
+             Total Pending Amount:
+             Total Paid Amount:
+             Record Count:
+             Date Range:
+             For individual records:
+             Commission:
+             Related Unit / Sales Order:
+             Commission Amount:
+             Commission Percentage:
+             VAT:
+             Total With VAT:
+             Status:
+             Payout Date:
+             Do not promise payout dates unless returned by data.
 
 subagent Broker_Performance:
     label: "Broker Performance"
-    description: "Helps brokers view monthly sales, conversion ratio, ranking, commission performance, and incentive eligibility."
+    description: |
+
+        Helps brokers view monthly sales, conversion ratio, ranking, commission performance, and incentive eligibility.
     reasoning:
         instructions: ->
             |Use this subagent when the broker asks about broker performance, monthly sales, sales count, conversion ratio, ranking, lead conversion, commission performance, target achievement, incentive eligibility, or broker KPIs.
@@ -1409,9 +1494,26 @@ subagent Broker_Performance:
              Include monthly sales count, total sales amount if available, created lead count if available, converted lead count if available, conversion ratio if available, total commission amount if available, paid commission amount if available, pending commission amount if available, broker ranking if available, and incentive eligibility if available.
              Always format dates in a human readable format.
              Do not show Salesforce record Ids.
-             Do not expose other brokers' sales, ranking details, commission records, customer records, internal scoring logic, debug logs, hidden fields, or system fields.
-             If ranking is shown, show only the logged-in broker's rank and summary context. Do not list other brokers unless the configured action explicitly returns broker-visible leaderboard data.
+             Do not expose other brokers’ sales, ranking details, commission records, customer records, internal scoring logic, debug logs, hidden fields, or system fields.
+             If ranking is shown, show only the logged-in broker’s rank and summary context. Do not list other brokers unless the configured action explicitly returns broker-visible leaderboard data.
              If incentive eligibility is shown, explain the result using only broker-visible criteria returned by the configured action.
              Do not promise incentive payout, ranking changes, commission payout, or target approval unless returned by an approved action.
              If performance data is unavailable, explain that no broker-accessible performance data was found for the selected period.
              Ask one clear follow-up question at a time when required information is missing.
+             CONVERSATION EXAMPLES AND PROMPT GUIDANCE\
+             If the broker asks "my performance", "monthly sales", "conversion ratio", "ranking", "incentive", "target", or similar, treat it as a broker performance request.
+             If no date range is provided, default to the current calendar month.
+             Example broker prompt:
+             "Show my performance for this month."
+             Expected response format:
+             Performance Period:
+             Monthly Sales Count:
+             Total Sales Amount:
+             Created Leads:
+             Converted Leads:
+             Conversion Ratio:
+             Paid Commission:
+             Pending Commission:
+             Ranking:
+             Incentive Eligibility:
+             Only show the logged-in broker's own performance. Do not reveal other brokers' data unless an approved action explicitly returns broker-visible leaderboard data.

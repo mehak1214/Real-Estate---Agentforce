@@ -3,6 +3,7 @@
     <fullName>Possession_Status__c</fullName>
     <defaultValue>false</defaultValue>
     <label>Possession Status</label>
+    <trackFeedHistory>false</trackFeedHistory>
     <trackHistory>true</trackHistory>
     <type>Checkbox</type>
 </CustomField>

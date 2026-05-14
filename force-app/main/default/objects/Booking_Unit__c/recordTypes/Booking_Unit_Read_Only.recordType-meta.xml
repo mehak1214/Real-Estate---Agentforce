@@ -3,4 +3,196 @@
     <fullName>Booking_Unit_Read_Only</fullName>
     <active>true</active>
     <label>Booking Unit Read Only</label>
+    <picklistValues>
+        <picklist>Account_Payment_Type__c</picklist>
+        <values>
+            <fullName>Cash</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Mortgage</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>PHPP</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Admin_Review_Status__c</picklist>
+        <values>
+            <fullName>Approved</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Notified to Sales Agent</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Rejected</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Approval_Status__c</picklist>
+        <values>
+            <fullName>Approved</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Pending with BD</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Pending with Contracts</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Pending with Inventory</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Rejected By Contracts</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Rejected By Inventory</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Booking_Status__c</picklist>
+        <values>
+            <fullName>Active</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Complete</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Booking_Unit_Status__c</picklist>
+        <values>
+            <fullName>Booked</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Cancellation in Progress</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Cancelled</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Draft</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>EOI Generated</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>In Progress</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Resale in Progress</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Reserved</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Resold</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Sold</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>FinishingOption__c</picklist>
+        <values>
+            <fullName>Default Option</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Option 1</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Option 2</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Option A</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Option B</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Finishing__c</picklist>
+        <values>
+            <fullName>Dark Option</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Light Option</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>No Option chosen</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Option 1</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Option 2</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Option 3</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Order_Type__c</picklist>
+        <values>
+            <fullName>Consolidation</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Downgrade</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Launch Sales</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Merging</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Reinstatement</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Tempo Sales</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Upgrade</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
 </RecordType>

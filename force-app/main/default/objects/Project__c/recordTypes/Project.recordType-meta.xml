@@ -3,4 +3,305 @@
     <fullName>Project</fullName>
     <active>true</active>
     <label>Project</label>
+    <picklistValues>
+        <picklist>Business_Unit__c</picklist>
+        <values>
+            <fullName>Dummy 1</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Dummy 2</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Dummy 3</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Classification_Type__c</picklist>
+        <values>
+            <fullName>Non-Prime</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Prime</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Company__c</picklist>
+        <values>
+            <fullName>Dummy 1</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Dummy 2</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Dummy 3</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Default_Area_Column__c</picklist>
+        <values>
+            <fullName>GFA %28SQFT%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Plot Area %28SQFT%29</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Financial_Account__c</picklist>
+        <values>
+            <fullName>Dummy 1</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Dummy 2</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Dummy 3</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Ownership_Sub_Category_AR__c</picklist>
+        <values>
+            <fullName>بيع بالتجزئة</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>تجاري</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>صناعي</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>فيلا عائلية واحدة</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>مرافق المجتمع</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>معسكر العمل</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Ownership_Sub_Category__c</picklist>
+        <values>
+            <fullName>Commercial</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Community facilities</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Industrial</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Labour camp</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Retail</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>single family villa</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Ownership_Type_AR__c</picklist>
+        <values>
+            <fullName>عقار متعدد الملكية</fullName>
+            <default>true</default>
+        </values>
+        <values>
+            <fullName>عقار ملكية مفردة</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Ownership_Type__c</picklist>
+        <values>
+            <fullName>Multi Ownership Property</fullName>
+            <default>true</default>
+        </values>
+        <values>
+            <fullName>Single Ownership Property</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Project_Status__c</picklist>
+        <values>
+            <fullName>Green</fullName>
+            <default>true</default>
+        </values>
+        <values>
+            <fullName>Red</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Project_Sub_Type__c</picklist>
+        <values>
+            <fullName>Aspirational</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Premium</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Project_Type__c</picklist>
+        <values>
+            <fullName>Completed</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Off Plan</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Ready</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Site_Name__c</picklist>
+        <values>
+            <fullName>DHRE2BTS_NONPRJ</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>DPG_NONPRJ</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>MDL_NONPRJ</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>MEL_NONPRJ</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>OMR_NONPRJ</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>TPJAC_NONPRJ</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Size_Type__c</picklist>
+        <values>
+            <fullName>2 BHK</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>3 BHK</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>4 BHK</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Among Others</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Bunglow</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Hospitality%28Hotel%2CMotels%2CResorts%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Office</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Retail</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Villa</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>SyncToUnifier__c</picklist>
+        <values>
+            <fullName>Active</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Inactive</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>dSQFT14__c</picklist>
+        <values>
+            <fullName>GFA %28SQFT%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>GFA %28SQMT%29</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>dSQFT15__c</picklist>
+        <values>
+            <fullName>GFA %28SQFT%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>GFA %28SQMT%29</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>dSQFT8__c</picklist>
+        <values>
+            <fullName>Plot Area %28SQFT%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Plot Area %28SQM%29</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>dSQFT9__c</picklist>
+        <values>
+            <fullName>Plot Area %28SQFT%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Plot Area %28SQM%29</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
 </RecordType>

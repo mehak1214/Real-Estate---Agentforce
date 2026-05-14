@@ -79,7 +79,6 @@
                 <elementReference>Loop_Over_Applicants.LastName__c</elementReference>
             </value>
         </assignmentItems>
-        
         <assignmentItems>
             <assignToReference>CurrentContact.Phone</assignToReference>
             <operator>Assign</operator>

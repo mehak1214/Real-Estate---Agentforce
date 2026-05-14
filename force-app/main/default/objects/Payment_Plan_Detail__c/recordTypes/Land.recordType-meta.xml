@@ -3,4 +3,831 @@
     <fullName>Land</fullName>
     <active>true</active>
     <label>Land</label>
+    <picklistValues>
+        <picklist>Bank_Name__c</picklist>
+        <values>
+            <fullName>ABN Amro Bank NV</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Abu Dhabi Commercial Bank</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Abu Dhabi Islamic Bank</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Ajman Bank</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Al Ahli Bank of Kuwait</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Al Hilal Bank</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Al Khaliji France</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Al Masraf Bank</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Al Rafidain Bank</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Arab African Intl Bank</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Arab Bank Limited</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Arab Bank PLC</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Arab Emirates Investment Bank</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Arab National Bank</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>BLC Bank</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>BNP Paribas Bank</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Banca Commercials Italiana</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Bank Melli Iran</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Bank Saderat Iran</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Bank of Baroda</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Bank of Sharjah</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Banque Banorabe</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Banque Du Caire</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Banque Libanaise Pour Le Comm%2E</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Barclays Bank</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Blom Bank France SA</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>British Bank of the M%2EE%2E</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Calyon Bank</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Canara Bank</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Central Bank of UAE</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>CitiBank NA</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Citibank UAE</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Commercial Bank International</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Commercial Bank of Dubai</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Commercial Bank of Qatar</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Credit Agricole Indosuez</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Credit Suisse</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Deutsche Bank AG Dubai</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Doha Bank</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Dubai Islamic Bank</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>El Nilein Bank</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Emirates Islamic Bank</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Emirates NBD</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Finance House</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>First Gulf Bank</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Grindlays Qatar Bank</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>HDFC Bank</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>HSBC Bank Middle East</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>HSBC Bank Middle East Limited</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Habib Bank AG Zurich</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Habib Bank Limited</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Invest Bank</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Jordan National Bank</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Lloyds Bank TSB</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>ME Bank</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Mashreq Bank</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Melle Bank</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Middle East Bank</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>National Bank of Abu Dhabi</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>National Bank of Bahrain</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>National Bank of Fujairah</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>National Bank of Kuwait</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>National Bank of Oman</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>National Bank of RAK</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>National Bank of Sharjah</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>National Bank of UAQ</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>National Commercial Bank</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Noor Bank</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Noor Islamic Bank PJSC</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Others</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>RAKBANK</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Saudi British Bank</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Sharjah Islamic Bank</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Standard Chartered Bank</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Standard Chartered Grindlays</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>State Bank of India</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Union National Bank</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>United Arab Bank</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>United Bank Limited</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Incremental_Month__c</picklist>
+        <values>
+            <fullName>Incremental_Month</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Indian</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Installment_No__c</picklist>
+        <values>
+            <fullName>CNCL_CM</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>IN01</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>IN02</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Refund</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>adsfee</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>advance</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>advsc</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>bnkchrg</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>cancel</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>chqrep</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>chqret</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>dupcert</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>eres</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>exchchq</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>extrafin</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>in03</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>in04</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>in05</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>in06</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>in07</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>in08</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>in09</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>in10</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>in11</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>in12</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>in13</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>in14</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>in15</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>in16</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>in17</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>in18</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>in19</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>in20</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>in21</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>in22</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>in23</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>in24</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>in25</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>in26</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>in27</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>in28</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>in29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>in30</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>in31</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>in32</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>in33</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>in34</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>in35</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>in36</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>in37</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>in38</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>in39</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>in40</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>in41</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>in42</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>in43</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>in44</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>in45</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>in46</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>in47</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>in48</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>in78</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>latefee</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>layvar</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>legal</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>mortfee</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>nocescw</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>nocoth</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>nocpre</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>nocpvtde</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>noctitle</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>nocvisa</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>paydef</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>photocop</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>proc</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>recall</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>ref_area</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>rera</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>roundoff</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>tdreg</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>transfer</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Instalment_Type__c</picklist>
+        <values>
+            <fullName>Fixed Date</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Handover Event</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Milestone</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>PHPP</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Migrated_Entity__c</picklist>
+        <values>
+            <fullName>Nakheel</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Opp_Late_Payment_status__c</picklist>
+        <values>
+            <fullName>Collection Case</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>First Notice</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>None</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Over Due Notifications</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Second Notice</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Termination Case</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Payment_Mode__c</picklist>
+        <values>
+            <fullName>Bank Transfer</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Cash</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Cheque</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Payment_Status__c</picklist>
+        <values>
+            <fullName>Not Paid</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Paid</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Payment_Type__c</picklist>
+        <values>
+            <fullName>Card</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Cash</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Cheque</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Plan_Type__c</picklist>
+        <values>
+            <fullName>12</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>24</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>36</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>48</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>CC</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Upfront</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Remarks__c</picklist>
+        <values>
+            <fullName>Fully Paid</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>None</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Not Paid</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Partially Paid</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Resale</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>unpaid</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Source_System__c</picklist>
+        <values>
+            <fullName>Test</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Status__c</picklist>
+        <values>
+            <fullName>Draft</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Payment Received</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Progressed</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
 </RecordType>

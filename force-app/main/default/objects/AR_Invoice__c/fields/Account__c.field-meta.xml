@@ -4,7 +4,7 @@
     <deleteConstraint>SetNull</deleteConstraint>
     <label>Account</label>
     <referenceTo>Account</referenceTo>
-    <relationshipName>Invoices</relationshipName>
+    <relationshipName>AR_Invoices</relationshipName>
     <required>false</required>
     <trackTrending>false</trackTrending>
     <type>Lookup</type>

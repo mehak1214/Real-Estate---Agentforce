@@ -3,6 +3,7 @@
     <fullName>Design_Style__c</fullName>
     <label>Design Style</label>
     <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
     <trackHistory>false</trackHistory>
     <type>Picklist</type>
     <valueSet>

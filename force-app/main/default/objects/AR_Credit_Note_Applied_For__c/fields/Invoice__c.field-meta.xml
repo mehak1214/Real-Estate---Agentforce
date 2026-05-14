@@ -4,7 +4,7 @@
     <label>Invoice</label>
     <referenceTo>AR_Invoice__c</referenceTo>
     <relationshipName>Credit_Notes_Applied_For</relationshipName>
-    <relationshipOrder>1</relationshipOrder>
+    <relationshipOrder>0</relationshipOrder>
     <reparentableMasterDetail>true</reparentableMasterDetail>
     <trackHistory>false</trackHistory>
     <trackTrending>false</trackTrending>

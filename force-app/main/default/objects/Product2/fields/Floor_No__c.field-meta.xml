@@ -3,6 +3,7 @@
     <fullName>Floor_No__c</fullName>
     <label>Floor No</label>
     <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
     <trackHistory>false</trackHistory>
     <type>Picklist</type>
     <valueSet>

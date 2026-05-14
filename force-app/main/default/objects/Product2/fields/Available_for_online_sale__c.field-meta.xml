@@ -3,6 +3,7 @@
     <fullName>Available_for_online_sale__c</fullName>
     <defaultValue>false</defaultValue>
     <label>Available For Online Sale</label>
+    <trackFeedHistory>false</trackFeedHistory>
     <trackHistory>false</trackHistory>
     <type>Checkbox</type>
 </CustomField>

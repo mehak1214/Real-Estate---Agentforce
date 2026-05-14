@@ -3,4 +3,19 @@
     <fullName>Invoice</fullName>
     <active>true</active>
     <label>Invoice</label>
+    <picklistValues>
+        <picklist>Payment_Type__c</picklist>
+        <values>
+            <fullName>Booking Amount</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Installment</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Other Charges</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
 </RecordType>

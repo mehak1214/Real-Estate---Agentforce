@@ -4,5 +4,6 @@
     <label>Commercial License Expiry Date</label>
     <required>false</required>
     <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
     <type>Date</type>
 </CustomField>

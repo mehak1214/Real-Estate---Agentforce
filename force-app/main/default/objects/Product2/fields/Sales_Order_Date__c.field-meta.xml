@@ -3,6 +3,7 @@
     <fullName>Sales_Order_Date__c</fullName>
     <label>Sales Order Date</label>
     <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
     <trackHistory>false</trackHistory>
     <type>Date</type>
 </CustomField>

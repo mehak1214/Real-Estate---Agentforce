@@ -3,6 +3,7 @@
     <fullName>No_of_Bathrooms__c</fullName>
     <label>No of Bathrooms</label>
     <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
     <trackHistory>false</trackHistory>
     <type>Picklist</type>
     <valueSet>

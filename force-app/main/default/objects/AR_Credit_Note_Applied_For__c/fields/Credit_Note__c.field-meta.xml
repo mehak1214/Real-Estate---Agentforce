@@ -4,7 +4,7 @@
     <label>Credit Note</label>
     <referenceTo>Credit_Note__c</referenceTo>
     <relationshipName>Credit_Notes_Applied_For</relationshipName>
-    <relationshipOrder>0</relationshipOrder>
+    <relationshipOrder>1</relationshipOrder>
     <reparentableMasterDetail>true</reparentableMasterDetail>
     <trackHistory>false</trackHistory>
     <trackTrending>false</trackTrending>

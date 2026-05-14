@@ -1,5 +1,10 @@
 trigger BookingTrigger on Booking_Unit__c (after insert, after update) {
 
+    // After Insert: Set Active status and update Unit to Sold
+    if(Trigger.isInsert){
+        BookingTriggerHandler.activateBookingAndUpdateUnit(Trigger.new);
+    }
+
     List<Booking_Unit__c> eligibleBookings = new List<Booking_Unit__c>();
 
     for(Booking_Unit__c b : Trigger.new){

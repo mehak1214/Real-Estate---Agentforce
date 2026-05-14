@@ -7,6 +7,7 @@
     <relationshipLabel>Products (Sold To)</relationshipLabel>
     <relationshipName>Products1</relationshipName>
     <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
     <trackHistory>false</trackHistory>
     <type>Lookup</type>
 </CustomField>

@@ -3,6 +3,7 @@
     <fullName>Sales_Organization__c</fullName>
     <label>Sales Organization</label>
     <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
     <trackHistory>false</trackHistory>
     <type>Picklist</type>
     <valueSet>

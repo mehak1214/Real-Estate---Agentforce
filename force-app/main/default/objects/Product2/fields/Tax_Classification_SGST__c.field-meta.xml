@@ -3,6 +3,7 @@
     <fullName>Tax_Classification_SGST__c</fullName>
     <label>Tax Classification SGST</label>
     <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
     <trackHistory>false</trackHistory>
     <type>Picklist</type>
     <valueSet>

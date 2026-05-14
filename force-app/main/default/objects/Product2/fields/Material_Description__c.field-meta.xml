@@ -3,6 +3,7 @@
     <fullName>Material_Description__c</fullName>
     <label>Material Description</label>
     <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
     <trackHistory>false</trackHistory>
     <type>TextArea</type>
 </CustomField>

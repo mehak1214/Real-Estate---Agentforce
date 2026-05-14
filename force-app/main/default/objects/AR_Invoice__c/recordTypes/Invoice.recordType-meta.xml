@@ -3,4 +3,120 @@
     <fullName>Invoice</fullName>
     <active>true</active>
     <label>Invoice</label>
+    <picklistValues>
+        <picklist>Approval_Status__c</picklist>
+        <values>
+            <fullName>Approved</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Pending</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Rejected</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Charge_Type__c</picklist>
+        <values>
+            <fullName>Admin Fees</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Installments</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Late Payment Fees</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Other Charges</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Incremental_Month__c</picklist>
+        <values>
+            <fullName>Incremental_Month</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Indian</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Reversal_Type__c</picklist>
+        <values>
+            <fullName>Complete Reversal</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Not Reversed</fullName>
+            <default>true</default>
+        </values>
+        <values>
+            <fullName>Partial Reversal</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Send_Invoice__c</picklist>
+        <values>
+            <fullName>No</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Yes</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Source_System__c</picklist>
+        <values>
+            <fullName>Test</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Status__c</picklist>
+        <values>
+            <fullName>Fully Paid</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Partially Paid</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Pending Payment</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Reversed</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Vat__c</picklist>
+        <values>
+            <fullName>0 %25</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>5 %25</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Exempt</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Out of Scope</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
 </RecordType>

@@ -3,6 +3,7 @@
     <fullName>Registration_Status__c</fullName>
     <defaultValue>false</defaultValue>
     <label>Registration Status</label>
+    <trackFeedHistory>false</trackFeedHistory>
     <trackHistory>true</trackHistory>
     <type>Checkbox</type>
 </CustomField>

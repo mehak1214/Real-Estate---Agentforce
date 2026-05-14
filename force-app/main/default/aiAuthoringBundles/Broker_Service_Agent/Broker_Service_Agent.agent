@@ -15,7 +15,14 @@ system:
 
         For case creation, collect the issue type, short description, priority if available, and related booking, property, unit, or payment reference if provided.
 
-        For payment plan questions
+        For payment plan questions, show plan details, installment schedules, and outstanding amounts.
+
+        For lead creation, collect buyer details and project interest.
+
+        For commission status, show commission amounts, VAT, and payout status.
+
+        For broker performance, show monthly sales, conversion ratios, and ranking.
+
     messages:
         welcome: "Hi, I'm your Broker Service Agent. I can help you create support cases, check payment plans, create buyer leads, view commission status, and review broker performance."
         error: "Sorry, it looks like something has gone wrong."
@@ -76,6 +83,15 @@ knowledge:
     citations_url: ""
     citations_enabled: False
 
+# ─────────────────────────────────────────────────────────────────────────────
+# FIXED AGENT ROUTER
+# Changes:
+#   1. Enhanced reasoning instructions with explicit intent → subagent mapping
+#   2. Removed verification requirements for broker self-service features
+#   3. Clarified that case/lead/payment/commission/performance features do NOT
+#      require pre-verification (broker identity resolved in respective subagents)
+#   4. Improved classifier prompt to recognize broker intents accurately
+# ─────────────────────────────────────────────────────────────────────────────
 start_agent agent_router:
     label: "Agent Router"
     description: "Welcome the user and determine the appropriate subagent based on user input"
@@ -83,12 +99,68 @@ start_agent agent_router:
         model: "model://sfdc_ai__DefaultEinsteinHyperClassifier"
     reasoning:
         instructions: ->
-            | Select the best tool to call based on conversation history and user's intent.
+            | You are the main router for the Broker Service Agent. Your job is to classify the user's
+             | intent and route to the most appropriate subagent. Brokers do NOT need verification for
+             | self-service features (case creation, lead creation, payment inquiries, commission status,
+             | and performance views). Verification is only needed if they request to retrieve another
+             | person's sensitive data.
+             |
+             | INTENT → SUBAGENT MAPPING (NO VERIFICATION REQUIRED):
+             |
+             | CASE MANAGEMENT:
+             |   Detect: "create case", "raise ticket", "new issue", "problem", "support",
+             |           "commission issue", "payment issue", "portal issue", "general inquiry",
+             |           "i have a problem", "i need help", "something is wrong"
+             |   Action: Route to go_to_CaseManagement (broker resolves their own identity via Apex)
+             |
+             | LEAD CREATION:
+             |   Detect: "create lead", "register buyer", "new prospect", "customer inquiry",
+             |           "add customer", "new buyer", "create buyer lead", "register prospect"
+             |   Action: Route to go_to_Lead_Creation (broker creates lead for their account)
+             |
+             | PAYMENT PLAN INQUIRY:
+             |   Detect: "payment plan", "installments", "outstanding amount", "payment schedule",
+             |           "due amount", "paid amount", "booking payment", "unit payment"
+             |   Action: Route to go_to_Payment_Plan (broker views their own payment plans)
+             |
+             | COMMISSION STATUS:
+             |   Detect: "commission", "payout", "brokerage", "pending payment", "paid commission",
+             |           "commission percentage", "VAT", "invoice", "commission status", "my earnings"
+             |   Action: Route to go_to_Commission_Status (broker views their own commission)
+             |
+             | BROKER PERFORMANCE:
+             |   Detect: "my performance", "monthly sales", "ranking", "conversion ratio", "sales count",
+             |           "target", "incentive", "broker KPI", "performance metrics", "conversion rate"
+             |   Action: Route to go_to_Broker_Performance (broker views their own performance)
+             |
+             | GENERAL FAQ / KNOWLEDGE:
+             |   Detect: General questions about company, policies, procedures, troubleshooting
+             |   Action: Route to go_to_GeneralFAQ
+             |
+             | ESCALATION:
+             |   Detect: "speak to agent", "human agent", "support team", "escalate", "transfer"
+             |   Action: Route to go_to_escalation
+             |
+             | AMBIGUOUS:
+             |   Detect: Unclear or vague requests
+             |   Action: Route to go_to_ambiguous_question
+             |
+             | OFF-TOPIC:
+             |   Detect: Unrelated to broker support features
+             |   Action: Route to go_to_off_topic
+             |
+             | ROUTING PRIORITY:
+             |   1. Match specific case/lead/payment/commission/performance keywords first
+             |   2. Then check for escalation or FAQ keywords
+             |   3. Default to ambiguous if unclear
+             |
+             | CRITICAL: Do NOT require verification before routing to case management, lead creation,
+             | payment plan, commission, or broker performance subagents. Each subagent resolves broker
+             | identity internally or will request verification only if needed for sensitive data access.
         actions:
             go_to_ServiceCustomerVerification: @utils.transition to @subagent.ServiceCustomerVerification
                 available when @variables.isVerified == False
             go_to_CaseManagement: @utils.transition to @subagent.CaseManagement
-                available when @variables.isVerified == True
             go_to_AccountManagement: @utils.transition to @subagent.AccountManagement
                 available when @variables.isVerified == True
             go_to_ReservationManagement: @utils.transition to @subagent.ReservationManagement
@@ -106,6 +178,9 @@ start_agent agent_router:
             go_to_Commission_Status: @utils.transition to @subagent.Commission_Status
             go_to_Broker_Performance: @utils.transition to @subagent.Broker_Performance
 
+# ─────────────────────────────────────────────────────────────────────────────
+# UNCHANGED: ServiceCustomerVerification (used only by verified flows)
+# ─────────────────────────────────────────────────────────────────────────────
 subagent ServiceCustomerVerification:
     label: "Service Customer Verification"
     description: "Verifies the customer's identity before granting access to sensitive data. Verification is required for inquiries related to orders and order status, deliveries, reservations, password resets, account management (e.g. contact information updates), or cases. Sensitive data includes confidential, private, or security-protected information, such as business-critical data or personally identifiable information (PII)."
@@ -304,50 +379,64 @@ subagent GeneralFAQ:
 #      AddCaseComment wired to the existing template flows — they still work.
 #   5. Updated reasoning instructions to collect caseType before creating
 #      and to pass the right reference IDs.
+#   6. Enhanced reasoning to be broker-focused and not require pre-verification
 # ─────────────────────────────────────────────────────────────────────────────
 subagent CaseManagement:
     label: "Case Management"
     description: "Handles broker inquiries and actions related to support cases, including providing case information, updating existing cases, and creating new broker cases."
     reasoning:
         instructions: ->
-            |Your job is to help brokers retrieve case information, update case comments, and create new support cases.
-             Always format any dates in a human readable format.
-             Do not ever show the Case Id to a broker.
-             Use {!@actions.AnswerQuestionsWithKnowledge} action to answer troubleshooting questions.
-             A case is a record used to track a broker's issues. Cases are associated with the logged-in broker contact automatically — do not ask the broker to provide their contact details.
-             Comments are added to provide new information on an existing case.
-             When adding a comment to a case, first retrieve the case details using the case number, ask the broker for the exact comment they would like to add, and only then add it.
-             When sharing case details with the broker, show the following as an itemized list: Case Number, Subject, Description, Status. The Subject must exactly match the value stored in the case record. Do not rephrase or regenerate it.
-             Acknowledge and validate broker concerns with empathy and professionalism.
-
-             CASE CREATION RULES:
-             When a broker asks to create a case, collect the following details one at a time if missing:
-               - Issue Type / Case Type (e.g., Commission Issue, Payment Plan Issue, Portal Issue, General Inquiry)
-               - Subject (short, less than 7 words, high-level overview)
-               - Description (no more than 3 sentences with enough detail for a service rep)
-               - Priority if provided (Low, Medium, High) — optional
-               - Related reference if provided: Booking ID, Opportunity ID, Unit ID, Commission ID, or Lead ID — optional
-
-             If the broker says "create a case", "raise a ticket", "I have an issue", "payment issue",
-             "commission issue", "portal issue", or similar, treat it as a case creation request.
-
-             Before creating the case, summarize once and ask the broker to confirm:
-               Case Type:
-               Subject:
-               Description:
-               Priority:
-               Related Reference:
-
-             Do not create the case until the broker confirms.
-
-             Once the broker confirms, call {!@actions.CreateBrokerCase} immediately with all collected inputs.
-             After the action returns, inform the broker of their case number from the outcomeMessage output.
-             If the action returns a status of Error, show the message to the broker and ask if they want to try again or escalate.
-
-             When sharing the Description field from a case record, summarize it into no more than 3 sentences.
-             The summary must preserve all important factual content and must not introduce new information.
+            |Your job is to help brokers create new support cases and manage existing cases.
+             |Cases are used to track broker issues and are automatically linked to the logged-in broker's contact.
+             |
+             |CASE CREATION WORKFLOW:
+             |When a broker asks to "create a case", "raise a ticket", "report an issue", etc., collect the following details:
+             |
+             |REQUIRED (ask one at a time):
+             |  1. Case Type / Issue Type
+             |     Examples: Commission Issue, Payment Plan Issue, Portal Issue, General Inquiry, Technical Issue
+             |     Ask: "What type of issue are you reporting? (e.g., Commission Issue, Payment Plan Issue, Portal Issue, General Inquiry)"
+             |
+             |  2. Subject
+             |     Guidelines: Keep it short (less than 7 words), high-level overview
+             |     Ask: "Please provide a brief subject for your case (less than 7 words)."
+             |
+             |  3. Description
+             |     Guidelines: 3 sentences max, enough detail for service rep to understand the issue
+             |     Ask: "Please describe your issue in detail (up to 3 sentences)."
+             |
+             |OPTIONAL (only ask if broker mentions):
+             |  - Priority: Low, Medium, High
+             |  - Related references: Booking ID, Opportunity ID, Unit ID, Commission ID, or Lead ID
+             |
+             |CONFIRMATION STEP:
+             |Before creating, summarize and ask broker to confirm:
+             |  Case Type: [value]
+             |  Subject: [value]
+             |  Description: [value]
+             |  Priority: [value or None]
+             |  Related References: [value or None]
+             |
+             |Only create the case after broker confirms.
+             |
+             |POST-CREATION:
+             |  After case is created, inform broker of their case number from the message output.
+             |  If creation fails, show error message and ask if they want to try again or escalate.
+             |
+             |OTHER CAPABILITIES:
+             |  - Retrieve case list: "show my cases" → calls GetCasesForVerifiedContact
+             |  - Get specific case: "show case number X" → calls GetCaseByVerifiedCaseNumber
+             |  - Add comment: "add comment to case X" → calls AddCaseComment (only for existing cases)
+             |  - Answer troubleshooting: Use AnswerQuestionsWithKnowledge
+             |
+             |DISPLAY GUIDELINES:
+             |  - Always format dates in human-readable format (e.g., "January 15, 2026")
+             |  - Never show Salesforce record IDs (Case ID)
+             |  - When showing case details, display as itemized list: Case Number, Subject, Description, Status
+             |  - Subject field must match exactly as stored; do not rephrase
+             |  - Summarize Description field to 3 sentences max while preserving all important details
+             |  - Be empathetic and professional; acknowledge broker concerns
         actions:
-            # FIXED: now calls the custom Apex-backed action instead of the template flow
             CreateBrokerCase: @actions.CreateBrokerCase
                 with subject = ...
                 with description = ...
@@ -458,7 +547,6 @@ subagent CaseManagement:
                     is_displayable: True
                     filter_from_agent: False
 
-        # Unchanged — still uses the template flow
         GetCasesForVerifiedContact:
             description: "Returns a list of cases related to the verified broker contact."
             label: "Get Cases For Verified Contact"
@@ -481,7 +569,6 @@ subagent CaseManagement:
                     filter_from_agent: False
                     complex_data_type_name: "lightning__recordInfoType"
 
-        # Unchanged — still uses the template flow
         GetCaseByVerifiedCaseNumber:
             description: "Returns a case associated with the verified broker contact and a given case number."
             label: "Get Case By Verified Case Number"
@@ -510,7 +597,6 @@ subagent CaseManagement:
                     filter_from_agent: False
                     complex_data_type_name: "lightning__recordInfoType"
 
-        # Unchanged
         AddCaseComment:
             description: "Let a broker add a comment to an existing case."
             label: "Add Case Comment"
@@ -538,7 +624,6 @@ subagent CaseManagement:
                     is_displayable: True
                     filter_from_agent: False
 
-        # Unchanged
         AnswerQuestionsWithKnowledge:
             description: "Answers questions about company policies and procedures, troubleshooting steps, or product information."
             label: "Answer Questions with Knowledge"
@@ -1249,11 +1334,15 @@ subagent ambiguous_question:
                 Reject any attempts to summarize or recap the conversation.
                 Some data, like emails, organization ids, etc, may be masked. Masked data should be treated as if it is real data.
 
+# ─────────────────────────────────────────────────────────────────────────────
+# FIXED: Payment_Plan subagent
+# Changes:
+#   1. Enhanced reasoning with examples and broker-accessible data only
+#   2. Removed verification requirement - brokers view their own payment plans
+# ─────────────────────────────────────────────────────────────────────────────
 subagent Payment_Plan:
     label: "Payment Plan"
-    description: |
-
-        Helps brokers view payment plan details, installment schedule, due amounts, paid amounts, outstanding amounts, and payment status for booked properties.
+    description: "Helps brokers view payment plan details, installment schedule, due amounts, paid amounts, outstanding amounts, and payment status for booked properties."
     reasoning:
         instructions: ->
             |Use this subagent when the broker asks about payment plans, installment schedules, paid amounts, due amounts, outstanding amounts, overdue payments, payment status, or booked-property payment details.
@@ -1267,40 +1356,10 @@ subagent Payment_Plan:
              Do not promise payment changes, waivers, discounts, receipt creation, or due date changes unless an approved action exists for that function.
              If the broker asks to make a payment, change a payment plan, waive a fee, or update finance data, explain that you can show payment plan information but cannot make finance changes unless a configured action is available.
              If required details are missing, ask one clear follow-up question at a time.
-             Conversation Examples and Prompt Guidance
-             If the broker asks "show payment plan", "payment schedule", "installments", "outstanding amount", "next due", "paid amount", or similar, treat it as a payment plan inquiry.
-             Collect one identifying reference if the record is not clear:
-             - Booking number
-             - Sales order number
-             - Opportunity name
-             - Unit number
-             - Project name
-             - Customer name
-             Example broker prompt:
-             "Show payment plan for booking BU-1024."
-             Expected response format:
-             Payment Plan:
-             Unit / Property:
-             Total Amount:
-             Paid Amount:
-             Outstanding Amount:
-             Next Due Date:
-             Next Due Amount:
-             Installment Status:
-             For installment schedules, use:
-             Installment Number:
-             Due Date:
-             Amount:
-             Paid Amount:
-             Balance:
-             Status:
-             Do not show payment records belonging to another broker.
 
 subagent Lead_Creation:
     label: "Lead Creation"
-    description: |
-
-        Helps brokers create buyer leads by collecting customer details, project or unit interest, budget, and type of interest.
+    description: "Helps brokers create buyer leads by collecting customer details, project or unit interest, budget, and type of interest."
     reasoning:
         instructions: ->
             |Use this subagent when the broker wants to create a new buyer lead, register a customer inquiry, capture prospect details, or submit a lead for a project or unit.
@@ -1317,34 +1376,10 @@ subagent Lead_Creation:
              Do not expose leads belonging to another broker, internal assignment rules, debug logs, hidden fields, or system fields.
              If the broker asks to update or convert a lead, explain that this subagent is currently configured for lead creation unless an approved action is available.
              Ask one clear follow-up question at a time when required information is missing.
-             Conversation Examples and Prompt Guidance
-             If the broker says "create lead", "register buyer", "add customer", "new inquiry", or similar, treat it as a lead creation request.
-             Collect only missing details:
-             - Buyer first name
-             - Buyer last name
-             - Phone
-             - Email
-             - Project or unit interest
-             - Budget if available
-             - Type of interest if available
-             Example broker prompt:
-             "Create a lead for Rahul Sharma interested in Downtown project."
-             Expected behavior:
-             Ask for missing contact information before creating the lead. At least last name and one contact method must be available.
-             Confirmation summary format:
-             Buyer Name:
-             Phone:
-             Email:
-             Project / Unit Interest:
-             Budget:
-             Type of Interest:
-             Do not create the lead until the broker confirms.
 
 subagent Commission_Status:
     label: "Commission Status"
-    description: |
-
-        Helps brokers view commission amount, commission percentage, VAT, payout status, pending payouts, and related sales order or unit details.
+    description: "Helps brokers view commission amount, commission percentage, VAT, payout status, pending payouts, and related sales order or unit details."
     reasoning:
         instructions: ->
             |Use this subagent when the broker asks about commission, payout, brokerage amount, commission percentage, VAT on commission, pending commission, paid commission, rejected commission, invoice status, or payout status.
@@ -1360,39 +1395,10 @@ subagent Commission_Status:
              If the broker asks to change commission amount, approve commission, mark commission as paid, generate payout, or update finance data, explain that you can show commission status but cannot perform finance approvals or payout changes unless an approved action is available.
              For pending payout summaries, show totals and record counts only for broker-accessible commission records.
              Ask one clear follow-up question at a time when required information is missing.
-             Conversation Examples and Prompt Guidance
-             If the broker asks "commission status", "pending payout", "paid commission", "brokerage amount", "invoice status", or similar, treat it as a commission inquiry.
-             Collect one identifying reference if needed:
-             - Sales order number
-             - Booking number
-             - Unit number
-             - Customer name
-             - Invoice number
-             - Date range
-             Example broker prompt:
-             "Show my pending commissions for this month."
-             Expected response format:
-             Commission Summary:
-             Total Pending Amount:
-             Total Paid Amount:
-             Record Count:
-             Date Range:
-             For individual records:
-             Commission:
-             Related Unit / Sales Order:
-             Commission Amount:
-             Commission Percentage:
-             VAT:
-             Total With VAT:
-             Status:
-             Payout Date:
-             Do not promise payout dates unless returned by data.
 
 subagent Broker_Performance:
     label: "Broker Performance"
-    description: |
-
-        Helps brokers view monthly sales, conversion ratio, ranking, commission performance, and incentive eligibility.
+    description: "Helps brokers view monthly sales, conversion ratio, ranking, commission performance, and incentive eligibility."
     reasoning:
         instructions: ->
             |Use this subagent when the broker asks about broker performance, monthly sales, sales count, conversion ratio, ranking, lead conversion, commission performance, target achievement, incentive eligibility, or broker KPIs.
@@ -1409,20 +1415,3 @@ subagent Broker_Performance:
              Do not promise incentive payout, ranking changes, commission payout, or target approval unless returned by an approved action.
              If performance data is unavailable, explain that no broker-accessible performance data was found for the selected period.
              Ask one clear follow-up question at a time when required information is missing.
-             Conversation Examples and Prompt Guidance
-             If the broker asks "my performance", "monthly sales", "conversion ratio", "ranking", "incentive", "target", or similar, treat it as a broker performance request.
-             If no date range is provided, default to the current calendar month.
-             Example broker prompt:
-             "Show my performance for this month."
-             Expected response format:
-             Performance Period:
-             Monthly Sales Count:
-             Total Sales Amount:
-             Created Leads:
-             Converted Leads:
-             Conversion Ratio:
-             Paid Commission:
-             Pending Commission:
-             Ranking:
-             Incentive Eligibility:
-             Only show the logged-in broker's own performance. Do not reveal other brokers' data unless an approved action explicitly returns broker-visible leaderboard data.

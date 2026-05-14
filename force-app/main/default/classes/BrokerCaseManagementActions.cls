@@ -1,173 +1,175 @@
 /**
- * @description Broker case management actions for Agentforce
- * Handles case creation and retrieval for broker agents via Agentforce agent
+ * Agentforce action that creates a Draft broker support Case
+ * linked to the logged-in broker's Contact and Account.
  */
 public with sharing class BrokerCaseManagementActions {
 
-    public class CaseCreateInput {
-        @InvocableVariable(label='Subject' required=true description='Case subject (max 80 chars)')
+    public class Request {
+        @InvocableVariable(label='Subject' required=true)
         public String subject;
-        
-        @InvocableVariable(label='Description' required=true description='Case description')
+
+        @InvocableVariable(label='Description' required=true)
         public String description;
-        
-        @InvocableVariable(label='Case Type' required=true description='Case Type (e.g., Commission Issue, Payment Plan Issue)')
+
+        @InvocableVariable(label='Case Type' required=true)
         public String caseType;
-        
-        @InvocableVariable(label='Priority' required=false description='Priority (Low, Medium, High)')
+
+        @InvocableVariable(label='Priority')
         public String priority;
-        
-        @InvocableVariable(label='Related Booking ID' required=false description='Related Booking Unit record ID')
+
+        @InvocableVariable(label='Related Booking ID')
         public String relatedBookingId;
-        
-        @InvocableVariable(label='Related Opportunity ID' required=false description='Related Opportunity record ID')
+
+        @InvocableVariable(label='Related Opportunity ID')
         public String relatedOpportunityId;
-        
-        @InvocableVariable(label='Related Unit ID' required=false description='Related Unit record ID')
+
+        @InvocableVariable(label='Related Unit ID')
         public String relatedUnitId;
-        
-        @InvocableVariable(label='Related Commission ID' required=false description='Related Commission record ID')
+
+        @InvocableVariable(label='Related Commission ID')
         public String relatedCommissionId;
-        
-        @InvocableVariable(label='Related Lead ID' required=false description='Related Lead record ID')
+
+        @InvocableVariable(label='Related Lead ID')
         public String relatedLeadId;
     }
 
-    public class CaseCreateOutput {
-        @InvocableVariable(label='Case ID' description='Created Case record ID')
-        public String caseId;
-        
-        @InvocableVariable(label='Case Number' description='Case number')
+    public class Response {
+        @InvocableVariable(label='Case Number')
         public String caseNumber;
-        
-        @InvocableVariable(label='Status' description='Operation status (Success/Error)')
+
+        @InvocableVariable(label='Status')
         public String status;
-        
-        @InvocableVariable(label='Message' description='Response message')
+
+        @InvocableVariable(label='Message')
         public String message;
     }
 
-    /**
-     * Create a new broker case
-     * Uses logged-in broker contact to populate Contact field
-     * 
-     * @param inputs List of CaseCreateInput
-     * @return List of CaseCreateOutput
-     */
-    @InvocableMethod(label='Create Broker Case' 
-                    description='Create a new broker support case')
-    public static List<CaseCreateOutput> createBrokerCase(List<CaseCreateInput> inputs) {
-        List<CaseCreateOutput> outputs = new List<CaseCreateOutput>();
-        
-        if (inputs == null || inputs.isEmpty()) {
-            CaseCreateOutput output = new CaseCreateOutput();
-            output.status = 'Error';
-            output.message = 'No input provided';
-            outputs.add(output);
-            return outputs;
+    @InvocableMethod(
+        label='Create Broker Case'
+        description='Creates a Draft broker support Case linked to the logged-in broker contact.'
+    )
+    public static List<Response> createBrokerCase(List<Request> requests) {
+        System.debug(LoggingLevel.INFO, 'BrokerCaseManagementActions.createBrokerCase requests=' + requests);
+
+        List<Response> responses = new List<Response>();
+
+        if (requests == null || requests.isEmpty()) {
+            return responses;
         }
-        
-        CaseCreateInput input = inputs[0];
-        CaseCreateOutput output = new CaseCreateOutput();
-        
+
+        Request req = requests[0];
+        Response res = new Response();
+
         try {
             // Validate required fields
-            if (String.isBlank(input.subject)) {
-                output.status = 'Error';
-                output.message = 'Subject is required';
-                outputs.add(output);
-                return outputs;
+            if (String.isBlank(req.subject)) {
+                res.status  = 'Error';
+                res.message = 'Subject is required.';
+                responses.add(res);
+                return responses;
             }
-            
-            if (String.isBlank(input.description)) {
-                output.status = 'Error';
-                output.message = 'Description is required';
-                outputs.add(output);
-                return outputs;
+            if (String.isBlank(req.description)) {
+                res.status  = 'Error';
+                res.message = 'Description is required.';
+                responses.add(res);
+                return responses;
             }
-            
-            if (String.isBlank(input.caseType)) {
-                output.status = 'Error';
-                output.message = 'Case Type is required';
-                outputs.add(output);
-                return outputs;
+            if (String.isBlank(req.caseType)) {
+                res.status  = 'Error';
+                res.message = 'Case Type is required.';
+                responses.add(res);
+                return responses;
             }
-            
-            // Get the record type ID for Broker_Service
-            RecordType brokerServiceRT = [
-                SELECT Id 
-                FROM RecordType 
-                WHERE SObjectType = 'Case' 
-                AND DeveloperName = 'Broker_Service' 
-                LIMIT 1
-            ];
-            
-            // Get logged-in broker contact
-            Contact brokerContact = [
-                SELECT Id, AccountId
-                FROM Contact
+
+            // Resolve the logged-in user's linked Contact.
+            // UserInfo.getUserId() returns a User Id (005...) not a Contact Id (003...).
+            // Experience Cloud / broker portal users have ContactId on their User record.
+            User currentUser = [
+                SELECT Id, ContactId, Contact.AccountId
+                FROM User
                 WHERE Id = :UserInfo.getUserId()
                 LIMIT 1
             ];
-            
-            // Create the case
+
+            if (currentUser.ContactId == null) {
+                res.status  = 'Error';
+                res.message = 'No broker contact is linked to this user. Please contact your administrator.';
+                responses.add(res);
+                return responses;
+            }
+
+            // Get the Broker_Service Case record type
+            List<RecordType> rtList = [
+                SELECT Id
+                FROM RecordType
+                WHERE SObjectType = 'Case'
+                AND DeveloperName = 'Broker_Service'
+                LIMIT 1
+            ];
+
+            if (rtList.isEmpty()) {
+                res.status  = 'Error';
+                res.message = 'Broker_Service record type not found on Case. Please contact your administrator.';
+                responses.add(res);
+                return responses;
+            }
+
+            // Build the Case
             Case newCase = new Case();
-            newCase.RecordTypeId = brokerServiceRT.Id;
-            newCase.Subject = input.subject;
-            newCase.Description = input.description;
-            newCase.Type = input.caseType;
-            newCase.Status = 'New';
-            newCase.Origin = 'Agentforce';
-            newCase.ContactId = brokerContact.Id;
-            newCase.AccountId = brokerContact.AccountId;
-            
-            // Set priority if provided
-            if (String.isNotBlank(input.priority)) {
-                newCase.Priority = input.priority;
+            newCase.RecordTypeId = rtList[0].Id;
+            newCase.Subject      = req.subject;
+            newCase.Description  = req.description;
+            newCase.Type         = req.caseType;
+            newCase.Status       = 'New';
+            newCase.Origin       = 'Agentforce';
+            newCase.ContactId    = currentUser.ContactId;
+            newCase.AccountId    = currentUser.Contact.AccountId;
+
+            if (String.isNotBlank(req.priority)) {
+                newCase.Priority = req.priority;
             }
-            
-            // Set related fields if provided
-            if (String.isNotBlank(input.relatedBookingId)) {
-                newCase.Related_Booking__c = input.relatedBookingId;
+            if (String.isNotBlank(req.relatedBookingId)) {
+                newCase.Related_Booking__c = req.relatedBookingId;
             }
-            
-            if (String.isNotBlank(input.relatedOpportunityId)) {
-                newCase.Related_Opportunity__c = input.relatedOpportunityId;
+            if (String.isNotBlank(req.relatedOpportunityId)) {
+                newCase.Related_Opportunity__c = req.relatedOpportunityId;
             }
-            
-            if (String.isNotBlank(input.relatedUnitId)) {
-                newCase.Related_Unit__c = input.relatedUnitId;
+            if (String.isNotBlank(req.relatedUnitId)) {
+                newCase.Related_Unit__c = req.relatedUnitId;
             }
-            
-            if (String.isNotBlank(input.relatedCommissionId)) {
-                newCase.Related_Commission__c = input.relatedCommissionId;
+            if (String.isNotBlank(req.relatedCommissionId)) {
+                newCase.Related_Commission__c = req.relatedCommissionId;
             }
-            
-            if (String.isNotBlank(input.relatedLeadId)) {
-                newCase.Related_Lead__c = input.relatedLeadId;
+            if (String.isNotBlank(req.relatedLeadId)) {
+                newCase.Related_Lead__c = req.relatedLeadId;
             }
-            
-            // Insert the case
+
             insert newCase;
-            
-            // Prepare successful response
-            output.caseId = newCase.Id;
-            output.caseNumber = newCase.CaseNumber;
-            output.status = 'Success';
-            output.message = 'Case created successfully with number ' + newCase.CaseNumber;
-            
+
+            // Re-query to get the auto-generated CaseNumber (blank immediately after insert)
+            Case inserted = [
+                SELECT Id, CaseNumber
+                FROM Case
+                WHERE Id = :newCase.Id
+                LIMIT 1
+            ];
+
+            res.caseNumber = inserted.CaseNumber;
+            res.status     = 'Success';
+            res.message    = 'Case created successfully. Your case number is ' + inserted.CaseNumber;
+
         } catch (QueryException qe) {
-            output.status = 'Error';
-            output.message = 'Query error: ' + qe.getMessage();
+            res.status  = 'Error';
+            res.message = 'Query error: ' + qe.getMessage();
         } catch (DmlException de) {
-            output.status = 'Error';
-            output.message = 'Error creating case: ' + de.getMessage();
+            res.status  = 'Error';
+            res.message = 'Error creating case: ' + de.getDmlMessage(0);
         } catch (Exception e) {
-            output.status = 'Error';
-            output.message = 'Unexpected error: ' + e.getMessage();
+            res.status  = 'Error';
+            res.message = 'Unexpected error: ' + e.getMessage();
         }
-        
-        outputs.add(output);
-        return outputs;
+
+        responses.add(res);
+        return responses;
     }
 }

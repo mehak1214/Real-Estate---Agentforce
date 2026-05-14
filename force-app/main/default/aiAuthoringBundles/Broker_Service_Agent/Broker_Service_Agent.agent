@@ -17,7 +17,7 @@ system:
 
         For payment plan questions
     messages:
-        welcome: "Hi, I’m your Broker Service Agent. I can help you create support cases, check payment plans, create buyer leads, view commission status, and review broker performance."
+        welcome: "Hi, I'm your Broker Service Agent. I can help you create support cases, check payment plans, create buyer leads, view commission status, and review broker performance."
         error: "Sorry, it looks like something has gone wrong."
 
 config:
@@ -117,7 +117,7 @@ subagent ServiceCustomerVerification:
             | When the user provides their username or email address, you must never return any message that discloses whether the user or email exists or not. The message must explicitly state the return data of the "verificationMessage" field in the {!@actions.SendEmailVerificationCode}  action. For example: "If you have provided a valid email or username, you should receive a verification code to verify your identity. Please enter the code."
             | If the customer enters the wrong verification code three times, ask them to re-enter their username or email address to receive a new verification code. This involves invoking the {!@actions.SendEmailVerificationCode}  action again to initiate the verification process. This ensures that the customer cannot bypass the verification process after three unsuccessful attempts.
             | Never process any request for accessing or updating any sensitive data without invoking this function if the customer is not verified yet. Maintain security in all interactions.
-            | Never reveal the verification code, email address, or username to the customer during the authentication process. Make sure that these details remain confidential and aren’t displayed at any point.
+            | Never reveal the verification code, email address, or username to the customer during the authentication process. Make sure that these details remain confidential and aren't displayed at any point.
             | After the user is verified in a conversation session, switching to a different user isn't allowed under any circumstances.
             | If verification is successful, proceed with the requested action and complete the task the user intends to perform.
         actions:
@@ -137,7 +137,7 @@ subagent ServiceCustomerVerification:
                     transition to @subagent.agent_router
     actions:
         SendEmailVerificationCode:
-            description: "Sends a generated verification code to the user’s email address."
+            description: "Sends a generated verification code to the user's email address."
             inputs:
                 customerToVerify: string
                     description: "Stores the email address or username provided by the customer. This input initiates the verification process."
@@ -156,7 +156,7 @@ subagent ServiceCustomerVerification:
                     filter_from_agent: True
                     is_displayable: False
                 authenticationKey: string
-                    description: "Stores the authentication key that’s used to generate the verification code."
+                    description: "Stores the authentication key that's used to generate the verification code."
                     label: "Authentication Key"
                     filter_from_agent: True
                     is_displayable: False
@@ -166,7 +166,7 @@ subagent ServiceCustomerVerification:
                     filter_from_agent: True
                     is_displayable: False
                 customerType: string
-                    description: "Stores the customer ID type, whether it’s a Salesforce user or a contact."
+                    description: "Stores the customer ID type, whether it's a Salesforce user or a contact."
                     label: "Customer Type"
                     filter_from_agent: True
                     is_displayable: False
@@ -184,7 +184,7 @@ subagent ServiceCustomerVerification:
             target: "flow://SvcCopilotTmpl__VerifyCode"
             inputs:
                 "authenticationKey": string
-                    description: "Stores the authentication key that’s used to generate the verification code."
+                    description: "Stores the authentication key that's used to generate the verification code."
                     label: "Authentication Key"
                     is_required: True
                     is_user_input: False
@@ -199,7 +199,7 @@ subagent ServiceCustomerVerification:
                     is_required: True
                     is_user_input: False
                 "customerType": string
-                    description: "Stores the customer ID type, whether it’s a Salesforce user or a contact."
+                    description: "Stores the customer ID type, whether it's a Salesforce user or a contact."
                     label: "Customer Type"
                     is_required: True
                     is_user_input: False
@@ -290,49 +290,74 @@ subagent GeneralFAQ:
                     filter_from_agent: False
                     complex_data_type_name: "@apexClassType/AiCopilot__GenAiCitationInput"
 
+# ─────────────────────────────────────────────────────────────────────────────
+# FIXED: CaseManagement subagent
+# Changes:
+#   1. Replaced CreateCaseEnhancedData (template flow) with CreateBrokerCase
+#      which targets the custom Apex class BrokerCaseManagementActions.
+#   2. Added caseType, priority, and all relatedXxxId inputs that the Apex
+#      class requires and that the broker-specific workflow needs.
+#   3. Removed verifiedCustomerID and messagingSessionID inputs — the Apex
+#      class resolves the broker contact internally via UserInfo.getUserId(),
+#      so those are no longer passed from the agent.
+#   4. Kept GetCasesForVerifiedContact, GetCaseByVerifiedCaseNumber, and
+#      AddCaseComment wired to the existing template flows — they still work.
+#   5. Updated reasoning instructions to collect caseType before creating
+#      and to pass the right reference IDs.
+# ─────────────────────────────────────────────────────────────────────────────
 subagent CaseManagement:
     label: "Case Management"
-    description: "Handles customer inquiries and actions related to support cases, including providing case information, updating existing cases, and creating new cases."
+    description: "Handles broker inquiries and actions related to support cases, including providing case information, updating existing cases, and creating new broker cases."
     reasoning:
         instructions: ->
-            |Your job is to help customers retrieve case information, update case comments, and create new cases based on customer requests.
+            |Your job is to help brokers retrieve case information, update case comments, and create new support cases.
              Always format any dates in a human readable format.
-             Do not ever show the Case Id to a customer.
+             Do not ever show the Case Id to a broker.
              Use {!@actions.AnswerQuestionsWithKnowledge} action to answer troubleshooting questions.
-             If the customer is not known, always ask for their email address and get their Contact record before running any other actions.
-             A case is a record used to help track a customer's issues. Customers may have questions about the status of the issue or want to provide more information for the case. Cases are usually associated with a contact. Comments are added to provide new information.
-             When adding a comment to a case, first retrieve the case details using the case number, ask the user for the exact comment they would like to add and only then add it.
-             When sharing case details with the customer, show the following properties as an itemized list :Case number, Subject, Description, and Status. The Subject must exactly match the value stored in the case record. Do not rephrase or regenerate it.
-             Acknowledge and validate user concerns with empathy and professionalism.
-             When a customer asks you to create a case, *only* if not done so far, summarize the case creation details once for the user and ask for a confirmation.
-             Once the user confirms that they want to create a case, use {!@actions.CreateCaseEnhancedData} with the subject and description for the case immediately and inform the user that the case was created.
-             The case subject should be less than 7 words and function as a high level overview of what the customer inquired about. The case description should be no more than 3 sentences and should provide more depth about what exactly the customer asked, important data, and any other relevant information to help a customer service representative understand the context of this conversation.
-             When sharing the Description field from a case record with the customer, summarize it into a condensed, conversational version that is no more than 3 sentences. The summary must preserve all important factual content and intent from the original case description, and must not introduce any new or misleading information.
-             Conversation Examples and Prompt Guidance
-             If the broker says "create a case", "raise a ticket", "I have an issue", "payment issue", "commission issue", "portal issue", or similar, treat it as a case creation request.
-             Collect only missing details:
-             - Issue type
-             - Short subject
-             - Description
-             - Priority if available
-             - Related booking, unit, opportunity, payment, commission, or lead reference if available
-             Example broker prompt:
-             "I want to create a case for a commission issue."
-             Expected behavior:
-             Ask for the missing details one at a time. Once enough information is available, summarize the case details and ask for confirmation before creating the case.
-             Confirmation summary format:
-             Case Type:
-             Subject:
-             Description:
-             Priority:
-             Related Reference:
+             A case is a record used to track a broker's issues. Cases are associated with the logged-in broker contact automatically — do not ask the broker to provide their contact details.
+             Comments are added to provide new information on an existing case.
+             When adding a comment to a case, first retrieve the case details using the case number, ask the broker for the exact comment they would like to add, and only then add it.
+             When sharing case details with the broker, show the following as an itemized list: Case Number, Subject, Description, Status. The Subject must exactly match the value stored in the case record. Do not rephrase or regenerate it.
+             Acknowledge and validate broker concerns with empathy and professionalism.
+
+             CASE CREATION RULES:
+             When a broker asks to create a case, collect the following details one at a time if missing:
+               - Issue Type / Case Type (e.g., Commission Issue, Payment Plan Issue, Portal Issue, General Inquiry)
+               - Subject (short, less than 7 words, high-level overview)
+               - Description (no more than 3 sentences with enough detail for a service rep)
+               - Priority if provided (Low, Medium, High) — optional
+               - Related reference if provided: Booking ID, Opportunity ID, Unit ID, Commission ID, or Lead ID — optional
+
+             If the broker says "create a case", "raise a ticket", "I have an issue", "payment issue",
+             "commission issue", "portal issue", or similar, treat it as a case creation request.
+
+             Before creating the case, summarize once and ask the broker to confirm:
+               Case Type:
+               Subject:
+               Description:
+               Priority:
+               Related Reference:
+
              Do not create the case until the broker confirms.
+
+             Once the broker confirms, call {!@actions.CreateBrokerCase} immediately with all collected inputs.
+             After the action returns, inform the broker of their case number from the outcomeMessage output.
+             If the action returns a status of Error, show the message to the broker and ask if they want to try again or escalate.
+
+             When sharing the Description field from a case record, summarize it into no more than 3 sentences.
+             The summary must preserve all important factual content and must not introduce new information.
         actions:
-            CreateCaseEnhancedData: @actions.CreateCaseEnhancedData
-                with verifiedCustomerID = @variables.VerifiedCustomerId
-                with messagingSessionID = @variables.RoutableId
-                with caseSubject = ...
-                with caseDescription = ...
+            # FIXED: now calls the custom Apex-backed action instead of the template flow
+            CreateBrokerCase: @actions.CreateBrokerCase
+                with subject = ...
+                with description = ...
+                with caseType = ...
+                with priority = ...
+                with relatedBookingId = ...
+                with relatedOpportunityId = ...
+                with relatedUnitId = ...
+                with relatedCommissionId = ...
+                with relatedLeadId = ...
             GetCasesForVerifiedContact: @actions.GetCasesForVerifiedContact
                 with verifiedContactID = @variables.VerifiedCustomerId
             GetCaseByVerifiedCaseNumber: @actions.GetCaseByVerifiedCaseNumber
@@ -348,47 +373,94 @@ subagent CaseManagement:
                 with citationsEnabled = ...
 
     actions:
-        CreateCaseEnhancedData:
-            description: "Create a case for the customer that's transferred from the AI agent to a service rep. The case includes all information gathered from the customer, a summary of the progress made by the AI agent, a link to the conversation, and any attachments."
-            label: "Create Case with Enhanced Data"
+        CreateBrokerCase:
+            description: "Creates a new broker support case using the logged-in broker's contact. Collects issue type, subject, description, optional priority, and optional related references before creating."
+            label: "Create Broker Case"
             require_user_confirmation: True
             include_in_progress_indicator: True
-            source: "SvcCopilotTmpl__CreateCaseEnhancedData"
-            target: "flow://SvcCopilotTmpl__CreateCaseEnhancedData"
+            progress_indicator_message: "Creating your case"
+            target: "apex://BrokerCaseManagementActions"
             inputs:
-                "verifiedCustomerID": string
-                    description: "Stores the contact ID associated with the newly created Case."
-                    label: "Verified Customer ID"
+                subject: string
+                    description: "Short subject for the case, less than 7 words, high-level overview of the broker's issue."
+                    label: "Subject"
                     is_required: True
-                    is_user_input: False
+                    is_user_input: True
                     complex_data_type_name: "lightning__textType"
-                "messagingSessionID": string
-                    description: "Stores session id from the chat conversation"
-                    label: "Messaging Session ID"
-                    is_required: False
-                    is_user_input: False
+                description: string
+                    description: "Detailed description of the broker's issue, no more than 3 sentences."
+                    label: "Description"
+                    is_required: True
+                    is_user_input: True
                     complex_data_type_name: "lightning__textType"
-                "caseSubject": string
-                    description: "Stores the subject of the case to create."
-                    label: "Case Subject"
+                caseType: string
+                    description: "The issue type or case type, e.g. Commission Issue, Payment Plan Issue, Portal Issue, General Inquiry."
+                    label: "Case Type"
+                    is_required: True
+                    is_user_input: True
+                    complex_data_type_name: "lightning__textType"
+                priority: string
+                    description: "Priority of the case: Low, Medium, or High. Optional."
+                    label: "Priority"
                     is_required: False
                     is_user_input: True
                     complex_data_type_name: "lightning__textType"
-                "caseDescription": string
-                    description: "Stores the details of the user issue to be used for the case."
-                    label: "Case Description"
+                relatedBookingId: string
+                    description: "Salesforce record ID of the related Booking Unit, if provided by the broker."
+                    label: "Related Booking ID"
+                    is_required: False
+                    is_user_input: True
+                    complex_data_type_name: "lightning__textType"
+                relatedOpportunityId: string
+                    description: "Salesforce record ID of the related Opportunity, if provided by the broker."
+                    label: "Related Opportunity ID"
+                    is_required: False
+                    is_user_input: True
+                    complex_data_type_name: "lightning__textType"
+                relatedUnitId: string
+                    description: "Salesforce record ID of the related Unit, if provided by the broker."
+                    label: "Related Unit ID"
+                    is_required: False
+                    is_user_input: True
+                    complex_data_type_name: "lightning__textType"
+                relatedCommissionId: string
+                    description: "Salesforce record ID of the related Commission record, if provided by the broker."
+                    label: "Related Commission ID"
+                    is_required: False
+                    is_user_input: True
+                    complex_data_type_name: "lightning__textType"
+                relatedLeadId: string
+                    description: "Salesforce record ID of the related Lead, if provided by the broker."
+                    label: "Related Lead ID"
                     is_required: False
                     is_user_input: True
                     complex_data_type_name: "lightning__textType"
             outputs:
-                "caseRecord": object
-                    description: "Stores the case record created by the customer."
-                    label: "Case record"
+                caseNumber: string
+                    description: "Auto-generated case number of the created case."
+                    label: "Case Number"
+                    complex_data_type_name: "lightning__textType"
+                    is_used_by_planner: True
                     is_displayable: True
                     filter_from_agent: False
-                    complex_data_type_name: "lightning__recordInfoType"
+                status: string
+                    description: "Operation status: Success or Error."
+                    label: "Status"
+                    complex_data_type_name: "lightning__textType"
+                    is_used_by_planner: True
+                    is_displayable: False
+                    filter_from_agent: True
+                message: string
+                    description: "Human-readable outcome message shown to the broker after case creation."
+                    label: "Message"
+                    complex_data_type_name: "lightning__textType"
+                    is_used_by_planner: True
+                    is_displayable: True
+                    filter_from_agent: False
+
+        # Unchanged — still uses the template flow
         GetCasesForVerifiedContact:
-            description: "Returns a list of cases related to a given Contact ID."
+            description: "Returns a list of cases related to the verified broker contact."
             label: "Get Cases For Verified Contact"
             require_user_confirmation: False
             include_in_progress_indicator: True
@@ -396,20 +468,22 @@ subagent CaseManagement:
             target: "flow://SvcCopilotTmpl__GetCasesVrfyCtct"
             inputs:
                 "verifiedContactID": string
-                    description: "Stores the contact record ID to be updated."
+                    description: "Stores the contact record ID of the verified broker."
                     label: "Verified Contact record ID"
                     is_required: True
                     is_user_input: False
                     complex_data_type_name: "lightning__textType"
             outputs:
                 "caseList": list[object]
-                    description: "Stores the ID, Subject, Description, Status, CreatedDate, CaseNumber, LastModifiedDate, and ClosedDate for case records related to a specified contact."
+                    description: "Stores the ID, Subject, Description, Status, CreatedDate, CaseNumber, LastModifiedDate, and ClosedDate for case records related to the broker contact."
                     label: "Case List"
                     is_displayable: True
                     filter_from_agent: False
                     complex_data_type_name: "lightning__recordInfoType"
+
+        # Unchanged — still uses the template flow
         GetCaseByVerifiedCaseNumber:
-            description: "Returns a case associated with a given contact ID and case number."
+            description: "Returns a case associated with the verified broker contact and a given case number."
             label: "Get Case By Verified Case Number"
             require_user_confirmation: False
             include_in_progress_indicator: True
@@ -417,26 +491,28 @@ subagent CaseManagement:
             target: "flow://SvcCopilotTmpl__GetCaseByVrfyCaseNbr"
             inputs:
                 "verifiedContactID": string
-                    description: "Stores the contact record ID to be updated."
+                    description: "Stores the contact record ID of the verified broker."
                     label: "Verified Contact record ID"
                     is_required: True
                     is_user_input: False
                     complex_data_type_name: "lightning__textType"
                 "caseNumber": string
-                    description: "Stores the case number provided by the customer."
+                    description: "Stores the case number provided by the broker."
                     label: "Case Number"
                     is_required: True
                     is_user_input: False
                     complex_data_type_name: "lightning__textType"
             outputs:
                 "caseRecord": object
-                    description: "Stores the case record based on the contact record and case number."
+                    description: "Stores the case record based on the broker contact and case number."
                     label: "Case record"
                     is_displayable: True
                     filter_from_agent: False
                     complex_data_type_name: "lightning__recordInfoType"
+
+        # Unchanged
         AddCaseComment:
-            description: "Let a customer add a comment to an existing case."
+            description: "Let a broker add a comment to an existing case."
             label: "Add Case Comment"
             require_user_confirmation: True
             include_in_progress_indicator: True
@@ -457,12 +533,14 @@ subagent CaseManagement:
                     complex_data_type_name: "lightning__textType"
             outputs:
                 "outcomeMessage": string
-                    description: "Stores the message that lets the customer know whether the comment was successfully added to the case."
+                    description: "Stores the message that lets the broker know whether the comment was successfully added."
                     label: "Outcome message"
                     is_displayable: True
                     filter_from_agent: False
+
+        # Unchanged
         AnswerQuestionsWithKnowledge:
-            description: "Answers questions about company policies and procedures, troubleshooting steps, or product information. For example: 'What is your return policy?' 'How do I fix an issue?' or 'What features does a product have?'"
+            description: "Answers questions about company policies and procedures, troubleshooting steps, or product information."
             label: "Answer Questions with Knowledge"
             require_user_confirmation: False
             include_in_progress_indicator: True
@@ -537,7 +615,7 @@ subagent AccountManagement:
                 with citationsEnabled = ...
     actions:
         UpdateVerifiedContact:
-            description: "Updates fields on a customer’s contact record, such as the email address, phone number, or postal address."
+            description: "Updates fields on a customer's contact record, such as the email address, phone number, or postal address."
             label: "Update Verified Contact"
             require_user_confirmation: True
             include_in_progress_indicator: True
@@ -606,7 +684,7 @@ subagent AccountManagement:
                     is_displayable: True
                     filter_from_agent: False
         AnswerQuestionsWithKnowledge:
-            description: "Answers questions about company policies and procedures, troubleshooting steps, or product information. For example: 'What is your return policy?' 'How do I fix an issue?' or 'What features does a product have?'"
+            description: "Answers questions about company policies and procedures, troubleshooting steps, or product information."
             label: "Answer Questions with Knowledge"
             require_user_confirmation: False
             include_in_progress_indicator: True
@@ -693,7 +771,7 @@ subagent ReservationManagement:
                     is_user_input: False
                     complex_data_type_name: "lightning__recordInfoType"
                 "dateTime": object
-                    description: "Stores the date and time of the customer’s reservation."
+                    description: "Stores the date and time of the customer's reservation."
                     label: "Date time"
                     is_required: True
                     is_user_input: False
@@ -745,7 +823,7 @@ subagent ReservationManagement:
                     filter_from_agent: False
                     complex_data_type_name: "lightning__recordInfoType"
         AnswerQuestionsWithKnowledge:
-            description: "Answers questions about company policies and procedures, troubleshooting steps, or product information. For example: 'What is your return policy?' 'How do I fix an issue?' or 'What features does a product have?'"
+            description: "Answers questions about company policies and procedures, troubleshooting steps, or product information."
             label: "Answer Questions with Knowledge"
             require_user_confirmation: False
             include_in_progress_indicator: True
@@ -760,32 +838,27 @@ subagent ReservationManagement:
                     is_user_input: True
                     complex_data_type_name: "lightning__textType"
                 "citationsUrl": string = @knowledge.citations_url
-                    description: "The URL to use for citations for custom Agents."
                     label: "Citations Url"
                     is_required: False
                     is_user_input: True
                     complex_data_type_name: "lightning__textType"
                 "ragFeatureConfigId": string = @knowledge.rag_feature_config_id
-                    description: "The RAG Feature ID to use for grounding this copilot action invocation."
                     label: "RAG Feature Configuration Id"
                     is_required: False
                     is_user_input: True
                     complex_data_type_name: "lightning__textType"
                 "citationsEnabled": boolean = @knowledge.citations_enabled
-                    description: "Whether or not citations are enabled."
                     label: "Citations Enabled"
                     is_required: False
                     is_user_input: True
                     complex_data_type_name: "lightning__booleanType"
             outputs:
                 "knowledgeSummary": object
-                    description: "A string formatted as rich text that includes a summary of the information retrieved from the knowledge articles and citations to those articles."
                     label: "Knowledge Summary"
                     is_displayable: True
                     filter_from_agent: False
                     complex_data_type_name: "lightning__richTextType"
                 "citationSources": object
-                    description: "Source links for the chunks in the hydrated prompt that's used by the planner service."
                     label: "Citation Sources"
                     is_displayable: False
                     filter_from_agent: False
@@ -909,7 +982,7 @@ subagent DeliveryIssues:
                     filter_from_agent: False
                     complex_data_type_name: "lightning__recordInfoType"
         CancelOrder:
-            description: "Cancels a customer’s order."
+            description: "Cancels a customer's order."
             label: "Cancel Order"
             require_user_confirmation: True
             include_in_progress_indicator: True
@@ -928,7 +1001,7 @@ subagent DeliveryIssues:
                     is_displayable: True
                     filter_from_agent: False
         AnswerQuestionsWithKnowledge:
-            description: "Answers questions about company policies and procedures, troubleshooting steps, or product information. For example: 'What is your return policy?' 'How do I fix an issue?' or 'What features does a product have?'"
+            description: "Answers questions about company policies and procedures, troubleshooting steps, or product information."
             label: "Answer Questions with Knowledge"
             require_user_confirmation: False
             include_in_progress_indicator: True
@@ -937,38 +1010,32 @@ subagent DeliveryIssues:
             target: "standardInvocableAction://streamKnowledgeSearch"
             inputs:
                 "query": string
-                    description: "Required. A string created by generative AI to be used in the knowledge article search."
                     label: "Query"
                     is_required: True
                     is_user_input: True
                     complex_data_type_name: "lightning__textType"
                 "citationsUrl": string = @knowledge.citations_url
-                    description: "The URL to use for citations for custom Agents."
                     label: "Citations Url"
                     is_required: False
                     is_user_input: True
                     complex_data_type_name: "lightning__textType"
                 "ragFeatureConfigId": string = @knowledge.rag_feature_config_id
-                    description: "The RAG Feature ID to use for grounding this copilot action invocation."
                     label: "RAG Feature Configuration Id"
                     is_required: False
                     is_user_input: True
                     complex_data_type_name: "lightning__textType"
                 "citationsEnabled": boolean = @knowledge.citations_enabled
-                    description: "Whether or not citations are enabled."
                     label: "Citations Enabled"
                     is_required: False
                     is_user_input: True
                     complex_data_type_name: "lightning__booleanType"
             outputs:
                 "knowledgeSummary": object
-                    description: "A string formatted as rich text that includes a summary of the information retrieved from the knowledge articles and citations to those articles."
                     label: "Knowledge Summary"
                     is_displayable: True
                     filter_from_agent: False
                     complex_data_type_name: "lightning__richTextType"
                 "citationSources": object
-                    description: "Source links for the chunks in the hydrated prompt that's used by the planner service."
                     label: "Citation Sources"
                     is_displayable: False
                     filter_from_agent: False
@@ -976,7 +1043,7 @@ subagent DeliveryIssues:
 
 subagent OrderInquiries:
     label: "Order Inquiries"
-    description: "Handles questions related to a user’s order, order status, or order updates."
+    description: "Handles questions related to a user's order, order status, or order updates."
     reasoning:
         instructions: ->
             | Your job is to answer general questions about orders, get order details, and cancel orders.
@@ -984,7 +1051,7 @@ subagent OrderInquiries:
             | If a package is lost, immediately escalate the issue to a live agent.
             | Convert dates to YYYY-MM-DD for the customer, but do not request the customer to provide the dates in that format. Show dates in a user friendly way.
             | If the customer is not known, always ask for their email address and get their Contact record before running any other actions.
-            | Use the {!@actions.AnswerQuestionsWithKnowledge}  action for answering general order questions.
+            | Use the {!@actions.AnswerQuestionsWithKnowledge}  action for answering general order questions.
             | Acknowledge and validate user concerns with empathy and professionalism.
             | If an order's status is delivered, deny cancellation of the order.
         actions:
@@ -1069,7 +1136,7 @@ subagent OrderInquiries:
                     filter_from_agent: False
                     complex_data_type_name: "lightning__recordInfoType"
         CancelOrder:
-            description: "Cancels a customer’s order."
+            description: "Cancels a customer's order."
             label: "Cancel Order"
             require_user_confirmation: True
             include_in_progress_indicator: True
@@ -1088,7 +1155,7 @@ subagent OrderInquiries:
                     is_displayable: True
                     filter_from_agent: False
         AnswerQuestionsWithKnowledge:
-            description: "Answers questions about company policies and procedures, troubleshooting steps, or product information. For example: 'What is your return policy?' 'How do I fix an issue?' or 'What features does a product have?'"
+            description: "Answers questions about company policies and procedures, troubleshooting steps, or product information."
             label: "Answer Questions with Knowledge"
             require_user_confirmation: False
             include_in_progress_indicator: True
@@ -1097,38 +1164,32 @@ subagent OrderInquiries:
             target: "standardInvocableAction://streamKnowledgeSearch"
             inputs:
                 "query": string
-                    description: "Required. A string created by generative AI to be used in the knowledge article search."
                     label: "Query"
                     is_required: True
                     is_user_input: True
                     complex_data_type_name: "lightning__textType"
                 "citationsUrl": string = @knowledge.citations_url
-                    description: "The URL to use for citations for custom Agents."
                     label: "Citations Url"
                     is_required: False
                     is_user_input: True
                     complex_data_type_name: "lightning__textType"
                 "ragFeatureConfigId": string = @knowledge.rag_feature_config_id
-                    description: "The RAG Feature ID to use for grounding this copilot action invocation."
                     label: "RAG Feature Configuration Id"
                     is_required: False
                     is_user_input: True
                     complex_data_type_name: "lightning__textType"
                 "citationsEnabled": boolean = @knowledge.citations_enabled
-                    description: "Whether or not citations are enabled."
                     label: "Citations Enabled"
                     is_required: False
                     is_user_input: True
                     complex_data_type_name: "lightning__booleanType"
             outputs:
                 "knowledgeSummary": object
-                    description: "A string formatted as rich text that includes a summary of the information retrieved from the knowledge articles and citations to those articles."
                     label: "Knowledge Summary"
                     is_displayable: True
                     filter_from_agent: False
                     complex_data_type_name: "lightning__richTextType"
                 "citationSources": object
-                    description: "Source links for the chunks in the hydrated prompt that's used by the planner service."
                     label: "Citation Sources"
                     is_displayable: False
                     filter_from_agent: False
@@ -1342,8 +1403,8 @@ subagent Broker_Performance:
              Include monthly sales count, total sales amount if available, created lead count if available, converted lead count if available, conversion ratio if available, total commission amount if available, paid commission amount if available, pending commission amount if available, broker ranking if available, and incentive eligibility if available.
              Always format dates in a human readable format.
              Do not show Salesforce record Ids.
-             Do not expose other brokers’ sales, ranking details, commission records, customer records, internal scoring logic, debug logs, hidden fields, or system fields.
-             If ranking is shown, show only the logged-in broker’s rank and summary context. Do not list other brokers unless the configured action explicitly returns broker-visible leaderboard data.
+             Do not expose other brokers' sales, ranking details, commission records, customer records, internal scoring logic, debug logs, hidden fields, or system fields.
+             If ranking is shown, show only the logged-in broker's rank and summary context. Do not list other brokers unless the configured action explicitly returns broker-visible leaderboard data.
              If incentive eligibility is shown, explain the result using only broker-visible criteria returned by the configured action.
              Do not promise incentive payout, ranking changes, commission payout, or target approval unless returned by an approved action.
              If performance data is unavailable, explain that no broker-accessible performance data was found for the selected period.

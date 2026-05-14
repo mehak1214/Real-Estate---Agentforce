@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ManagedTopics xmlns="http://soap.sforce.com/2006/04/metadata">
+    <managedTopic>
+        <name>Broker Performance</name>
+        <description>Show KPIs and sales insights for brokers</description>
+        <topicChannels>
+            <channel>Broker Service Agent</channel>
+        </topicChannels>
+        <subtopics>
+            <subtopic>
+                <name>Monthly Sales</name>
+                <description>Display monthly sales metrics</description>
+            </subtopic>
+            <subtopic>
+                <name>Conversion Ratio</name>
+                <description>Show lead-to-sale conversion percentage</description>
+            </subtopic>
+            <subtopic>
+                <name>Broker Ranking</name>
+                <description>Display ranking among all brokers</description>
+            </subtopic>
+            <subtopic>
+                <name>Incentive Eligibility</name>
+                <description>Check incentive qualification status</description>
+            </subtopic>
+        </subtopics>
+    </managedTopic>
+</ManagedTopics>

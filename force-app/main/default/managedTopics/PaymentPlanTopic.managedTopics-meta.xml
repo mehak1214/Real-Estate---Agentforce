@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ManagedTopics xmlns="http://soap.sforce.com/2006/04/metadata">
+    <managedTopic>
+        <name>Payment Plan</name>
+        <description>Show payment schedule for booked properties</description>
+        <topicChannels>
+            <channel>Broker Service Agent</channel>
+        </topicChannels>
+        <subtopics>
+            <subtopic>
+                <name>View Payment Schedule</name>
+                <description>Display payment plan installments and dues</description>
+            </subtopic>
+            <subtopic>
+                <name>Payment Status</name>
+                <description>Check payment status and outstanding amount</description>
+            </subtopic>
+        </subtopics>
+    </managedTopic>
+</ManagedTopics>

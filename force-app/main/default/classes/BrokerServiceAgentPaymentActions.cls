@@ -5,11 +5,11 @@ public with sharing class BrokerServiceAgentPaymentActions {
 
     public class PaymentPlanRequest {
         // Broker identity is resolved from User.ContactId, then User.ContactId__c for admin testing.
-        @InvocableVariable(label='Broker Contact ID')
+        @InvocableVariable(label='Broker Contact ID') 
         public Id brokerContactId;
 
         @InvocableVariable(label='Opportunity ID')
-        public Id opportunityId;
+        public Id opportunityId; 
 
         @InvocableVariable(label='Opportunity Name')
         public String opportunityName;

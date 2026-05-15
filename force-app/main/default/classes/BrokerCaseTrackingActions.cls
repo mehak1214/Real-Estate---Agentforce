@@ -87,7 +87,7 @@ public with sharing class BrokerCaseTrackingActions {
                 res.message = 'No broker contact is linked to this user. Please contact your administrator.';
                 res.recordCount = 0;
                 responses.add(res);
-                return responses;
+                return responses; 
             }
 
             Integer rowLimit = req.limitSize == null || req.limitSize <= 0 ? 10 : Math.min(req.limitSize, 50);

@@ -11,7 +11,7 @@ force-app/main/default/aiAuthoringBundles/Broker_Service_Agent/Broker_Service_Ag
 ```
 
 The Broker Service Agent is a broker-facing Agentforce assistant. It supports:
-
+ 
 - Case creation
 - Case tracking
 - Payment plan lookup

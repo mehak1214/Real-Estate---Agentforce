@@ -178,7 +178,7 @@ public with sharing class BrokerLeadCreationActions {
                     return outputs; 
                 }
                 newLead.Project__c = projectId;
-            }
+            } 
             
             if (String.isNotBlank(input.budget)) {
                 newLead.Budget__c = input.budget;

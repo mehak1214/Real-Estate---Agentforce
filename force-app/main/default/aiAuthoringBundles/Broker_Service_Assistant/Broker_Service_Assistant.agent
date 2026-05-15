@@ -255,7 +255,7 @@ subagent Assistant_Case_Management:
              "I want to create a case for a commission issue."
              Expected behavior:
              Acknowledge the request, then ask for the missing details one at a time (Subject, Description, Priority). Once all are collected, show the summary and ask for confirmation. After confirmation, call the Create Service Case action immediately.
-        actions:
+        actions: 
             get_service_cases: @actions.get_service_cases
                 with caseNumber = ...
                 with statusFilter = ...

@@ -178,7 +178,7 @@ public with sharing class BrokerPerformanceActions {
                     higherRankedBrokers++;
                 }
             }
-            
+             
             String ranking = 'Rank #' + (higherRankedBrokers + 1);
             
             // Determine incentive eligibility (example: minimum 5 sales per month)

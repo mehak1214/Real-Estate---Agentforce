@@ -47,7 +47,7 @@ public with sharing class BrokerCommissionActions {
         @InvocableVariable(label='Payout Date')
         public Date payoutDate;
     }
-
+ 
     public class CommissionOutput {
         @InvocableVariable(label='Commission Summary')
         public String summary;

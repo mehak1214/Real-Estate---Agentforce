@@ -129,7 +129,7 @@ public with sharing class BrokerCaseManagementActions {
             }
             if (String.isNotBlank(req.relatedUnitId)) {
                 newCase.Related_Unit__c = req.relatedUnitId;
-            }
+            } 
             if (String.isNotBlank(req.relatedCommissionId)) {
                 newCase.Related_Commission__c = req.relatedCommissionId;
             }

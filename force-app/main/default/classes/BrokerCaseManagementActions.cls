@@ -5,8 +5,7 @@
 public with sharing class BrokerCaseManagementActions {
 
     public class Request {
-        // Optional for internal-user testing and Agentforce sessions that pass
-        // @MessagingEndUser.ContactId. If blank, use the logged-in user's ContactId.
+        // Broker identity is resolved from User.ContactId, then User.ContactId__c for admin testing.
         @InvocableVariable(label='Broker Contact ID')
         public Id brokerContactId;
 
@@ -87,7 +86,7 @@ public with sharing class BrokerCaseManagementActions {
             }
             
 
-            Id brokerContactId = resolveBrokerContactId(req.brokerContactId);
+            Id brokerContactId = resolveLoggedInBrokerContactId();
             if (brokerContactId == null) {
                 res.status  = 'Error';
                 res.message = 'No broker contact is linked to this user. Please contact your administrator.';
@@ -167,11 +166,7 @@ public with sharing class BrokerCaseManagementActions {
         return responses;
     }
 
-    private static Id resolveBrokerContactId(Id brokerContactId) {
-        if (brokerContactId != null) {
-            return brokerContactId;
-        }
-
+    private static Id resolveLoggedInBrokerContactId() {
         // Production path: broker portal users have User.ContactId populated.
         // Testing fallback: internal users can store a broker Contact Id in User.ContactId__c.
         User currentUser = [

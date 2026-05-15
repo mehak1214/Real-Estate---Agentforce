@@ -4,8 +4,7 @@
 public  class BrokerServiceAgentPaymentActions {
 
     public class PaymentPlanRequest {
-        // Optional for internal-user testing and Agentforce sessions that pass
-        // @MessagingEndUser.ContactId. If blank, use the logged-in user's ContactId.
+        // Broker identity is resolved from User.ContactId, then User.ContactId__c for admin testing.
         @InvocableVariable(label='Broker Contact ID')
         public Id brokerContactId;
 
@@ -104,7 +103,7 @@ public  class BrokerServiceAgentPaymentActions {
                     continue;
                 }
 
-                Contact brokerContact = resolveBrokerContact(req.brokerContactId);
+                Contact brokerContact = resolveLoggedInBrokerContact();
                 if (brokerContact == null || brokerContact.AccountId == null) {
                     response.status = 'Error';
                     response.message = 'No broker contact is linked to this user. Please contact your administrator.';
@@ -190,23 +189,21 @@ public  class BrokerServiceAgentPaymentActions {
         return null;
     }
 
-    private static Contact resolveBrokerContact(Id brokerContactId) {
-        Id contactId = brokerContactId;
+    private static Contact resolveLoggedInBrokerContact() {
+        Id contactId;
 
-        if (contactId == null) {
-            // Production path: broker portal users have User.ContactId populated.
-            // Testing fallback: internal users can store a broker Contact Id in User.ContactId__c.
-            List<User> users = [
-                SELECT ContactId, ContactId__c
-                FROM User
-                WHERE Id = :UserInfo.getUserId()
-                LIMIT 1
-            ];
-            if (!users.isEmpty()) {
-                contactId = users[0].ContactId;
-                if (contactId == null && String.isNotBlank(users[0].ContactId__c)) {
-                    contactId = Id.valueOf(users[0].ContactId__c.trim());
-                }
+        // Production path: broker portal users have User.ContactId populated.
+        // Testing fallback: internal users can store a broker Contact Id in User.ContactId__c.
+        List<User> users = [
+            SELECT ContactId, ContactId__c
+            FROM User
+            WHERE Id = :UserInfo.getUserId()
+            LIMIT 1
+        ];
+        if (!users.isEmpty()) {
+            contactId = users[0].ContactId;
+            if (contactId == null && String.isNotBlank(users[0].ContactId__c)) {
+                contactId = Id.valueOf(users[0].ContactId__c.trim());
             }
         }
 

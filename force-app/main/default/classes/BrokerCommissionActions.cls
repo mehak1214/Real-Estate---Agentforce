@@ -5,8 +5,7 @@
 public with sharing class BrokerCommissionActions {
 
     public class CommissionQueryInput {
-        // Optional for Agentforce sessions and internal-user testing. If blank,
-        // use User.ContactId, then User.ContactId__c as a testing fallback.
+        // Broker identity is resolved from User.ContactId, then User.ContactId__c for admin testing.
         @InvocableVariable(label='Broker Contact ID' required=false description='Broker Contact ID from the messaging end user or testing fallback')
         public Id brokerContactId;
 
@@ -93,7 +92,7 @@ public with sharing class BrokerCommissionActions {
         CommissionOutput output = new CommissionOutput();
         
         try {
-            Contact brokerContact = resolveBrokerContact(input.brokerContactId);
+            Contact brokerContact = resolveLoggedInBrokerContact();
             if (brokerContact == null) {
                 output.status = 'Error';
                 output.message = 'No broker contact is linked to this user. Please contact your administrator.';
@@ -181,20 +180,16 @@ public with sharing class BrokerCommissionActions {
         return outputs;
     }
 
-    private static Contact resolveBrokerContact(Id brokerContactId) {
-        Id contactId = brokerContactId;
-
-        if (contactId == null) {
-            User currentUser = [
-                SELECT ContactId, ContactId__c
-                FROM User
-                WHERE Id = :UserInfo.getUserId()
-                LIMIT 1
-            ];
-            contactId = currentUser.ContactId;
-            if (contactId == null && String.isNotBlank(currentUser.ContactId__c)) {
-                contactId = Id.valueOf(currentUser.ContactId__c.trim());
-            }
+    private static Contact resolveLoggedInBrokerContact() {
+        User currentUser = [
+            SELECT ContactId, ContactId__c
+            FROM User
+            WHERE Id = :UserInfo.getUserId()
+            LIMIT 1
+        ];
+        Id contactId = currentUser.ContactId;
+        if (contactId == null && String.isNotBlank(currentUser.ContactId__c)) {
+            contactId = Id.valueOf(currentUser.ContactId__c.trim());
         }
 
         if (contactId == null) {

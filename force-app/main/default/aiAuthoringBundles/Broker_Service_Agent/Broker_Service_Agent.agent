@@ -114,7 +114,7 @@ subagent CaseManagement:
             inputs:
                 brokerContactId: id
                     label: "Broker Contact ID"
-                    description: "Broker Contact ID from the messaging end user. If unavailable, Apex uses the logged-in user's ContactId."
+                    description: "Apex resolves the broker contact from User.ContactId, with User.ContactId__c as an admin testing fallback."
                     is_required: False
                     is_user_input: False
                     is_displayable: False
@@ -193,7 +193,7 @@ subagent CaseManagement:
 
              AFTER BROKER CONFIRMS:
              Immediately call the Create Broker Case action with the collected details.
-             Pass brokerContactId from @variables.ContactId.
+             Do not pass brokerContactId. Apex resolves the broker contact from User.ContactId, with User.ContactId__c as an admin testing fallback.
              Leave bookingUnitId, relatedOpportunityId, relatedUnitId, relatedCommissionId, and relatedLeadId blank unless the broker explicitly provides a Salesforce record ID.
              Do not delay case creation after confirmation.
              Do not tell the broker the case is created unless the action returns a Success status.
@@ -211,7 +211,6 @@ subagent CaseManagement:
              Acknowledge the request, then ask for the missing details one at a time (Subject, Description, Priority). Once all are collected, show the summary and ask for confirmation. After confirmation, call the Create Broker Case action immediately.
         actions:
             create_broker_case: @actions.create_broker_case
-                with brokerContactId = @variables.ContactId
                 with subject = ...
                 with description = ...
                 with caseType = ...
@@ -237,7 +236,7 @@ subagent Payment_Plan:
             inputs:
                 brokerContactId: id
                     label: "Broker Contact ID"
-                    description: "Broker Contact ID from the messaging end user. If unavailable, Apex uses the logged-in user's ContactId."
+                    description: "Apex resolves the broker contact from User.ContactId, with User.ContactId__c as an admin testing fallback."
                     is_required: False
                     is_user_input: False
                     is_displayable: False
@@ -347,7 +346,7 @@ subagent Payment_Plan:
 
              STEP 2 — CALL THE ACTION:
              Once a supported reference is available, immediately call the Get Payment Plan Details action.
-             Pass brokerContactId from @variables.ContactId
+             Do not pass brokerContactId. Apex resolves the broker contact from User.ContactId, with User.ContactId__c as an admin testing fallback.
              Pass opportunityId when the broker provides a Salesforce Opportunity ID beginning with 006.
              Pass opportunityName when the broker provides an Opportunity Name.
              Pass bookingUnitId when the broker provides a Salesforce Booking Unit ID beginning with a3A.
@@ -396,7 +395,6 @@ subagent Payment_Plan:
              Action: Call Get Payment Plan Details with unitName = 1201.
         actions:
             get_payment_plan_details: @actions.get_payment_plan_details
-                with brokerContactId = @variables.ContactId
                 with opportunityId = ...
                 with opportunityName = ...
                 with bookingUnitId = ...

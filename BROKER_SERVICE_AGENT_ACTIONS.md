@@ -300,6 +300,12 @@ Opportunity.Channel_Partner__c = brokerContact.AccountId
 
 This means the broker can only see payment plans for Opportunities linked to the broker's account.
 
+Booking Unit and Unit lookups also filter by the related Opportunity's broker account before selecting the latest match:
+
+```apex
+Booking_Unit__c.Opportunity__r.Channel_Partner__c = brokerContact.AccountId
+```
+
 ### Execute Anonymous Test By Opportunity Name
 
 ```apex
@@ -752,13 +758,13 @@ Pending: 10000
 
 These are not necessarily blockers, but they are important to understand.
 
-1. `BrokerCommissionActions.daysBack` currently calculates and returns a date range. Confirm in the deployed class that the SOQL query also filters by date if date filtering is required.
+1. `BrokerCommissionActions.daysBack` filters commission records by `CreatedDate`. If `daysBack` is blank, the action returns records from the current month through today.
 
 2. `BrokerPerformanceActions` lead counts should match the broker ownership model. If Agentforce creates leads as a shared/default agent user, filtering leads by `CreatedById` may not represent a single broker. In that case, use `Lead.Channel_Partner__c = brokerContact.AccountId`.
 
 3. Case creation accepts optional related record IDs. For stricter security, Apex should validate that related records belong to the logged-in broker before linking them to the Case.
 
-4. Payment plan lookup is protected by `Opportunity.Channel_Partner__c = brokerContact.AccountId`. Do not remove this check unless another broker ownership check replaces it.
+4. Payment plan lookup is protected by `Opportunity.Channel_Partner__c = brokerContact.AccountId`. Booking Unit and Unit searches also filter through the related Opportunity's `Channel_Partner__c`. Do not remove this check unless another broker ownership check replaces it.
 
 5. Avoid returning raw exception details to brokers in production. Use generic broker-safe messages and keep detailed errors in logs.
 
@@ -774,4 +780,3 @@ Recommended end-to-end smoke test:
 6. Track broker Cases.
 7. Create a buyer Lead.
 8. Test Payment Plan using an Opportunity linked to the broker account through `Channel_Partner__c`.
-

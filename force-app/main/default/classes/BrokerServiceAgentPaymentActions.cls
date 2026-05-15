@@ -289,6 +289,7 @@ public with sharing class BrokerServiceAgentPaymentActions {
             FROM Booking_Unit__c
             WHERE Name LIKE :bookingUnitNameLike
             AND Opportunity__c != null
+            AND Opportunity__r.Channel_Partner__c = :brokerAccountId
             ORDER BY CreatedDate DESC
             LIMIT 1
         ];
@@ -306,6 +307,7 @@ public with sharing class BrokerServiceAgentPaymentActions {
             FROM Booking_Unit__c
             WHERE Unit__c = :unitId
             AND Opportunity__c != null
+            AND Opportunity__r.Channel_Partner__c = :brokerAccountId
             ORDER BY CreatedDate DESC
             LIMIT 1
         ];
@@ -324,6 +326,7 @@ public with sharing class BrokerServiceAgentPaymentActions {
             FROM Booking_Unit__c
             WHERE Unit__r.Name LIKE :unitNameLike
             AND Opportunity__c != null
+            AND Opportunity__r.Channel_Partner__c = :brokerAccountId
             ORDER BY CreatedDate DESC
             LIMIT 1
         ];

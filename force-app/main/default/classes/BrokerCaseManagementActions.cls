@@ -5,6 +5,11 @@
 public with sharing class BrokerCaseManagementActions {
 
     public class Request {
+        // Optional for internal-user testing and Agentforce sessions that pass
+        // @MessagingEndUser.ContactId. If blank, use the logged-in user's ContactId.
+        @InvocableVariable(label='Broker Contact ID')
+        public Id brokerContactId;
+
         @InvocableVariable(label='Subject' required=true)
         public String subject;
 
@@ -87,7 +92,7 @@ public with sharing class BrokerCaseManagementActions {
                 return responses;
             }
 
-            Id brokerContactId = resolveLoggedInBrokerContactId();
+            Id brokerContactId = resolveBrokerContactId(req.brokerContactId);
             if (brokerContactId == null) {
                 res.status  = 'Error';
                 res.message = 'No broker contact is linked to this user. Please contact your administrator.';
@@ -167,7 +172,12 @@ public with sharing class BrokerCaseManagementActions {
         return responses;
     }
 
-    private static Id resolveLoggedInBrokerContactId() {
+    private static Id resolveBrokerContactId(Id brokerContactId) {
+        if (brokerContactId != null) {
+            return brokerContactId;
+        }
+
+        // Production path: broker portal users have User.ContactId populated.
         User currentUser = [
             SELECT ContactId
             FROM User

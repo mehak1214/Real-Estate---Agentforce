@@ -4,6 +4,11 @@
 public with sharing class BrokerServiceAgentPaymentActions {
 
     public class PaymentPlanRequest {
+        // Optional for internal-user testing and Agentforce sessions that pass
+        // @MessagingEndUser.ContactId. If blank, use the logged-in user's ContactId.
+        @InvocableVariable(label='Broker Contact ID')
+        public Id brokerContactId;
+
         @InvocableVariable(label='Opportunity ID')
         public Id opportunityId;
 
@@ -99,7 +104,7 @@ public with sharing class BrokerServiceAgentPaymentActions {
                     continue;
                 }
 
-                Contact brokerContact = resolveLoggedInBrokerContact();
+                Contact brokerContact = resolveBrokerContact(req.brokerContactId);
                 if (brokerContact == null || brokerContact.AccountId == null) {
                     response.status = 'Error';
                     response.message = 'No broker contact is linked to this user. Please contact your administrator.';
@@ -183,14 +188,19 @@ public with sharing class BrokerServiceAgentPaymentActions {
         return null;
     }
 
-    private static Contact resolveLoggedInBrokerContact() {
-        List<User> users = [
-            SELECT ContactId
-            FROM User
-            WHERE Id = :UserInfo.getUserId()
-            LIMIT 1
-        ];
-        Id contactId = users.isEmpty() ? null : users[0].ContactId;
+    private static Contact resolveBrokerContact(Id brokerContactId) {
+        Id contactId = brokerContactId;
+
+        if (contactId == null) {
+            // Production path: broker portal users have User.ContactId populated.
+            List<User> users = [
+                SELECT ContactId
+                FROM User
+                WHERE Id = :UserInfo.getUserId()
+                LIMIT 1
+            ];
+            contactId = users.isEmpty() ? null : users[0].ContactId;
+        }
 
         if (contactId == null) {
             return null;

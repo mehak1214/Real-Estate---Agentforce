@@ -1,10 +1,13 @@
 /**
- * Agentforce action that creates a Draft broker support Case
- * linked to the logged-in broker's Contact and Account.
+ * Agentforce action that creates a broker support Case
+ * linked to the logged-in broker's Contact.
  */
 public with sharing class BrokerCaseManagementActions {
 
     public class Request {
+        @InvocableVariable(label='Broker Contact ID For Testing' description='Optional testing override. Leave blank in the broker portal so the logged-in user contact is used.')
+        public Id brokerContactIdForTesting;
+
         @InvocableVariable(label='Subject' required=true)
         public String subject;
 
@@ -17,8 +20,8 @@ public with sharing class BrokerCaseManagementActions {
         @InvocableVariable(label='Priority')
         public String priority;
 
-        @InvocableVariable(label='Related Booking ID')
-        public String relatedBookingId;
+        @InvocableVariable(label='Booking Unit ID' required=true)
+        public Id bookingUnitId;
 
         @InvocableVariable(label='Related Opportunity ID')
         public String relatedOpportunityId;
@@ -46,7 +49,7 @@ public with sharing class BrokerCaseManagementActions {
 
     @InvocableMethod(
         label='Create Broker Case'
-        description='Creates a Draft broker support Case linked to the logged-in broker contact.'
+        description='Creates a broker support Case linked to the logged-in broker contact.'
     )
     public static List<Response> createBrokerCase(List<Request> requests) {
         System.debug(LoggingLevel.INFO, 'BrokerCaseManagementActions.createBrokerCase requests=' + requests);
@@ -80,36 +83,33 @@ public with sharing class BrokerCaseManagementActions {
                 responses.add(res);
                 return responses;
             }
+            if (req.bookingUnitId == null) {
+                res.status  = 'Error';
+                res.message = 'Booking Unit ID is required.';
+                responses.add(res);
+                return responses;
+            }
 
-            // Resolve the logged-in user's linked Contact.
-            // UserInfo.getUserId() returns a User Id (005...) not a Contact Id (003...).
-            // Experience Cloud / broker portal users have ContactId on their User record.
-            User currentUser = [
-                SELECT Id, ContactId, Contact.AccountId
-                FROM User
-                WHERE Id = :UserInfo.getUserId()
-                LIMIT 1
-            ];
-
-            if (currentUser.ContactId == null) {
+            Id brokerContactId = resolveBrokerContactId(req.brokerContactIdForTesting);
+            if (brokerContactId == null) {
                 res.status  = 'Error';
                 res.message = 'No broker contact is linked to this user. Please contact your administrator.';
                 responses.add(res);
                 return responses;
             }
 
-            // Get the Broker_Service Case record type
+            // Get the broker_service Case record type.
             List<RecordType> rtList = [
                 SELECT Id
                 FROM RecordType
                 WHERE SObjectType = 'Case'
-                AND DeveloperName = 'Broker_Service'
+                AND DeveloperName = 'broker_service'
                 LIMIT 1
             ];
 
             if (rtList.isEmpty()) {
                 res.status  = 'Error';
-                res.message = 'Broker_Service record type not found on Case. Please contact your administrator.';
+                res.message = 'broker_service record type not found on Case. Please contact your administrator.';
                 responses.add(res);
                 return responses;
             }
@@ -122,14 +122,11 @@ public with sharing class BrokerCaseManagementActions {
             newCase.Type         = req.caseType;
             newCase.Status       = 'New';
             newCase.Origin       = 'Agentforce';
-            newCase.ContactId    = currentUser.ContactId;
-            newCase.AccountId    = currentUser.Contact.AccountId;
+            newCase.ContactId    = brokerContactId;
+            newCase.Related_Booking__c = req.bookingUnitId;
 
             if (String.isNotBlank(req.priority)) {
                 newCase.Priority = req.priority;
-            }
-            if (String.isNotBlank(req.relatedBookingId)) {
-                newCase.Related_Booking__c = req.relatedBookingId;
             }
             if (String.isNotBlank(req.relatedOpportunityId)) {
                 newCase.Related_Opportunity__c = req.relatedOpportunityId;
@@ -171,5 +168,19 @@ public with sharing class BrokerCaseManagementActions {
 
         responses.add(res);
         return responses;
+    }
+
+    private static Id resolveBrokerContactId(Id brokerContactIdForTesting) {
+        if (brokerContactIdForTesting != null) {
+            return brokerContactIdForTesting;
+        }
+
+        User currentUser = [
+            SELECT ContactId
+            FROM User
+            WHERE Id = :UserInfo.getUserId()
+            LIMIT 1
+        ];
+        return currentUser.ContactId;
     }
 }

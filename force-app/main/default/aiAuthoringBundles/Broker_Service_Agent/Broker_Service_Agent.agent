@@ -67,24 +67,6 @@ variables:
     endUserContactId: mutable string
         description: "Stores the Salesforce Contact ID associated with the end user who sent the inbound email."
         visibility: "External"
-    caseCategory: mutable string
-        description: "Stores the issue category for a broker support case."
-        visibility: "Internal"
-    caseSubject: mutable string
-        description: "Stores the subject for a broker support case."
-        visibility: "Internal"
-    caseDescription: mutable string
-        description: "Stores the description for a broker support case."
-        visibility: "Internal"
-    casePriority: mutable string
-        description: "Stores the priority for a broker support case."
-        visibility: "Internal"
-    caseBookingUnitId: mutable string
-        description: "Stores an optional related booking unit ID for a broker support case."
-        visibility: "Internal"
-    requestedCaseNumber: mutable string
-        description: "Stores an optional case number requested by the broker."
-        visibility: "Internal"
 
 language:
     additional_locales: "en_GB"
@@ -116,70 +98,76 @@ subagent CaseManagement:
     description: |
         Helps brokers create and track support cases for booking, payment, commission, lead, portal, or general service issues.
     actions:
-        CreateBrokerCase:
+        create_broker_case:
             label: "Create Broker Case"
-            description: "Create a broker support case linked to the current session ContactId"
-            target: "apex://BrokerServiceAgentActions"
-            require_user_confirmation: True
-            include_in_progress_indicator: True
-            inputs:
-                "contactId": id
-                    description: "Use the linked ContactId from the current messaging or portal session. Do not ask the broker for this value."
-                    is_required: True
-                "category": string
-                    description: "Issue category or Case Type"
-                    is_required: True
-                "subject": string
-                    description: "Short subject for the broker's case"
-                    is_required: True
-                "description": string
-                    description: "Detailed issue description"
-                    is_required: True
-                "priority": string
-                    description: "Priority: Low, Medium, or High. Use Medium if not provided."
-                    is_required: False
-                "bookingUnitId": id
-                    description: "Optional related booking unit ID, only when known from trusted context"
-                    is_required: False
-            outputs:
-                "caseNumber": string
-                    description: "Broker-visible case number"
-                "status": string
-                    description: "Operation status"
-                "message": string
-                    description: "Broker-visible result message"
-
-        GetBrokerCases:
-            label: "Get Broker Cases"
-            description: "Retrieve broker-visible cases linked to the current session ContactId"
-            target: "apex://BrokerServiceAgentCaseQueryActions"
+            description: |
+                Creates a broker support Case after the broker confirms the captured case details.
+            target: "apex://BrokerCaseManagementActions"
             require_user_confirmation: False
             include_in_progress_indicator: True
             inputs:
-                "contactId": id
-                    description: "Use the linked ContactId from the current messaging or portal session. Do not ask the broker for this value."
+                brokerContactIdForTesting: id
+                    label: "Broker Contact ID For Testing"
+                    description: "Optional Contact ID override for controlled testing. Leave blank in the broker portal so Apex uses the logged-in user's ContactId."
+                    is_required: False
+                    is_user_input: False
+                    is_displayable: False
+                subject: string
+                    label: "Subject"
+                    description: "Short subject of the broker support case."
                     is_required: True
-                "caseNumber": string
-                    description: "Optional case number when the broker asks about a specific case"
+                description: string
+                    label: "Description"
+                    description: "Detailed description of the broker issue."
+                    is_required: True
+                caseType: string
+                    label: "Case Type"
+                    description: "Case type or issue category."
+                    is_required: True
+                priority: string
+                    label: "Priority"
+                    description: "Priority value such as Low, Medium, or High."
+                    is_required: False
+                bookingUnitId: id
+                    label: "Booking Unit ID"
+                    description: "Salesforce Booking Unit record ID related to this case."
+                    is_required: True
+                relatedOpportunityId: string
+                    label: "Related Opportunity ID"
+                    description: "Optional related Opportunity record ID."
+                    is_required: False
+                relatedUnitId: string
+                    label: "Related Unit ID"
+                    description: "Optional related Unit record ID."
+                    is_required: False
+                relatedCommissionId: string
+                    label: "Related Commission ID"
+                    description: "Optional related Commission record ID."
+                    is_required: False
+                relatedLeadId: string
+                    label: "Related Lead ID"
+                    description: "Optional related Lead record ID."
                     is_required: False
             outputs:
-                "cases": list[object]
-                    description: "Broker-visible case summaries"
-                    complex_data_type_name: "@apexClassType/c__BrokerServiceAgentCaseQueryActions$BrokerCase"
-                "status": string
-                    description: "Operation status"
-                "message": string
-                    description: "Broker-visible result message"
+                caseNumber: string
+                    label: "Case Number"
+                    description: "Broker-visible case number for the created Case."
+                status: string
+                    label: "Status"
+                    description: "Action result status."
+                message: string
+                    label: "Message"
+                    description: "Broker-visible action response message."
     reasoning:
         instructions: ->
             |This agent supports brokers, not retail customers. Treat the user as a broker using the broker portal.
              Only retrieve, show, update, or create cases related to the logged-in broker account or broker contact.
              For broker case requests, the case can be related to booking issues, payment plan questions, commission or payout issues, lead creation issues, portal access issues, document issues, or general broker support.
              If the broker asks about a case and provides a case number, retrieve the case details first. Never show the Salesforce Case Id.
-             When creating a broker case, collect the issue type, subject, short description, priority if available, and any related booking, unit, opportunity, payment, commission, or lead reference provided by the broker.
+             When creating a broker case, collect the issue type, subject, description, priority, and booking unit ID.
              Before creating the case, summarize the details once and ask for confirmation.
-             After the broker confirms, create the case immediately by calling CreateBrokerCase.
-             If the broker asks for their cases, case status, ticket list, or a specific case number, call GetBrokerCases using the current session ContactId.
+             After the broker confirms, immediately create the case by calling the Create Broker Case action: {!@actions.create_broker_case}
+             Do not delay case creation after confirmation, and do not say the case is created unless the Create Broker Case action returns Success.
              When showing case information, include only case number, subject, summarized description, status, priority if available, and created date if available.
              Do not expose internal comments, approval comments, debug logs, owner-only notes, system fields, or cases belonging to another broker.
              If the broker asks for another broker’s case information, politely refuse and explain that broker case access is restricted.
@@ -189,8 +177,8 @@ subagent CaseManagement:
              - Issue type
              - Short subject
              - Description
-             - Priority if available
-             - Related booking, unit, opportunity, payment, commission, or lead reference if available
+             - Priority
+             - Booking unit ID
              Example broker prompt:
              "I want to create a case for a commission issue."
              Expected behavior:
@@ -200,19 +188,20 @@ subagent CaseManagement:
              Subject:
              Description:
              Priority:
-             Related Reference:
+             Booking Unit ID:
              Do not create the case until the broker confirms.
         actions:
-            CreateBrokerCase: @actions.CreateBrokerCase
-                with contactId = @variables.ContactId
-                with category = @variables.caseCategory
-                with subject = @variables.caseSubject
-                with description = @variables.caseDescription
-                with priority = @variables.casePriority
-                with bookingUnitId = @variables.caseBookingUnitId
-            GetBrokerCases: @actions.GetBrokerCases
-                with contactId = @variables.ContactId
-                with caseNumber = @variables.requestedCaseNumber
+            create_broker_case: @actions.create_broker_case
+                with brokerContactIdForTesting=...
+                with subject=...
+                with description=...
+                with caseType=...
+                with priority=...
+                with bookingUnitId=...
+                with relatedOpportunityId=...
+                with relatedUnitId=...
+                with relatedCommissionId=...
+                with relatedLeadId=...
 
 subagent Payment_Plan:
     label: "Payment Plan"

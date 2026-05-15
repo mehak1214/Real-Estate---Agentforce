@@ -107,13 +107,15 @@ public with sharing class BrokerCommissionActions {
             }
             
             // Calculate date range
-            Date startDate = Date.today().addMonths(-1).toStartOfMonth();
-            Date endDate = Date.today().toStartOfMonth().addDays(-1);
+            Date startDate = Date.today().toStartOfMonth();
+            Date endDate = Date.today();
             
             if (input.daysBack != null && input.daysBack > 0) {
                 startDate = Date.today().addDays(-input.daysBack);
                 endDate = Date.today();
             }
+            DateTime startDateTime = DateTime.newInstance(startDate, Time.newInstance(0, 0, 0, 0));
+            DateTime endDateTime = DateTime.newInstance(endDate.addDays(1), Time.newInstance(0, 0, 0, 0));
 
             Id brokerContactId = brokerContact.Id;
             
@@ -123,7 +125,9 @@ public with sharing class BrokerCommissionActions {
                           'Status__c, ' +
                           'SalesOrder__c, SalesOrder__r.Name, Unit__c, Unit__r.Name, Broker__c, Broker__r.Name, CreatedDate ' +
                           'FROM BrokerCommission__c ' +
-                          'WHERE Broker__c = :brokerContactId';
+                          'WHERE Broker__c = :brokerContactId ' +
+                          'AND CreatedDate >= :startDateTime ' +
+                          'AND CreatedDate < :endDateTime';
             
             // Add status filter if provided
             String statusFilter = input.statusFilter;

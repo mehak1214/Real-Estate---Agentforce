@@ -23,6 +23,9 @@ public with sharing class BrokerServiceAgentActions {
     public class CaseOutput {
         @InvocableVariable(label='Case ID' description='ID of the newly created case')
         public Id caseId;
+
+        @InvocableVariable(label='Case Number' description='Broker-visible case number for the newly created case')
+        public String caseNumber;
     }
 
     @InvocableMethod(label='Create Case From Agent' description='Creates a new support case for the broker')
@@ -60,10 +63,20 @@ public with sharing class BrokerServiceAgentActions {
         
         if (!casesToInsert.isEmpty()) {
             insert casesToInsert;
+            Set<Id> caseIds = new Set<Id>();
+            for (Case c : casesToInsert) {
+                caseIds.add(c.Id);
+            }
+            Map<Id, Case> insertedCasesById = new Map<Id, Case>([
+                SELECT Id, CaseNumber
+                FROM Case
+                WHERE Id IN :caseIds
+            ]);
             
             for (Case c : casesToInsert) {
                 CaseOutput out = new CaseOutput();
                 out.caseId = c.Id;
+                out.caseNumber = insertedCasesById.get(c.Id).CaseNumber;
                 outputs.add(out);
             }
         }

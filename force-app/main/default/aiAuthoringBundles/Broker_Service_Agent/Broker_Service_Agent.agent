@@ -86,9 +86,9 @@ start_agent agent_router:
     reasoning:
         instructions: ->
             |Select the best tool to call based on conversation history and user's intent.
+             If the user wants to create a support case, check a case, or use the create case from agent action, route to the CaseManagement subagent.
         actions:
             go_to_CaseManagement: @utils.transition to @subagent.CaseManagement
-                available when @variables.isVerified == True
             go_to_GeneralFAQ: @utils.transition to @subagent.GeneralFAQ
             go_to_off_topic: @utils.transition to @subagent.off_topic
             go_to_Payment_Plan: @utils.transition to @subagent.Payment_Plan
@@ -208,7 +208,7 @@ subagent CaseManagement:
                 with ragFeatureConfigId = ...
                 with citationsEnabled = ...
             create_case_from_agent: @actions.create_case_from_agent
-                with brokerId = @variables.customerId
+                with brokerId = @variables.ContactId
                 with category = ...
                 with subject = ...
                 with description = ...
@@ -268,12 +268,11 @@ subagent CaseManagement:
             include_in_progress_indicator: True
             target: "apex://BrokerServiceAgentActions"
             inputs:
-                "brokerId": object
+                "brokerId": id
                     description: "The broker's unique identifier"
                     label: "Broker ID"
                     is_required: True
                     is_user_input: False
-                    complex_data_type_name: "lightning__recordIdType"
                 "category": string
                     description: "Category: General, Finance Problem, Invoice Amount Incorrect, Invoice Inquiry, Lead Creation Issue, Booking Issue, Payment Plan Issue, Commission Issue, Portal Access Issue, Document Issue, or other"
                     label: "Issue Category"
@@ -294,19 +293,22 @@ subagent CaseManagement:
                     label: "Priority"
                     is_required: False
                     is_user_input: True
-                "bookingUnitId": object
+                "bookingUnitId": id
                     description: "Related Booking Unit ID if provided by the broker"
                     label: "Booking Unit ID"
                     is_required: False
                     is_user_input: True
-                    complex_data_type_name: "lightning__recordIdType"
             outputs:
-                "caseId": object
+                "caseId": id
                     description: "ID of the newly created case"
                     label: "Case ID"
                     is_displayable: False
                     filter_from_agent: False
-                    complex_data_type_name: "lightning__recordIdType"
+                "caseNumber": string
+                    description: "Broker-visible case number for the newly created case"
+                    label: "Case Number"
+                    is_displayable: True
+                    filter_from_agent: False
 
 subagent off_topic:
     label: "Off Topic"

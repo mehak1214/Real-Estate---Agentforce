@@ -41,12 +41,6 @@ public with sharing class BrokerCommissionActions {
         @InvocableVariable(label='Commission Percentage')
         public Decimal commissionPercentage;
         
-        @InvocableVariable(label='VAT')
-        public Decimal vat;
-        
-        @InvocableVariable(label='Total With VAT')
-        public Decimal totalWithVat;
-        
         @InvocableVariable(label='Status')
         public String status;
         
@@ -126,7 +120,7 @@ public with sharing class BrokerCommissionActions {
             // Build query for commissions
             String query = 'SELECT Id, Name, Unit_Cost__c, Commission_Amount__c, ' +
                           'CommissionAmount__c, CommissionPercentage__c, Commission_Percent__c, ' +
-                          'VATPercentage__c, TotalCommissionAmountWithVAT__c, Status__c, ' +
+                          'Status__c, ' +
                           'SalesOrder__c, SalesOrder__r.Name, Unit__c, Unit__r.Name, Broker__c, Broker__r.Name, CreatedDate ' +
                           'FROM BrokerCommission__c ' +
                           'WHERE Broker__c = :brokerContactId';
@@ -160,20 +154,17 @@ public with sharing class BrokerCommissionActions {
                 record.commissionPercentage = commission.CommissionPercentage__c != null ? 
                                              commission.CommissionPercentage__c : 
                                              commission.Commission_Percent__c;
-                record.vat = commission.VATPercentage__c;
-                record.totalWithVat = commission.TotalCommissionAmountWithVAT__c;
                 record.status = commission.Status__c;
                 record.relatedReference = String.isNotBlank(record.salesOrder)
                     ? record.salesOrder
                     : record.unit;
                 
-                // Track totals
-                if (commission.Status__c == 'Pending') {
-                    totalPending += commission.TotalCommissionAmountWithVAT__c != null ? 
-                                   commission.TotalCommissionAmountWithVAT__c : 0;
-                } else if (commission.Status__c == 'Paid') {
-                    totalPaid += commission.TotalCommissionAmountWithVAT__c != null ? 
-                                commission.TotalCommissionAmountWithVAT__c : 0;
+                // Track totals using the displayed commission amount.
+                Decimal commissionAmount = record.commissionAmount != null ? record.commissionAmount : 0;
+                if (commission.Status__c == 'Paid') {
+                    totalPaid += commissionAmount;
+                } else {
+                    totalPending += commissionAmount;
                 }
                 
                 records.add(record);

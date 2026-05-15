@@ -90,7 +90,7 @@ start_agent agent_router:
             |Select the best tool to call based on conversation history and user's intent.
              Route payment plan, payment schedule, installment, due amount, paid amount, outstanding amount, overdue payment, and booked-property payment detail requests to Payment_Plan.
              Route lead creation or buyer inquiry requests to Lead_Creation.
-             Route commission, brokerage, payout, VAT on commission, and invoice status requests to Commission_Status.
+             Route commission, brokerage, payout, and invoice status requests to Commission_Status.
              Route broker KPI, monthly sales, ranking, incentive, target, and conversion ratio requests to Broker_Performance.
              Route support case, ticket, issue, complaint, booking issue, payment issue, commission issue, and portal issue requests to CaseManagement.
         actions:
@@ -587,14 +587,73 @@ subagent Lead_Creation:
 subagent Commission_Status:
     label: "Commission Status"
     description: |
-        Helps brokers view commission amount, commission percentage, VAT, payout status, pending payouts, and related sales order or unit details.
+        Helps brokers view commission amount, commission percentage, payout status, pending payouts, and related sales order or unit details.
+    actions:
+        get_commission_status:
+            label: "Get Commission Status"
+            description: "Retrieves broker commission status, paid amount, pending amount, and commission records for the logged-in broker."
+            target: "apex://BrokerCommissionActions"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            inputs:
+                brokerContactId: id
+                    label: "Broker Contact ID"
+                    description: "Apex resolves the broker contact from User.ContactId, with User.ContactId__c as an admin testing fallback."
+                    is_required: False
+                    is_user_input: False
+                    is_displayable: False
+                    complex_data_type_name: "lightning__recordIdType"
+                daysBack: integer
+                    label: "Date Range Days"
+                    description: "Optional number of days to look back. If omitted, Apex uses the default date range."
+                    is_required: False
+                statusFilter: string
+                    label: "Status Filter"
+                    description: "Optional commission status filter such as Pending, Paid, Approved, or Rejected."
+                    is_required: False
+            outputs:
+                summary: string
+                    label: "Commission Summary"
+                    description: "Summary of pending and paid commission totals."
+                    is_displayable: True
+                totalPendingAmount: currency
+                    label: "Total Pending Amount"
+                    description: "Total pending commission amount."
+                    is_displayable: True
+                totalPaidAmount: currency
+                    label: "Total Paid Amount"
+                    description: "Total paid commission amount."
+                    is_displayable: True
+                recordCount: integer
+                    label: "Record Count"
+                    description: "Number of commission records returned."
+                    is_displayable: True
+                dateRange: string
+                    label: "Date Range"
+                    description: "Date range used for the commission response."
+                    is_displayable: True
+                records: list[object]
+                    label: "Records"
+                    description: "Commission records returned for the logged-in broker."
+                    complex_data_type_name: "@apexClassType/c__BrokerCommissionActions$CommissionRecord"
+                    is_displayable: True
+                status: string
+                    label: "Status"
+                    description: "Action result status."
+                    is_displayable: False
+                message: string
+                    label: "Message"
+                    description: "User-visible action response message."
+                    is_displayable: True
     reasoning:
         instructions: ->
-            |Use this subagent when the broker asks about commission, payout, brokerage amount, commission percentage, VAT on commission, pending commission, paid commission, rejected commission, invoice status, or payout status.
+            |Use this subagent when the broker asks about commission, payout, brokerage amount, commission percentage, pending commission, paid commission, rejected commission, invoice status, or payout status.
              Only show commission information related to the logged-in broker account or broker contact.
-             If the correct commission record is not clear, ask the broker for one reference such as sales order number, booking number, opportunity name, unit number, customer name, invoice number, or date range.
+             If the broker asks for a specific status, pass it as statusFilter. If the broker provides a lookback period in days, pass it as daysBack.
+             Call the Get Commission Status action for commission status, paid commission, pending commission, brokerage amount, or payout status requests.
+             Do not pass brokerContactId. Apex resolves the contact from User.ContactId, with User.ContactId__c as an admin testing fallback.
              When showing commission details, summarize the result clearly using an itemized list.
-             Include commission record name or number if available, sales order, unit, broker name, unit cost, commission amount, commission percentage, VAT percentage if available, total commission amount with VAT if available, status, and payout or paid date if available.
+             Include commission record name or number if available, sales order, unit, broker name, unit cost, commission amount, commission percentage, status, and payout or paid date if available.
              Always format dates in a human readable format.
              Do not show Salesforce record Ids.
              Do not expose internal finance notes, approval comments, rejection comments unless explicitly broker-visible, debug logs, hidden fields, or records belonging to another broker.
@@ -606,13 +665,9 @@ subagent Commission_Status:
 
              CONVERSATION EXAMPLES:
              If the broker says "commission status", "pending payout", "paid commission", "brokerage amount", "invoice status", or similar, treat it as a commission inquiry.
-             Collect one identifying reference if needed:
-             - Sales order number
-             - Booking number
-             - Unit number
-             - Customer name
-             - Invoice number
-             - Date range
+             Optional filters supported by this action:
+             - Status such as Pending, Paid, Approved, or Rejected
+             - Lookback period in days
 
              Example broker prompt:
              "Show my pending commissions for this month."
@@ -631,11 +686,13 @@ subagent Commission_Status:
              Unit Cost:
              Commission Amount:
              Commission Percentage:
-             VAT:
-             Total With VAT:
              Status:
              Payout Date:
              Do not promise payout dates unless returned by data.
+        actions:
+            get_commission_status: @actions.get_commission_status
+                with daysBack = ...
+                with statusFilter = ...
 
 subagent Broker_Performance:
     label: "Broker Performance"

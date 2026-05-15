@@ -126,12 +126,10 @@ public with sharing class BrokerPerformanceActions {
 
                 totalAmount += commission.Unit_Cost__c != null ? commission.Unit_Cost__c : 0;
 
-                Decimal commissionAmount = commission.Commission_Amount__c != null
-                    ? commission.Commission_Amount__c
-                    : commission.CommissionAmount__c;
+                Decimal commissionAmount = getCommissionAmount(commission);
                 commissionAmount = commissionAmount != null ? commissionAmount : 0;
 
-                if (commission.Status__c == 'Paid') {
+                if (String.valueOf(commission.Status__c).equalsIgnoreCase('Paid')) {
                     paidCommission += commissionAmount;
                 } else {
                     pendingCommission += commissionAmount;
@@ -238,6 +236,16 @@ public with sharing class BrokerPerformanceActions {
             LIMIT 1
         ];
         return contacts.isEmpty() ? null : contacts[0];
+    }
+
+    private static Decimal getCommissionAmount(BrokerCommission__c commission) {
+        if (commission.Commission_Amount__c != null && commission.Commission_Amount__c != 0) {
+            return commission.Commission_Amount__c;
+        }
+        if (commission.CommissionAmount__c != null) {
+            return commission.CommissionAmount__c;
+        }
+        return commission.Commission_Amount__c;
     }
 
     private static Id parseContactId(String contactIdText) {

@@ -148,9 +148,7 @@ public with sharing class BrokerCommissionActions {
                 record.unit = commission.Unit__r == null ? null : commission.Unit__r.Name;
                 record.brokerName = commission.Broker__r == null ? null : commission.Broker__r.Name;
                 record.unitCost = commission.Unit_Cost__c;
-                record.commissionAmount = commission.Commission_Amount__c != null
-                    ? commission.Commission_Amount__c
-                    : commission.CommissionAmount__c;
+                record.commissionAmount = getCommissionAmount(commission);
                 record.commissionPercentage = commission.CommissionPercentage__c != null ? 
                                              commission.CommissionPercentage__c : 
                                              commission.Commission_Percent__c;
@@ -161,7 +159,7 @@ public with sharing class BrokerCommissionActions {
                 
                 // Track totals using the displayed commission amount.
                 Decimal commissionAmount = record.commissionAmount != null ? record.commissionAmount : 0;
-                if (commission.Status__c == 'Paid') {
+                if (String.valueOf(commission.Status__c).equalsIgnoreCase('Paid')) {
                     totalPaid += commissionAmount;
                 } else {
                     totalPending += commissionAmount;
@@ -215,6 +213,16 @@ public with sharing class BrokerCommissionActions {
             LIMIT 1
         ];
         return contacts.isEmpty() ? null : contacts[0];
+    }
+
+    private static Decimal getCommissionAmount(BrokerCommission__c commission) {
+        if (commission.Commission_Amount__c != null && commission.Commission_Amount__c != 0) {
+            return commission.Commission_Amount__c;
+        }
+        if (commission.CommissionAmount__c != null) {
+            return commission.CommissionAmount__c;
+        }
+        return commission.Commission_Amount__c;
     }
 
     private static Id parseContactId(String contactIdText) {

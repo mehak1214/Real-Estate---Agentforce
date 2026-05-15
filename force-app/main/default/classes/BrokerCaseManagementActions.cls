@@ -122,7 +122,7 @@ public with sharing class BrokerCaseManagementActions {
             newCase.Related_Booking__c = req.bookingUnitId;
 
             if (String.isNotBlank(req.priority)) {
-                newCase.Priority = req.priority;
+                newCase.Priority = req.priority; 
             }
             if (String.isNotBlank(req.relatedOpportunityId)) {
                 newCase.Related_Opportunity__c = req.relatedOpportunityId;

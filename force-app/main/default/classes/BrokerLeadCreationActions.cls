@@ -175,7 +175,7 @@ public with sharing class BrokerLeadCreationActions {
                     output.status = 'Error';
                     output.message = 'No project was found for the provided Project / Unit Interest. Please provide a valid project name or Project record ID.';
                     outputs.add(output);
-                    return outputs;
+                    return outputs; 
                 }
                 newLead.Project__c = projectId;
             }

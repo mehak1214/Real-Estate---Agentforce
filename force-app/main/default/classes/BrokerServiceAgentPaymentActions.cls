@@ -110,14 +110,14 @@ public with sharing class BrokerServiceAgentPaymentActions {
                     allResponses.add(response);
                     continue;
                 }
-
+ 
                 Opportunity opportunity = findBrokerOpportunity(req, brokerContact.AccountId);
                 if (opportunity == null) {
                     response.status = 'Error';
                     response.message = 'No broker-accessible payment plan was found for the provided reference.';
                     allResponses.add(response);
                     continue;
-                }
+                } 
 
                 List<Payment_Plan_Detail__c> records = [
                     SELECT Id, Name, Seq__c, Amount__c, Amount_Paid__c,

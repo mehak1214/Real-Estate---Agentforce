@@ -100,7 +100,7 @@ public with sharing class BrokerCaseTrackingActions {
                 'Related_Commission__r.Name, Related_Lead__r.Name ' +
                 'FROM Case ' +
                 'WHERE ContactId = :brokerContactId';
-
+ 
             if (caseNumber != null) {
                 query += ' AND CaseNumber = :caseNumber';
             }

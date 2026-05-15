@@ -111,7 +111,7 @@ subagent CaseManagement:
             target: "apex://BrokerCaseTrackingActions"
             require_user_confirmation: False
             include_in_progress_indicator: True
-            inputs:
+            inputs: 
                 brokerContactId: id
                     label: "Broker Contact ID"
                     description: "Apex resolves the broker contact from User.ContactId, with User.ContactId__c as an admin testing fallback."

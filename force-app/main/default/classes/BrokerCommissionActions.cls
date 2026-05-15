@@ -38,7 +38,7 @@ public with sharing class BrokerCommissionActions {
         @InvocableVariable(label='Commission Amount')
         public Decimal commissionAmount;
         
-        @InvocableVariable(label='Commission Percentage')
+        @InvocableVariable(label='Commission Percentage')  
         public Decimal commissionPercentage;
         
         @InvocableVariable(label='Status')

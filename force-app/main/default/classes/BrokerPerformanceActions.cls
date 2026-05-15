@@ -170,7 +170,7 @@ public with sharing class BrokerPerformanceActions {
                 AND CreatedDate >= :periodStartDateTime
                 AND CreatedDate < :periodEndDateTime
                 GROUP BY Broker__c
-            ];
+            ]; 
 
             for (AggregateResult brokerSalesCount : brokerSalesCounts) {
                 if ((Id)brokerSalesCount.get('brokerId') != brokerContact.Id

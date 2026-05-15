@@ -6,7 +6,7 @@ public with sharing class BrokerCommissionActions {
 
     public class CommissionQueryInput {
         // Broker identity is resolved from User.ContactId, then User.ContactId__c for admin testing.
-        @InvocableVariable(label='Broker Contact ID' required=false description='Broker Contact ID from the messaging end user or testing fallback')
+        @InvocableVariable(label='Broker Contact ID' required=false description='Not used. Apex resolves the broker contact from User.ContactId, then User.ContactId__c for admin testing.')
         public Id brokerContactId;
 
         @InvocableVariable(label='Date Range (Days)' required=false description='Number of days to look back (default: current month)')
@@ -189,7 +189,7 @@ public with sharing class BrokerCommissionActions {
         ];
         Id contactId = currentUser.ContactId;
         if (contactId == null && String.isNotBlank(currentUser.ContactId__c)) {
-            contactId = Id.valueOf(currentUser.ContactId__c.trim());
+            contactId = parseContactId(currentUser.ContactId__c);
         }
 
         if (contactId == null) {
@@ -203,5 +203,14 @@ public with sharing class BrokerCommissionActions {
             LIMIT 1
         ];
         return contacts.isEmpty() ? null : contacts[0];
+    }
+
+    private static Id parseContactId(String contactIdText) {
+        try {
+            Id contactId = Id.valueOf(contactIdText.trim());
+            return contactId.getSObjectType() == Contact.SObjectType ? contactId : null;
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

@@ -105,6 +105,50 @@ subagent CaseManagement:
     description: |
         Helps brokers create and track support cases for booking, payment, commission, lead, portal, or general service issues.
     actions:
+        get_broker_cases:
+            label: "Get Broker Cases"
+            description: "Retrieves broker support Cases linked to the logged-in broker contact."
+            target: "apex://BrokerCaseTrackingActions"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            inputs:
+                brokerContactId: id
+                    label: "Broker Contact ID"
+                    description: "Apex resolves the broker contact from User.ContactId, with User.ContactId__c as an admin testing fallback."
+                    is_required: False
+                    is_user_input: False
+                    is_displayable: False
+                    complex_data_type_name: "lightning__recordIdType"
+                caseNumber: string
+                    label: "Case Number"
+                    description: "Broker-visible Case Number to retrieve. Optional."
+                    is_required: False
+                statusFilter: string
+                    label: "Status"
+                    description: "Optional case status filter, such as New, Working, Closed, or Escalated."
+                    is_required: False
+                limitSize: integer
+                    label: "Limit Size"
+                    description: "Maximum number of recent broker cases to return."
+                    is_required: False
+            outputs:
+                status: string
+                    label: "Status"
+                    description: "Action result status."
+                    is_displayable: False
+                message: string
+                    label: "Message"
+                    description: "Broker-visible action response message."
+                    is_displayable: True
+                recordCount: integer
+                    label: "Record Count"
+                    description: "Number of broker cases returned."
+                    is_displayable: True
+                cases: list[object]
+                    label: "Cases"
+                    description: "Broker-visible case summaries, including related Booking, Opportunity, Unit, Commission, and Lead names when available."
+                    complex_data_type_name: "@apexClassType/c__BrokerCaseTrackingActions$CaseSummary"
+                    is_displayable: True
         create_broker_case:
             label: "Create Broker Case"
             description: "Creates a broker support Case after the broker confirms the captured case details."
@@ -174,7 +218,9 @@ subagent CaseManagement:
             |This agent supports brokers, not retail customers. Treat the user as a broker using the broker portal.
              Only retrieve, show, update, or create cases related to the logged-in broker account or broker contact.
              For broker case requests, the case can be related to booking issues, payment plan questions, commission or payout issues, lead creation issues, portal access issues, document issues, or general broker support.
-             If the broker asks about a case and provides a case number, retrieve the case details first. Never show the Salesforce Case Id.
+             If the broker asks to track, view, check, or list cases, call the Get Broker Cases action.
+             If the broker provides a case number, pass it as caseNumber. Otherwise, retrieve the most recent broker cases.
+             Never show the Salesforce Case Id.
 
              COLLECTING CASE DETAILS:
              Collect the following details from the broker, asking for missing ones one at a time:
@@ -198,7 +244,7 @@ subagent CaseManagement:
              Do not delay case creation after confirmation.
              Do not tell the broker the case is created unless the action returns a Success status.
 
-             When showing case information, include only case number, subject, summarized description, status, priority if available, and created date if available.
+             When showing case information, include only case number, subject, summarized description, status, priority if available, created date if available, and related Booking, Opportunity, Unit, Commission, or Lead names if available.
              Do not expose internal comments, approval comments, debug logs, owner-only notes, system fields, or cases belonging to another broker.
              If the broker asks for another broker's case information, politely refuse and explain that broker case access is restricted.
 
@@ -210,6 +256,10 @@ subagent CaseManagement:
              Expected behavior:
              Acknowledge the request, then ask for the missing details one at a time (Subject, Description, Priority). Once all are collected, show the summary and ask for confirmation. After confirmation, call the Create Broker Case action immediately.
         actions:
+            get_broker_cases: @actions.get_broker_cases
+                with caseNumber = ...
+                with statusFilter = ...
+                with limitSize = ...
             create_broker_case: @actions.create_broker_case
                 with subject = ...
                 with description = ...

@@ -178,6 +178,18 @@ public with sharing class BrokerCaseManagementActions {
         if (currentUser.ContactId != null) {
             return currentUser.ContactId;
         }
-        return String.isBlank(currentUser.ContactId__c) ? null : Id.valueOf(currentUser.ContactId__c.trim());
+        return parseContactId(currentUser.ContactId__c);
+    }
+
+    private static Id parseContactId(String contactIdText) {
+        if (String.isBlank(contactIdText)) {
+            return null;
+        }
+        try {
+            Id contactId = Id.valueOf(contactIdText.trim());
+            return contactId.getSObjectType() == Contact.SObjectType ? contactId : null;
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

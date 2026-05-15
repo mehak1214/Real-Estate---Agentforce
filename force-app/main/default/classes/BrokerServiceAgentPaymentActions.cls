@@ -1,7 +1,7 @@
 /**
  * @description Payment plan actions for Broker Service Agent
  */
-public  class BrokerServiceAgentPaymentActions {
+public with sharing class BrokerServiceAgentPaymentActions {
 
     public class PaymentPlanRequest {
         // Broker identity is resolved from User.ContactId, then User.ContactId__c for admin testing.
@@ -203,7 +203,7 @@ public  class BrokerServiceAgentPaymentActions {
         if (!users.isEmpty()) {
             contactId = users[0].ContactId;
             if (contactId == null && String.isNotBlank(users[0].ContactId__c)) {
-                contactId = Id.valueOf(users[0].ContactId__c.trim());
+                contactId = parseContactId(users[0].ContactId__c);
             }
         }
 
@@ -218,6 +218,15 @@ public  class BrokerServiceAgentPaymentActions {
             LIMIT 1
         ];
         return contacts.isEmpty() ? null : contacts[0];
+    }
+
+    private static Id parseContactId(String contactIdText) {
+        try {
+            Id contactId = Id.valueOf(contactIdText.trim());
+            return contactId.getSObjectType() == Contact.SObjectType ? contactId : null;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     private static Opportunity findBrokerOpportunity(PaymentPlanRequest req, Id brokerAccountId) {

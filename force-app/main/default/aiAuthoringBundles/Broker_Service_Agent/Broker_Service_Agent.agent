@@ -698,10 +698,73 @@ subagent Broker_Performance:
     label: "Broker Performance"
     description: |
         Helps brokers view monthly sales, conversion ratio, ranking, commission performance, and incentive eligibility.
+    actions:
+        get_broker_performance:
+            label: "Get Broker Performance"
+            description: "Retrieves broker sales, lead, commission, ranking, and incentive metrics for the logged-in broker."
+            target: "apex://BrokerPerformanceActions"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            inputs:
+                period: string
+                    label: "Period"
+                    description: "Optional period filter. Supported values: current_month, last_month, last_quarter, year_to_date."
+                    is_required: False
+            outputs:
+                performancePeriod: string
+                    label: "Performance Period"
+                    description: "Period used for the performance metrics."
+                    is_displayable: True
+                monthlySalesCount: integer
+                    label: "Monthly Sales Count"
+                    description: "Sales count for the selected period."
+                    is_displayable: True
+                totalSalesAmount: currency
+                    label: "Total Sales Amount"
+                    description: "Total sales amount for the selected period."
+                    is_displayable: True
+                createdLeads: integer
+                    label: "Created Leads"
+                    description: "Number of leads created for the selected period."
+                    is_displayable: True
+                convertedLeads: integer
+                    label: "Converted Leads"
+                    description: "Number of converted leads for the selected period."
+                    is_displayable: True
+                conversionRatio: number
+                    label: "Conversion Ratio"
+                    description: "Lead conversion ratio for the selected period."
+                    is_displayable: True
+                paidCommission: currency
+                    label: "Paid Commission"
+                    description: "Paid commission amount for the selected period."
+                    is_displayable: True
+                pendingCommission: currency
+                    label: "Pending Commission"
+                    description: "Pending commission amount for the selected period."
+                    is_displayable: True
+                ranking: string
+                    label: "Ranking"
+                    description: "Broker ranking for the selected period."
+                    is_displayable: True
+                incentiveEligibility: string
+                    label: "Incentive Eligibility"
+                    description: "Incentive eligibility for the selected period."
+                    is_displayable: True
+                status: string
+                    label: "Status"
+                    description: "Action result status."
+                    is_displayable: False
+                message: string
+                    label: "Message"
+                    description: "User-visible action response message."
+                    is_displayable: True
     reasoning:
         instructions: ->
             |Use this subagent when the broker asks about broker performance, monthly sales, sales count, conversion ratio, ranking, lead conversion, commission performance, target achievement, incentive eligibility, or broker KPIs.
              Only show performance information related to the logged-in broker account or broker contact.
+             Call the Get Broker Performance action for broker performance, monthly sales, conversion ratio, ranking, incentive, target, or KPI requests.
+             If the broker asks for last month, last quarter, or year to date, pass period as last_month, last_quarter, or year_to_date. Otherwise leave period blank for current month.
              If the broker does not provide a date range, default to the current calendar month.
              If the broker asks for monthly performance, summarize metrics for the requested month.
              When showing broker performance, summarize the result clearly using an itemized list.
@@ -733,3 +796,6 @@ subagent Broker_Performance:
              Ranking:
              Incentive Eligibility:
              Only show the logged-in broker's own performance. Do not reveal other brokers' data unless an approved action explicitly returns broker-visible leaderboard data.
+        actions:
+            get_broker_performance: @actions.get_broker_performance
+                with period = ...

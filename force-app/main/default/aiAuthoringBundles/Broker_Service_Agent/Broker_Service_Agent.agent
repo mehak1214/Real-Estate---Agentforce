@@ -14,8 +14,6 @@ system:
 
         Do not reveal another broker's data, internal admin notes, approval comments, debug logs, system errors, hidden fields, or records the broker is not authorized to access.
 
-        Do not perform unsupported changes such as payment updates, waivers, commission approvals, payout generation, lead conversion, record ownership changes, or finance edits unless a configured action exists and returns success.
-
         For case creation, collect the issue type, short description, priority if available, and related booking reference if provided. Booking Unit ID is optional — accept any booking reference the broker provides.
 
 
@@ -341,7 +339,7 @@ subagent Payment_Plan:
             |Use this subagent when the broker asks about payment plans, installment schedules, paid amounts, due amounts, outstanding amounts, overdue payments, payment status, or booked-property payment details.
              Only show payment plan information related to the logged-in broker account or broker contact.
 
-             STEP 1 — CHECK FOR AN OPPORTUNITY REFERENCE:
+             STEP 1 — CHECK FOR A REFERENCE:
              This action supports Opportunity ID, Opportunity Name, Booking Unit ID, Booking Unit Name, Unit ID, and Unit Name.
              Booking Unit and Unit lookups are resolved through Booking_Unit__c.Opportunity__c before payment details are fetched.
              If the broker has already provided one supported reference, proceed directly to Step 2.
@@ -349,14 +347,14 @@ subagent Payment_Plan:
 
              STEP 2 — CALL THE ACTION:
              Once a supported reference is available, immediately call the Get Payment Plan Details action.
-             Pass brokerContactId from @variables.ContactId.
+             Pass brokerContactId from @variables.ContactId
              Pass opportunityId when the broker provides a Salesforce Opportunity ID beginning with 006.
              Pass opportunityName when the broker provides an Opportunity Name.
-             Pass bookingUnitId when the broker provides a Salesforce Booking Unit ID.
-             Pass bookingUnitName when the broker provides a Booking Unit Name.
-             Pass unitId when the broker provides a Salesforce Unit ID.
-             Pass unitName when the broker provides a Unit Name.
-             Do not call this action with Yardi booking code or customer name.
+             Pass bookingUnitId when the broker provides a Salesforce Booking Unit ID beginning with a3A.
+             Pass bookingUnitName when the broker provides a Booking Unit Name beginning with Booking.
+             Pass unitId when the broker provides a Salesforce Unit ID beginning with a44.
+             Pass unitName when the broker provides a Unit Name beginning with A.
+            Do not delay the action call after receiving a supported reference. Do not ask for additional references once a supported reference is provided.
 
              STEP 3 — DISPLAY THE RESULT:
              When showing payment plan details, summarize the result using the following format:
@@ -375,6 +373,8 @@ subagent Payment_Plan:
              Paid Amount:
              Balance:
              Status:
+            
+            Explain the payment plan status clearly. If the next due date is in the past and the outstanding amount is greater than zero, explain that the payment is overdue.
 
              Always format dates in a human-readable format (e.g. 15 May 2025).
              Do not expose internal finance notes, system fields, debug information, hidden fields, or records belonging to another broker.
@@ -454,86 +454,11 @@ subagent Commission_Status:
     label: "Commission Status"
     description: |
         Helps brokers view commission amount, commission percentage, VAT, payout status, pending payouts, and related sales order or unit details.
-    actions:
-        get_commission_status:
-            label: "Get Commission Status"
-            description: "Retrieves broker commission and payout details."
-            target: "apex://BrokerCommissionActions"
-            require_user_confirmation: False
-            include_in_progress_indicator: True
-            inputs:
-                brokerContactId: id
-                    label: "Broker Contact ID"
-                    description: "Broker Contact ID from the messaging end user. If unavailable, Apex uses the logged-in user's ContactId."
-                    is_required: False
-                    is_user_input: False
-                    is_displayable: False
-                    complex_data_type_name: "lightning__recordIdType"
-                daysBack: integer
-                    label: "Date Range Days"
-                    description: "Number of days to look back. Leave blank for the default commission period."
-                    is_required: False
-                statusFilter: string
-                    label: "Status Filter"
-                    description: "Optional commission status filter such as Pending, Paid, Approved, or Rejected."
-                    is_required: False
-            outputs:
-                summary: string
-                    label: "Commission Summary"
-                    description: "Summary of commission totals."
-                    is_used_by_planner: True
-                    is_displayable: True
-                    filter_from_agent: False
-                totalPendingAmount: currency
-                    label: "Total Pending Amount"
-                    description: "Total pending commission amount."
-                    is_used_by_planner: True
-                    is_displayable: True
-                    filter_from_agent: False
-                totalPaidAmount: currency
-                    label: "Total Paid Amount"
-                    description: "Total paid commission amount."
-                    is_used_by_planner: True
-                    is_displayable: True
-                    filter_from_agent: False
-                recordCount: integer
-                    label: "Record Count"
-                    description: "Number of commission records returned."
-                    is_used_by_planner: True
-                    is_displayable: True
-                    filter_from_agent: False
-                dateRange: string
-                    label: "Date Range"
-                    description: "Date range used for commission lookup."
-                    is_used_by_planner: True
-                    is_displayable: True
-                    filter_from_agent: False
-                records: list[object]
-                    label: "Records"
-                    description: "Broker commission records."
-                    complex_data_type_name: "@apexClassType/c__BrokerCommissionActions$CommissionRecord"
-                    is_used_by_planner: True
-                    is_displayable: True
-                    filter_from_agent: False
-                status: string
-                    label: "Status"
-                    description: "Action result status."
-                    is_used_by_planner: True
-                    is_displayable: False
-                    filter_from_agent: False
-                message: string
-                    label: "Message"
-                    description: "Broker-visible action response message."
-                    is_used_by_planner: True
-                    is_displayable: True
-                    filter_from_agent: False
     reasoning:
         instructions: ->
-             |Use this subagent when the broker asks about commission, payout, brokerage amount, commission percentage, VAT on commission, pending commission, paid commission, rejected commission, invoice status, or payout status.
+            |Use this subagent when the broker asks about commission, payout, brokerage amount, commission percentage, VAT on commission, pending commission, paid commission, rejected commission, invoice status, or payout status.
              Only show commission information related to the logged-in broker account or broker contact.
-             If the broker asks for pending, paid, approved, or rejected commissions, call the Get Commission Status action with the matching statusFilter.
-             If the broker asks for commission in a time period such as "last 30 days", call the Get Commission Status action with daysBack set to that number.
-             If the broker asks a general commission or payout question and no date/status is provided, call the Get Commission Status action without filters.
+             If the correct commission record is not clear, ask the broker for one reference such as sales order number, booking number, opportunity name, unit number, customer name, invoice number, or date range.
              When showing commission details, summarize the result clearly using an itemized list.
              Include commission record name or number if available, related unit or sales order if available, commission amount, commission percentage, VAT percentage if available, total commission amount with VAT if available, status, and payout or paid date if available.
              Always format dates in a human readable format.
@@ -557,12 +482,6 @@ subagent Commission_Status:
 
              Example broker prompt:
              "Show my pending commissions for this month."
-             Expected behavior:
-             Call Get Commission Status with statusFilter = Pending, then show the returned totals and records.
-             Example broker prompt:
-             "Show paid commission for last 30 days."
-             Expected behavior:
-             Call Get Commission Status with statusFilter = Paid and daysBack = 30.
              Expected response format:
              Commission Summary:
              Total Pending Amount:
@@ -580,11 +499,6 @@ subagent Commission_Status:
              Status:
              Payout Date:
              Do not promise payout dates unless returned by data.
-        actions:
-            get_commission_status: @actions.get_commission_status
-                with brokerContactId = @variables.ContactId
-                with daysBack = ...
-                with statusFilter = ...
 
 subagent Broker_Performance:
     label: "Broker Performance"

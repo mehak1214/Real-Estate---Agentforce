@@ -11,19 +11,31 @@ public with sharing class BrokerLeadCreationActions {
         @InvocableVariable(label='Last Name' required=true description='Buyer last name')
         public String lastName;
         
-        @InvocableVariable(label='Phone' required=false description='Buyer phone number')
+        @InvocableVariable(label='Mobile' required=true description='Buyer mobile number')
+        public String mobile;
+
+        @InvocableVariable(label='Phone' required=false description='Buyer alternate phone number')
         public String phone;
         
         @InvocableVariable(label='Email' required=false description='Buyer email address')
         public String email;
+
+        @InvocableVariable(label='Purchaser' required=true description='Purchaser type: Individual, Group, or Company')
+        public String purchaser;
+
+        @InvocableVariable(label='Company Name' required=false description='Required when Purchaser is Company')
+        public String companyName;
+
+        @InvocableVariable(label='Lead Type' required=false description='Lead type: Enquiry or Booking')
+        public String leadType;
         
-        @InvocableVariable(label='Project / Unit Interest' required=false description='Project or unit the buyer is interested in')
+        @InvocableVariable(label='Project / Unit Interest' required=false description='Project Id or project name the buyer is interested in')
         public String projectInterest;
         
         @InvocableVariable(label='Budget' required=false description='Budget if available (in Lac or currency)')
         public String budget;
         
-        @InvocableVariable(label='Type of Interest' required=false description='Type of interest (Residential, Commercial, etc.)')
+        @InvocableVariable(label='Type of Interest' required=true description='Type of interest (LAND, BTS.)')
         public String typeOfInterest;
     }
 
@@ -77,32 +89,71 @@ public with sharing class BrokerLeadCreationActions {
                 return outputs;
             }
             
-            // Require at least email or phone
-            if (String.isBlank(input.email) && String.isBlank(input.phone)) {
+            if (String.isBlank(input.mobile)) {
                 output.status = 'Error';
-                output.message = 'At least one contact method (Email or Phone) is required';
+                output.message = 'Mobile is required';
+                outputs.add(output);
+                return outputs;
+            }
+
+            String purchaser = normalizePicklistValue(input.purchaser, new Set<String>{ 'Individual', 'Group', 'Company' });
+            if (purchaser == null) {
+                output.status = 'Error';
+                output.message = 'Purchaser is required and must be Individual, Group, or Company';
+                outputs.add(output);
+                return outputs;
+            }
+
+            if (purchaser == 'Company' && String.isBlank(input.companyName)) {
+                output.status = 'Error';
+                output.message = 'Company Name is required when Purchaser is Company';
+                outputs.add(output);
+                return outputs;
+            }
+
+            String leadType = String.isBlank(input.leadType)
+                ? 'Enquiry'
+                : normalizePicklistValue(input.leadType, new Set<String>{ 'Enquiry', 'Booking' });
+            if (leadType == null) {
+                output.status = 'Error';
+                output.message = 'Lead Type must be Enquiry or Booking';
+                outputs.add(output);
+                return outputs;
+            }
+
+            if (String.isBlank(input.typeOfInterest)) {
+                output.status = 'Error';
+                output.message = 'Type of Interest is required';
                 outputs.add(output);
                 return outputs;
             }
             
             // Get logged-in broker contact
-            Contact brokerContact = [
-                SELECT Id, AccountId
-                FROM Contact
-                WHERE Id = :UserInfo.getUserId()
-                LIMIT 1
-            ];
+            Contact brokerContact = resolveLoggedInBrokerContact();
+            if (brokerContact == null || brokerContact.AccountId == null) {
+                output.status = 'Error';
+                output.message = 'No broker contact is linked to this user. Please contact your administrator.';
+                outputs.add(output);
+                return outputs;
+            }
             
             // Create the lead
             Lead newLead = new Lead();
             newLead.FirstName = input.firstName;
             newLead.LastName = input.lastName;
-            newLead.Company = 'Unknown'; // Required field for leads
-            newLead.Status = 'New';
+            newLead.Company = purchaser == 'Company'
+                ? input.companyName.trim()
+                : input.firstName + ' ' + input.lastName;
+            newLead.Status = 'Open';
             newLead.LeadSource = 'Broker Agent';
-            newLead.OwnerId = brokerContact.Id;
+            newLead.OwnerId = UserInfo.getUserId();
+            newLead.MobilePhone = input.mobile;
+            newLead.Purchaser__c = purchaser;
+            newLead.Lead_Type__c = leadType;
             newLead.Channel_Partner__c = brokerContact.AccountId;
-            newLead.BrokerAgentContact__c = brokerContact.Id;
+            if (Schema.sObjectType.Lead.fields.getMap().containsKey('BrokerAgentContact__c')) {
+                newLead.put('BrokerAgentContact__c', brokerContact.Id);
+            }
             
             // Set optional fields
             if (String.isNotBlank(input.phone)) {
@@ -112,10 +163,21 @@ public with sharing class BrokerLeadCreationActions {
             if (String.isNotBlank(input.email)) {
                 newLead.Email = input.email;
             }
+
+            if (String.isNotBlank(input.companyName)
+                && Schema.sObjectType.Lead.fields.getMap().containsKey('Company_Name__c')) {
+                newLead.put('Company_Name__c', input.companyName.trim());
+            }
             
             if (String.isNotBlank(input.projectInterest)) {
-                newLead.Project__c = input.projectInterest;
-                newLead.ProductInterest__c = input.projectInterest;
+                Id projectId = resolveProjectId(input.projectInterest);
+                if (projectId == null) {
+                    output.status = 'Error';
+                    output.message = 'No project was found for the provided Project / Unit Interest. Please provide a valid project name or Project record ID.';
+                    outputs.add(output);
+                    return outputs;
+                }
+                newLead.Project__c = projectId;
             }
             
             if (String.isNotBlank(input.budget)) {
@@ -144,5 +206,94 @@ public with sharing class BrokerLeadCreationActions {
         
         outputs.add(output);
         return outputs;
+    }
+
+    private static Contact resolveLoggedInBrokerContact() {
+        User currentUser = [
+            SELECT ContactId, ContactId__c
+            FROM User
+            WHERE Id = :UserInfo.getUserId()
+            LIMIT 1
+        ];
+
+        Id contactId = currentUser.ContactId;
+        if (contactId == null) {
+            contactId = parseContactId(currentUser.ContactId__c);
+        }
+        if (contactId == null) {
+            return null;
+        }
+
+        List<Contact> contacts = [
+            SELECT Id, AccountId
+            FROM Contact
+            WHERE Id = :contactId
+            LIMIT 1
+        ];
+        return contacts.isEmpty() ? null : contacts[0];
+    }
+
+    private static Id parseContactId(String contactIdText) {
+        if (String.isBlank(contactIdText)) {
+            return null;
+        }
+        try {
+            Id contactId = Id.valueOf(contactIdText.trim());
+            return contactId.getSObjectType() == Contact.SObjectType ? contactId : null;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private static String normalizePicklistValue(String value, Set<String> allowedValues) {
+        if (String.isBlank(value)) {
+            return null;
+        }
+        for (String allowedValue : allowedValues) {
+            if (allowedValue.equalsIgnoreCase(value.trim())) {
+                return allowedValue;
+            }
+        }
+        return null;
+    }
+
+    private static Id resolveProjectId(String projectReference) {
+        if (String.isBlank(projectReference)) {
+            return null;
+        }
+
+        String trimmedReference = projectReference.trim();
+        Id providedId = parseId(trimmedReference);
+        if (providedId != null && providedId.getSObjectType() == Project__c.SObjectType) {
+            return providedId;
+        }
+
+        List<Project__c> projects = [
+            SELECT Id
+            FROM Project__c
+            WHERE Name = :trimmedReference
+            LIMIT 1
+        ];
+        if (!projects.isEmpty()) {
+            return projects[0].Id;
+        }
+
+        String projectNameLike = '%' + trimmedReference + '%';
+        projects = [
+            SELECT Id
+            FROM Project__c
+            WHERE Name LIKE :projectNameLike
+            ORDER BY CreatedDate DESC
+            LIMIT 1
+        ];
+        return projects.isEmpty() ? null : projects[0].Id;
+    }
+
+    private static Id parseId(String idText) {
+        try {
+            return Id.valueOf(idText);
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

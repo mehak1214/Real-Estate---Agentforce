@@ -86,6 +86,11 @@ start_agent agent_router:
     reasoning:
         instructions: ->
             |Select the best tool to call based on conversation history and user's intent.
+             Route payment plan, payment schedule, installment, due amount, paid amount, outstanding amount, overdue payment, and booked-property payment detail requests to Payment_Plan.
+             Route lead creation or buyer inquiry requests to Lead_Creation.
+             Route commission, brokerage, payout, VAT on commission, and invoice status requests to Commission_Status.
+             Route broker KPI, monthly sales, ranking, incentive, target, and conversion ratio requests to Broker_Performance.
+             Route support case, ticket, issue, complaint, booking issue, payment issue, commission issue, and portal issue requests to CaseManagement.
         actions:
             go_to_Payment_Plan: @utils.transition to @subagent.Payment_Plan
             go_to_Lead_Creation: @utils.transition to @subagent.Lead_Creation
@@ -208,11 +213,121 @@ subagent Payment_Plan:
     description: |
 
         Helps brokers view payment plan details, installment schedule, due amounts, paid amounts, outstanding amounts, and payment status for booked properties.
+    actions:
+        get_payment_plan_details:
+            label: "Get Payment Plan Details"
+            description: |
+                Retrieves payment plan installment details for a booked property using an Opportunity ID, Booking Unit ID, booking number, unit ID, or customer name.
+            target: "apex://BrokerServiceAgentPaymentActions"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            inputs:
+                brokerContactIdForTesting: id
+                    label: "Broker Contact ID For Testing"
+                    description: "Optional Contact ID override for controlled testing. Leave blank in the broker portal so Apex uses the logged-in user's ContactId."
+                    is_required: False
+                    is_user_input: False
+                    is_displayable: False
+                opportunityId: id
+                    label: "Opportunity ID"
+                    description: "Salesforce Opportunity record ID for the booked property whose payment plan should be retrieved."
+                    is_required: False
+                    complex_data_type_name: "lightning__recordIdType"
+                bookingUnitId: id
+                    label: "Booking Unit ID"
+                    description: "Salesforce Booking Unit record ID related to the booked property."
+                    is_required: False
+                    complex_data_type_name: "lightning__recordIdType"
+                bookingNumber: string
+                    label: "Booking Number"
+                    description: "Booking number, sales order number, or Yardi booking code provided by the broker."
+                    is_required: False
+                    complex_data_type_name: "lightning__textType"
+                unitId: id
+                    label: "Unit ID"
+                    description: "Salesforce Unit record ID related to the booked property."
+                    is_required: False
+                    complex_data_type_name: "lightning__recordIdType"
+                customerName: string
+                    label: "Customer Name"
+                    description: "Customer or opportunity name to search when a specific booking reference is not available."
+                    is_required: False
+                    complex_data_type_name: "lightning__textType"
+            outputs:
+                status: string
+                    label: "Status"
+                    description: "Action result status."
+                    is_used_by_planner: True
+                    is_displayable: False
+                    filter_from_agent: False
+                message: string
+                    label: "Message"
+                    description: "Broker-visible action response message."
+                    is_used_by_planner: True
+                    is_displayable: True
+                    filter_from_agent: False
+                opportunityName: string
+                    label: "Opportunity Name"
+                    description: "Matched opportunity name."
+                    is_used_by_planner: True
+                    is_displayable: True
+                    filter_from_agent: False
+                bookingNumber: string
+                    label: "Booking Number"
+                    description: "Matched booking or sales order number."
+                    is_used_by_planner: True
+                    is_displayable: True
+                    filter_from_agent: False
+                unitProperty: string
+                    label: "Unit / Property"
+                    description: "Matched unit or property name."
+                    is_used_by_planner: True
+                    is_displayable: True
+                    filter_from_agent: False
+                totalAmount: currency
+                    label: "Total Amount"
+                    description: "Total scheduled payment amount."
+                    is_used_by_planner: True
+                    is_displayable: True
+                    filter_from_agent: False
+                paidAmount: currency
+                    label: "Paid Amount"
+                    description: "Total paid amount."
+                    is_used_by_planner: True
+                    is_displayable: True
+                    filter_from_agent: False
+                outstandingAmount: currency
+                    label: "Outstanding Amount"
+                    description: "Total outstanding amount."
+                    is_used_by_planner: True
+                    is_displayable: True
+                    filter_from_agent: False
+                nextDueDate: date
+                    label: "Next Due Date"
+                    description: "Next due payment date."
+                    is_used_by_planner: True
+                    is_displayable: True
+                    filter_from_agent: False
+                nextDueAmount: currency
+                    label: "Next Due Amount"
+                    description: "Next due payment amount."
+                    is_used_by_planner: True
+                    is_displayable: True
+                    filter_from_agent: False
+                payment_details: list[object]
+                    label: "Payment Details"
+                    description: "Payment plan installment details returned for the opportunity."
+                    complex_data_type_name: "@apexClassType/c__BrokerServiceAgentPaymentActions$PaymentDetail"
+                    is_used_by_planner: True
+                    is_displayable: True
+                    filter_from_agent: False
     reasoning:
         instructions: ->
             |Use this subagent when the broker asks about payment plans, installment schedules, paid amounts, due amounts, outstanding amounts, overdue payments, payment status, or booked-property payment details.
              Only show payment plan information related to the logged-in broker account or broker contact.
              If the correct record is not clear, ask the broker for one reference such as booking number, opportunity name, sales order number, unit number, project name, or customer name.
+             If the broker provides or the conversation context contains an Opportunity ID, Booking Unit ID, booking number, sales order number, unit ID, or customer name, immediately call the Get Payment Plan Details action: {!@actions.get_payment_plan_details}
+             If no usable reference is available, ask the broker for one booking reference before calling the action.
              When showing payment plan details, summarize the result clearly using an itemized list.
              Include payment plan name, unit or property reference, total amount if available, paid amount if available, outstanding amount if available, next due date if available, next due amount if available, and installment status if available.
              For installment schedules, show installment number, due date, amount, paid amount, balance amount, and status where available.
@@ -249,6 +364,14 @@ subagent Payment_Plan:
              Balance:
              Status:
              Do not show payment records belonging to another broker.
+        actions:
+            get_payment_plan_details: @actions.get_payment_plan_details
+                with brokerContactIdForTesting=...
+                with opportunityId=...
+                with bookingUnitId=...
+                with bookingNumber=...
+                with unitId=...
+                with customerName=...
 
 subagent Lead_Creation:
     label: "Lead Creation"

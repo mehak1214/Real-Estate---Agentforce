@@ -17,11 +17,23 @@ public with sharing class BrokerCommissionActions {
     }
 
     public class CommissionRecord {
-        @InvocableVariable(label='Commission ID')
-        public String commissionId;
+        @InvocableVariable(label='Commission Name')
+        public String commissionName;
         
-        @InvocableVariable(label='Related Unit / Sales Order')
+        @InvocableVariable(label='Related Reference')
         public String relatedReference;
+
+        @InvocableVariable(label='Sales Order')
+        public String salesOrder;
+
+        @InvocableVariable(label='Unit')
+        public String unit;
+
+        @InvocableVariable(label='Broker')
+        public String brokerName;
+
+        @InvocableVariable(label='Unit Cost')
+        public Decimal unitCost;
         
         @InvocableVariable(label='Commission Amount')
         public Decimal commissionAmount;
@@ -108,13 +120,16 @@ public with sharing class BrokerCommissionActions {
                 startDate = Date.today().addDays(-input.daysBack);
                 endDate = Date.today();
             }
+
+            Id brokerContactId = brokerContact.Id;
             
             // Build query for commissions
-            String query = 'SELECT Id, CommissionAmount__c, CommissionPercentage__c, Commission_Percent__c, ' +
+            String query = 'SELECT Id, Name, Unit_Cost__c, Commission_Amount__c, ' +
+                          'CommissionAmount__c, CommissionPercentage__c, Commission_Percent__c, ' +
                           'VATPercentage__c, TotalCommissionAmountWithVAT__c, Status__c, ' +
-                          'SalesOrder__c, Unit__c, CreatedDate ' +
+                          'SalesOrder__c, SalesOrder__r.Name, Unit__c, Unit__r.Name, Broker__c, Broker__r.Name, CreatedDate ' +
                           'FROM BrokerCommission__c ' +
-                          'WHERE Broker__c = :brokerContact.Id';
+                          'WHERE Broker__c = :brokerContactId';
             
             // Add status filter if provided
             String statusFilter = input.statusFilter;
@@ -134,17 +149,23 @@ public with sharing class BrokerCommissionActions {
             
             for (BrokerCommission__c commission : commissions) {
                 CommissionRecord record = new CommissionRecord();
-                record.commissionId = commission.Id;
-                record.commissionAmount = commission.CommissionAmount__c;
+                record.commissionName = commission.Name;
+                record.salesOrder = commission.SalesOrder__r == null ? null : commission.SalesOrder__r.Name;
+                record.unit = commission.Unit__r == null ? null : commission.Unit__r.Name;
+                record.brokerName = commission.Broker__r == null ? null : commission.Broker__r.Name;
+                record.unitCost = commission.Unit_Cost__c;
+                record.commissionAmount = commission.Commission_Amount__c != null
+                    ? commission.Commission_Amount__c
+                    : commission.CommissionAmount__c;
                 record.commissionPercentage = commission.CommissionPercentage__c != null ? 
                                              commission.CommissionPercentage__c : 
                                              commission.Commission_Percent__c;
                 record.vat = commission.VATPercentage__c;
                 record.totalWithVat = commission.TotalCommissionAmountWithVAT__c;
                 record.status = commission.Status__c;
-                record.relatedReference = commission.SalesOrder__c != null ? 
-                                         commission.SalesOrder__c : 
-                                         commission.Unit__c;
+                record.relatedReference = String.isNotBlank(record.salesOrder)
+                    ? record.salesOrder
+                    : record.unit;
                 
                 // Track totals
                 if (commission.Status__c == 'Pending') {

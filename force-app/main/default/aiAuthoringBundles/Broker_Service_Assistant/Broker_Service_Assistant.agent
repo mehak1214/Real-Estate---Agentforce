@@ -594,7 +594,7 @@ subagent Assistant_Commission_Status:
              Only show commission information related to the logged-in user's account or contact.
              If the correct commission record is not clear, ask the user for one reference such as sales order number, booking number, opportunity name, unit number, customer name, invoice number, or date range.
              When showing commission details, summarize the result clearly using an itemized list.
-             Include commission record name or number if available, related unit or sales order if available, commission amount, commission percentage, VAT percentage if available, total commission amount with VAT if available, status, and payout or paid date if available.
+             Include commission record name or number if available, sales order, unit, broker name, unit cost, commission amount, commission percentage, VAT percentage if available, total commission amount with VAT if available, status, and payout or paid date if available.
              Always format dates in a human readable format.
              Do not show Salesforce record Ids.
              Do not expose internal finance notes, approval comments, rejection comments unless explicitly user-visible, debug logs, hidden fields, or records belonging to another user.
@@ -625,7 +625,10 @@ subagent Assistant_Commission_Status:
 
              For individual records:
              Commission:
-             Related Unit / Sales Order:
+             Sales Order:
+             Unit:
+             Broker:
+             Unit Cost:
              Commission Amount:
              Commission Percentage:
              VAT:

@@ -178,12 +178,16 @@ public with sharing class BrokerCaseManagementActions {
         }
 
         // Production path: broker portal users have User.ContactId populated.
+        // Testing fallback: internal users can store a broker Contact Id in User.ContactId__c.
         User currentUser = [
-            SELECT ContactId
+            SELECT ContactId, ContactId__c
             FROM User
             WHERE Id = :UserInfo.getUserId()
             LIMIT 1
         ];
-        return currentUser.ContactId;
+        if (currentUser.ContactId != null) {
+            return currentUser.ContactId;
+        }
+        return String.isBlank(currentUser.ContactId__c) ? null : Id.valueOf(currentUser.ContactId__c.trim());
     }
 }

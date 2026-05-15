@@ -193,13 +193,19 @@ public with sharing class BrokerServiceAgentPaymentActions {
 
         if (contactId == null) {
             // Production path: broker portal users have User.ContactId populated.
+            // Testing fallback: internal users can store a broker Contact Id in User.ContactId__c.
             List<User> users = [
-                SELECT ContactId
+                SELECT ContactId, ContactId__c
                 FROM User
                 WHERE Id = :UserInfo.getUserId()
                 LIMIT 1
             ];
-            contactId = users.isEmpty() ? null : users[0].ContactId;
+            if (!users.isEmpty()) {
+                contactId = users[0].ContactId;
+                if (contactId == null && String.isNotBlank(users[0].ContactId__c)) {
+                    contactId = Id.valueOf(users[0].ContactId__c.trim());
+                }
+            }
         }
 
         if (contactId == null) {

@@ -111,12 +111,6 @@ subagent CaseManagement:
             require_user_confirmation: False
             include_in_progress_indicator: True
             inputs:
-                brokerContactIdForTesting: id
-                    label: "Broker Contact ID For Testing"
-                    description: "Optional Contact ID override for controlled testing. Leave blank in the broker portal so Apex uses the logged-in user's ContactId."
-                    is_required: False
-                    is_user_input: False
-                    is_displayable: False
                 subject: string
                     label: "Subject"
                     description: "Short subject of the broker support case."
@@ -197,7 +191,6 @@ subagent CaseManagement:
              Do not create the case until the broker confirms.
         actions:
             create_broker_case: @actions.create_broker_case
-                with brokerContactIdForTesting=...
                 with subject=...
                 with description=...
                 with caseType=...
@@ -222,12 +215,6 @@ subagent Payment_Plan:
             require_user_confirmation: False
             include_in_progress_indicator: True
             inputs:
-                brokerContactIdForTesting: id
-                    label: "Broker Contact ID For Testing"
-                    description: "Optional Contact ID override for controlled testing. Leave blank in the broker portal so Apex uses the logged-in user's ContactId."
-                    is_required: False
-                    is_user_input: False
-                    is_displayable: False
                 opportunityId: id
                     label: "Opportunity ID"
                     description: "Salesforce Opportunity record ID for the booked property whose payment plan should be retrieved."
@@ -366,7 +353,6 @@ subagent Payment_Plan:
              Do not show payment records belonging to another broker.
         actions:
             get_payment_plan_details: @actions.get_payment_plan_details
-                with brokerContactIdForTesting=...
                 with opportunityId=...
                 with bookingUnitId=...
                 with bookingNumber=...

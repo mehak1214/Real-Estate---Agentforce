@@ -4,9 +4,6 @@
 public with sharing class BrokerServiceAgentPaymentActions {
 
     public class PaymentPlanRequest {
-        @InvocableVariable(label='Broker Contact ID For Testing' description='Optional testing override. Leave blank in the broker portal so the logged-in user contact is used.')
-        public Id brokerContactIdForTesting;
-
         @InvocableVariable(label='Opportunity ID')
         public Id opportunityId;
 
@@ -102,7 +99,7 @@ public with sharing class BrokerServiceAgentPaymentActions {
                     continue;
                 }
 
-                Contact brokerContact = resolveBrokerContact(req.brokerContactIdForTesting);
+                Contact brokerContact = resolveLoggedInBrokerContact();
                 if (brokerContact == null || brokerContact.AccountId == null) {
                     response.status = 'Error';
                     response.message = 'No broker contact is linked to this user. Please contact your administrator.';
@@ -186,20 +183,14 @@ public with sharing class BrokerServiceAgentPaymentActions {
         return null;
     }
 
-    private static Contact resolveBrokerContact(Id brokerContactIdForTesting) {
-        Id contactId = brokerContactIdForTesting;
-
-        if (contactId == null) {
-            List<User> users = [
-                SELECT ContactId
-                FROM User
-                WHERE Id = :UserInfo.getUserId()
-                LIMIT 1
-            ];
-            if (!users.isEmpty()) {
-                contactId = users[0].ContactId;
-            }
-        }
+    private static Contact resolveLoggedInBrokerContact() {
+        List<User> users = [
+            SELECT ContactId
+            FROM User
+            WHERE Id = :UserInfo.getUserId()
+            LIMIT 1
+        ];
+        Id contactId = users.isEmpty() ? null : users[0].ContactId;
 
         if (contactId == null) {
             return null;

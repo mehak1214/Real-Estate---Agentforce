@@ -5,9 +5,6 @@
 public with sharing class BrokerCaseManagementActions {
 
     public class Request {
-        @InvocableVariable(label='Broker Contact ID For Testing' description='Optional testing override. Leave blank in the broker portal so the logged-in user contact is used.')
-        public Id brokerContactIdForTesting;
-
         @InvocableVariable(label='Subject' required=true)
         public String subject;
 
@@ -90,7 +87,7 @@ public with sharing class BrokerCaseManagementActions {
                 return responses;
             }
 
-            Id brokerContactId = resolveBrokerContactId(req.brokerContactIdForTesting);
+            Id brokerContactId = resolveLoggedInBrokerContactId();
             if (brokerContactId == null) {
                 res.status  = 'Error';
                 res.message = 'No broker contact is linked to this user. Please contact your administrator.';
@@ -170,11 +167,7 @@ public with sharing class BrokerCaseManagementActions {
         return responses;
     }
 
-    private static Id resolveBrokerContactId(Id brokerContactIdForTesting) {
-        if (brokerContactIdForTesting != null) {
-            return brokerContactIdForTesting;
-        }
-
+    private static Id resolveLoggedInBrokerContactId() {
         User currentUser = [
             SELECT ContactId
             FROM User

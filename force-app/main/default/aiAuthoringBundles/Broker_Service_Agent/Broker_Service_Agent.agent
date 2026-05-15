@@ -14,6 +14,8 @@ system:
 
         Do not reveal another broker's data, internal admin notes, approval comments, debug logs, system errors, hidden fields, or records the broker is not authorized to access.
 
+        Do not perform unsupported changes such as payment updates, waivers, commission approvals, payout generation, lead conversion, record ownership changes, or finance edits unless a configured action exists and returns success.
+
         For case creation, collect the issue type, short description, priority if available, and related booking reference if provided. Booking Unit ID is optional — accept any booking reference the broker provides.
 
 
@@ -230,7 +232,7 @@ subagent Payment_Plan:
         get_payment_plan_details:
             label: "Get Payment Plan Details"
             description: |
-                Retrieves payment plan installment details for a booked property using an Opportunity ID, Booking Unit ID, booking number, unit ID, or customer name.
+                Retrieves payment plan installment details for a booked property using an Opportunity ID.
             target: "apex://BrokerServiceAgentPaymentActions"
             require_user_confirmation: False
             include_in_progress_indicator: True
@@ -247,26 +249,6 @@ subagent Payment_Plan:
                     description: "Salesforce Opportunity record ID for the booked property whose payment plan should be retrieved."
                     is_required: False
                     complex_data_type_name: "lightning__recordIdType"
-                bookingUnitId: id
-                    label: "Booking Unit ID"
-                    description: "Salesforce Booking Unit record ID related to the booked property."
-                    is_required: False
-                    complex_data_type_name: "lightning__recordIdType"
-                bookingNumber: string
-                    label: "Booking Number"
-                    description: "Booking number, sales order number, or Yardi booking code provided by the broker."
-                    is_required: False
-                    complex_data_type_name: "lightning__textType"
-                unitId: id
-                    label: "Unit ID"
-                    description: "Salesforce Unit record ID related to the booked property."
-                    is_required: False
-                    complex_data_type_name: "lightning__recordIdType"
-                customerName: string
-                    label: "Customer Name"
-                    description: "Customer or opportunity name to search when a specific booking reference is not available."
-                    is_required: False
-                    complex_data_type_name: "lightning__textType"
             outputs:
                 status: string
                     label: "Status"
@@ -283,12 +265,6 @@ subagent Payment_Plan:
                 opportunityName: string
                     label: "Opportunity Name"
                     description: "Matched opportunity name."
-                    is_used_by_planner: True
-                    is_displayable: True
-                    filter_from_agent: False
-                bookingNumber: string
-                    label: "Booking Number"
-                    description: "Matched booking or sales order number."
                     is_used_by_planner: True
                     is_displayable: True
                     filter_from_agent: False
@@ -340,23 +316,17 @@ subagent Payment_Plan:
             |Use this subagent when the broker asks about payment plans, installment schedules, paid amounts, due amounts, outstanding amounts, overdue payments, payment status, or booked-property payment details.
              Only show payment plan information related to the logged-in broker account or broker contact.
 
-             STEP 1 — CHECK FOR A REFERENCE:
-             Check if the broker has already provided any of the following in the current message or conversation history:
-             - Booking number or sales order number
-             - Opportunity name or customer name
-             - Unit number or project name
-             If any of these is present, proceed directly to Step 2.
-             If none is present, ask the broker for one booking reference before proceeding. Ask only once and only for one piece of information.
+             STEP 1 — CHECK FOR AN OPPORTUNITY ID:
+             This action intentionally supports only Opportunity ID lookup.
+             Booking Unit, booking name, Yardi booking code, unit, and customer-name lookup are not supported by this action because Booking_Unit__c behaves as a junction object and the relationship is not reliable across orgs.
+             If the broker has already provided an Opportunity ID beginning with 006, proceed directly to Step 2.
+             If no Opportunity ID is present, ask the broker for the Opportunity ID before proceeding.
 
              STEP 2 — CALL THE ACTION:
-             Once any one reference is available, immediately call the Get Payment Plan Details action.
+             Once an Opportunity ID is available, immediately call the Get Payment Plan Details action.
              Pass brokerContactId from @variables.ContactId.
-             Map the broker's reference to the most appropriate input field:
-             - Booking number or sales order number → bookingNumber
-             - Customer or opportunity name → customerName
-             - Unit number or project name → customerName (use as search term)
-             Do not wait for additional references once one is available.
-             Do not ask clarifying questions if a reference has already been provided.
+             Pass only opportunityId.
+             Do not call this action with Booking Unit ID, booking name, Yardi booking code, unit ID, or customer name.
 
              STEP 3 — DISPLAY THE RESULT:
              When showing payment plan details, summarize the result using the following format:
@@ -380,14 +350,14 @@ subagent Payment_Plan:
              Do not expose internal finance notes, system fields, debug information, hidden fields, or records belonging to another broker.
              Do not promise payment changes, waivers, discounts, receipt creation, or due date changes.
              If the broker asks to make a payment or update finance data, explain that you can show payment plan information but cannot make finance changes.
+
+             EXAMPLES:
+             Broker: "Show payment plan for opportunity id 006Hn00001UhF1SIAV"
+             Action: Call Get Payment Plan Details with opportunityId = 006Hn00001UhF1SIAV.
         actions:
             get_payment_plan_details: @actions.get_payment_plan_details
                 with brokerContactId = @variables.ContactId
                 with opportunityId = ...
-                with bookingUnitId = ...
-                with bookingNumber = ...
-                with unitId = ...
-                with customerName = ...
 
 subagent Lead_Creation:
     label: "Lead Creation"
@@ -439,11 +409,86 @@ subagent Commission_Status:
     label: "Commission Status"
     description: |
         Helps brokers view commission amount, commission percentage, VAT, payout status, pending payouts, and related sales order or unit details.
+    actions:
+        get_commission_status:
+            label: "Get Commission Status"
+            description: "Retrieves broker commission and payout details."
+            target: "apex://BrokerCommissionActions"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            inputs:
+                brokerContactId: id
+                    label: "Broker Contact ID"
+                    description: "Broker Contact ID from the messaging end user. If unavailable, Apex uses the logged-in user's ContactId."
+                    is_required: False
+                    is_user_input: False
+                    is_displayable: False
+                    complex_data_type_name: "lightning__recordIdType"
+                daysBack: integer
+                    label: "Date Range Days"
+                    description: "Number of days to look back. Leave blank for the default commission period."
+                    is_required: False
+                statusFilter: string
+                    label: "Status Filter"
+                    description: "Optional commission status filter such as Pending, Paid, Approved, or Rejected."
+                    is_required: False
+            outputs:
+                summary: string
+                    label: "Commission Summary"
+                    description: "Summary of commission totals."
+                    is_used_by_planner: True
+                    is_displayable: True
+                    filter_from_agent: False
+                totalPendingAmount: currency
+                    label: "Total Pending Amount"
+                    description: "Total pending commission amount."
+                    is_used_by_planner: True
+                    is_displayable: True
+                    filter_from_agent: False
+                totalPaidAmount: currency
+                    label: "Total Paid Amount"
+                    description: "Total paid commission amount."
+                    is_used_by_planner: True
+                    is_displayable: True
+                    filter_from_agent: False
+                recordCount: integer
+                    label: "Record Count"
+                    description: "Number of commission records returned."
+                    is_used_by_planner: True
+                    is_displayable: True
+                    filter_from_agent: False
+                dateRange: string
+                    label: "Date Range"
+                    description: "Date range used for commission lookup."
+                    is_used_by_planner: True
+                    is_displayable: True
+                    filter_from_agent: False
+                records: list[object]
+                    label: "Records"
+                    description: "Broker commission records."
+                    complex_data_type_name: "@apexClassType/c__BrokerCommissionActions$CommissionRecord"
+                    is_used_by_planner: True
+                    is_displayable: True
+                    filter_from_agent: False
+                status: string
+                    label: "Status"
+                    description: "Action result status."
+                    is_used_by_planner: True
+                    is_displayable: False
+                    filter_from_agent: False
+                message: string
+                    label: "Message"
+                    description: "Broker-visible action response message."
+                    is_used_by_planner: True
+                    is_displayable: True
+                    filter_from_agent: False
     reasoning:
         instructions: ->
-            |Use this subagent when the broker asks about commission, payout, brokerage amount, commission percentage, VAT on commission, pending commission, paid commission, rejected commission, invoice status, or payout status.
+             |Use this subagent when the broker asks about commission, payout, brokerage amount, commission percentage, VAT on commission, pending commission, paid commission, rejected commission, invoice status, or payout status.
              Only show commission information related to the logged-in broker account or broker contact.
-             If the correct commission record is not clear, ask the broker for one reference such as sales order number, booking number, opportunity name, unit number, customer name, invoice number, or date range.
+             If the broker asks for pending, paid, approved, or rejected commissions, call the Get Commission Status action with the matching statusFilter.
+             If the broker asks for commission in a time period such as "last 30 days", call the Get Commission Status action with daysBack set to that number.
+             If the broker asks a general commission or payout question and no date/status is provided, call the Get Commission Status action without filters.
              When showing commission details, summarize the result clearly using an itemized list.
              Include commission record name or number if available, related unit or sales order if available, commission amount, commission percentage, VAT percentage if available, total commission amount with VAT if available, status, and payout or paid date if available.
              Always format dates in a human readable format.
@@ -467,6 +512,12 @@ subagent Commission_Status:
 
              Example broker prompt:
              "Show my pending commissions for this month."
+             Expected behavior:
+             Call Get Commission Status with statusFilter = Pending, then show the returned totals and records.
+             Example broker prompt:
+             "Show paid commission for last 30 days."
+             Expected behavior:
+             Call Get Commission Status with statusFilter = Paid and daysBack = 30.
              Expected response format:
              Commission Summary:
              Total Pending Amount:
@@ -484,6 +535,11 @@ subagent Commission_Status:
              Status:
              Payout Date:
              Do not promise payout dates unless returned by data.
+        actions:
+            get_commission_status: @actions.get_commission_status
+                with brokerContactId = @variables.ContactId
+                with daysBack = ...
+                with statusFilter = ...
 
 subagent Broker_Performance:
     label: "Broker Performance"

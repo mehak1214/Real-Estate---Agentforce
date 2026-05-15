@@ -11,18 +11,6 @@ public with sharing class BrokerServiceAgentPaymentActions {
 
         @InvocableVariable(label='Opportunity ID')
         public Id opportunityId;
-
-        @InvocableVariable(label='Booking Unit ID')
-        public Id bookingUnitId;
-
-        @InvocableVariable(label='Booking Number')
-        public String bookingNumber;
-
-        @InvocableVariable(label='Unit ID')
-        public Id unitId;
-
-        @InvocableVariable(label='Customer Name')
-        public String customerName;
     }
 
     public class PaymentDetail {
@@ -60,9 +48,6 @@ public with sharing class BrokerServiceAgentPaymentActions {
 
         @InvocableVariable(label='Opportunity Name')
         public String opportunityName;
-
-        @InvocableVariable(label='Booking Number')
-        public String bookingNumber;
 
         @InvocableVariable(label='Unit / Property')
         public String unitProperty;
@@ -112,7 +97,7 @@ public with sharing class BrokerServiceAgentPaymentActions {
                     continue;
                 }
 
-                Opportunity opportunity = findBrokerOpportunity(req, brokerContact.AccountId);
+                Opportunity opportunity = findBrokerOpportunityById(req.opportunityId, brokerContact.AccountId);
                 if (opportunity == null) {
                     response.status = 'Error';
                     response.message = 'No broker-accessible payment plan was found for the provided reference.';
@@ -158,7 +143,6 @@ public with sharing class BrokerServiceAgentPaymentActions {
                     ? 'No payment plan installments were found for this opportunity.'
                     : 'Payment plan retrieved successfully.';
                 response.opportunityName = opportunity.Name;
-                response.bookingNumber = opportunity.OrderNumber__c;
                 response.unitProperty = opportunity.Unit__r == null ? null : opportunity.Unit__r.Name;
                 response.totalAmount = totalAmount;
                 response.paidAmount = paidAmount;
@@ -178,12 +162,10 @@ public with sharing class BrokerServiceAgentPaymentActions {
         if (req == null) {
             return 'Payment plan reference is required.';
         }
-        if (req.opportunityId == null
-            && req.bookingUnitId == null
-            && req.unitId == null
-            && String.isBlank(req.bookingNumber)
-            && String.isBlank(req.customerName)) {
-            return 'Please provide an Opportunity ID, Booking Unit ID, booking number, unit ID, or customer name.';
+        // This action intentionally supports only Opportunity ID lookup.
+        // Booking_Unit__c is a junction object and is not reliable for this action across orgs.
+        if (req.opportunityId == null) {
+            return 'Please provide an Opportunity ID.';
         }
         return null;
     }
@@ -221,92 +203,14 @@ public with sharing class BrokerServiceAgentPaymentActions {
         return contacts.isEmpty() ? null : contacts[0];
     }
 
-    private static Opportunity findBrokerOpportunity(PaymentPlanRequest req, Id brokerAccountId) {
-        if (req.opportunityId != null) {
-            return getFirstOpportunity([
-                SELECT Id, Name, OrderNumber__c, Unit__c, Unit__r.Name
-                FROM Opportunity
-                WHERE Id = :req.opportunityId
-                AND Channel_Partner__c = :brokerAccountId
-                LIMIT 1
-            ]);
-        }
-
-        if (req.bookingUnitId != null) {
-            List<Booking_Unit__c> bookings = [
-                SELECT Opportunity__c
-                FROM Booking_Unit__c
-                WHERE Id = :req.bookingUnitId
-                LIMIT 1
-            ];
-            if (!bookings.isEmpty() && bookings[0].Opportunity__c != null) {
-                Id bookingOpportunityId = bookings[0].Opportunity__c;
-                return getFirstOpportunity([
-                    SELECT Id, Name, OrderNumber__c, Unit__c, Unit__r.Name
-                    FROM Opportunity
-                    WHERE Id = :bookingOpportunityId
-                    AND Channel_Partner__c = :brokerAccountId
-                    LIMIT 1
-                ]);
-            }
-        }
-
-        if (String.isNotBlank(req.bookingNumber)) {
-            String bookingNumber = req.bookingNumber.trim();
-            List<Booking_Unit__c> bookings = [
-                SELECT Opportunity__c
-                FROM Booking_Unit__c
-                WHERE Name = :bookingNumber
-                OR Yardi_Booking_Code__c = :bookingNumber
-                LIMIT 1
-            ];
-            if (!bookings.isEmpty() && bookings[0].Opportunity__c != null) {
-                Id bookingOpportunityId = bookings[0].Opportunity__c;
-                Opportunity opportunity = getFirstOpportunity([
-                    SELECT Id, Name, OrderNumber__c, Unit__c, Unit__r.Name
-                    FROM Opportunity
-                    WHERE Id = :bookingOpportunityId
-                    AND Channel_Partner__c = :brokerAccountId
-                    LIMIT 1
-                ]);
-                if (opportunity != null) {
-                    return opportunity;
-                }
-            }
-
-            return getFirstOpportunity([
-                SELECT Id, Name, OrderNumber__c, Unit__c, Unit__r.Name
-                FROM Opportunity
-                WHERE OrderNumber__c = :bookingNumber
-                AND Channel_Partner__c = :brokerAccountId
-                LIMIT 1
-            ]);
-        }
-
-        if (req.unitId != null) {
-            return getFirstOpportunity([
-                SELECT Id, Name, OrderNumber__c, Unit__c, Unit__r.Name
-                FROM Opportunity
-                WHERE Unit__c = :req.unitId
-                AND Channel_Partner__c = :brokerAccountId
-                ORDER BY CreatedDate DESC
-                LIMIT 1
-            ]);
-        }
-
-        if (String.isNotBlank(req.customerName)) {
-            String customerNameLike = '%' + req.customerName.trim() + '%';
-            return getFirstOpportunity([
-                SELECT Id, Name, OrderNumber__c, Unit__c, Unit__r.Name
-                FROM Opportunity
-                WHERE Name LIKE :customerNameLike
-                AND Channel_Partner__c = :brokerAccountId
-                ORDER BY CreatedDate DESC
-                LIMIT 1
-            ]);
-        }
-
-        return null;
+    private static Opportunity findBrokerOpportunityById(Id opportunityId, Id brokerAccountId) {
+        return getFirstOpportunity([
+            SELECT Id, Name, Unit__c, Unit__r.Name
+            FROM Opportunity
+            WHERE Id = :opportunityId
+            AND Channel_Partner__c = :brokerAccountId
+            LIMIT 1
+        ]);
     }
 
     private static Opportunity getFirstOpportunity(List<Opportunity> opportunities) {

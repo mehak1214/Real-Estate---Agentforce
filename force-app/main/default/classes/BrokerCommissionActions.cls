@@ -5,6 +5,11 @@
 public with sharing class BrokerCommissionActions {
 
     public class CommissionQueryInput {
+        // Optional for Agentforce sessions and internal-user testing. If blank,
+        // use User.ContactId, then User.ContactId__c as a testing fallback.
+        @InvocableVariable(label='Broker Contact ID' required=false description='Broker Contact ID from the messaging end user or testing fallback')
+        public Id brokerContactId;
+
         @InvocableVariable(label='Date Range (Days)' required=false description='Number of days to look back (default: current month)')
         public Integer daysBack;
         
@@ -88,13 +93,13 @@ public with sharing class BrokerCommissionActions {
         CommissionOutput output = new CommissionOutput();
         
         try {
-            // Get logged-in broker contact
-            Contact brokerContact = [
-                SELECT Id, AccountId
-                FROM Contact
-                WHERE Id = :UserInfo.getUserId()
-                LIMIT 1
-            ];
+            Contact brokerContact = resolveBrokerContact(input.brokerContactId);
+            if (brokerContact == null) {
+                output.status = 'Error';
+                output.message = 'No broker contact is linked to this user. Please contact your administrator.';
+                outputs.add(output);
+                return outputs;
+            }
             
             // Calculate date range
             Date startDate = Date.today().addMonths(-1).toStartOfMonth();
@@ -113,7 +118,8 @@ public with sharing class BrokerCommissionActions {
                           'WHERE Broker__c = :brokerContact.Id';
             
             // Add status filter if provided
-            if (String.isNotBlank(input.statusFilter)) {
+            String statusFilter = input.statusFilter;
+            if (String.isNotBlank(statusFilter)) {
                 query += ' AND Status__c = :statusFilter';
             }
             
@@ -173,5 +179,34 @@ public with sharing class BrokerCommissionActions {
         
         outputs.add(output);
         return outputs;
+    }
+
+    private static Contact resolveBrokerContact(Id brokerContactId) {
+        Id contactId = brokerContactId;
+
+        if (contactId == null) {
+            User currentUser = [
+                SELECT ContactId, ContactId__c
+                FROM User
+                WHERE Id = :UserInfo.getUserId()
+                LIMIT 1
+            ];
+            contactId = currentUser.ContactId;
+            if (contactId == null && String.isNotBlank(currentUser.ContactId__c)) {
+                contactId = Id.valueOf(currentUser.ContactId__c.trim());
+            }
+        }
+
+        if (contactId == null) {
+            return null;
+        }
+
+        List<Contact> contacts = [
+            SELECT Id, AccountId
+            FROM Contact
+            WHERE Id = :contactId
+            LIMIT 1
+        ];
+        return contacts.isEmpty() ? null : contacts[0];
     }
 }

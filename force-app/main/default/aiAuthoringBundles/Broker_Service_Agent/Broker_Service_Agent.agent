@@ -232,7 +232,7 @@ subagent Payment_Plan:
         get_payment_plan_details:
             label: "Get Payment Plan Details"
             description: |
-                Retrieves payment plan installment details for a booked property using an Opportunity ID or Opportunity Name.
+                Retrieves payment plan installment details for a booked property using an Opportunity ID/Name, Booking Unit ID/Name, or Unit ID/Name.
             target: "apex://BrokerServiceAgentPaymentActions"
             require_user_confirmation: False
             include_in_progress_indicator: True
@@ -252,6 +252,26 @@ subagent Payment_Plan:
                 opportunityName: string
                     label: "Opportunity Name"
                     description: "Opportunity Name for the booked property whose payment plan should be retrieved."
+                    is_required: False
+                    complex_data_type_name: "lightning__textType"
+                bookingUnitId: id
+                    label: "Booking Unit ID"
+                    description: "Salesforce Booking Unit record ID. Apex resolves its Opportunity__c before fetching payment plan details."
+                    is_required: False
+                    complex_data_type_name: "lightning__recordIdType"
+                bookingUnitName: string
+                    label: "Booking Unit Name"
+                    description: "Booking Unit Name. Apex resolves its Opportunity__c before fetching payment plan details."
+                    is_required: False
+                    complex_data_type_name: "lightning__textType"
+                unitId: id
+                    label: "Unit ID"
+                    description: "Salesforce Unit record ID. Apex finds the latest Booking Unit for this Unit and resolves its Opportunity__c."
+                    is_required: False
+                    complex_data_type_name: "lightning__recordIdType"
+                unitName: string
+                    label: "Unit Name"
+                    description: "Unit Name. Apex finds the latest Booking Unit for this Unit and resolves its Opportunity__c."
                     is_required: False
                     complex_data_type_name: "lightning__textType"
             outputs:
@@ -322,17 +342,21 @@ subagent Payment_Plan:
              Only show payment plan information related to the logged-in broker account or broker contact.
 
              STEP 1 — CHECK FOR AN OPPORTUNITY REFERENCE:
-             This action intentionally supports only Opportunity lookup by ID or Name.
-             Booking Unit, booking name, Yardi booking code, unit, and customer-name lookup are not supported by this action because Booking_Unit__c behaves as a junction object and the relationship is not reliable across orgs.
-             If the broker has already provided an Opportunity ID beginning with 006 or an Opportunity Name, proceed directly to Step 2.
-             If no Opportunity ID or Opportunity Name is present, ask the broker for one of them before proceeding.
+             This action supports Opportunity ID, Opportunity Name, Booking Unit ID, Booking Unit Name, Unit ID, and Unit Name.
+             Booking Unit and Unit lookups are resolved through Booking_Unit__c.Opportunity__c before payment details are fetched.
+             If the broker has already provided one supported reference, proceed directly to Step 2.
+             If no supported reference is present, ask the broker for an Opportunity ID/Name, Booking Unit ID/Name, or Unit ID/Name before proceeding.
 
              STEP 2 — CALL THE ACTION:
-             Once an Opportunity ID or Opportunity Name is available, immediately call the Get Payment Plan Details action.
+             Once a supported reference is available, immediately call the Get Payment Plan Details action.
              Pass brokerContactId from @variables.ContactId.
              Pass opportunityId when the broker provides a Salesforce Opportunity ID beginning with 006.
              Pass opportunityName when the broker provides an Opportunity Name.
-             Do not call this action with Booking Unit ID, booking name, Yardi booking code, unit ID, or customer name.
+             Pass bookingUnitId when the broker provides a Salesforce Booking Unit ID.
+             Pass bookingUnitName when the broker provides a Booking Unit Name.
+             Pass unitId when the broker provides a Salesforce Unit ID.
+             Pass unitName when the broker provides a Unit Name.
+             Do not call this action with Yardi booking code or customer name.
 
              STEP 3 — DISPLAY THE RESULT:
              When showing payment plan details, summarize the result using the following format:
@@ -362,11 +386,23 @@ subagent Payment_Plan:
              Action: Call Get Payment Plan Details with opportunityId = 006Hn00001UhF1SIAV.
              Broker: "Show payment plan for opportunity Rahul Sharma - Unit 1201"
              Action: Call Get Payment Plan Details with opportunityName = Rahul Sharma - Unit 1201.
+             Broker: "Show payment plan for booking unit a3AHn0000024dZCMAY"
+             Action: Call Get Payment Plan Details with bookingUnitId = a3AHn0000024dZCMAY.
+             Broker: "Show payment plan for booking unit Rahul Sharma - Unit 1201"
+             Action: Call Get Payment Plan Details with bookingUnitName = Rahul Sharma - Unit 1201.
+             Broker: "Show payment plan for unit a2xHn0000012345IAB"
+             Action: Call Get Payment Plan Details with unitId = a2xHn0000012345IAB.
+             Broker: "Show payment plan for unit 1201"
+             Action: Call Get Payment Plan Details with unitName = 1201.
         actions:
             get_payment_plan_details: @actions.get_payment_plan_details
                 with brokerContactId = @variables.ContactId
                 with opportunityId = ...
                 with opportunityName = ...
+                with bookingUnitId = ...
+                with bookingUnitName = ...
+                with unitId = ...
+                with unitName = ...
 
 subagent Lead_Creation:
     label: "Lead Creation"

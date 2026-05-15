@@ -1,7 +1,7 @@
 /**
  * @description Payment plan actions for Broker Service Agent
  */
-public with sharing class BrokerServiceAgentPaymentActions {
+public  class BrokerServiceAgentPaymentActions {
 
     public class PaymentPlanRequest {
         // Optional for internal-user testing and Agentforce sessions that pass
@@ -14,6 +14,18 @@ public with sharing class BrokerServiceAgentPaymentActions {
 
         @InvocableVariable(label='Opportunity Name')
         public String opportunityName;
+
+        @InvocableVariable(label='Booking Unit ID')
+        public Id bookingUnitId;
+
+        @InvocableVariable(label='Booking Unit Name')
+        public String bookingUnitName;
+
+        @InvocableVariable(label='Unit ID')
+        public Id unitId;
+
+        @InvocableVariable(label='Unit Name')
+        public String unitName;
     }
 
     public class PaymentDetail {
@@ -165,10 +177,15 @@ public with sharing class BrokerServiceAgentPaymentActions {
         if (req == null) {
             return 'Payment plan reference is required.';
         }
-        // This action intentionally supports only Opportunity lookup by Id or Name.
-        // Booking_Unit__c is a junction object and is not reliable for this action across orgs.
-        if (req.opportunityId == null && String.isBlank(req.opportunityName)) {
-            return 'Please provide an Opportunity ID or Opportunity Name.';
+        // Supported references: Opportunity Id/Name, Booking Unit Id/Name, or Unit Id/Name.
+        // Booking Unit and Unit lookups resolve through Booking_Unit__c.Opportunity__c.
+        if (req.opportunityId == null
+            && String.isBlank(req.opportunityName)
+            && req.bookingUnitId == null
+            && String.isBlank(req.bookingUnitName)
+            && req.unitId == null
+            && String.isBlank(req.unitName)) {
+            return 'Please provide an Opportunity ID, Opportunity Name, Booking Unit ID, Booking Unit Name, Unit ID, or Unit Name.';
         }
         return null;
     }
@@ -217,6 +234,22 @@ public with sharing class BrokerServiceAgentPaymentActions {
             ]);
         }
 
+        if (req.bookingUnitId != null) {
+            return findBrokerOpportunityByBookingUnitId(req.bookingUnitId, brokerAccountId);
+        }
+
+        if (String.isNotBlank(req.bookingUnitName)) {
+            return findBrokerOpportunityByBookingUnitName(req.bookingUnitName, brokerAccountId);
+        }
+
+        if (req.unitId != null) {
+            return findBrokerOpportunityByUnitId(req.unitId, brokerAccountId);
+        }
+
+        if (String.isNotBlank(req.unitName)) {
+            return findBrokerOpportunityByUnitName(req.unitName, brokerAccountId);
+        }
+
         String opportunityNameLike = '%' + req.opportunityName.trim() + '%';
         return getFirstOpportunity([
             SELECT Id, Name, Unit__c, Unit__r.Name
@@ -224,6 +257,84 @@ public with sharing class BrokerServiceAgentPaymentActions {
             WHERE Name LIKE :opportunityNameLike
             AND Channel_Partner__c = :brokerAccountId
             ORDER BY CreatedDate DESC
+            LIMIT 1
+        ]);
+    }
+
+    private static Opportunity findBrokerOpportunityByBookingUnitId(Id bookingUnitId, Id brokerAccountId) {
+        List<Booking_Unit__c> bookings = [
+            SELECT Id, Opportunity__c, Unit__c, Unit__r.Name
+            FROM Booking_Unit__c
+            WHERE Id = :bookingUnitId
+            LIMIT 1
+        ];
+
+        if (bookings.isEmpty() || bookings[0].Opportunity__c == null) {
+            return null;
+        }
+
+        return getBrokerOpportunityById(bookings[0].Opportunity__c, brokerAccountId);
+    }
+
+    private static Opportunity findBrokerOpportunityByBookingUnitName(String bookingUnitName, Id brokerAccountId) {
+        String bookingUnitNameLike = '%' + bookingUnitName.trim() + '%';
+        List<Booking_Unit__c> bookings = [
+            SELECT Id, Opportunity__c, Unit__c, Unit__r.Name
+            FROM Booking_Unit__c
+            WHERE Name LIKE :bookingUnitNameLike
+            AND Opportunity__c != null
+            ORDER BY CreatedDate DESC
+            LIMIT 1
+        ];
+
+        if (bookings.isEmpty()) {
+            return null;
+        }
+
+        return getBrokerOpportunityById(bookings[0].Opportunity__c, brokerAccountId);
+    }
+
+    private static Opportunity findBrokerOpportunityByUnitId(Id unitId, Id brokerAccountId) {
+        List<Booking_Unit__c> bookings = [
+            SELECT Id, Opportunity__c, Unit__c, Unit__r.Name
+            FROM Booking_Unit__c
+            WHERE Unit__c = :unitId
+            AND Opportunity__c != null
+            ORDER BY CreatedDate DESC
+            LIMIT 1
+        ];
+
+        if (bookings.isEmpty()) {
+            return null;
+        }
+
+        return getBrokerOpportunityById(bookings[0].Opportunity__c, brokerAccountId);
+    }
+
+    private static Opportunity findBrokerOpportunityByUnitName(String unitName, Id brokerAccountId) {
+        String unitNameLike = '%' + unitName.trim() + '%';
+        List<Booking_Unit__c> bookings = [
+            SELECT Id, Opportunity__c, Unit__c, Unit__r.Name
+            FROM Booking_Unit__c
+            WHERE Unit__r.Name LIKE :unitNameLike
+            AND Opportunity__c != null
+            ORDER BY CreatedDate DESC
+            LIMIT 1
+        ];
+
+        if (bookings.isEmpty()) {
+            return null;
+        }
+
+        return getBrokerOpportunityById(bookings[0].Opportunity__c, brokerAccountId);
+    }
+
+    private static Opportunity getBrokerOpportunityById(Id opportunityId, Id brokerAccountId) {
+        return getFirstOpportunity([
+            SELECT Id, Name, Unit__c, Unit__r.Name
+            FROM Opportunity
+            WHERE Id = :opportunityId
+            AND Channel_Partner__c = :brokerAccountId
             LIMIT 1
         ]);
     }

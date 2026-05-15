@@ -162,10 +162,3 @@ public with sharing class BrokerServiceAgentCaseActions {
         return responses;
     }
 }
-            }
-        } catch (Exception e) {
-            System.debug('Error creating case: ' + e.getMessage());
-        }
-        return responses;
-    }
-}

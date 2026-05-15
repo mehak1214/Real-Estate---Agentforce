@@ -22,7 +22,7 @@ public with sharing class BrokerCaseManagementActions {
         @InvocableVariable(label='Priority')
         public String priority;
 
-        @InvocableVariable(label='Booking Unit ID' required=true)
+        @InvocableVariable(label='Booking Unit ID' required=false)
         public Id bookingUnitId;
 
         @InvocableVariable(label='Related Opportunity ID')
@@ -85,12 +85,7 @@ public with sharing class BrokerCaseManagementActions {
                 responses.add(res);
                 return responses;
             }
-            if (req.bookingUnitId == null) {
-                res.status  = 'Error';
-                res.message = 'Booking Unit ID is required.';
-                responses.add(res);
-                return responses;
-            }
+            
 
             Id brokerContactId = resolveBrokerContactId(req.brokerContactId);
             if (brokerContactId == null) {

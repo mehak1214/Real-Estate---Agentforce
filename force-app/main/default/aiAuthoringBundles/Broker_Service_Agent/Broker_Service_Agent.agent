@@ -232,7 +232,7 @@ subagent Payment_Plan:
         get_payment_plan_details:
             label: "Get Payment Plan Details"
             description: |
-                Retrieves payment plan installment details for a booked property using an Opportunity ID.
+                Retrieves payment plan installment details for a booked property using an Opportunity ID or Opportunity Name.
             target: "apex://BrokerServiceAgentPaymentActions"
             require_user_confirmation: False
             include_in_progress_indicator: True
@@ -249,6 +249,11 @@ subagent Payment_Plan:
                     description: "Salesforce Opportunity record ID for the booked property whose payment plan should be retrieved."
                     is_required: False
                     complex_data_type_name: "lightning__recordIdType"
+                opportunityName: string
+                    label: "Opportunity Name"
+                    description: "Opportunity Name for the booked property whose payment plan should be retrieved."
+                    is_required: False
+                    complex_data_type_name: "lightning__textType"
             outputs:
                 status: string
                     label: "Status"
@@ -316,16 +321,17 @@ subagent Payment_Plan:
             |Use this subagent when the broker asks about payment plans, installment schedules, paid amounts, due amounts, outstanding amounts, overdue payments, payment status, or booked-property payment details.
              Only show payment plan information related to the logged-in broker account or broker contact.
 
-             STEP 1 — CHECK FOR AN OPPORTUNITY ID:
-             This action intentionally supports only Opportunity ID lookup.
+             STEP 1 — CHECK FOR AN OPPORTUNITY REFERENCE:
+             This action intentionally supports only Opportunity lookup by ID or Name.
              Booking Unit, booking name, Yardi booking code, unit, and customer-name lookup are not supported by this action because Booking_Unit__c behaves as a junction object and the relationship is not reliable across orgs.
-             If the broker has already provided an Opportunity ID beginning with 006, proceed directly to Step 2.
-             If no Opportunity ID is present, ask the broker for the Opportunity ID before proceeding.
+             If the broker has already provided an Opportunity ID beginning with 006 or an Opportunity Name, proceed directly to Step 2.
+             If no Opportunity ID or Opportunity Name is present, ask the broker for one of them before proceeding.
 
              STEP 2 — CALL THE ACTION:
-             Once an Opportunity ID is available, immediately call the Get Payment Plan Details action.
+             Once an Opportunity ID or Opportunity Name is available, immediately call the Get Payment Plan Details action.
              Pass brokerContactId from @variables.ContactId.
-             Pass only opportunityId.
+             Pass opportunityId when the broker provides a Salesforce Opportunity ID beginning with 006.
+             Pass opportunityName when the broker provides an Opportunity Name.
              Do not call this action with Booking Unit ID, booking name, Yardi booking code, unit ID, or customer name.
 
              STEP 3 — DISPLAY THE RESULT:
@@ -354,10 +360,13 @@ subagent Payment_Plan:
              EXAMPLES:
              Broker: "Show payment plan for opportunity id 006Hn00001UhF1SIAV"
              Action: Call Get Payment Plan Details with opportunityId = 006Hn00001UhF1SIAV.
+             Broker: "Show payment plan for opportunity Rahul Sharma - Unit 1201"
+             Action: Call Get Payment Plan Details with opportunityName = Rahul Sharma - Unit 1201.
         actions:
             get_payment_plan_details: @actions.get_payment_plan_details
                 with brokerContactId = @variables.ContactId
                 with opportunityId = ...
+                with opportunityName = ...
 
 subagent Lead_Creation:
     label: "Lead Creation"

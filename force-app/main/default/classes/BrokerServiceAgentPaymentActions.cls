@@ -11,6 +11,9 @@ public with sharing class BrokerServiceAgentPaymentActions {
 
         @InvocableVariable(label='Opportunity ID')
         public Id opportunityId;
+
+        @InvocableVariable(label='Opportunity Name')
+        public String opportunityName;
     }
 
     public class PaymentDetail {
@@ -97,7 +100,7 @@ public with sharing class BrokerServiceAgentPaymentActions {
                     continue;
                 }
 
-                Opportunity opportunity = findBrokerOpportunityById(req.opportunityId, brokerContact.AccountId);
+                Opportunity opportunity = findBrokerOpportunity(req, brokerContact.AccountId);
                 if (opportunity == null) {
                     response.status = 'Error';
                     response.message = 'No broker-accessible payment plan was found for the provided reference.';
@@ -162,10 +165,10 @@ public with sharing class BrokerServiceAgentPaymentActions {
         if (req == null) {
             return 'Payment plan reference is required.';
         }
-        // This action intentionally supports only Opportunity ID lookup.
+        // This action intentionally supports only Opportunity lookup by Id or Name.
         // Booking_Unit__c is a junction object and is not reliable for this action across orgs.
-        if (req.opportunityId == null) {
-            return 'Please provide an Opportunity ID.';
+        if (req.opportunityId == null && String.isBlank(req.opportunityName)) {
+            return 'Please provide an Opportunity ID or Opportunity Name.';
         }
         return null;
     }
@@ -203,12 +206,24 @@ public with sharing class BrokerServiceAgentPaymentActions {
         return contacts.isEmpty() ? null : contacts[0];
     }
 
-    private static Opportunity findBrokerOpportunityById(Id opportunityId, Id brokerAccountId) {
+    private static Opportunity findBrokerOpportunity(PaymentPlanRequest req, Id brokerAccountId) {
+        if (req.opportunityId != null) {
+            return getFirstOpportunity([
+                SELECT Id, Name, Unit__c, Unit__r.Name
+                FROM Opportunity
+                WHERE Id = :req.opportunityId
+                AND Channel_Partner__c = :brokerAccountId
+                LIMIT 1
+            ]);
+        }
+
+        String opportunityNameLike = '%' + req.opportunityName.trim() + '%';
         return getFirstOpportunity([
             SELECT Id, Name, Unit__c, Unit__r.Name
             FROM Opportunity
-            WHERE Id = :opportunityId
+            WHERE Name LIKE :opportunityNameLike
             AND Channel_Partner__c = :brokerAccountId
+            ORDER BY CreatedDate DESC
             LIMIT 1
         ]);
     }

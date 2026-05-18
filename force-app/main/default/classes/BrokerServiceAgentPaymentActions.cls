@@ -68,6 +68,35 @@ public with sharing class BrokerServiceAgentPaymentActions {
 
         @InvocableVariable(label='Invoice Date')
         public Date invoiceDate;
+
+        @InvocableVariable(label='Receipt Applications')
+        public List<ReceiptApplicationDetail> receiptApplications;
+    }
+
+    public class ReceiptApplicationDetail {
+        @InvocableVariable(label='Receipt Name')
+        public String receiptName;
+
+        @InvocableVariable(label='Receipt Payment Date')
+        public Date receiptPaymentDate;
+
+        @InvocableVariable(label='Applied Amount')
+        public Decimal appliedAmount;
+
+        @InvocableVariable(label='Receipt Status')
+        public String receiptStatus;
+
+        @InvocableVariable(label='Invoice Code')
+        public String invoiceCode;
+
+        @InvocableVariable(label='Invoice Name')
+        public String invoiceName;
+
+        @InvocableVariable(label='Charge Type')
+        public String chargeType;
+
+        @InvocableVariable(label='Charge Code')
+        public String chargeCode;
     }
 
     public class PaymentPlanResponse {
@@ -145,20 +174,38 @@ public with sharing class BrokerServiceAgentPaymentActions {
                 ];
 
                 Map<Id, List<AR_Invoice__c>> invoicesByPaymentPlanDetailId = getInvoicesByPaymentPlanDetailId(records);
+                Map<Id, List<AR_Applied_For__c>> appliedReceiptsByPaymentPlanDetailId = getAppliedReceiptsByPaymentPlanDetailId(records);
                 Decimal totalAmount = 0;
                 Decimal paidAmount = 0;
 
                 for (Payment_Plan_Detail__c record : records) {
                     PaymentDetail detail = new PaymentDetail();
                     detail.invoices = new List<InvoiceDetail>();
+                    detail.receiptApplications = new List<ReceiptApplicationDetail>();
                     detail.name = record.Name;
                     detail.sequence = record.Seq__c == null ? null : record.Seq__c.intValue();
                     detail.amount = record.Amount__c;
                     detail.percentage = record.Percent__c;
                     detail.dueDate = record.Invoice_Due_Date__c != null ? record.Invoice_Due_Date__c : record.Final_Due_Date__c;
 
+                    List<AR_Applied_For__c> appliedReceipts = appliedReceiptsByPaymentPlanDetailId.get(record.Id);
                     List<AR_Invoice__c> invoices = invoicesByPaymentPlanDetailId.get(record.Id);
-                    if (invoices == null || invoices.isEmpty()) {
+                    if (appliedReceipts != null && !appliedReceipts.isEmpty()) {
+                        Decimal appliedAmountTotal = 0;
+
+                        for (AR_Applied_For__c appliedRecord : appliedReceipts) {
+                            ReceiptApplicationDetail receiptDetail = buildReceiptApplicationDetail(appliedRecord);
+                            detail.receiptApplications.add(receiptDetail);
+                            appliedAmountTotal += receiptDetail.appliedAmount == null ? 0 : receiptDetail.appliedAmount;
+                        }
+
+                        detail.paidAmount = appliedAmountTotal;
+                        detail.balanceAmount = (record.Amount__c == null ? 0 : record.Amount__c) - appliedAmountTotal;
+                        if (detail.balanceAmount < 0) {
+                            detail.balanceAmount = 0;
+                        }
+                        detail.status = getPaymentStatusFromAmounts(detail.amount, detail.paidAmount, detail.balanceAmount);
+                    } else if (invoices == null || invoices.isEmpty()) {
                         detail.paidAmount = record.Amount_Paid__c;
                         detail.balanceAmount = (record.Amount__c == null ? 0 : record.Amount__c)
                             - (record.Amount_Paid__c == null ? 0 : record.Amount_Paid__c);
@@ -241,6 +288,37 @@ public with sharing class BrokerServiceAgentPaymentActions {
         return invoicesByPaymentPlanDetailId;
     }
 
+    private static Map<Id, List<AR_Applied_For__c>> getAppliedReceiptsByPaymentPlanDetailId(List<Payment_Plan_Detail__c> paymentPlanDetails) {
+        Map<Id, List<AR_Applied_For__c>> appliedReceiptsByPaymentPlanDetailId = new Map<Id, List<AR_Applied_For__c>>();
+        Set<Id> paymentPlanDetailIds = new Set<Id>();
+        for (Payment_Plan_Detail__c detail : paymentPlanDetails) {
+            paymentPlanDetailIds.add(detail.Id);
+            appliedReceiptsByPaymentPlanDetailId.put(detail.Id, new List<AR_Applied_For__c>());
+        }
+
+        if (paymentPlanDetailIds.isEmpty()) {
+            return appliedReceiptsByPaymentPlanDetailId;
+        }
+
+        for (AR_Applied_For__c appliedRecord : [
+            SELECT Id, Applied_Amount__c, Status__c,
+                Invoice__c, Invoice__r.Name, Invoice__r.Invoice_Code__c, Invoice__r.Payment_Plan_Detail__c,
+                Receipt__c, Receipt__r.Name, Receipt__r.Status__c, Receipt__r.Charge_Type__c, Receipt__r.Charge_Code__c,
+                Receipt_Payment_Date__c, Invoice_Code__c
+            FROM AR_Applied_For__c
+            WHERE Invoice__r.Payment_Plan_Detail__c IN :paymentPlanDetailIds
+            AND Status__c = 'Applied'
+            ORDER BY Receipt_Payment_Date__c ASC, CreatedDate ASC
+        ]) {
+            Id paymentPlanDetailId = appliedRecord.Invoice__r == null ? null : appliedRecord.Invoice__r.Payment_Plan_Detail__c;
+            if (paymentPlanDetailId != null) {
+                appliedReceiptsByPaymentPlanDetailId.get(paymentPlanDetailId).add(appliedRecord);
+            }
+        }
+
+        return appliedReceiptsByPaymentPlanDetailId;
+    }
+
     private static InvoiceDetail buildInvoiceDetail(AR_Invoice__c invoice) {
         InvoiceDetail detail = new InvoiceDetail();
         detail.invoiceName = invoice.Name;
@@ -248,12 +326,28 @@ public with sharing class BrokerServiceAgentPaymentActions {
         detail.amount = invoice.Amount__c;
         detail.status = invoice.Status__c;
         detail.invoiceDate = invoice.Invoice_Date__c;
+        detail.receiptApplications = new List<ReceiptApplicationDetail>();
         detail.balanceAmount = getInvoiceBalanceAmount(invoice);
         detail.paidAmount = (invoice.Amount__c == null ? 0 : invoice.Amount__c)
             - (detail.balanceAmount == null ? 0 : detail.balanceAmount);
         if (detail.paidAmount < 0) {
             detail.paidAmount = 0;
         }
+        return detail;
+    }
+
+    private static ReceiptApplicationDetail buildReceiptApplicationDetail(AR_Applied_For__c appliedRecord) {
+        ReceiptApplicationDetail detail = new ReceiptApplicationDetail();
+        detail.receiptName = appliedRecord.Receipt__r == null ? null : appliedRecord.Receipt__r.Name;
+        detail.receiptPaymentDate = appliedRecord.Receipt_Payment_Date__c;
+        detail.appliedAmount = appliedRecord.Applied_Amount__c;
+        detail.receiptStatus = appliedRecord.Receipt__r == null ? null : appliedRecord.Receipt__r.Status__c;
+        detail.invoiceCode = String.isNotBlank(appliedRecord.Invoice_Code__c)
+            ? appliedRecord.Invoice_Code__c
+            : (appliedRecord.Invoice__r == null ? null : appliedRecord.Invoice__r.Invoice_Code__c);
+        detail.invoiceName = appliedRecord.Invoice__r == null ? null : appliedRecord.Invoice__r.Name;
+        detail.chargeType = appliedRecord.Receipt__r == null ? null : appliedRecord.Receipt__r.Charge_Type__c;
+        detail.chargeCode = appliedRecord.Receipt__r == null ? null : appliedRecord.Receipt__r.Charge_Code__c;
         return detail;
     }
 

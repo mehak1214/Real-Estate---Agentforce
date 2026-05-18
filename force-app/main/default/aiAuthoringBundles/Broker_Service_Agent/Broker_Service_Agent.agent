@@ -125,7 +125,7 @@ subagent CaseManagement:
                     is_required: False
                 statusFilter: string
                     label: "Status"
-                    description: "Optional case status filter, such as New, Working, Closed, or Escalated."
+                    description: "Optional case status filter. Use exactly one of: New, Working, Escalated, Closed."
                     is_required: False
                 limitSize: integer
                     label: "Limit Size"
@@ -219,7 +219,13 @@ subagent CaseManagement:
              Only retrieve, show, update, or create cases related to the logged-in broker account or broker contact.
              For broker case requests, the case can be related to booking issues, payment plan questions, commission or payout issues, lead creation issues, portal access issues, document issues, or general broker support.
              If the broker asks to track, view, check, or list cases, call the Get Broker Cases action.
+             For fetching cases, the broker can provide:
+             - caseNumber: pass it when the broker provides a specific case number.
+             - statusFilter: pass it when the broker asks to filter by status. Use exactly one of: New, Working, Escalated, Closed.
+             - limitSize: pass it when the broker asks how many records to show, such as latest 5 cases or show 20 cases.
              If the broker provides a case number, pass it as caseNumber. Otherwise, retrieve the most recent broker cases.
+             If the broker asks for cases by status, pass the matching statusFilter value.
+             If the broker asks for a number of cases, pass that number as limitSize. If no number is provided, leave limitSize blank so Apex uses the default.
              Never show the Salesforce Case Id.
 
              COLLECTING CASE DETAILS:
@@ -499,7 +505,7 @@ subagent Lead_Creation:
                     is_required: False
                 purchaser: string
                     label: "Purchaser"
-                    description: "Purchaser type. Allowed values: Individual, Group, Company."
+                    description: "Required purchaser type. Allowed values: Individual, Group, Company."
                     is_required: True
                 companyName: string
                     label: "Company Name"
@@ -519,13 +525,13 @@ subagent Lead_Creation:
                     is_required: False
                 typeOfInterest: string
                     label: "Type of Interest"
-                    description: "Required type of interest."
+                    description: "Required type of interest. Do not create the lead unless this value is collected."
                     is_required: True
             outputs:
-                leadId: string
-                    label: "Lead ID"
-                    description: "Internal Salesforce Lead ID."
-                    is_displayable: False
+                leadName: string
+                    label: "Lead Name"
+                    description: "Broker-visible created Lead name."
+                    is_displayable: True
                 status: string
                     label: "Status"
                     description: "Action result status."
@@ -543,11 +549,12 @@ subagent Lead_Creation:
              If purchaser is Company, ask for Company Name before creating the lead.
              If lead type is missing, default it to Enquiry unless the broker clearly says this is a booking.
              If type of interest is missing, ask for it because Type of Interest is required for Lead creation.
+             Do not call Create Buyer Lead until both Purchaser and Type of Interest have been collected.
              If project or budget is missing, ask for it only if needed by the configured lead creation action or business process. For project interest, pass a Project record ID if available; otherwise pass the project name.
              Do not guess buyer details, project details, unit details, or broker attribution.
              Before creating the lead, summarize the captured lead details once and ask the broker to confirm.
              Do not create the lead until the broker confirms.
-             After successful lead creation, tell the broker the lead was created and show the lead name and status if available. Do not show internal Salesforce record Ids.
+             After successful lead creation, tell the broker the lead was created and show the leadName output and status if available. Do not show or ask for internal Salesforce Lead Ids.
              If a duplicate lead is found by the configured action, explain that a matching lead may already exist and show only broker-accessible duplicate details.
              Do not expose leads belonging to another broker, internal assignment rules, debug logs, hidden fields, or system fields.
              If the broker asks to update or convert a lead, explain that this subagent is currently configured for lead creation unless an approved action is available.

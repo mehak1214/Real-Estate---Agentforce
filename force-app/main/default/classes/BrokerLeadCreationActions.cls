@@ -40,8 +40,8 @@ public with sharing class BrokerLeadCreationActions {
     }
 
     public class LeadCreateOutput {
-        @InvocableVariable(label='Lead ID' description='Created Lead record ID')
-        public String leadId;
+        @InvocableVariable(label='Lead Name' description='Created Lead name')
+        public String leadName;
         
         @InvocableVariable(label='Status' description='Operation status (Success/Error)')
         public String status;
@@ -72,6 +72,7 @@ public with sharing class BrokerLeadCreationActions {
         
         LeadCreateInput input = inputs[0];
         LeadCreateOutput output = new LeadCreateOutput();
+        Id createdLeadId = null;
         
         try {
             // Validate required fields
@@ -190,11 +191,15 @@ public with sharing class BrokerLeadCreationActions {
             
             // Insert the lead
             insert newLead;
+            createdLeadId = newLead.Id;
             
             // Prepare successful response
-            output.leadId = newLead.Id;
+            output.leadName = getLeadName(createdLeadId);
+            if (String.isBlank(output.leadName)) {
+                output.leadName = buildLeadName(input.firstName, input.lastName);
+            }
             output.status = 'Success';
-            output.message = 'Lead created successfully for ' + input.firstName + ' ' + input.lastName;
+            output.message = 'Lead created successfully for ' + output.leadName;
             
         } catch (DmlException de) {
             output.status = 'Error';
@@ -206,9 +211,9 @@ public with sharing class BrokerLeadCreationActions {
         
         // Send notification email to broker contact (outside lead creation try-catch)
         // Email errors are logged but don't affect lead creation response
-        if (output.status == 'Success' && String.isNotBlank(output.leadId)) {
+        if (output.status == 'Success' && createdLeadId != null) {
             Contact brokerContact = resolveLoggedInBrokerContact();
-            Lead leadForEmail = queryLeadForEmail(output.leadId);
+            Lead leadForEmail = queryLeadForEmail(createdLeadId);
             if (brokerContact != null && brokerContact.Id != null && leadForEmail != null) {
                 sendLeadCreationEmail(brokerContact.Id, leadForEmail);
             }
@@ -307,8 +312,32 @@ public with sharing class BrokerLeadCreationActions {
         }
     }
 
-    private static Lead queryLeadForEmail(String leadIdText) {
-        Id leadId = parseId(leadIdText);
+    private static String getLeadName(Id leadId) {
+        if (leadId == null) {
+            return null;
+        }
+
+        List<Lead> leads = [
+            SELECT Name
+            FROM Lead
+            WHERE Id = :leadId
+            LIMIT 1
+        ];
+        return leads.isEmpty() ? null : leads[0].Name;
+    }
+
+    private static String buildLeadName(String firstName, String lastName) {
+        String leadName = '';
+        if (String.isNotBlank(firstName)) {
+            leadName += firstName.trim();
+        }
+        if (String.isNotBlank(lastName)) {
+            leadName += String.isBlank(leadName) ? lastName.trim() : ' ' + lastName.trim();
+        }
+        return leadName;
+    }
+
+    private static Lead queryLeadForEmail(Id leadId) {
         if (leadId == null || leadId.getSObjectType() != Lead.SObjectType) {
             return null;
         }

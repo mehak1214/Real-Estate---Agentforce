@@ -85,6 +85,7 @@ public with sharing class BrokerPerformanceActions {
             String periodLabel = 'Current Month (' + Date.today().format() + ')';
             
             if (String.isNotBlank(input.period)) {
+                // Normalize supported period filters into an explicit date window.
                 if (input.period == 'last_month') {
                     Date lastMonthStart = Date.today().addMonths(-1);
                     periodStart = lastMonthStart.toStartOfMonth();
@@ -106,6 +107,7 @@ public with sharing class BrokerPerformanceActions {
             DateTime periodStartDateTime = DateTime.newInstance(periodStart, Time.newInstance(0, 0, 0, 0));
             DateTime periodEndDateTime = DateTime.newInstance(periodEnd.addDays(1), Time.newInstance(0, 0, 0, 0));
 
+            // Pull only this broker's commissions for the selected period.
             List<BrokerCommission__c> commissions = [
                 SELECT Id, SalesOrder__c, Unit_Cost__c, Commission_Amount__c, CommissionAmount__c, Status__c
                 FROM BrokerCommission__c
@@ -120,6 +122,7 @@ public with sharing class BrokerPerformanceActions {
             Decimal pendingCommission = 0;
 
             for (BrokerCommission__c commission : commissions) {
+                // Use unique SalesOrder__c to avoid double-counting split commission rows.
                 if (commission.SalesOrder__c != null) {
                     salesOrderIds.add(commission.SalesOrder__c);
                 }
@@ -132,6 +135,7 @@ public with sharing class BrokerPerformanceActions {
                 if (String.valueOf(commission.Status__c).equalsIgnoreCase('Paid')) {
                     paidCommission += commissionAmount;
                 } else {
+                    // Any non-paid status is treated as pending for KPI display.
                     pendingCommission += commissionAmount;
                 }
             }
@@ -157,7 +161,7 @@ public with sharing class BrokerPerformanceActions {
                 AND CreatedDate < :periodEndDateTime
             ];
             
-            // Calculate conversion ratio
+            // Conversion percentage in [0,100], rounded to 2 decimals.
             Decimal conversionRatio = leadsCreated > 0 ? 
                                      (((Decimal)leadsConverted / (Decimal)leadsCreated) * 100).setScale(2) : 0;
             
@@ -173,6 +177,7 @@ public with sharing class BrokerPerformanceActions {
             ]; 
 
             for (AggregateResult brokerSalesCount : brokerSalesCounts) {
+                // Rank is 1 + number of brokers with strictly higher sales count.
                 if ((Id)brokerSalesCount.get('brokerId') != brokerContact.Id
                     && (Integer)brokerSalesCount.get('salesCount') > salesCount) {
                     higherRankedBrokers++;
@@ -239,6 +244,7 @@ public with sharing class BrokerPerformanceActions {
     }
 
     private static Decimal getCommissionAmount(BrokerCommission__c commission) {
+        // Prefer Commission_Amount__c; fallback to legacy CommissionAmount__c.
         if (commission.Commission_Amount__c != null && commission.Commission_Amount__c != 0) {
             return commission.Commission_Amount__c;
         }

@@ -832,3 +832,20 @@ subagent Broker_Performance:
         actions:
             get_broker_performance: @actions.get_broker_performance
                 with period = ...
+        examples:
+                - user: "Show my performance for this month"
+                    agent_action: get_broker_performance
+                    params:
+                        period: current_month
+                - user: "How many sales did I close last month?"
+                    agent_action: get_broker_performance
+                    params:
+                        period: last_month
+                - user: "Am I eligible for incentives this quarter?"
+                    agent_action: get_broker_performance
+                    params:
+                        period: last_quarter
+
+        training_note: |
+                Use the `performance` JSON returned by Apex. Always check `status` first; if not 'Success', surface `message`.
+                Present `performancePeriod`, `monthlySalesCount`, `totalSalesAmount`, `paidCommission`, `pendingCommission`, `ranking`, and `incentiveEligibility` in summary card format.

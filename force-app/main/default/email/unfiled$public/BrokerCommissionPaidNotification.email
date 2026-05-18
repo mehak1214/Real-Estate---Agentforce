@@ -1,0 +1,18 @@
+Dear {{BrokerFirstName}},
+
+Your commission payout has been successfully processed and marked as paid.
+
+Commission Details:
+- Commission Reference: {{CommissionName}}
+- Sales Order: {{SalesOrderNumber}}
+- Unit: {{UnitName}}
+- Unit Cost: {{UnitCost}}
+- Commission Percentage: {{CommissionPercent}}
+- Commission Amount: {{CommissionAmount}}
+- Status: {{Status}}
+- Payout Date: {{PayoutDate}}
+
+Thank you for your business. If you have any questions regarding this payout, please reply to this email or contact our support team.
+
+Best regards,
+Finance Team

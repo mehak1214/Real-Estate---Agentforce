@@ -21,11 +21,8 @@ public with sharing class BrokerCaseManagementActions {
         @InvocableVariable(label='Priority')
         public String priority;
 
-        @InvocableVariable(label='Booking Unit ID' required=false)
-        public Id bookingUnitId;
-
-        @InvocableVariable(label='Booking Name' required=false)
-        public String bookingName;
+        @InvocableVariable(label='Booking Unit ID or Name' required=false)
+        public String bookingUnitId;
 
         @InvocableVariable(label='Related Opportunity ID or Name')
         public String relatedOpportunityId;
@@ -99,9 +96,9 @@ public with sharing class BrokerCaseManagementActions {
             }
 
             Id relatedBookingId = resolveRelatedBookingId(req, brokerContactId);
-            if (req.bookingUnitId == null && String.isNotBlank(req.bookingName) && relatedBookingId == null) {
+            if (String.isNotBlank(req.bookingUnitId) && relatedBookingId == null) {
                 res.status  = 'Error';
-                res.message = 'No broker-accessible booking was found for the provided Booking Name.';
+                res.message = 'No broker-accessible booking was found for the provided Booking Unit ID or Name.';
                 responses.add(res);
                 return responses;
             }
@@ -249,11 +246,19 @@ public with sharing class BrokerCaseManagementActions {
         if (req == null) {
             return null;
         }
-        if (req.bookingUnitId != null) {
-            return req.bookingUnitId;
-        }
-        if (String.isBlank(req.bookingName)) {
+        if (String.isBlank(req.bookingUnitId)) {
             return null;
+        }
+
+        String searchText = req.bookingUnitId.trim();
+        try {
+            Id bookingId = Id.valueOf(searchText);
+            if (bookingId.getSObjectType() == Booking_Unit__c.SObjectType) {
+                return bookingId;
+            }
+            return null;
+        } catch (Exception e) {
+            // Not an Id, so continue with broker-scoped booking Name lookup.
         }
 
         List<Contact> contacts = [
@@ -267,11 +272,11 @@ public with sharing class BrokerCaseManagementActions {
         }
 
         Id brokerAccountId = contacts[0].AccountId;
-        String bookingNameLike = '%' + req.bookingName.trim() + '%';
+        String bookingReferenceLike = '%' + searchText + '%';
         List<Booking_Unit__c> bookings = [
             SELECT Id
             FROM Booking_Unit__c
-            WHERE Name LIKE :bookingNameLike
+            WHERE Name LIKE :bookingReferenceLike
             AND Opportunity__c != null
             AND Opportunity__r.Channel_Partner__c = :brokerAccountId
             ORDER BY CreatedDate DESC

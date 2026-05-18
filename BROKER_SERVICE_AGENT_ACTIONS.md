@@ -57,6 +57,15 @@ This is important because broker records can be linked in two ways:
 - Broker contact ownership: `BrokerCommission__c.Broker__c = Contact.Id`
 - Broker account ownership: `Opportunity.Channel_Partner__c = Contact.AccountId`, `Lead.Channel_Partner__c = Contact.AccountId`
 
+### Production: How Contact Id Is Provided
+
+- **Agent behavior:** The agent does *not* pass `brokerContactId` in production payloads. Apex actions resolve the broker contact from the running Salesforce user.
+- **Resolution flow:** Apex reads the logged-in user (via `UserInfo.getUserId()`), then uses `User.ContactId`. If your org requires a fallback, the code can read a custom field such as `User.ContactId__c`.
+- **Requirements for brokers:** Brokers must sign in as or be mapped to a Salesforce `User` record with a populated `ContactId` (or the approved fallback). For SSO/portal setups, ensure the identity provider maps or provisions the `ContactId` into the Salesforce `User` record.
+- **Optional explicit passing:** If an integration needs the agent to supply a contact id, the agent payload may include `brokerContactId`, but Apex must validate that the running `User` is authorized for that contact before using it.
+- **Security note:** Never trust an incoming `brokerContactId` without verifying the caller's identity and relationship to the contact (for example, confirm `Contact.AccountId` matches the broker's account or check an explicit permission).
+
+
 ## Prerequisites For Testing
 
 Before running test snippets, make sure the running user has either:

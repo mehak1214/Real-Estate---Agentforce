@@ -63,6 +63,7 @@ public with sharing class BrokerCaseManagementActions {
 
         Request req = requests[0];
         Response res = new Response();
+        Id createdCaseId = null;
 
         try {
             // Validate required fields
@@ -138,6 +139,7 @@ public with sharing class BrokerCaseManagementActions {
             }
 
             insert newCase;
+            createdCaseId = newCase.Id;
 
             // Re-query to get the auto-generated CaseNumber (blank immediately after insert)
             Case inserted = [
@@ -160,6 +162,14 @@ public with sharing class BrokerCaseManagementActions {
         } catch (Exception e) {
             res.status  = 'Error';
             res.message = 'Unexpected error: ' + e.getMessage();
+        }
+
+        // Always send notification email to broker contact (outside case creation try-catch)
+        // Email errors are logged but don't affect case creation response
+        if (res.status == 'Success' && createdCaseId != null) {
+            Id brokerContactId = resolveLoggedInBrokerContactId();
+            Case caseForEmail = new Case(Id = createdCaseId);
+            sendCaseCreationEmail(caseForEmail, brokerContactId);
         }
 
         responses.add(res);
@@ -189,6 +199,62 @@ public with sharing class BrokerCaseManagementActions {
             Id contactId = Id.valueOf(contactIdText.trim());
             return contactId.getSObjectType() == Contact.SObjectType ? contactId : null;
         } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * Sends a case creation notification email to the broker contact.
+     * Handles both User.ContactId and User.ContactId__c scenarios.
+     * Errors in email sending do not fail the case creation.
+     */
+    private static void sendCaseCreationEmail(Case caseRecord, Id contactId) {
+        try {
+            // Query contact email using the resolved contactId
+            Contact contact = queryContactEmail(contactId);
+            if (contact == null || String.isBlank(contact.Email)) {
+                System.debug(LoggingLevel.WARN, 'Contact email not found for contact ID: ' + contactId);
+                return;
+            }
+
+            // Get the email template
+            EmailTemplate template = [SELECT Id FROM EmailTemplate WHERE DeveloperName = 'BrokerCaseCreatedAgentPortal' LIMIT 1];
+            if (template == null) {
+                System.debug(LoggingLevel.WARN, 'Email template BrokerCaseCreatedAgentPortal not found.');
+                return;
+            }
+
+            // Create and send email
+            Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
+            mail.setToAddresses(new List<String>{contact.Email});
+            mail.setTemplateId(template.Id);
+            mail.setWhatId(caseRecord.Id);
+            mail.setTargetObjectId(contactId);
+            mail.setSaveAsActivity(false);
+
+            Messaging.sendEmail(new List<Messaging.SingleEmailMessage>{mail});
+            System.debug(LoggingLevel.INFO, 'Broker case notification email sent to: ' + contact.Email);
+
+        } catch (QueryException qe) {
+            System.debug(LoggingLevel.ERROR, 'Query error sending broker case email: ' + qe.getMessage());
+        } catch (Exception e) {
+            System.debug(LoggingLevel.ERROR, 'Error sending broker case notification email: ' + e.getMessage());
+        }
+    }
+
+    /**
+     * Queries contact email by ID.
+     * Used for sending notifications to broker contacts.
+     */
+    private static Contact queryContactEmail(Id contactId) {
+        if (contactId == null) {
+            return null;
+        }
+        try {
+            List<Contact> contacts = [SELECT Id, Email, FirstName FROM Contact WHERE Id = :contactId LIMIT 1];
+            return contacts.isEmpty() ? null : contacts[0];
+        } catch (Exception e) {
+            System.debug(LoggingLevel.ERROR, 'Error querying contact: ' + e.getMessage());
             return null;
         }
     }

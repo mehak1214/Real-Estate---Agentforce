@@ -1,0 +1,16 @@
+Dear {!Contact.FirstName},
+
+Thank you for creating a support case through Agentforce. We appreciate your business and your inquiry is important to us.
+
+**Case Details:**
+- Case Number: {!Case.CaseNumber}
+- Subject: {!Case.Subject}
+- Status: New
+
+Our support team will review your case and get back to you within the next 24 hours with an update.
+
+If you have any questions in the meantime, please reply to this email or contact us at your earliest convenience.
+
+Thank you,
+
+Customer Support Team

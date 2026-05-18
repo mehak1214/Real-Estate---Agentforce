@@ -27,16 +27,16 @@ public with sharing class BrokerCaseManagementActions {
         @InvocableVariable(label='Booking Name' required=false)
         public String bookingName;
 
-        @InvocableVariable(label='Related Opportunity ID')
+        @InvocableVariable(label='Related Opportunity ID or Name')
         public String relatedOpportunityId;
 
-        @InvocableVariable(label='Related Unit ID')
+        @InvocableVariable(label='Related Unit ID or Name')
         public String relatedUnitId;
 
-        @InvocableVariable(label='Related Commission ID')
+        @InvocableVariable(label='Related Commission ID or Name')
         public String relatedCommissionId;
 
-        @InvocableVariable(label='Related Lead ID')
+        @InvocableVariable(label='Related Lead ID or Name')
         public String relatedLeadId;
     }
 
@@ -105,6 +105,37 @@ public with sharing class BrokerCaseManagementActions {
                 responses.add(res);
                 return responses;
             }
+            Id relatedOpportunityId = resolveRelatedRecordId(req.relatedOpportunityId, Opportunity.SObjectType);
+            if (String.isNotBlank(req.relatedOpportunityId) && relatedOpportunityId == null) {
+                res.status  = 'Error';
+                res.message = 'No Opportunity was found for the provided Related Opportunity ID or Name.';
+                responses.add(res);
+                return responses;
+            }
+
+            Id relatedUnitId = resolveRelatedRecordId(req.relatedUnitId, Unit__c.SObjectType);
+            if (String.isNotBlank(req.relatedUnitId) && relatedUnitId == null) {
+                res.status  = 'Error';
+                res.message = 'No Unit was found for the provided Related Unit ID or Name.';
+                responses.add(res);
+                return responses;
+            }
+
+            Id relatedCommissionId = resolveRelatedRecordId(req.relatedCommissionId, BrokerCommission__c.SObjectType);
+            if (String.isNotBlank(req.relatedCommissionId) && relatedCommissionId == null) {
+                res.status  = 'Error';
+                res.message = 'No Commission was found for the provided Related Commission ID or Name.';
+                responses.add(res);
+                return responses;
+            }
+
+            Id relatedLeadId = resolveRelatedRecordId(req.relatedLeadId, Lead.SObjectType);
+            if (String.isNotBlank(req.relatedLeadId) && relatedLeadId == null) {
+                res.status  = 'Error';
+                res.message = 'No Lead was found for the provided Related Lead ID or Name.';
+                responses.add(res);
+                return responses;
+            }
 
             // Get the broker_service Case record type.
             List<RecordType> rtList = [
@@ -136,17 +167,17 @@ public with sharing class BrokerCaseManagementActions {
             if (String.isNotBlank(req.priority)) {
                 newCase.Priority = req.priority; 
             }
-            if (String.isNotBlank(req.relatedOpportunityId)) {
-                newCase.Related_Opportunity__c = req.relatedOpportunityId;
+            if (relatedOpportunityId != null) {
+                newCase.Related_Opportunity__c = relatedOpportunityId;
             }
-            if (String.isNotBlank(req.relatedUnitId)) {
-                newCase.Related_Unit__c = req.relatedUnitId;
+            if (relatedUnitId != null) {
+                newCase.Related_Unit__c = relatedUnitId;
             } 
-            if (String.isNotBlank(req.relatedCommissionId)) {
-                newCase.Related_Commission__c = req.relatedCommissionId;
+            if (relatedCommissionId != null) {
+                newCase.Related_Commission__c = relatedCommissionId;
             }
-            if (String.isNotBlank(req.relatedLeadId)) {
-                newCase.Related_Lead__c = req.relatedLeadId;
+            if (relatedLeadId != null) {
+                newCase.Related_Lead__c = relatedLeadId;
             }
 
             insert newCase;
@@ -247,6 +278,31 @@ public with sharing class BrokerCaseManagementActions {
             LIMIT 1
         ];
         return bookings.isEmpty() ? null : bookings[0].Id;
+    }
+
+    private static Id resolveRelatedRecordId(String idOrName, Schema.SObjectType expectedType) {
+        if (String.isBlank(idOrName) || expectedType == null) {
+            return null;
+        }
+
+        String searchText = idOrName.trim();
+        try {
+            Id recordId = Id.valueOf(searchText);
+            if (recordId.getSObjectType() == expectedType) {
+                return recordId;
+            }
+            return null;
+        } catch (Exception e) {
+            // Not an Id, so continue with Name lookup.
+        }
+
+        String objectApiName = expectedType.getDescribe().getName();
+        String nameLike = '%' + searchText + '%';
+        List<SObject> records = Database.query(
+            'SELECT Id FROM ' + objectApiName +
+            ' WHERE Name LIKE :nameLike ORDER BY CreatedDate DESC LIMIT 1'
+        );
+        return records.isEmpty() ? null : (Id) records[0].get('Id');
     }
 
     /**

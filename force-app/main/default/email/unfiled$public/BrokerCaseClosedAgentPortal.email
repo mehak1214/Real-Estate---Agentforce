@@ -1,0 +1,17 @@
+Dear {!Contact.FirstName},
+
+Your support case has been marked as closed.
+
+Case Details:
+- Case Number: {!Case.CaseNumber}
+- Subject: {!Case.Subject}
+- Final Status: {!Case.Status}
+- Priority: {!Case.Priority}
+
+If you still need assistance or have any questions please reply to this email or feel free to raise another case.
+
+Thank you,
+Customer Support Team
+
+
+

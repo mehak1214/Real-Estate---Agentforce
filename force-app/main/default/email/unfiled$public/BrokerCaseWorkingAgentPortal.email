@@ -1,0 +1,14 @@
+Dear {!Contact.FirstName},
+
+This is an update on your support case.
+
+Case Details:
+- Case Number: {!Case.CaseNumber}
+- Subject: {!Case.Subject}
+- Current Status: {!Case.Status}
+- Priority: {!Case.Priority}
+
+Our team is actively working on your case and will keep you informed of further progress.
+
+Thank you,
+Customer Support Team

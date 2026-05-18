@@ -358,7 +358,7 @@ subagent Payment_Plan:
                     filter_from_agent: False
                 paidAmount: currency
                     label: "Paid Amount"
-                    description: "Total paid amount. When related invoices exist, Apex derives this from invoice status and invoice balance."
+                    description: "Total paid amount from applied receipt amounts. Apex first uses installment and invoice applied allocations, with an opportunity-level receipt-paid fallback when installment mapping is unavailable."
                     is_used_by_planner: True
                     is_displayable: True
                     filter_from_agent: False
@@ -382,7 +382,7 @@ subagent Payment_Plan:
                     filter_from_agent: False
                 payment_details: list[object]
                     label: "Payment Details"
-                    description: "Payment plan installment details returned for the opportunity, including related invoices when available."
+                    description: "Payment plan installment details returned for the opportunity, including invoice rows and receipt applications when available."
                     complex_data_type_name: "@apexClassType/c__BrokerServiceAgentPaymentActions$PaymentDetail"
                     is_used_by_planner: True
                     is_displayable: True
@@ -391,6 +391,23 @@ subagent Payment_Plan:
         instructions: ->
             |Use this subagent when the broker asks about payment plans, installment schedules, paid amounts, due amounts, outstanding amounts, overdue payments, payment status, or booked-property payment details.
              Only show payment plan information related to the logged-in broker account or broker contact.
+
+             APEX RESPONSE RULES (SOURCE OF TRUTH):
+             Use values exactly as returned by Apex:
+             - totalAmount, paidAmount, outstandingAmount, nextDueDate, nextDueAmount at top level.
+             - payment_details for installment rows.
+             - invoices and receiptApplications under each installment when present.
+
+             CALCULATION-AWARE INTERPRETATION:
+             Apex computes installment values using three branches:
+             - If invoices exist: installment paid and balance come from invoice rows.
+             - If no invoices and no applied receipts: installment paid and status come from payment plan detail fields (Amount_Paid__c and Status__c).
+             - If no invoices but applied receipts exist: installment paid comes from summed applied receipt amounts.
+             Apex then computes top-level paidAmount as the installment rollup, and if needed increases it using opportunity-level paid receipts fallback.
+             Therefore, do not override or recompute top-level totals from visible rows. Always present top-level paidAmount and outstandingAmount as final summary numbers.
+
+             If installment-level invoices are empty but top-level paidAmount is greater than zero, explain that payment was recognized from applied receipt records while installment invoice linkage is not present in the returned dataset.
+             If status is Error, show message and ask for one corrected reference input.
 
              STEP 1 — CHECK FOR A REFERENCE:
              This action supports one reference in any of these fields: opportunityId for Opportunity ID or Name, bookingUnitId for Booking Unit ID or Name, or unitId for Unit ID or Name.
@@ -423,8 +440,10 @@ subagent Payment_Plan:
              Paid Amount:
              Balance:
              Status:
-             If an installment has related invoices, use the invoice-derived Paid Amount, Balance, and Status returned by Apex to explain whether it is Fully Paid, Partially Paid, or Pending Payment.
+             Paid amounts are receipt-application-driven in Apex. Do not infer payment only from invoice status text.
              When useful, include invoice information under the installment: Invoice Name or Invoice Number, Invoice Date, Invoice Amount, Paid Amount, Balance, and Invoice Status.
+             If receipt applications are returned, include the payment trail under each installment or invoice: Receipt Name, Receipt Payment Date, Applied Amount, and Receipt Status.
+             If installment-level invoices are empty but top-level Paid Amount is greater than zero, explain that payment was recognized from opportunity-level applied receipts and invoice-to-installment linkage is not yet available in the returned dataset.
             
             Explain the payment plan status clearly. If the next due date is in the past and the outstanding amount is greater than zero, explain that the payment is overdue.
 

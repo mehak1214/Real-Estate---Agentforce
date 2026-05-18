@@ -403,6 +403,7 @@ public with sharing class BrokerServiceAgentPaymentActions {
                 receiptAppliedAmount += receiptApplication.appliedAmount == null ? 0 : receiptApplication.appliedAmount;
             }
         }
+        
 
         return receiptAppliedAmount;
     }

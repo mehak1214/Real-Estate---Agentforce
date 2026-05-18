@@ -276,12 +276,9 @@ The broker can search using:
 | Input | Required | Description |
 | --- | --- | --- |
 | `brokerContactId` | No | Not passed by agent. Apex resolves logged-in broker contact. |
-| `opportunityId` | No | Opportunity Id |
-| `opportunityName` | No | Opportunity name search |
-| `bookingUnitId` | No | Booking Unit Id |
-| `bookingUnitName` | No | Booking Unit name search |
-| `unitId` | No | Unit Id |
-| `unitName` | No | Unit name search |
+| `opportunityId` | No | Opportunity Id or Opportunity Name |
+| `bookingUnitId` | No | Booking Unit Id or Booking Unit Name |
+| `unitId` | No | Unit Id or Unit Name |
 
 At least one reference is required.
 
@@ -294,11 +291,11 @@ At least one reference is required.
 | `opportunityName` | Matched Opportunity name |
 | `unitProperty` | Matched Unit name |
 | `totalAmount` | Total scheduled payment amount |
-| `paidAmount` | Total paid amount |
+| `paidAmount` | Total paid amount from applied receipt allocations |
 | `outstandingAmount` | Remaining amount |
 | `nextDueDate` | Next due date where balance is greater than zero |
 | `nextDueAmount` | Next due amount |
-| `payment_details` | Installment details |
+| `payment_details` | Installment details, including invoice rows and receipt applications when available |
 
 ### Ownership Check
 
@@ -322,7 +319,7 @@ Booking_Unit__c.Opportunity__r.Channel_Partner__c = brokerContact.AccountId
 BrokerServiceAgentPaymentActions.PaymentPlanRequest req =
     new BrokerServiceAgentPaymentActions.PaymentPlanRequest();
 
-req.opportunityName = 'Opportunity Name Here';
+req.opportunityId = 'Opportunity Name Here';
 
 List<BrokerServiceAgentPaymentActions.PaymentPlanResponse> responses =
     BrokerServiceAgentPaymentActions.getPaymentPlanDetails(
@@ -338,7 +335,7 @@ System.debug(JSON.serializePretty(responses));
 BrokerServiceAgentPaymentActions.PaymentPlanRequest req =
     new BrokerServiceAgentPaymentActions.PaymentPlanRequest();
 
-req.unitName = '1201';
+req.unitId = '1201';
 
 List<BrokerServiceAgentPaymentActions.PaymentPlanResponse> responses =
     BrokerServiceAgentPaymentActions.getPaymentPlanDetails(

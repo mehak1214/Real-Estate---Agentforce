@@ -45,6 +45,9 @@ public with sharing class BrokerServiceAgentPaymentActions {
 
         @InvocableVariable(label='Invoices')
         public List<InvoiceDetail> invoices;
+
+        @InvocableVariable(label='Receipt Applications')
+        public List<ReceiptApplicationDetail> receiptApplications;
     }
 
     public class InvoiceDetail {
@@ -175,6 +178,7 @@ public with sharing class BrokerServiceAgentPaymentActions {
 
                 Map<Id, List<AR_Invoice__c>> invoicesByPaymentPlanDetailId = getInvoicesByPaymentPlanDetailId(records);
                 Map<Id, List<AR_Applied_For__c>> appliedReceiptsByPaymentPlanDetailId = getAppliedReceiptsByPaymentPlanDetailId(records);
+                Map<Id, List<ReceiptApplicationDetail>> receiptApplicationsByInvoiceId = getReceiptApplicationsByInvoiceId(records);
                 Decimal totalAmount = 0;
                 Decimal paidAmount = 0;
 
@@ -190,32 +194,26 @@ public with sharing class BrokerServiceAgentPaymentActions {
 
                     List<AR_Applied_For__c> appliedReceipts = appliedReceiptsByPaymentPlanDetailId.get(record.Id);
                     List<AR_Invoice__c> invoices = invoicesByPaymentPlanDetailId.get(record.Id);
-                    if (appliedReceipts != null && !appliedReceipts.isEmpty()) {
-                        Decimal appliedAmountTotal = 0;
+                    Decimal receiptAppliedAmountTotal = 0;
 
+                    if (appliedReceipts != null && !appliedReceipts.isEmpty()) {
                         for (AR_Applied_For__c appliedRecord : appliedReceipts) {
                             ReceiptApplicationDetail receiptDetail = buildReceiptApplicationDetail(appliedRecord);
                             detail.receiptApplications.add(receiptDetail);
-                            appliedAmountTotal += receiptDetail.appliedAmount == null ? 0 : receiptDetail.appliedAmount;
+                            receiptAppliedAmountTotal += receiptDetail.appliedAmount == null ? 0 : receiptDetail.appliedAmount;
                         }
+                    }
 
-                        detail.paidAmount = appliedAmountTotal;
-                        detail.balanceAmount = (record.Amount__c == null ? 0 : record.Amount__c) - appliedAmountTotal;
-                        if (detail.balanceAmount < 0) {
-                            detail.balanceAmount = 0;
-                        }
-                        detail.status = getPaymentStatusFromAmounts(detail.amount, detail.paidAmount, detail.balanceAmount);
-                    } else if (invoices == null || invoices.isEmpty()) {
-                        detail.paidAmount = record.Amount_Paid__c;
-                        detail.balanceAmount = (record.Amount__c == null ? 0 : record.Amount__c)
-                            - (record.Amount_Paid__c == null ? 0 : record.Amount_Paid__c);
-                        detail.status = record.Status__c;
-                    } else {
+                    if (invoices != null && !invoices.isEmpty()) {
                         Decimal detailPaidAmount = 0;
                         Decimal detailBalanceAmount = 0;
 
                         for (AR_Invoice__c invoice : invoices) {
                             InvoiceDetail invoiceDetail = buildInvoiceDetail(invoice);
+                            List<ReceiptApplicationDetail> invoiceReceiptApplications = receiptApplicationsByInvoiceId.get(invoice.Id);
+                            if (invoiceReceiptApplications != null) {
+                                invoiceDetail.receiptApplications = invoiceReceiptApplications;
+                            }
                             detail.invoices.add(invoiceDetail);
                             detailPaidAmount += invoiceDetail.paidAmount == null ? 0 : invoiceDetail.paidAmount;
                             detailBalanceAmount += invoiceDetail.balanceAmount == null ? 0 : invoiceDetail.balanceAmount;
@@ -226,6 +224,18 @@ public with sharing class BrokerServiceAgentPaymentActions {
                             detail.paidAmount = detail.amount;
                         }
                         detail.balanceAmount = detailBalanceAmount;
+                        if (detail.balanceAmount < 0) {
+                            detail.balanceAmount = 0;
+                        }
+                        detail.status = getPaymentStatusFromAmounts(detail.amount, detail.paidAmount, detail.balanceAmount);
+                    } else if (appliedReceipts == null || appliedReceipts.isEmpty()) {
+                        detail.paidAmount = record.Amount_Paid__c;
+                        detail.balanceAmount = (record.Amount__c == null ? 0 : record.Amount__c)
+                            - (record.Amount_Paid__c == null ? 0 : record.Amount_Paid__c);
+                        detail.status = record.Status__c;
+                    } else {
+                        detail.paidAmount = receiptAppliedAmountTotal;
+                        detail.balanceAmount = (record.Amount__c == null ? 0 : record.Amount__c) - receiptAppliedAmountTotal;
                         if (detail.balanceAmount < 0) {
                             detail.balanceAmount = 0;
                         }
@@ -317,6 +327,41 @@ public with sharing class BrokerServiceAgentPaymentActions {
         }
 
         return appliedReceiptsByPaymentPlanDetailId;
+    }
+
+    private static Map<Id, List<ReceiptApplicationDetail>> getReceiptApplicationsByInvoiceId(List<Payment_Plan_Detail__c> paymentPlanDetails) {
+        Map<Id, List<ReceiptApplicationDetail>> receiptApplicationsByInvoiceId = new Map<Id, List<ReceiptApplicationDetail>>();
+        Set<Id> paymentPlanDetailIds = new Set<Id>();
+        for (Payment_Plan_Detail__c detail : paymentPlanDetails) {
+            paymentPlanDetailIds.add(detail.Id);
+        }
+
+        if (paymentPlanDetailIds.isEmpty()) {
+            return receiptApplicationsByInvoiceId;
+        }
+
+        for (AR_Applied_For__c appliedRecord : [
+            SELECT Id, Applied_Amount__c, Status__c,
+                Invoice__c, Invoice__r.Name, Invoice__r.Invoice_Code__c, Invoice__r.Payment_Plan_Detail__c,
+                Receipt__c, Receipt__r.Name, Receipt__r.Status__c, Receipt__r.Charge_Type__c, Receipt__r.Charge_Code__c,
+                Receipt_Payment_Date__c, Invoice_Code__c
+            FROM AR_Applied_For__c
+            WHERE Invoice__r.Payment_Plan_Detail__c IN :paymentPlanDetailIds
+            AND Status__c = 'Applied'
+            ORDER BY Receipt_Payment_Date__c ASC, CreatedDate ASC
+        ]) {
+            if (appliedRecord.Invoice__c == null) {
+                continue;
+            }
+
+            if (!receiptApplicationsByInvoiceId.containsKey(appliedRecord.Invoice__c)) {
+                receiptApplicationsByInvoiceId.put(appliedRecord.Invoice__c, new List<ReceiptApplicationDetail>());
+            }
+
+            receiptApplicationsByInvoiceId.get(appliedRecord.Invoice__c).add(buildReceiptApplicationDetail(appliedRecord));
+        }
+
+        return receiptApplicationsByInvoiceId;
     }
 
     private static InvoiceDetail buildInvoiceDetail(AR_Invoice__c invoice) {

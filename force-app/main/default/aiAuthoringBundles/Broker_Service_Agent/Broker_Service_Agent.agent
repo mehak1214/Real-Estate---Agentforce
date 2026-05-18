@@ -358,7 +358,7 @@ subagent Payment_Plan:
                     filter_from_agent: False
                 paidAmount: currency
                     label: "Paid Amount"
-                    description: "Total paid amount."
+                    description: "Total paid amount. When related invoices exist, Apex derives this from invoice status and invoice balance."
                     is_used_by_planner: True
                     is_displayable: True
                     filter_from_agent: False
@@ -382,7 +382,7 @@ subagent Payment_Plan:
                     filter_from_agent: False
                 payment_details: list[object]
                     label: "Payment Details"
-                    description: "Payment plan installment details returned for the opportunity."
+                    description: "Payment plan installment details returned for the opportunity, including related invoices when available."
                     complex_data_type_name: "@apexClassType/c__BrokerServiceAgentPaymentActions$PaymentDetail"
                     is_used_by_planner: True
                     is_displayable: True
@@ -423,6 +423,8 @@ subagent Payment_Plan:
              Paid Amount:
              Balance:
              Status:
+             If an installment has related invoices, use the invoice-derived Paid Amount, Balance, and Status returned by Apex to explain whether it is Fully Paid, Partially Paid, or Pending Payment.
+             When useful, include invoice information under the installment: Invoice Name or Invoice Number, Invoice Date, Invoice Amount, Paid Amount, Balance, and Invoice Status.
             
             Explain the payment plan status clearly. If the next due date is in the past and the outstanding amount is greater than zero, explain that the payment is overdue.
 

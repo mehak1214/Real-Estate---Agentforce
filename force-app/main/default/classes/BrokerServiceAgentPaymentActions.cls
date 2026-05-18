@@ -42,6 +42,32 @@ public with sharing class BrokerServiceAgentPaymentActions {
 
         @InvocableVariable(label='Status')
         public String status;
+
+        @InvocableVariable(label='Invoices')
+        public List<InvoiceDetail> invoices;
+    }
+
+    public class InvoiceDetail {
+        @InvocableVariable(label='Invoice Name')
+        public String invoiceName;
+
+        @InvocableVariable(label='Invoice Number')
+        public String invoiceNumber;
+
+        @InvocableVariable(label='Amount')
+        public Decimal amount;
+
+        @InvocableVariable(label='Paid Amount')
+        public Decimal paidAmount;
+
+        @InvocableVariable(label='Balance Amount')
+        public Decimal balanceAmount;
+
+        @InvocableVariable(label='Status')
+        public String status;
+
+        @InvocableVariable(label='Invoice Date')
+        public Date invoiceDate;
     }
 
     public class PaymentPlanResponse {
@@ -118,24 +144,50 @@ public with sharing class BrokerServiceAgentPaymentActions {
                     ORDER BY Seq__c ASC
                 ];
 
+                Map<Id, List<AR_Invoice__c>> invoicesByPaymentPlanDetailId = getInvoicesByPaymentPlanDetailId(records);
                 Decimal totalAmount = 0;
                 Decimal paidAmount = 0;
 
                 for (Payment_Plan_Detail__c record : records) {
                     PaymentDetail detail = new PaymentDetail();
+                    detail.invoices = new List<InvoiceDetail>();
                     detail.name = record.Name;
                     detail.sequence = record.Seq__c == null ? null : record.Seq__c.intValue();
                     detail.amount = record.Amount__c;
-                    detail.paidAmount = record.Amount_Paid__c;
-                    detail.balanceAmount = (record.Amount__c == null ? 0 : record.Amount__c)
-                        - (record.Amount_Paid__c == null ? 0 : record.Amount_Paid__c);
                     detail.percentage = record.Percent__c;
                     detail.dueDate = record.Invoice_Due_Date__c != null ? record.Invoice_Due_Date__c : record.Final_Due_Date__c;
-                    detail.status = record.Status__c;
+
+                    List<AR_Invoice__c> invoices = invoicesByPaymentPlanDetailId.get(record.Id);
+                    if (invoices == null || invoices.isEmpty()) {
+                        detail.paidAmount = record.Amount_Paid__c;
+                        detail.balanceAmount = (record.Amount__c == null ? 0 : record.Amount__c)
+                            - (record.Amount_Paid__c == null ? 0 : record.Amount_Paid__c);
+                        detail.status = record.Status__c;
+                    } else {
+                        Decimal detailPaidAmount = 0;
+                        Decimal detailBalanceAmount = 0;
+
+                        for (AR_Invoice__c invoice : invoices) {
+                            InvoiceDetail invoiceDetail = buildInvoiceDetail(invoice);
+                            detail.invoices.add(invoiceDetail);
+                            detailPaidAmount += invoiceDetail.paidAmount == null ? 0 : invoiceDetail.paidAmount;
+                            detailBalanceAmount += invoiceDetail.balanceAmount == null ? 0 : invoiceDetail.balanceAmount;
+                        }
+
+                        detail.paidAmount = detailPaidAmount;
+                        if (detail.amount != null && detail.paidAmount > detail.amount) {
+                            detail.paidAmount = detail.amount;
+                        }
+                        detail.balanceAmount = detailBalanceAmount;
+                        if (detail.balanceAmount < 0) {
+                            detail.balanceAmount = 0;
+                        }
+                        detail.status = getPaymentStatusFromAmounts(detail.amount, detail.paidAmount, detail.balanceAmount);
+                    }
                     details.add(detail);
 
                     totalAmount += record.Amount__c == null ? 0 : record.Amount__c;
-                    paidAmount += record.Amount_Paid__c == null ? 0 : record.Amount_Paid__c;
+                    paidAmount += detail.paidAmount == null ? 0 : detail.paidAmount;
 
                     if (response.nextDueDate == null && detail.balanceAmount != null && detail.balanceAmount > 0) {
                         response.nextDueDate = detail.dueDate;
@@ -161,6 +213,72 @@ public with sharing class BrokerServiceAgentPaymentActions {
             allResponses.add(response);
         }
         return allResponses;
+    }
+
+    private static Map<Id, List<AR_Invoice__c>> getInvoicesByPaymentPlanDetailId(List<Payment_Plan_Detail__c> paymentPlanDetails) {
+        Map<Id, List<AR_Invoice__c>> invoicesByPaymentPlanDetailId = new Map<Id, List<AR_Invoice__c>>();
+        Set<Id> paymentPlanDetailIds = new Set<Id>();
+        for (Payment_Plan_Detail__c detail : paymentPlanDetails) {
+            paymentPlanDetailIds.add(detail.Id);
+            invoicesByPaymentPlanDetailId.put(detail.Id, new List<AR_Invoice__c>());
+        }
+
+        if (paymentPlanDetailIds.isEmpty()) {
+            return invoicesByPaymentPlanDetailId;
+        }
+
+        for (AR_Invoice__c invoice : [
+            SELECT Id, Name, Invoice_Number__c, Amount__c, Trigger_Amount__c,
+                Status__c, Invoice_Date__c, Payment_Plan_Detail__c
+            FROM AR_Invoice__c
+            WHERE Payment_Plan_Detail__c IN :paymentPlanDetailIds
+            AND Status__c != 'Reversed'
+            ORDER BY Invoice_Date__c ASC, CreatedDate ASC
+        ]) {
+            invoicesByPaymentPlanDetailId.get(invoice.Payment_Plan_Detail__c).add(invoice);
+        }
+
+        return invoicesByPaymentPlanDetailId;
+    }
+
+    private static InvoiceDetail buildInvoiceDetail(AR_Invoice__c invoice) {
+        InvoiceDetail detail = new InvoiceDetail();
+        detail.invoiceName = invoice.Name;
+        detail.invoiceNumber = invoice.Invoice_Number__c;
+        detail.amount = invoice.Amount__c;
+        detail.status = invoice.Status__c;
+        detail.invoiceDate = invoice.Invoice_Date__c;
+        detail.balanceAmount = getInvoiceBalanceAmount(invoice);
+        detail.paidAmount = (invoice.Amount__c == null ? 0 : invoice.Amount__c)
+            - (detail.balanceAmount == null ? 0 : detail.balanceAmount);
+        if (detail.paidAmount < 0) {
+            detail.paidAmount = 0;
+        }
+        return detail;
+    }
+
+    private static Decimal getInvoiceBalanceAmount(AR_Invoice__c invoice) {
+        if (invoice.Status__c == 'Fully Paid') {
+            return 0;
+        }
+        if (invoice.Trigger_Amount__c != null) {
+            return invoice.Trigger_Amount__c;
+        }
+        return invoice.Amount__c == null ? 0 : invoice.Amount__c;
+    }
+
+    private static String getPaymentStatusFromAmounts(Decimal scheduledAmount, Decimal paidAmount, Decimal balanceAmount) {
+        Decimal safeScheduledAmount = scheduledAmount == null ? 0 : scheduledAmount;
+        Decimal safePaidAmount = paidAmount == null ? 0 : paidAmount;
+        Decimal safeBalanceAmount = balanceAmount == null ? 0 : balanceAmount;
+
+        if (safeScheduledAmount > 0 && safeBalanceAmount <= 0) {
+            return 'Fully Paid';
+        }
+        if (safePaidAmount > 0) {
+            return 'Partially Paid';
+        }
+        return 'Pending Payment';
     }
 
     private static String validateRequest(PaymentPlanRequest req) {

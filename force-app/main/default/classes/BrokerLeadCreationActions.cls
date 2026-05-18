@@ -326,6 +326,28 @@ public with sharing class BrokerLeadCreationActions {
         }
     }
 
+    private static String applyLeadEmailTokens(
+        String templateText,
+        Contact contact,
+        String safeLeadName,
+        String safeMobile,
+        String safeEmail,
+        String safeLeadType,
+        String safeStatus
+    ) {
+        if (templateText == null) {
+            return null;
+        }
+        String brokerName = String.isNotBlank(contact.FirstName) ? contact.FirstName : 'Broker';
+        return templateText
+            .replace('{{BrokerFirstName}}', brokerName)
+            .replace('{{LeadName}}', safeLeadName)
+            .replace('{{LeadMobile}}', safeMobile)
+            .replace('{{LeadEmail}}', safeEmail)
+            .replace('{{LeadType}}', safeLeadType)
+            .replace('{{LeadStatus}}', safeStatus);
+    }
+
     /**
      * Sends a lead creation notification email to the broker contact.
      * Errors in email sending do not fail the lead creation.
@@ -359,6 +381,40 @@ public with sharing class BrokerLeadCreationActions {
                 + '- Status: ' + safeStatus + '\n\n'
                 + 'Thank you,\n'
                 + 'Customer Support Team';
+
+            List<EmailTemplate> templates = [
+                SELECT Subject, Body
+                FROM EmailTemplate
+                WHERE DeveloperName = 'BrokerLeadCreatedAgentPortal'
+                LIMIT 1
+            ];
+            if (!templates.isEmpty()) {
+                EmailTemplate templateRecord = templates[0];
+                String templatedSubject = applyLeadEmailTokens(
+                    templateRecord.Subject,
+                    contact,
+                    safeLeadName,
+                    safeMobile,
+                    safeEmail,
+                    safeLeadType,
+                    safeStatus
+                );
+                String templatedBody = applyLeadEmailTokens(
+                    templateRecord.Body,
+                    contact,
+                    safeLeadName,
+                    safeMobile,
+                    safeEmail,
+                    safeLeadType,
+                    safeStatus
+                );
+                if (String.isNotBlank(templatedSubject)) {
+                    subject = templatedSubject;
+                }
+                if (String.isNotBlank(templatedBody)) {
+                    body = templatedBody;
+                }
+            }
 
             // Create and send email
             Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();

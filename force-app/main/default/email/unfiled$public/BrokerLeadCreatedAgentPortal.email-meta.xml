@@ -5,7 +5,7 @@
     <encodingKey>UTF-8</encodingKey>
     <name>Broker Lead Created - Agent Portal</name>
     <style>none</style>
-    <subject>Your Lead For {!Lead.FirstName} {!Lead.LastName} Has Been Created</subject>
+    <subject>Your Lead For {{LeadName}} Has Been Created</subject>
     <type>text</type>
     <uiType>Aloha</uiType>
 </EmailTemplate>

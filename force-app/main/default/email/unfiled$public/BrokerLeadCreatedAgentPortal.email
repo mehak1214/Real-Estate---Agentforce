@@ -1,8 +1,13 @@
-Dear {!Contact.FirstName},
+Dear {{BrokerFirstName}},
 
 Thank you for creating a lead through Agentforce. The lead has been captured successfully in our system.
 
-Your lead creation request has been submitted successfully.
+Lead Details:
+- Name: {{LeadName}}
+- Mobile: {{LeadMobile}}
+- Email: {{LeadEmail}}
+- Lead Type: {{LeadType}}
+- Status: {{LeadStatus}}
 
 Our team will process this lead and keep you updated on progress.
 

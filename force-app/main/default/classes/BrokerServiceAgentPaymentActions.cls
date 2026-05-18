@@ -209,8 +209,9 @@ public with sharing class BrokerServiceAgentPaymentActions {
                         Decimal detailBalanceAmount = 0;
 
                         for (AR_Invoice__c invoice : invoices) {
-                            InvoiceDetail invoiceDetail = buildInvoiceDetail(invoice);
                             List<ReceiptApplicationDetail> invoiceReceiptApplications = receiptApplicationsByInvoiceId.get(invoice.Id);
+                            Decimal invoiceAppliedAmount = getInvoiceAppliedAmount(invoice, invoiceReceiptApplications);
+                            InvoiceDetail invoiceDetail = buildInvoiceDetail(invoice, invoiceAppliedAmount);
                             if (invoiceReceiptApplications != null) {
                                 invoiceDetail.receiptApplications = invoiceReceiptApplications;
                             }
@@ -259,8 +260,15 @@ public with sharing class BrokerServiceAgentPaymentActions {
                 response.opportunityName = opportunity.Name;
                 response.unitProperty = opportunity.Unit__r == null ? null : opportunity.Unit__r.Name;
                 response.totalAmount = totalAmount;
+                Decimal opportunityPaidReceiptAmount = getOpportunityPaidReceiptAmount(opportunity.Id);
+                if (paidAmount < opportunityPaidReceiptAmount) {
+                    paidAmount = opportunityPaidReceiptAmount;
+                }
                 response.paidAmount = paidAmount;
                 response.outstandingAmount = totalAmount - paidAmount;
+                if (response.outstandingAmount < 0) {
+                    response.outstandingAmount = 0;
+                }
             } catch (Exception e) {
                 System.debug('Error fetching payment plan: ' + e.getMessage());
                 response.status = 'Error';
@@ -285,7 +293,7 @@ public with sharing class BrokerServiceAgentPaymentActions {
         }
 
         for (AR_Invoice__c invoice : [
-            SELECT Id, Name, Invoice_Number__c, Amount__c, Trigger_Amount__c,
+            SELECT Id, Name, Invoice_Number__c, Amount__c, Trigger_Amount__c, Applied_Amount__c,
                 Status__c, Invoice_Date__c, Payment_Plan_Detail__c
             FROM AR_Invoice__c
             WHERE Payment_Plan_Detail__c IN :paymentPlanDetailIds
@@ -364,7 +372,7 @@ public with sharing class BrokerServiceAgentPaymentActions {
         return receiptApplicationsByInvoiceId;
     }
 
-    private static InvoiceDetail buildInvoiceDetail(AR_Invoice__c invoice) {
+    private static InvoiceDetail buildInvoiceDetail(AR_Invoice__c invoice, Decimal appliedAmount) {
         InvoiceDetail detail = new InvoiceDetail();
         detail.invoiceName = invoice.Name;
         detail.invoiceNumber = invoice.Invoice_Number__c;
@@ -372,13 +380,31 @@ public with sharing class BrokerServiceAgentPaymentActions {
         detail.status = invoice.Status__c;
         detail.invoiceDate = invoice.Invoice_Date__c;
         detail.receiptApplications = new List<ReceiptApplicationDetail>();
-        detail.balanceAmount = getInvoiceBalanceAmount(invoice);
-        detail.paidAmount = (invoice.Amount__c == null ? 0 : invoice.Amount__c)
-            - (detail.balanceAmount == null ? 0 : detail.balanceAmount);
+        detail.paidAmount = appliedAmount == null ? 0 : appliedAmount;
+        detail.balanceAmount = (invoice.Amount__c == null ? 0 : invoice.Amount__c) - detail.paidAmount;
         if (detail.paidAmount < 0) {
             detail.paidAmount = 0;
         }
+        if (detail.balanceAmount < 0) {
+            detail.balanceAmount = 0;
+        }
         return detail;
+    }
+
+    private static Decimal getInvoiceAppliedAmount(AR_Invoice__c invoice, List<ReceiptApplicationDetail> receiptApplications) {
+        Decimal appliedAmount = invoice.Applied_Amount__c == null ? 0 : invoice.Applied_Amount__c;
+        if (appliedAmount > 0) {
+            return appliedAmount;
+        }
+
+        Decimal receiptAppliedAmount = 0;
+        if (receiptApplications != null) {
+            for (ReceiptApplicationDetail receiptApplication : receiptApplications) {
+                receiptAppliedAmount += receiptApplication.appliedAmount == null ? 0 : receiptApplication.appliedAmount;
+            }
+        }
+
+        return receiptAppliedAmount;
     }
 
     private static ReceiptApplicationDetail buildReceiptApplicationDetail(AR_Applied_For__c appliedRecord) {
@@ -400,10 +426,10 @@ public with sharing class BrokerServiceAgentPaymentActions {
         if (invoice.Status__c == 'Fully Paid') {
             return 0;
         }
-        if (invoice.Trigger_Amount__c != null) {
-            return invoice.Trigger_Amount__c;
-        }
-        return invoice.Amount__c == null ? 0 : invoice.Amount__c;
+        Decimal appliedAmount = invoice.Applied_Amount__c == null ? 0 : invoice.Applied_Amount__c;
+        Decimal invoiceAmount = invoice.Amount__c == null ? 0 : invoice.Amount__c;
+        Decimal balanceAmount = invoiceAmount - appliedAmount;
+        return balanceAmount < 0 ? 0 : balanceAmount;
     }
 
     private static String getPaymentStatusFromAmounts(Decimal scheduledAmount, Decimal paidAmount, Decimal balanceAmount) {
@@ -418,6 +444,31 @@ public with sharing class BrokerServiceAgentPaymentActions {
             return 'Partially Paid';
         }
         return 'Pending Payment';
+    }
+
+    private static Decimal getOpportunityPaidReceiptAmount(Id opportunityId) {
+        if (opportunityId == null) {
+            return 0;
+        }
+
+        Decimal paidReceiptAmount = 0;
+        for (AR_Receipt__c receipt : [
+            SELECT Id, Amount__c, Applied_Amount__c, Trigger_Amount__c, Status__c, Financial_Status__c
+            FROM AR_Receipt__c
+            WHERE Opportunity__c = :opportunityId
+            AND Financial_Status__c != 'Reversed'
+            AND Status__c != 'Cancelled'
+            ORDER BY Payment_Date__c ASC, CreatedDate ASC
+        ]) {
+            Decimal appliedAmount = receipt.Applied_Amount__c;
+            if (appliedAmount == null && receipt.Amount__c != null && receipt.Trigger_Amount__c != null) {
+                appliedAmount = receipt.Amount__c - receipt.Trigger_Amount__c;
+            }
+
+            paidReceiptAmount += appliedAmount == null ? 0 : appliedAmount;
+        }
+
+        return paidReceiptAmount;
     }
 
     private static String validateRequest(PaymentPlanRequest req) {

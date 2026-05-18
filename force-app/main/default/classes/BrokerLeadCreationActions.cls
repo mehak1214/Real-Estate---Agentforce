@@ -204,6 +204,16 @@ public with sharing class BrokerLeadCreationActions {
             output.message = 'Unexpected error: ' + e.getMessage();
         }
         
+        // Send notification email to broker contact (outside lead creation try-catch)
+        // Email errors are logged but don't affect lead creation response
+        if (output.status == 'Success' && String.isNotBlank(output.leadId)) {
+            Contact brokerContact = resolveLoggedInBrokerContact();
+            Lead leadForEmail = queryLeadForEmail(output.leadId);
+            if (brokerContact != null && brokerContact.Id != null && leadForEmail != null) {
+                sendLeadCreationEmail(brokerContact.Id, leadForEmail);
+            }
+        }
+        
         outputs.add(output);
         return outputs;
     }
@@ -293,6 +303,94 @@ public with sharing class BrokerLeadCreationActions {
         try {
             return Id.valueOf(idText);
         } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private static Lead queryLeadForEmail(String leadIdText) {
+        Id leadId = parseId(leadIdText);
+        if (leadId == null || leadId.getSObjectType() != Lead.SObjectType) {
+            return null;
+        }
+        try {
+            List<Lead> leads = [
+                SELECT Id, FirstName, LastName, MobilePhone, Email, Status, Lead_Type__c
+                FROM Lead
+                WHERE Id = :leadId
+                LIMIT 1
+            ];
+            return leads.isEmpty() ? null : leads[0];
+        } catch (Exception e) {
+            System.debug(LoggingLevel.ERROR, 'Error querying lead for email: ' + e.getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Sends a lead creation notification email to the broker contact.
+     * Errors in email sending do not fail the lead creation.
+     */
+    private static void sendLeadCreationEmail(Id contactId, Lead leadRecord) {
+        try {
+            // Query contact email using the provided contactId
+            Contact contact = queryContactEmail(contactId);
+            if (contact == null || String.isBlank(contact.Email)) {
+                System.debug(LoggingLevel.WARN, 'Contact email not found for contact ID: ' + contactId);
+                return;
+            }
+
+            String leadName = (String.isNotBlank(leadRecord.FirstName) ? leadRecord.FirstName + ' ' : '')
+                + (String.isNotBlank(leadRecord.LastName) ? leadRecord.LastName : '');
+            String safeLeadName = String.isNotBlank(leadName) ? leadName : 'N/A';
+            String safeMobile = String.isNotBlank(leadRecord.MobilePhone) ? leadRecord.MobilePhone : 'N/A';
+            String safeEmail = String.isNotBlank(leadRecord.Email) ? leadRecord.Email : 'N/A';
+            String safeStatus = String.isNotBlank(leadRecord.Status) ? leadRecord.Status : 'N/A';
+            String safeLeadType = String.isNotBlank(leadRecord.Lead_Type__c) ? leadRecord.Lead_Type__c : 'N/A';
+
+            String subject = 'Lead Created Successfully - ' + safeLeadName;
+            String body =
+                'Dear ' + (String.isNotBlank(contact.FirstName) ? contact.FirstName : 'Broker') + ',\n\n'
+                + 'Your lead has been created successfully through Agentforce.\n\n'
+                + 'Lead Details:\n'
+                + '- Name: ' + safeLeadName + '\n'
+                + '- Mobile: ' + safeMobile + '\n'
+                + '- Email: ' + safeEmail + '\n'
+                + '- Lead Type: ' + safeLeadType + '\n'
+                + '- Status: ' + safeStatus + '\n\n'
+                + 'Thank you,\n'
+                + 'Customer Support Team';
+
+            // Create and send email
+            Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
+            mail.setToAddresses(new List<String>{contact.Email});
+            mail.setSubject(subject);
+            mail.setPlainTextBody(body);
+            mail.setTargetObjectId(contactId);
+            mail.setSaveAsActivity(false);
+
+            Messaging.sendEmail(new List<Messaging.SingleEmailMessage>{mail});
+            System.debug(LoggingLevel.INFO, 'Broker lead notification email sent to: ' + contact.Email);
+
+        } catch (QueryException qe) {
+            System.debug(LoggingLevel.ERROR, 'Query error sending broker lead email: ' + qe.getMessage());
+        } catch (Exception e) {
+            System.debug(LoggingLevel.ERROR, 'Error sending broker lead notification email: ' + e.getMessage());
+        }
+    }
+
+    /**
+     * Queries contact email by ID.
+     * Used for sending notifications to broker contacts.
+     */
+    private static Contact queryContactEmail(Id contactId) {
+        if (contactId == null) {
+            return null;
+        }
+        try {
+            List<Contact> contacts = [SELECT Id, Email, FirstName FROM Contact WHERE Id = :contactId LIMIT 1];
+            return contacts.isEmpty() ? null : contacts[0];
+        } catch (Exception e) {
+            System.debug(LoggingLevel.ERROR, 'Error querying contact: ' + e.getMessage());
             return null;
         }
     }

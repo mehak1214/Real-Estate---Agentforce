@@ -193,7 +193,8 @@ Creates a broker support Case linked to the logged-in broker contact.
 | `description` | Yes | Case description |
 | `caseType` | Yes | Case type, mapped to `Case.Type` |
 | `priority` | No | Case priority |
-| `bookingUnitId` | No | Optional related Booking Unit Id |
+| `bookingUnitId` | No | Optional related Booking Unit Id (format starts with 'a3a') |
+| `bookingName` | No | Optional related Booking Unit name (format starts with 'booking unit') |
 | `relatedOpportunityId` | No | Optional related Opportunity Id |
 | `relatedUnitId` | No | Optional related Unit Id |
 | `relatedCommissionId` | No | Optional related Commission Id |

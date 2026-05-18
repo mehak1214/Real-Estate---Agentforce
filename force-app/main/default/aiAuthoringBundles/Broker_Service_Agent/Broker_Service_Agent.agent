@@ -181,7 +181,13 @@ subagent CaseManagement:
                     is_required: False
                 bookingUnitId: id
                     label: "Booking Unit ID"
-                    description: "Salesforce Booking Unit record ID related to this case. Optional — pass only if the broker provides a valid Salesforce record ID. Do not ask the broker for a Salesforce ID."
+                    description: "Salesforce Booking Unit record ID related to this case. Optional — pass only if the broker provides a valid Salesforce record ID. Booking Unit ID starts with 'a3a'. Do not ask the broker for a Salesforce ID."
+                    is_required: False
+                    is_user_input: False
+                    is_displayable: False
+                bookingName: string
+                    label: "Booking Name"
+                    description: "Booking Unit name related to this case. Optional — pass only if the broker provides a booking name. Booking names typically start with 'booking unit'. Do not ask the broker if not provided."
                     is_required: False
                     is_user_input: False
                     is_displayable: False
@@ -228,7 +234,10 @@ subagent CaseManagement:
              - Subject: a short one-line summary of the issue
              - Description: a detailed explanation of the problem
              - Priority: Low, Medium, or High (optional; default to Medium if not provided)
-             Do not ask the broker for any Salesforce record IDs (Booking Unit ID, Opportunity ID, Unit ID, etc.). These are internal identifiers the broker does not have.
+             When the broker mentions a booking, ask if they want to include the booking reference. If provided:
+             - If it's a Salesforce Booking Unit ID (format: starts with 'a3a'), use bookingUnitId
+             - If it's a booking name (format: starts with 'booking unit'), use bookingName
+             Do not ask the broker for other Salesforce record IDs (Opportunity ID, Unit ID, etc.). These are internal identifiers the broker does not have.
 
              BEFORE CREATING THE CASE:
              Summarize the collected details once and ask the broker to confirm:
@@ -240,7 +249,7 @@ subagent CaseManagement:
              AFTER BROKER CONFIRMS:
              Immediately call the Create Broker Case action with the collected details.
              Do not pass brokerContactId. Apex resolves the broker contact from User.ContactId, with User.ContactId__c as an admin testing fallback.
-             Leave bookingUnitId, relatedOpportunityId, relatedUnitId, relatedCommissionId, and relatedLeadId blank unless the broker explicitly provides a Salesforce record ID.
+             Leave bookingUnitId, bookingName, relatedOpportunityId, relatedUnitId, relatedCommissionId, and relatedLeadId blank unless the broker explicitly provides them.
              Do not delay case creation after confirmation.
              Do not tell the broker the case is created unless the action returns a Success status.
 
@@ -266,6 +275,7 @@ subagent CaseManagement:
                 with caseType = ...
                 with priority = ...
                 with bookingUnitId = ...
+                with bookingName = ...
                 with relatedOpportunityId = ...
                 with relatedUnitId = ...
                 with relatedCommissionId = ...

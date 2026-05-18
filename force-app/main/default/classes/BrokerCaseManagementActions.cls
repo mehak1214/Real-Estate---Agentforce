@@ -24,6 +24,9 @@ public with sharing class BrokerCaseManagementActions {
         @InvocableVariable(label='Booking Unit ID' required=false)
         public Id bookingUnitId;
 
+        @InvocableVariable(label='Booking Name' required=false)
+        public String bookingName;
+
         @InvocableVariable(label='Related Opportunity ID')
         public String relatedOpportunityId;
 
@@ -95,6 +98,14 @@ public with sharing class BrokerCaseManagementActions {
                 return responses;
             }
 
+            Id relatedBookingId = resolveRelatedBookingId(req, brokerContactId);
+            if (req.bookingUnitId == null && String.isNotBlank(req.bookingName) && relatedBookingId == null) {
+                res.status  = 'Error';
+                res.message = 'No broker-accessible booking was found for the provided Booking Name.';
+                responses.add(res);
+                return responses;
+            }
+
             // Get the broker_service Case record type.
             List<RecordType> rtList = [
                 SELECT Id
@@ -120,7 +131,7 @@ public with sharing class BrokerCaseManagementActions {
             newCase.Status       = 'New';
             newCase.Origin       = 'Agentforce';
             newCase.ContactId    = brokerContactId;
-            newCase.Related_Booking__c = req.bookingUnitId;
+            newCase.Related_Booking__c = relatedBookingId;
 
             if (String.isNotBlank(req.priority)) {
                 newCase.Priority = req.priority; 
@@ -201,6 +212,41 @@ public with sharing class BrokerCaseManagementActions {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    private static Id resolveRelatedBookingId(Request req, Id brokerContactId) {
+        if (req == null) {
+            return null;
+        }
+        if (req.bookingUnitId != null) {
+            return req.bookingUnitId;
+        }
+        if (String.isBlank(req.bookingName)) {
+            return null;
+        }
+
+        List<Contact> contacts = [
+            SELECT Id, AccountId
+            FROM Contact
+            WHERE Id = :brokerContactId
+            LIMIT 1
+        ];
+        if (contacts.isEmpty() || contacts[0].AccountId == null) {
+            return null;
+        }
+
+        Id brokerAccountId = contacts[0].AccountId;
+        String bookingNameLike = '%' + req.bookingName.trim() + '%';
+        List<Booking_Unit__c> bookings = [
+            SELECT Id
+            FROM Booking_Unit__c
+            WHERE Name LIKE :bookingNameLike
+            AND Opportunity__c != null
+            AND Opportunity__r.Channel_Partner__c = :brokerAccountId
+            ORDER BY CreatedDate DESC
+            LIMIT 1
+        ];
+        return bookings.isEmpty() ? null : bookings[0].Id;
     }
 
     /**

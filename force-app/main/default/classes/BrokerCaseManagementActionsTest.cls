@@ -97,7 +97,6 @@ public class BrokerCaseManagementActionsTest {
 
     /**
      * Test case creation with email flag but contact has no email (should not break case creation)
-     */hen contact has no email (should not break case creation)
      */
     @isTest
     static void testCreateBrokerCaseContactWithoutEmail() {

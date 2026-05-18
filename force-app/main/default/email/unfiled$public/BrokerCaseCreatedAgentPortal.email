@@ -2,7 +2,7 @@ Dear {!Contact.FirstName},
 
 Thank you for creating a support case through Agentforce. We appreciate your business and your inquiry is important to us.
 
-**Case Details:**
+Case Details:
 - Case Number: {!Case.CaseNumber}
 - Subject: {!Case.Subject}
 - Status: New

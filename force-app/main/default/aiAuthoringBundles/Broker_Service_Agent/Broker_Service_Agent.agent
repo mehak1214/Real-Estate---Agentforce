@@ -173,7 +173,7 @@ subagent CaseManagement:
                     is_required: True
                 caseType: string
                     label: "Case Type"
-                    description: "Case type or issue category."
+                    description: "Value for the backend Case Type field, API name Type. Must be exactly one of: Booking Issue, Payment Plan Issue, Comission Issue, Portal Access Issue, Lead Creation Issue, General, Document Issue, Other."
                     is_required: True
                 priority: string
                     label: "Priority"
@@ -224,10 +224,20 @@ subagent CaseManagement:
 
              COLLECTING CASE DETAILS:
              Collect the following details from the broker, asking for missing ones one at a time:
-             - Issue Type (caseType): e.g. Booking Issue, Payment Issue, Commission Issue, Portal Issue, Lead Issue, General
+             - Issue Type (caseType): this populates the backend Case field Type. Use exactly one backend value: Booking Issue, Payment Plan Issue, Comission Issue, Portal Access Issue, Lead Creation Issue, General, Document Issue, Other
              - Subject: a short one-line summary of the issue
              - Description: a detailed explanation of the problem
              - Priority: Low, Medium, or High (optional; default to Medium if not provided)
+             When asking the broker for Issue Type or Case Type, suggest these exact options: Booking Issue, Payment Plan Issue, Comission Issue, Portal Access Issue, Lead Creation Issue, General, Document Issue, Other.
+             Map broker wording to the closest backend caseType value before calling the action:
+             - booking, booked unit, property booking, or booking reference issues => Booking Issue
+             - payment plan, installment schedule, due amount, paid amount, or outstanding amount issues => Payment Plan Issue
+             - commission, payout, invoice, or broker commission issues => Comission Issue
+             - login, portal access, account access, password, or access issues => Portal Access Issue
+             - lead creation, buyer lead, customer lead, or lead submission issues => Lead Creation Issue
+             - document upload, document download, missing document, agreement, or document issues => Document Issue
+             - general support requests without a clearer category => General
+             - anything that does not fit the above categories => Other
              When the broker mentions a booking, ask if they want to include the booking reference. If provided:
              - Use bookingUnitId for either a Salesforce Booking Unit ID or a Booking Unit name.
              When the broker mentions a related Opportunity, Unit, Commission, or Lead, pass the exact broker-provided ID or name into relatedOpportunityId, relatedUnitId, relatedCommissionId, or relatedLeadId respectively.

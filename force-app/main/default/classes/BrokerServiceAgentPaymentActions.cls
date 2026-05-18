@@ -8,23 +8,14 @@ public with sharing class BrokerServiceAgentPaymentActions {
         @InvocableVariable(label='Broker Contact ID') 
         public Id brokerContactId;
 
-        @InvocableVariable(label='Opportunity ID')
-        public Id opportunityId; 
+        @InvocableVariable(label='Opportunity ID or Name')
+        public String opportunityId;
 
-        @InvocableVariable(label='Opportunity Name')
-        public String opportunityName;
+        @InvocableVariable(label='Booking Unit ID or Name')
+        public String bookingUnitId;
 
-        @InvocableVariable(label='Booking Unit ID')
-        public Id bookingUnitId;
-
-        @InvocableVariable(label='Booking Unit Name')
-        public String bookingUnitName;
-
-        @InvocableVariable(label='Unit ID')
-        public Id unitId;
-
-        @InvocableVariable(label='Unit Name')
-        public String unitName;
+        @InvocableVariable(label='Unit ID or Name')
+        public String unitId;
     }
 
     public class PaymentDetail {
@@ -178,13 +169,10 @@ public with sharing class BrokerServiceAgentPaymentActions {
         }
         // Supported references: Opportunity Id/Name, Booking Unit Id/Name, or Unit Id/Name.
         // Booking Unit and Unit lookups resolve through Booking_Unit__c.Opportunity__c.
-        if (req.opportunityId == null
-            && String.isBlank(req.opportunityName)
-            && req.bookingUnitId == null
-            && String.isBlank(req.bookingUnitName)
-            && req.unitId == null
-            && String.isBlank(req.unitName)) {
-            return 'Please provide an Opportunity ID, Opportunity Name, Booking Unit ID, Booking Unit Name, Unit ID, or Unit Name.';
+        if (String.isBlank(req.opportunityId)
+            && String.isBlank(req.bookingUnitId)
+            && String.isBlank(req.unitId)) {
+            return 'Please provide an Opportunity ID or Name, Booking Unit ID or Name, or Unit ID or Name.';
         }
         return null;
     }
@@ -230,33 +218,27 @@ public with sharing class BrokerServiceAgentPaymentActions {
     }
 
     private static Opportunity findBrokerOpportunity(PaymentPlanRequest req, Id brokerAccountId) {
-        if (req.opportunityId != null) {
-            return getFirstOpportunity([
-                SELECT Id, Name, Unit__c, Unit__r.Name
-                FROM Opportunity
-                WHERE Id = :req.opportunityId
-                AND Channel_Partner__c = :brokerAccountId
-                LIMIT 1
-            ]);
+        if (String.isNotBlank(req.opportunityId)) {
+            return findBrokerOpportunityByOpportunityReference(req.opportunityId, brokerAccountId);
         }
 
-        if (req.bookingUnitId != null) {
-            return findBrokerOpportunityByBookingUnitId(req.bookingUnitId, brokerAccountId);
+        if (String.isNotBlank(req.bookingUnitId)) {
+            return findBrokerOpportunityByBookingUnitReference(req.bookingUnitId, brokerAccountId);
         }
 
-        if (String.isNotBlank(req.bookingUnitName)) {
-            return findBrokerOpportunityByBookingUnitName(req.bookingUnitName, brokerAccountId);
+        return findBrokerOpportunityByUnitReference(req.unitId, brokerAccountId);
+    }
+
+    private static Opportunity findBrokerOpportunityByOpportunityReference(String opportunityReference, Id brokerAccountId) {
+        String reference = opportunityReference.trim();
+        Id opportunityId = parseId(reference);
+        if (opportunityId != null) {
+            return opportunityId.getSObjectType() == Opportunity.SObjectType
+                ? getBrokerOpportunityById(opportunityId, brokerAccountId)
+                : null;
         }
 
-        if (req.unitId != null) {
-            return findBrokerOpportunityByUnitId(req.unitId, brokerAccountId);
-        }
-
-        if (String.isNotBlank(req.unitName)) {
-            return findBrokerOpportunityByUnitName(req.unitName, brokerAccountId);
-        }
-
-        String opportunityNameLike = '%' + req.opportunityName.trim() + '%';
+        String opportunityNameLike = '%' + reference + '%';
         return getFirstOpportunity([
             SELECT Id, Name, Unit__c, Unit__r.Name
             FROM Opportunity
@@ -267,23 +249,16 @@ public with sharing class BrokerServiceAgentPaymentActions {
         ]);
     }
 
-    private static Opportunity findBrokerOpportunityByBookingUnitId(Id bookingUnitId, Id brokerAccountId) {
-        List<Booking_Unit__c> bookings = [
-            SELECT Id, Opportunity__c, Unit__c, Unit__r.Name
-            FROM Booking_Unit__c
-            WHERE Id = :bookingUnitId
-            LIMIT 1
-        ];
-
-        if (bookings.isEmpty() || bookings[0].Opportunity__c == null) {
-            return null;
+    private static Opportunity findBrokerOpportunityByBookingUnitReference(String bookingUnitReference, Id brokerAccountId) {
+        String reference = bookingUnitReference.trim();
+        Id bookingUnitId = parseId(reference);
+        if (bookingUnitId != null) {
+            return bookingUnitId.getSObjectType() == Booking_Unit__c.SObjectType
+                ? findBrokerOpportunityByBookingUnitId(bookingUnitId, brokerAccountId)
+                : null;
         }
 
-        return getBrokerOpportunityById(bookings[0].Opportunity__c, brokerAccountId);
-    }
-
-    private static Opportunity findBrokerOpportunityByBookingUnitName(String bookingUnitName, Id brokerAccountId) {
-        String bookingUnitNameLike = '%' + bookingUnitName.trim() + '%';
+        String bookingUnitNameLike = '%' + reference + '%';
         List<Booking_Unit__c> bookings = [
             SELECT Id, Opportunity__c, Unit__c, Unit__r.Name
             FROM Booking_Unit__c
@@ -301,30 +276,32 @@ public with sharing class BrokerServiceAgentPaymentActions {
         return getBrokerOpportunityById(bookings[0].Opportunity__c, brokerAccountId);
     }
 
-    private static Opportunity findBrokerOpportunityByUnitId(Id unitId, Id brokerAccountId) {
+    private static Opportunity findBrokerOpportunityByBookingUnitId(Id bookingUnitId, Id brokerAccountId) {
         List<Booking_Unit__c> bookings = [
             SELECT Id, Opportunity__c, Unit__c, Unit__r.Name
             FROM Booking_Unit__c
-            WHERE Unit__c = :unitId
-            AND Opportunity__c != null
-            AND Opportunity__r.Channel_Partner__c = :brokerAccountId
-            ORDER BY CreatedDate DESC
+            WHERE Id = :bookingUnitId
             LIMIT 1
         ];
 
-        if (bookings.isEmpty()) {
+        if (bookings.isEmpty() || bookings[0].Opportunity__c == null) {
             return null;
         }
 
         return getBrokerOpportunityById(bookings[0].Opportunity__c, brokerAccountId);
     }
 
-    private static Opportunity findBrokerOpportunityByUnitName(String unitName, Id brokerAccountId) {
-        String unitNameLike = '%' + unitName.trim() + '%';
+    private static Opportunity findBrokerOpportunityByUnitReference(String unitReference, Id brokerAccountId) {
+        String reference = unitReference.trim();
+        Id unitId = parseId(reference);
+        if (unitId != null && unitId.getSObjectType() != Unit__c.SObjectType) {
+            return null;
+        }
+        String unitNameLike = '%' + reference + '%';
         List<Booking_Unit__c> bookings = [
             SELECT Id, Opportunity__c, Unit__c, Unit__r.Name
             FROM Booking_Unit__c
-            WHERE Unit__r.Name LIKE :unitNameLike
+            WHERE (Unit__c = :unitId OR Unit__r.Name LIKE :unitNameLike)
             AND Opportunity__c != null
             AND Opportunity__r.Channel_Partner__c = :brokerAccountId
             ORDER BY CreatedDate DESC
@@ -346,6 +323,17 @@ public with sharing class BrokerServiceAgentPaymentActions {
             AND Channel_Partner__c = :brokerAccountId
             LIMIT 1
         ]);
+    }
+
+    private static Id parseId(String idText) {
+        if (String.isBlank(idText)) {
+            return null;
+        }
+        try {
+            return Id.valueOf(idText.trim());
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     private static Opportunity getFirstOpportunity(List<Opportunity> opportunities) {

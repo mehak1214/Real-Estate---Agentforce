@@ -111,14 +111,7 @@ subagent CaseManagement:
             target: "apex://BrokerCaseTrackingActions"
             require_user_confirmation: False
             include_in_progress_indicator: True
-            inputs: 
-                brokerContactId: id
-                    label: "Broker Contact ID"
-                    description: "Apex resolves the broker contact from User.ContactId, with User.ContactId__c as an admin testing fallback."
-                    is_required: False
-                    is_user_input: False
-                    is_displayable: False
-                    complex_data_type_name: "lightning__recordIdType"
+            inputs:
                 caseNumber: string
                     label: "Case Number"
                     description: "Broker-visible Case Number to retrieve. Optional."
@@ -156,13 +149,6 @@ subagent CaseManagement:
             require_user_confirmation: False
             include_in_progress_indicator: True
             inputs:
-                brokerContactId: id
-                    label: "Broker Contact ID"
-                    description: "Apex resolves the broker contact from User.ContactId, with User.ContactId__c as an admin testing fallback."
-                    is_required: False
-                    is_user_input: False
-                    is_displayable: False
-                    complex_data_type_name: "lightning__recordIdType"
                 subject: string
                     label: "Subject"
                     description: "Short subject of the broker support case."
@@ -303,13 +289,6 @@ subagent Payment_Plan:
             require_user_confirmation: False
             include_in_progress_indicator: True
             inputs:
-                brokerContactId: id
-                    label: "Broker Contact ID"
-                    description: "Apex resolves the broker contact from User.ContactId, with User.ContactId__c as an admin testing fallback."
-                    is_required: False
-                    is_user_input: False
-                    is_displayable: False
-                    complex_data_type_name: "lightning__recordIdType"
                 opportunityId: string
                     label: "Opportunity ID or Name"
                     description: "Opportunity record ID or Opportunity name for the booked property whose payment plan should be retrieved."
@@ -629,13 +608,6 @@ subagent Commission_Status:
             require_user_confirmation: False
             include_in_progress_indicator: True
             inputs:
-                brokerContactId: id
-                    label: "Broker Contact ID"
-                    description: "Apex resolves the broker contact from User.ContactId, with User.ContactId__c as an admin testing fallback."
-                    is_required: False
-                    is_user_input: False
-                    is_displayable: False
-                    complex_data_type_name: "lightning__recordIdType"
                 daysBack: integer
                     label: "Date Range Days"
                     description: "Optional number of days to look back. If omitted, Apex uses the default date range."

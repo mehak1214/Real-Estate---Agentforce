@@ -5,10 +5,6 @@
 public with sharing class BrokerCommissionActions {
 
     public class CommissionQueryInput {
-        // Broker identity is resolved from User.ContactId, then User.ContactId__c for admin testing.
-        @InvocableVariable(label='Broker Contact ID' required=false description='Not used. Apex resolves the broker contact from User.ContactId, then User.ContactId__c for admin testing.')
-        public Id brokerContactId;
-
         @InvocableVariable(label='Date Range (Days)' required=false description='Number of days to look back (default: current month)')
         public Integer daysBack;
         

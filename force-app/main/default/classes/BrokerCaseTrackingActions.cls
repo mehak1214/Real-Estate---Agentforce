@@ -4,10 +4,6 @@
 public with sharing class BrokerCaseTrackingActions {
 
     public class Request {
-        // Broker identity is resolved from User.ContactId, then User.ContactId__c for admin testing.
-        @InvocableVariable(label='Broker Contact ID')
-        public Id brokerContactId;
-
         @InvocableVariable(label='Case Number')
         public String caseNumber;
 

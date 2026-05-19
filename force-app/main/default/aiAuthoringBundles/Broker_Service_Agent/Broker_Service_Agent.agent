@@ -111,19 +111,22 @@ subagent CaseManagement:
             target: "apex://BrokerCaseTrackingActions"
             require_user_confirmation: False
             include_in_progress_indicator: True
-            inputs:
+            inputs: 
                 caseNumber: string
                     label: "Case Number"
                     description: "Broker-visible Case Number to retrieve. Optional."
                     is_required: False
+                    complex_data_type_name: "lightning__textType"
                 statusFilter: string
                     label: "Status"
                     description: "Optional case status filter. Use exactly one of: New, Working, Escalated, Closed."
                     is_required: False
+                    complex_data_type_name: "lightning__textType"
                 limitSize: integer
                     label: "Limit Size"
                     description: "Maximum number of recent broker cases to return."
                     is_required: False
+                    complex_data_type_name: "lightning__integerType"
             outputs:
                 status: string
                     label: "Status"
@@ -153,40 +156,49 @@ subagent CaseManagement:
                     label: "Subject"
                     description: "Short subject of the broker support case."
                     is_required: True
+                    complex_data_type_name: "lightning__textType"
                 description: string
                     label: "Description"
                     description: "Detailed description of the broker issue."
                     is_required: True
+                    complex_data_type_name: "lightning__textType"
                 caseType: string
                     label: "Case Type"
                     description: "Value for the backend Case Type field, API name Type. Must be exactly one of: Booking Issue, Payment Plan Issue, Comission Issue, Portal Access Issue, Lead Creation Issue, General, Document Issue, Other."
                     is_required: True
+                    complex_data_type_name: "lightning__textType"
                 priority: string
                     label: "Priority"
                     description: "Priority value such as Low, Medium, or High."
                     is_required: False
+                    complex_data_type_name: "lightning__textType"
                 bookingUnitId: string
                     label: "Booking Unit ID or Name"
                     description: "Optional related Booking Unit record ID or Booking Unit name. Pass the broker-provided booking reference here whether it is an ID or a name."
                     is_required: False
+                    complex_data_type_name: "lightning__textType"
                     is_user_input: False
                     is_displayable: False
                 relatedOpportunityId: string
                     label: "Related Opportunity ID or Name"
                     description: "Optional related Opportunity record ID or Opportunity name. Pass the broker-provided name when they mention an opportunity by name."
                     is_required: False
+                    complex_data_type_name: "lightning__textType"
                 relatedUnitId: string
                     label: "Related Unit ID or Name"
                     description: "Optional related Unit record ID or Unit name. Pass the broker-provided name when they mention a unit by name."
                     is_required: False
+                    complex_data_type_name: "lightning__textType"
                 relatedCommissionId: string
                     label: "Related Commission ID or Name"
                     description: "Optional related Commission record ID or Commission name. Pass the broker-provided name when they mention a commission by name."
                     is_required: False
+                    complex_data_type_name: "lightning__textType"
                 relatedLeadId: string
                     label: "Related Lead ID or Name"
                     description: "Optional related Lead record ID or Lead name. Pass the broker-provided name when they mention a lead by name."
                     is_required: False
+                    complex_data_type_name: "lightning__textType"
             outputs:
                 caseNumber: string
                     label: "Case Number"
@@ -243,7 +255,7 @@ subagent CaseManagement:
              Priority: [value]
 
              AFTER BROKER CONFIRMS:
-             Immediately call the Create Broker Case action with the collected details.
+             Immediately call the {!@actions.create_broker_case} action with the collected details.
              Do not pass brokerContactId. Apex resolves the broker contact from User.ContactId, with User.ContactId__c as an admin testing fallback.
              Leave bookingUnitId, relatedOpportunityId, relatedUnitId, relatedCommissionId, and relatedLeadId blank unless the broker explicitly provides them.
              Do not delay case creation after confirmation.
@@ -395,7 +407,7 @@ subagent Payment_Plan:
              If no supported reference is present, ask the broker for an Opportunity ID/Name, Booking Unit ID/Name, or Unit ID/Name before proceeding.
 
              STEP 2 — CALL THE ACTION:
-             Once a supported reference is available, immediately call the Get Payment Plan Details action.
+             Once a supported reference is available, immediately call {!@actions.get_payment_plan_details}.
              Do not pass brokerContactId. Apex resolves the broker contact from User.ContactId, with User.ContactId__c as an admin testing fallback.
              Pass opportunityId when the broker provides either an Opportunity ID or Opportunity Name.
              Pass bookingUnitId when the broker provides either a Booking Unit ID or Booking Unit Name.
@@ -466,46 +478,57 @@ subagent Lead_Creation:
                     label: "First Name"
                     description: "Buyer first name."
                     is_required: True
+                    complex_data_type_name: "lightning__textType"
                 lastName: string
                     label: "Last Name"
                     description: "Buyer last name."
                     is_required: True
+                    complex_data_type_name: "lightning__textType"
                 mobile: string
                     label: "Mobile"
                     description: "Buyer mobile number."
                     is_required: True
+                    complex_data_type_name: "lightning__textType"
                 phone: string
                     label: "Alternate Phone"
                     description: "Optional alternate phone number."
                     is_required: False
+                    complex_data_type_name: "lightning__textType"
                 email: string
                     label: "Email"
                     description: "Buyer email address."
                     is_required: False
+                    complex_data_type_name: "lightning__textType"
                 purchaser: string
                     label: "Purchaser"
                     description: "Required purchaser type. Allowed values: Individual, Group, Company."
                     is_required: True
+                    complex_data_type_name: "lightning__textType"
                 companyName: string
                     label: "Company Name"
                     description: "Required when Purchaser is Company."
                     is_required: False
+                    complex_data_type_name: "lightning__textType"
                 leadType: string
                     label: "Lead Type"
                     description: "Lead type. Allowed values: Enquiry, Booking. Defaults to Enquiry if not provided."
                     is_required: False
+                    complex_data_type_name: "lightning__textType"
                 projectInterest: string
                     label: "Project / Unit Interest"
                     description: "Project name or Project record ID the buyer is interested in."
                     is_required: False
+                    complex_data_type_name: "lightning__textType"
                 budget: string
                     label: "Budget"
                     description: "Budget if available."
                     is_required: False
+                    complex_data_type_name: "lightning__textType"
                 typeOfInterest: string
                     label: "Type of Interest"
                     description: "Required type of interest. Allowed values: BTS, LAND. Do not create the lead unless this value is collected."
                     is_required: True
+                    complex_data_type_name: "lightning__textType"
             outputs:
                 leadName: string
                     label: "Lead Name"
@@ -546,7 +569,7 @@ subagent Lead_Creation:
              Do not guess buyer details, project details, unit details, or broker attribution.
              Before creating the lead, summarize the captured lead details once and ask the broker to confirm.
              Do not create the lead until the broker confirms.
-             After successful lead creation, tell the broker the lead was created and show the leadName output and status if available. Do not show or ask for internal Salesforce Lead Ids.
+             After the broker confirms, immediately call {!@actions.create_buyer_lead} with the collected details. After successful lead creation, tell the broker the lead was created and show the leadName output and status if available. Do not show or ask for internal Salesforce Lead Ids.
              If a duplicate lead is found by the configured action, explain that a matching lead may already exist and show only broker-accessible duplicate details.
              Do not expose leads belonging to another broker, internal assignment rules, debug logs, hidden fields, or system fields.
              If the broker asks to update or convert a lead, explain that this subagent is currently configured for lead creation unless an approved action is available.
@@ -612,10 +635,12 @@ subagent Commission_Status:
                     label: "Date Range Days"
                     description: "Optional number of days to look back. If omitted, Apex uses the default date range."
                     is_required: False
+                    complex_data_type_name: "lightning__integerType"
                 statusFilter: string
                     label: "Status Filter"
                     description: "Optional commission status filter such as Pending, Paid, Approved, or Rejected."
                     is_required: False
+                    complex_data_type_name: "lightning__textType"
             outputs:
                 summary: string
                     label: "Commission Summary"
@@ -655,7 +680,7 @@ subagent Commission_Status:
             |Use this subagent when the broker asks about commission, payout, brokerage amount, commission percentage, pending commission, paid commission, rejected commission, invoice status, or payout status.
              Only show commission information related to the logged-in broker account or broker contact.
              If the broker asks for a specific status, pass it as statusFilter. If the broker provides a lookback period in days, pass it as daysBack.
-             Call the Get Commission Status action for commission status, paid commission, pending commission, brokerage amount, or payout status requests.
+             When the broker asks for commission status or payout information, immediately call {!@actions.get_commission_status} with the appropriate filters.
              Do not pass brokerContactId. Apex resolves the contact from User.ContactId, with User.ContactId__c as an admin testing fallback.
              When showing commission details, summarize the result clearly using an itemized list.
              Include commission record name or number if available, sales order, unit, broker name, unit cost, commission amount, commission percentage, status, and payout or paid date if available.
@@ -715,6 +740,7 @@ subagent Broker_Performance:
                     label: "Period"
                     description: "Optional period filter. Supported values: current_month, last_month, last_quarter, year_to_date."
                     is_required: False
+                    complex_data_type_name: "lightning__textType"
             outputs:
                 performancePeriod: string
                     label: "Performance Period"
@@ -768,7 +794,7 @@ subagent Broker_Performance:
         instructions: ->
             |Use this subagent when the broker asks about broker performance, monthly sales, sales count, conversion ratio, ranking, lead conversion, commission performance, target achievement, incentive eligibility, or broker KPIs.
              Only show performance information related to the logged-in broker account or broker contact.
-             Call the Get Broker Performance action for broker performance, monthly sales, conversion ratio, ranking, incentive, target, or KPI requests.
+             When the broker asks for performance metrics, immediately call {!@actions.get_broker_performance} with the appropriate period filter.
              If the broker asks for last month, last quarter, or year to date, pass period as last_month, last_quarter, or year_to_date. Otherwise leave period blank for current month.
              If the broker does not provide a date range, default to the current calendar month.
              If the broker asks for monthly performance, summarize metrics for the requested month.

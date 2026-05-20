@@ -1,0 +1,20 @@
+{
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "daysBack" : {
+      "title" : "Date Range (Days)",
+      "description" : "Number of days to look back (default: current month)",
+      "lightning:type" : "lightning__integerType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "statusFilter" : {
+      "title" : "Status Filter",
+      "description" : "Filter by status (Pending, Paid, Approved, Rejected)",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    }
+  },
+  "lightning:type" : "lightning__objectType"
+}

@@ -5,6 +5,10 @@
 public with sharing class BrokerCaseManagementActions {
 
     public class Request {
+        // Broker identity is resolved from User.ContactId, then User.ContactId__c for admin testing.
+        @InvocableVariable(label='Broker Contact ID')
+        public Id brokerContactId;
+
         @InvocableVariable(label='Subject' required=true)
         public String subject;
 
@@ -42,9 +46,6 @@ public with sharing class BrokerCaseManagementActions {
 
         @InvocableVariable(label='Message')
         public String message;
-
-        @InvocableVariable(label='Diagnostic Info')
-        public String diagnosticInfo;
     }
 
     @InvocableMethod(
@@ -98,9 +99,6 @@ public with sharing class BrokerCaseManagementActions {
             if (String.isNotBlank(req.bookingUnitId) && relatedBookingId == null) {
                 res.status  = 'Error';
                 res.message = 'No broker-accessible booking was found for the provided Booking Unit ID or Name.';
-                res.diagnosticInfo = 'Searched for booking name containing: ' + req.bookingUnitId + 
-                    ' | Broker Contact: ' + brokerContactId + 
-                    ' | Check: (1) Booking Unit name format, (2) Related Opportunity exists, (3) Opportunity.Channel_Partner matches broker Account.';
                 responses.add(res);
                 return responses;
             }
@@ -183,22 +181,12 @@ public with sharing class BrokerCaseManagementActions {
             createdCaseId = newCase.Id;
 
             // Re-query to get the auto-generated CaseNumber (blank immediately after insert)
-            List<Case> insertedCases = [
+            Case inserted = [
                 SELECT Id, CaseNumber
                 FROM Case
                 WHERE Id = :newCase.Id
                 LIMIT 1
             ];
-            if (insertedCases.isEmpty()) {
-                System.debug(LoggingLevel.ERROR, 'Case re-query failed. Created Case ID: ' + createdCaseId + 
-                    ' | Current User: ' + UserInfo.getUserId());
-                res.status  = 'Error';
-                res.message = 'Case was created (ID: ' + createdCaseId + '), but the Case Number could not be retrieved. This may indicate a sharing or permission issue.';
-                responses.add(res);
-                return responses;
-            }
-
-            Case inserted = insertedCases[0];
 
             res.caseNumber = inserted.CaseNumber;
             res.status     = 'Success';
@@ -230,17 +218,12 @@ public with sharing class BrokerCaseManagementActions {
     private static Id resolveLoggedInBrokerContactId() {
         // Production path: broker portal users have User.ContactId populated.
         // Testing fallback: internal users can store a broker Contact Id in User.ContactId__c.
-        List<User> currentUsers = [
+        User currentUser = [
             SELECT ContactId, ContactId__c
             FROM User
             WHERE Id = :UserInfo.getUserId()
             LIMIT 1
         ];
-        if (currentUsers.isEmpty()) {
-            return null;
-        }
-
-        User currentUser = currentUsers[0];
         if (currentUser.ContactId != null) {
             return currentUser.ContactId;
         }
@@ -284,13 +267,7 @@ public with sharing class BrokerCaseManagementActions {
             WHERE Id = :brokerContactId
             LIMIT 1
         ];
-        if (contacts.isEmpty()) {
-            System.debug(LoggingLevel.WARN, 'Broker contact not found: ' + brokerContactId);
-            return null;
-        }
-        
-        if (contacts[0].AccountId == null) {
-            System.debug(LoggingLevel.WARN, 'Broker contact has no AccountId: ' + brokerContactId);
+        if (contacts.isEmpty() || contacts[0].AccountId == null) {
             return null;
         }
 
@@ -348,17 +325,11 @@ public with sharing class BrokerCaseManagementActions {
             }
 
             // Get the email template
-            List<EmailTemplate> templates = [
-                SELECT Id
-                FROM EmailTemplate
-                WHERE DeveloperName = 'BrokerCaseCreatedAgentPortal'
-                LIMIT 1
-            ];
-            if (templates.isEmpty()) {
+            EmailTemplate template = [SELECT Id FROM EmailTemplate WHERE DeveloperName = 'BrokerCaseCreatedAgentPortal' LIMIT 1];
+            if (template == null) {
                 System.debug(LoggingLevel.WARN, 'Email template BrokerCaseCreatedAgentPortal not found.');
                 return;
             }
-            EmailTemplate template = templates[0];
 
             // Create and send email
             Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();

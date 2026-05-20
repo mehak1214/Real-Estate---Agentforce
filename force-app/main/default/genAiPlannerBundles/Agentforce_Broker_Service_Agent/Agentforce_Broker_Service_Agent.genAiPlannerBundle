@@ -25,18 +25,42 @@
     <localTopics>
         <fullName>Broker_Case_Management_16jHn0000010zDe</fullName>
         <canEscalate>false</canEscalate>
-        <description>This topic is used to address Broker reports of issue booking a Unit, issue related to payment plans of Unit, commission related to Unit, create lead , Broker portal issues, and general support.</description>
+        <description>Handles the creation and tracking of support cases related to booking, payment plans, commissions, leads, portal issues, and general support inquiries.
+
+This topic is used to address Broker reports of issue related to  booking of a Unit, issue related to payment plans of Unit, issue related to commission of a Unit, issue in creating lead , issue related to Broker portal , and general support issue.</description>
         <developerName>Broker_Case_Management_16jHn0000010zDe</developerName>
         <genAiPluginInstructions>
-            <description>If the user mentions problems, issues, complaints, Unit booking , issue related to payment plans of Unit, commission related issue of Unit, create leads, Broker portal issues, and general support
+            <description>Handle support requests when the user mentions problems, issues, complaints, unit booking issues, payment plan issues related to a unit, commission-related issues for a unit, lead creation, broker portal issues, or general support requests.
 
-Get the Unit name from user to proceed if user asked related (Unit Booking , Payment plans related , commission related ) and then Call the action ‘Create Broker Case’.
+If the user reports an issue while booking a unit, ask for the Unit Name and pass it to the Apex class.
+Unit Record IDs start with a44
+Unit names follow formats like A-101, A-102
 
-If user asked about the create lead or broker portal or general case related queries then simply ask for Type, Subject and description and then call the apex action ‘Create Broker Case’.
+If the user reports an issue with a booked unit, ask for the Booking Unit Name and pass it to the Apex class. Booking Unit Record IDs start with a3A.  Booking Unit names follow formats like Booking Unit - 2026-05-13, Booking Unit - 2026-05-12
 
-confirm the details from user and then only call the action .
+Do not get confused in UNIT and Booking Unit (Booked Unit) both are different.
 
-Ask clarifying questions to gather complete information needed for the support case.</description>
+For requests related to:
+Unit Booking
+Payment Plans
+Commission-related issues
+first collect the Unit Name from the user, then call the action ‘Create Broker Case’.
+For requests related to:
+Lead creation
+Broker portal issues
+General support cases
+ask for:
+Type
+Subject
+Description
+Any other required details
+and then call the Apex action ‘Create Broker Case’.
+
+Before triggering any action:
+
+Gather all required information by asking clarifying questions.
+Summarize and confirm the details with the user.
+Only proceed with the action after the user confirms with responses such as “yes”, “ok”, “proceed”, or similar confirmation.</description>
             <developerName>instructions_0_1779274658537</developerName>
             <language>en_US</language>
             <masterLabel>instructions_0_1779274658537</masterLabel>
@@ -48,9 +72,9 @@ Ask clarifying questions to gather complete information needed for the support c
 Issue Type
 Subject
 Description</description>
-            <developerName>instruction_1</developerName>
-            <language xsi:nil="true"/>
-            <masterLabel>Instruction 1</masterLabel>
+            <developerName>instructions_0_1779281774443</developerName>
+            <language>en_US</language>
+            <masterLabel>instructions_0_1779281774443</masterLabel>
             <sortOrder>1</sortOrder>
         </genAiPluginInstructions>
         <genAiPluginInstructions>
@@ -58,26 +82,24 @@ Description</description>
 Case Type
 Subject
 Description
-Priority
-
-Ask for booking reference if they want to provide or not</description>
-            <developerName>instruction_2</developerName>
+Priority</description>
+            <developerName>instruction_1</developerName>
             <language xsi:nil="true"/>
-            <masterLabel>Instruction 2</masterLabel>
+            <masterLabel>Instruction 1</masterLabel>
             <sortOrder>2</sortOrder>
         </genAiPluginInstructions>
         <genAiPluginInstructions>
             <description>Call the action ‘Create Broker Case’ to create case with required inputs.</description>
-            <developerName>instruction_3</developerName>
+            <developerName>instruction_2</developerName>
             <language xsi:nil="true"/>
-            <masterLabel>Instruction 3</masterLabel>
+            <masterLabel>Instruction 2</masterLabel>
             <sortOrder>3</sortOrder>
         </genAiPluginInstructions>
         <genAiPluginInstructions>
             <description>If user says he is facing issue with Unit or booking for a unit then pass the unit value to apex, booking unit and unit both are different</description>
-            <developerName>instructions_0_1779281774443</developerName>
-            <language>en_US</language>
-            <masterLabel>instructions_0_1779281774443</masterLabel>
+            <developerName>instruction_3</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>Instruction 3</masterLabel>
             <sortOrder>4</sortOrder>
         </genAiPluginInstructions>
         <language>en_US</language>
@@ -100,7 +122,7 @@ Ask for booking reference if they want to provide or not</description>
         <masterLabel>Broker Case Management</masterLabel>
         <pluginType>Topic</pluginType>
         <scope>Agent job is to help customers with issues by understanding the problem, collecting required details, and creating a support case.
-You should gather issue information, confirm contact details, and create a Case record.</scope>
+You should gather issue information, confirm required details, and create a Case record on user confirmation</scope>
     </localTopics>
     <localTopics>
         <fullName>Commission_Management_16jHn0000010zDe</fullName>

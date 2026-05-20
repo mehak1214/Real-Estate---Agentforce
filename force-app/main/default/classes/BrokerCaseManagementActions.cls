@@ -42,6 +42,9 @@ public with sharing class BrokerCaseManagementActions {
 
         @InvocableVariable(label='Message')
         public String message;
+
+        @InvocableVariable(label='Diagnostic Info')
+        public String diagnosticInfo;
     }
 
     @InvocableMethod(
@@ -95,6 +98,9 @@ public with sharing class BrokerCaseManagementActions {
             if (String.isNotBlank(req.bookingUnitId) && relatedBookingId == null) {
                 res.status  = 'Error';
                 res.message = 'No broker-accessible booking was found for the provided Booking Unit ID or Name.';
+                res.diagnosticInfo = 'Searched for booking name containing: ' + req.bookingUnitId + 
+                    ' | Broker Contact: ' + brokerContactId + 
+                    ' | Check: (1) Booking Unit name format, (2) Related Opportunity exists, (3) Opportunity.Channel_Partner matches broker Account.';
                 responses.add(res);
                 return responses;
             }
@@ -185,8 +191,7 @@ public with sharing class BrokerCaseManagementActions {
             ];
             if (insertedCases.isEmpty()) {
                 System.debug(LoggingLevel.ERROR, 'Case re-query failed. Created Case ID: ' + createdCaseId + 
-                    ' | Current User: ' + UserInfo.getUserId() + 
-                    ' | User has ' + (UserInfo.isCurrentUserLicensed() ? 'license' : 'no license'));
+                    ' | Current User: ' + UserInfo.getUserId());
                 res.status  = 'Error';
                 res.message = 'Case was created (ID: ' + createdCaseId + '), but the Case Number could not be retrieved. This may indicate a sharing or permission issue.';
                 responses.add(res);
@@ -279,7 +284,13 @@ public with sharing class BrokerCaseManagementActions {
             WHERE Id = :brokerContactId
             LIMIT 1
         ];
-        if (contacts.isEmpty() || contacts[0].AccountId == null) {
+        if (contacts.isEmpty()) {
+            System.debug(LoggingLevel.WARN, 'Broker contact not found: ' + brokerContactId);
+            return null;
+        }
+        
+        if (contacts[0].AccountId == null) {
+            System.debug(LoggingLevel.WARN, 'Broker contact has no AccountId: ' + brokerContactId);
             return null;
         }
 

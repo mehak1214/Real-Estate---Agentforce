@@ -5,6 +5,7 @@
         <description>Allow brokers to create leads through agent</description>
         <topicChannels>
             <channel>Broker Service Agent</channel>
+            <channel>Agentforce Service Agent</channel>
         </topicChannels>
         <subtopics>
             <subtopic>

@@ -5,6 +5,7 @@
         <description>Display commission and payout details</description>
         <topicChannels>
             <channel>Broker Service Agent</channel>
+            <channel>Agentforce Service Agent</channel>
         </topicChannels>
         <subtopics>
             <subtopic>

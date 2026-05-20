@@ -1,0 +1,70 @@
+{
+  "required" : [ "caseType", "description", "subject" ],
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "bookingUnitId" : {
+      "title" : "Booking Unit ID or Name",
+      "description" : "Optional related Booking Unit record ID or Booking Unit name. Pass the broker-provided booking reference here whether it is an ID or a name.\n",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "caseType" : {
+      "title" : "Case Type",
+      "description" : "Value for the backend Case Type field, API name Type. Must be exactly one of: Booking Issue, Payment Plan Issue, Comission Issue, Portal Access Issue, Lead Creation Issue, General, Document Issue, Other.\n",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "description" : {
+      "title" : "Description",
+      "description" : "Detailed description of the broker issue.\n",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "priority" : {
+      "title" : "Priority",
+      "description" : "Priority value such as Low, Medium, or High.\n",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "relatedCommissionId" : {
+      "title" : "Related Commission ID or Name",
+      "description" : "Optional related Commission record ID or Commission name. Pass the broker-provided name when they mention a commission by name.\n",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "relatedLeadId" : {
+      "title" : "Related Lead ID or Name",
+      "description" : "Optional related Lead record ID or Lead name. Pass the broker-provided name when they mention a lead by name.\n",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "relatedOpportunityId" : {
+      "title" : "Related Opportunity ID or Name",
+      "description" : "Optional related Opportunity record ID or Opportunity name. Pass the broker-provided name when they mention an opportunity by name.\n",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "relatedUnitId" : {
+      "title" : "Related Unit ID or Name",
+      "description" : "Optional related Unit record ID or Unit name. Pass the broker-provided name when they mention a unit by name.\n",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "subject" : {
+      "title" : "Subject",
+      "description" : "Short subject of the broker support case.\n",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    }
+  },
+  "lightning:type" : "lightning__objectType"
+}

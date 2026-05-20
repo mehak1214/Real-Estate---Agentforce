@@ -5,6 +5,7 @@
         <description>Allow brokers to create and track support cases</description>
         <topicChannels>
             <channel>Broker Service Agent</channel>
+            <channel>Agentforce Service Agent</channel>
         </topicChannels>
         <subtopics>
             <subtopic>

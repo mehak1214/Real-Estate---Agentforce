@@ -1,0 +1,84 @@
+{
+  "required" : [ "firstName", "lastName", "mobile", "purchaser", "typeOfInterest" ],
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "budget" : {
+      "title" : "Budget",
+      "description" : "Budget if available (in Lac or currency)",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "companyName" : {
+      "title" : "Company Name",
+      "description" : "Required when Purchaser is Company",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "email" : {
+      "title" : "Email",
+      "description" : "Buyer email address",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "firstName" : {
+      "title" : "First Name",
+      "description" : "Buyer first name",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "lastName" : {
+      "title" : "Last Name",
+      "description" : "Buyer last name",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "leadType" : {
+      "title" : "Lead Type",
+      "description" : "Lead type: Enquiry or Booking",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "mobile" : {
+      "title" : "Mobile",
+      "description" : "Buyer mobile number",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "phone" : {
+      "title" : "Phone",
+      "description" : "Buyer alternate phone number",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "projectInterest" : {
+      "title" : "Project / Unit Interest",
+      "description" : "Project Id or project name the buyer is interested in",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "purchaser" : {
+      "title" : "Purchaser",
+      "description" : "Purchaser type: Individual, Group, or Company",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "typeOfInterest" : {
+      "title" : "Type of Interest",
+      "description" : "Type of interest (LAND, BTS.)",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    }
+  },
+  "lightning:type" : "lightning__objectType"
+}

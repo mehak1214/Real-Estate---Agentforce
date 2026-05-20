@@ -5,6 +5,7 @@
         <description>Show payment schedule for booked properties</description>
         <topicChannels>
             <channel>Broker Service Agent</channel>
+            <channel>Agentforce Service Agent</channel>
         </topicChannels>
         <subtopics>
             <subtopic>

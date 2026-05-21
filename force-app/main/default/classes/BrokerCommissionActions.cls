@@ -59,6 +59,9 @@ public with sharing class BrokerCommissionActions {
         
         @InvocableVariable(label='Date Range')
         public String dateRange;
+
+        @InvocableVariable(label='Currency Code')
+        public String currencyCode;
         
         @InvocableVariable(label='Records')
         public List<CommissionRecord> records;
@@ -173,6 +176,7 @@ public with sharing class BrokerCommissionActions {
             output.totalPaidAmount = totalPaid;
             output.recordCount = commissions.size();
             output.dateRange = startDate.format() + ' to ' + endDate.format();
+            output.currencyCode = UserInfo.getDefaultCurrency();
             output.summary = 'Pending: ' + totalPending + ' | Paid: ' + totalPaid;
             output.records = records;
             output.status = 'Success';

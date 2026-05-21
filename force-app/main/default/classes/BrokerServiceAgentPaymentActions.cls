@@ -111,6 +111,9 @@ public with sharing class BrokerServiceAgentPaymentActions {
         @InvocableVariable(label='Unit / Property')
         public String unitProperty;
 
+        @InvocableVariable(label='Currency Code')
+        public String currencyCode;
+
         @InvocableVariable(label='Total Amount')
         public Decimal totalAmount;
 
@@ -255,6 +258,7 @@ public with sharing class BrokerServiceAgentPaymentActions {
                     : 'Payment plan retrieved successfully.';
                 response.opportunityName = opportunity.Name;
                 response.unitProperty = opportunity.Unit__r == null ? null : opportunity.Unit__r.Name;
+                response.currencyCode = UserInfo.getDefaultCurrency();
                 response.totalAmount = totalAmount;
                 Decimal opportunityPaidReceiptAmount = getOpportunityPaidReceiptAmount(opportunity.Id);
                 if (paidAmount < opportunityPaidReceiptAmount) {

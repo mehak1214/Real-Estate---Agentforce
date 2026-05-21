@@ -355,8 +355,11 @@ public with sharing class BrokerLeadCreationActions {
         }
     }
 
-    private static String applyLeadEmailTokens(
-        String templateText,
+    private static String buildLeadEmailSubject(String safeLeadName) {
+        return 'Lead Created Successfully - ' + safeLeadName;
+    }
+
+    private static String buildLeadEmailBody(
         Contact contact,
         String safeLeadName,
         String safeMobile,
@@ -364,17 +367,17 @@ public with sharing class BrokerLeadCreationActions {
         String safeLeadType,
         String safeStatus
     ) {
-        if (templateText == null) {
-            return null;
-        }
         String brokerName = String.isNotBlank(contact.FirstName) ? contact.FirstName : 'Broker';
-        return templateText
-            .replace('{{BrokerFirstName}}', brokerName)
-            .replace('{{LeadName}}', safeLeadName)
-            .replace('{{LeadMobile}}', safeMobile)
-            .replace('{{LeadEmail}}', safeEmail)
-            .replace('{{LeadType}}', safeLeadType)
-            .replace('{{LeadStatus}}', safeStatus);
+        return 'Dear ' + brokerName + ',\n\n'
+            + 'Your lead has been created successfully through Agentforce.\n\n'
+            + 'Lead Details:\n'
+            + '- Name: ' + safeLeadName + '\n'
+            + '- Mobile: ' + safeMobile + '\n'
+            + '- Email: ' + safeEmail + '\n'
+            + '- Lead Type: ' + safeLeadType + '\n'
+            + '- Status: ' + safeStatus + '\n\n'
+            + 'Thank you,\n'
+            + 'Customer Support Team';
     }
 
     /**
@@ -398,59 +401,21 @@ public with sharing class BrokerLeadCreationActions {
             String safeStatus = String.isNotBlank(leadRecord.Status) ? leadRecord.Status : 'N/A';
             String safeLeadType = String.isNotBlank(leadRecord.Lead_Type__c) ? leadRecord.Lead_Type__c : 'N/A';
 
-            String subject = 'Lead Created Successfully - ' + safeLeadName;
-            String body =
-                'Dear ' + (String.isNotBlank(contact.FirstName) ? contact.FirstName : 'Broker') + ',\n\n'
-                + 'Your lead has been created successfully through Agentforce.\n\n'
-                + 'Lead Details:\n'
-                + '- Name: ' + safeLeadName + '\n'
-                + '- Mobile: ' + safeMobile + '\n'
-                + '- Email: ' + safeEmail + '\n'
-                + '- Lead Type: ' + safeLeadType + '\n'
-                + '- Status: ' + safeStatus + '\n\n'
-                + 'Thank you,\n'
-                + 'Customer Support Team';
-
-            List<EmailTemplate> templates = [
-                SELECT Subject, Body
-                FROM EmailTemplate
-                WHERE DeveloperName = 'BrokerLeadCreatedAgentPortal'
-                LIMIT 1
-            ];
-            if (!templates.isEmpty()) {
-                EmailTemplate templateRecord = templates[0];
-                String templatedSubject = applyLeadEmailTokens(
-                    templateRecord.Subject,
-                    contact,
-                    safeLeadName,
-                    safeMobile,
-                    safeEmail,
-                    safeLeadType,
-                    safeStatus
-                );
-                String templatedBody = applyLeadEmailTokens(
-                    templateRecord.Body,
-                    contact,
-                    safeLeadName,
-                    safeMobile,
-                    safeEmail,
-                    safeLeadType,
-                    safeStatus
-                );
-                if (String.isNotBlank(templatedSubject)) {
-                    subject = templatedSubject;
-                }
-                if (String.isNotBlank(templatedBody)) {
-                    body = templatedBody;
-                }
-            }
+            String subject = buildLeadEmailSubject(safeLeadName);
+            String body = buildLeadEmailBody(
+                contact,
+                safeLeadName,
+                safeMobile,
+                safeEmail,
+                safeLeadType,
+                safeStatus
+            );
 
             // Create and send email
             Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
             mail.setToAddresses(new List<String>{contact.Email});
             mail.setSubject(subject);
             mail.setPlainTextBody(body);
-            mail.setTargetObjectId(contactId);
             mail.setSaveAsActivity(false);
 
             Messaging.sendEmail(new List<Messaging.SingleEmailMessage>{mail});

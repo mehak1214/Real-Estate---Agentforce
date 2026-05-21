@@ -37,7 +37,7 @@ public with sharing class BrokerCaseStatusNotificationHandler {
         allIds.addAll(closedCaseIds);
 
         List<Case> casesToNotify = [
-            SELECT Id, ContactId
+            SELECT Id, CaseNumber, Subject, ContactId
             FROM Case
             WHERE Id IN :allIds
             AND ContactId != null
@@ -53,22 +53,10 @@ public with sharing class BrokerCaseStatusNotificationHandler {
         }
 
         Map<Id, Contact> contactsById = new Map<Id, Contact>([
-            SELECT Id, Email
+            SELECT Id, Email, FirstName
             FROM Contact
             WHERE Id IN :contactIds
         ]);
-
-        Map<String, Id> templateIds = new Map<String, Id>();
-        for (EmailTemplate template : [
-            SELECT Id, DeveloperName
-            FROM EmailTemplate
-            WHERE DeveloperName IN ('BrokerCaseWorkingAgentPortal', 'BrokerCaseClosedAgentPortal')
-        ]) {
-            templateIds.put(template.DeveloperName, template.Id);
-        }
-
-        Id workingTemplateId = templateIds.get('BrokerCaseWorkingAgentPortal');
-        Id closedTemplateId = templateIds.get('BrokerCaseClosedAgentPortal');
 
         List<Messaging.SingleEmailMessage> emails = new List<Messaging.SingleEmailMessage>();
         for (Case currentCase : casesToNotify) {
@@ -77,21 +65,21 @@ public with sharing class BrokerCaseStatusNotificationHandler {
                 continue;
             }
 
-            Id templateId;
+            String statusLabel;
             if (workingCaseIds.contains(currentCase.Id)) {
-                templateId = workingTemplateId;
+                statusLabel = STATUS_WORKING;
             } else if (closedCaseIds.contains(currentCase.Id)) {
-                templateId = closedTemplateId;
+                statusLabel = STATUS_CLOSED;
             }
 
-            if (templateId == null) {
+            if (String.isBlank(statusLabel)) {
                 continue;
             }
 
             Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
-            mail.setTargetObjectId(currentCase.ContactId);
-            mail.setTemplateId(templateId);
-            mail.setWhatId(currentCase.Id);
+            mail.setToAddresses(new List<String>{recipient.Email});
+            mail.setSubject(buildStatusSubject(currentCase, statusLabel));
+            mail.setPlainTextBody(buildStatusBody(recipient, currentCase, statusLabel));
             mail.setSaveAsActivity(false);
             emails.add(mail);
         }
@@ -103,5 +91,33 @@ public with sharing class BrokerCaseStatusNotificationHandler {
                 System.debug(LoggingLevel.ERROR, 'Error sending case status notification email: ' + e.getMessage());
             }
         }
+    }
+
+    private static String buildStatusSubject(Case currentCase, String statusLabel) {
+        String caseNumber = currentCase != null && String.isNotBlank(currentCase.CaseNumber)
+            ? currentCase.CaseNumber
+            : 'N/A';
+        return 'Case Status Updated - ' + statusLabel + ' - ' + caseNumber;
+    }
+
+    private static String buildStatusBody(Contact recipient, Case currentCase, String statusLabel) {
+        String recipientName = recipient != null && String.isNotBlank(recipient.FirstName)
+            ? recipient.FirstName
+            : 'Broker';
+        String caseNumber = currentCase != null && String.isNotBlank(currentCase.CaseNumber)
+            ? currentCase.CaseNumber
+            : 'N/A';
+        String caseSubject = currentCase != null && String.isNotBlank(currentCase.Subject)
+            ? currentCase.Subject
+            : 'N/A';
+
+        return 'Dear ' + recipientName + ',\n\n'
+            + 'Your case status has been updated to ' + statusLabel + '.\n\n'
+            + 'Case Details:\n'
+            + '- Case Number: ' + caseNumber + '\n'
+            + '- Subject: ' + caseSubject + '\n'
+            + '- Status: ' + statusLabel + '\n\n'
+            + 'Thank you,\n'
+            + 'Customer Support Team';
     }
 }

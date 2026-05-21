@@ -192,6 +192,18 @@ public with sharing class BrokerCaseManagementActions {
             res.status     = 'Success';
             res.message    = 'Case created successfully. Your case number is ' + inserted.CaseNumber;
 
+            // Trigger notification email immediately using provided brokerContactId if present,
+            // otherwise use the Case.ContactId or resolved logged-in broker contact.
+            try {
+                Id emailContactId = (req != null && req.brokerContactId != null) ? req.brokerContactId : newCase.ContactId;
+                if (emailContactId == null) {
+                    emailContactId = resolveLoggedInBrokerContactId();
+                }
+                sendCaseCreationEmail(inserted, emailContactId);
+            } catch (Exception e) {
+                System.debug(LoggingLevel.ERROR, 'Error invoking sendCaseCreationEmail inline: ' + e.getMessage());
+            }
+
         } catch (QueryException qe) {
             res.status  = 'Error';
             res.message = 'Query error: ' + qe.getMessage();
@@ -203,13 +215,7 @@ public with sharing class BrokerCaseManagementActions {
             res.message = 'Unexpected error: ' + e.getMessage();
         }
 
-        // Always send notification email to broker contact (outside case creation try-catch)
-        // Email errors are logged but don't affect case creation response
-        if (res.status == 'Success' && createdCaseId != null) {
-            Id brokerContactId = resolveLoggedInBrokerContactId();
-            Case caseForEmail = new Case(Id = createdCaseId);
-            sendCaseCreationEmail(caseForEmail, brokerContactId);
-        }
+        // Notification email is triggered inline after successful insert; nothing to do here.
 
         responses.add(res);
         return responses;
@@ -324,19 +330,21 @@ public with sharing class BrokerCaseManagementActions {
                 return;
             }
 
-            // Get the email template
-            EmailTemplate template = [SELECT Id FROM EmailTemplate WHERE DeveloperName = 'BrokerCaseCreatedAgentPortal' LIMIT 1];
-            if (template == null) {
-                System.debug(LoggingLevel.WARN, 'Email template BrokerCaseCreatedAgentPortal not found.');
+            Case caseDetails = queryCaseDetails(caseRecord.Id);
+            if (caseDetails == null) {
+                System.debug(LoggingLevel.WARN, 'Case not found for notification: ' + caseRecord.Id);
                 return;
             }
+
+            String recipientName = String.isNotBlank(contact.FirstName) ? contact.FirstName : 'Broker';
+            String subject = buildCaseCreationSubject(caseDetails);
+            String body = buildCaseCreationBody(recipientName, caseDetails);
 
             // Create and send email
             Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
             mail.setToAddresses(new List<String>{contact.Email});
-            mail.setTemplateId(template.Id);
-            mail.setWhatId(caseRecord.Id);
-            mail.setTargetObjectId(contactId);
+            mail.setSubject(subject);
+            mail.setPlainTextBody(body);
             mail.setSaveAsActivity(false);
 
             Messaging.sendEmail(new List<Messaging.SingleEmailMessage>{mail});
@@ -347,6 +355,59 @@ public with sharing class BrokerCaseManagementActions {
         } catch (Exception e) {
             System.debug(LoggingLevel.ERROR, 'Error sending broker case notification email: ' + e.getMessage());
         }
+    }
+
+    private static Case queryCaseDetails(Id caseId) {
+        if (caseId == null) {
+            return null;
+        }
+        List<Case> cases = [
+            SELECT Id, CaseNumber, Subject, Type, Priority, Status, Origin
+            FROM Case
+            WHERE Id = :caseId
+            LIMIT 1
+        ];
+        return cases.isEmpty() ? null : cases[0];
+    }
+
+    private static String buildCaseCreationSubject(Case caseDetails) {
+        String caseNumber = caseDetails != null && String.isNotBlank(caseDetails.CaseNumber)
+            ? caseDetails.CaseNumber
+            : 'N/A';
+        return 'Case Created Successfully - ' + caseNumber;
+    }
+
+    private static String buildCaseCreationBody(String recipientName, Case caseDetails) {
+        String caseNumber = caseDetails != null && String.isNotBlank(caseDetails.CaseNumber)
+            ? caseDetails.CaseNumber
+            : 'N/A';
+        String subject = caseDetails != null && String.isNotBlank(caseDetails.Subject)
+            ? caseDetails.Subject
+            : 'N/A';
+        String type = caseDetails != null && String.isNotBlank(caseDetails.Type)
+            ? caseDetails.Type
+            : 'N/A';
+        String priority = caseDetails != null && String.isNotBlank(caseDetails.Priority)
+            ? caseDetails.Priority
+            : 'N/A';
+        String status = caseDetails != null && String.isNotBlank(caseDetails.Status)
+            ? caseDetails.Status
+            : 'N/A';
+        String origin = caseDetails != null && String.isNotBlank(caseDetails.Origin)
+            ? caseDetails.Origin
+            : 'N/A';
+
+        return 'Dear ' + recipientName + ',\n\n'
+            + 'Your case has been created successfully through Agentforce.\n\n'
+            + 'Case Details:\n'
+            + '- Case Number: ' + caseNumber + '\n'
+            + '- Subject: ' + subject + '\n'
+            + '- Type: ' + type + '\n'
+            + '- Priority: ' + priority + '\n'
+            + '- Status: ' + status + '\n'
+            + '- Origin: ' + origin + '\n\n'
+            + 'Thank you,\n'
+            + 'Customer Support Team';
     }
 
     /**

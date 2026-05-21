@@ -62,19 +62,11 @@ public class BrokerCaseManagementActionsTest {
     }
 
     /**
-     * Test case creation with email template present (email sent automatically)
+     * Test case creation with notification email logic enabled
      */
     @isTest
     static void testCreateBrokerCaseEmailNotificationSent() {
         Contact testContact = [SELECT Id FROM Contact WHERE Email = 'broker@example.com' LIMIT 1];
-        
-        // Create email template for testing
-        EmailTemplate template = new EmailTemplate();
-        template.DeveloperName = 'BrokerCaseCreatedAgentPortal';
-        template.Name = 'Broker Case Created Agent Portal';
-        template.Subject = 'Your Case {!Case.CaseNumber}';
-        template.HtmlValue = 'Test email: {!Case.CaseNumber}';
-        insert template;
 
         BrokerCaseManagementActions.Request req = new BrokerCaseManagementActions.Request();
         req.brokerContactId = testContact.Id;

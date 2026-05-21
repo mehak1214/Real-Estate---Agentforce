@@ -87,27 +87,17 @@ public with sharing class BrokerCommissionNotificationHandler {
             String status = String.isNotBlank(commission.Status__c) ? commission.Status__c : 'N/A';
             String payoutDate = System.today().format();
 
-            // Get email template
-            List<EmailTemplate> templates = [
-                SELECT Id, Subject, Body
-                FROM EmailTemplate
-                WHERE DeveloperName = 'BrokerCommissionPaidNotification'
-                LIMIT 1
-            ];
-
-            if (templates.isEmpty()) {
-                System.debug(LoggingLevel.WARN, 'Email template BrokerCommissionPaidNotification not found.');
-                return;
-            }
-
-            // Apply token replacement
-            String subject = applyCommissionEmailTokens(
-                templates[0].Subject, brokerFirstName, commissionName, salesOrderNumber, 
-                unitName, unitCost, commissionPercent, commissionAmount, status, payoutDate
-            );
-            String body = applyCommissionEmailTokens(
-                templates[0].Body, brokerFirstName, commissionName, salesOrderNumber,
-                unitName, unitCost, commissionPercent, commissionAmount, status, payoutDate
+            String subject = buildCommissionEmailSubject(commissionName);
+            String body = buildCommissionEmailBody(
+                brokerFirstName,
+                commissionName,
+                salesOrderNumber,
+                unitName,
+                unitCost,
+                commissionPercent,
+                commissionAmount,
+                status,
+                payoutDate
             );
 
             // Send email
@@ -115,7 +105,6 @@ public with sharing class BrokerCommissionNotificationHandler {
             mail.setToAddresses(new List<String>{commission.Broker__r.Email});
             mail.setSubject(subject);
             mail.setPlainTextBody(body);
-            mail.setTargetObjectId(commission.Broker__c);
             mail.setSaveAsActivity(false);
 
             Messaging.sendEmail(new List<Messaging.SingleEmailMessage>{mail});
@@ -126,8 +115,11 @@ public with sharing class BrokerCommissionNotificationHandler {
         }
     }
 
-    private static String applyCommissionEmailTokens(
-        String templateText,
+    private static String buildCommissionEmailSubject(String commissionName) {
+        return 'Commission Paid Notification - ' + (String.isNotBlank(commissionName) ? commissionName : 'N/A');
+    }
+
+    private static String buildCommissionEmailBody(
         String brokerFirstName,
         String commissionName,
         String salesOrderNumber,
@@ -138,18 +130,19 @@ public with sharing class BrokerCommissionNotificationHandler {
         String status,
         String payoutDate
     ) {
-        if (templateText == null) {
-            return null;
-        }
-        return templateText
-            .replace('{{BrokerFirstName}}', brokerFirstName)
-            .replace('{{CommissionName}}', commissionName)
-            .replace('{{SalesOrderNumber}}', salesOrderNumber)
-            .replace('{{UnitName}}', unitName)
-            .replace('{{UnitCost}}', unitCost)
-            .replace('{{CommissionPercent}}', commissionPercent)
-            .replace('{{CommissionAmount}}', commissionAmount)
-            .replace('{{Status}}', status)
-            .replace('{{PayoutDate}}', payoutDate);
+        String recipientName = String.isNotBlank(brokerFirstName) ? brokerFirstName : 'Broker';
+        return 'Dear ' + recipientName + ',\n\n'
+            + 'Your broker commission has been marked as paid.\n\n'
+            + 'Commission Details:\n'
+            + '- Commission: ' + commissionName + '\n'
+            + '- Sales Order: ' + salesOrderNumber + '\n'
+            + '- Unit: ' + unitName + '\n'
+            + '- Unit Cost: ' + unitCost + '\n'
+            + '- Commission Percent: ' + commissionPercent + '\n'
+            + '- Commission Amount: ' + commissionAmount + '\n'
+            + '- Status: ' + status + '\n'
+            + '- Payout Date: ' + payoutDate + '\n\n'
+            + 'Thank you,\n'
+            + 'Customer Support Team';
     }
 }

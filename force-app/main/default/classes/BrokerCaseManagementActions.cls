@@ -95,6 +95,13 @@ public with sharing class BrokerCaseManagementActions {
                 return responses;
             }
 
+            Contact brokerContact = [
+                SELECT Id, AccountId
+                FROM Contact
+                WHERE Id = :brokerContactId
+                LIMIT 1
+            ];
+
             Id relatedBookingId = resolveRelatedBookingId(req, brokerContactId);
             if (String.isNotBlank(req.bookingUnitId) && relatedBookingId == null) {
                 res.status  = 'Error';
@@ -159,6 +166,7 @@ public with sharing class BrokerCaseManagementActions {
             newCase.Status       = 'New';
             newCase.Origin       = 'Agentforce';
             newCase.ContactId    = brokerContactId;
+            newCase.AccountId    = brokerContact.AccountId;
             newCase.Related_Booking__c = relatedBookingId;
 
             if (String.isNotBlank(req.priority)) {

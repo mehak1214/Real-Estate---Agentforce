@@ -14,8 +14,7 @@ public with sharing class BrokerLeadCreationActions {
         @InvocableVariable(label='Mobile' required=true description='Buyer mobile number')
         public String mobile;
 
-        @InvocableVariable(label='Phone' required=false description='Buyer alternate phone number')
-        public String phone;
+        // phone removed: only `mobile` is captured now
         
         @InvocableVariable(label='Email' required=false description='Buyer email address')
         public String email;
@@ -29,8 +28,10 @@ public with sharing class BrokerLeadCreationActions {
         @InvocableVariable(label='Lead Type' required=false description='Lead type: Enquiry or Booking')
         public String leadType;
         
-        @InvocableVariable(label='Project / Unit Interest' required=false description='Project Id or project name the buyer is interested in')
-        public String projectInterest;
+        // project removed: only unit is captured now
+
+        @InvocableVariable(label='Unit' required=false description='Unit Id or unit name the buyer is interested in')
+        public String relatedUnitId;
         
         @InvocableVariable(label='Budget' required=false description='Budget if available (in Lac or currency)')
         public String budget;
@@ -157,9 +158,11 @@ public with sharing class BrokerLeadCreationActions {
             }
             
             // Set optional fields
+            /* Phone assignment commented out: we only capture Mobile by design now.
             if (String.isNotBlank(input.phone)) {
                 newLead.Phone = input.phone;
             }
+            */
             
             if (String.isNotBlank(input.email)) {
                 newLead.Email = input.email;
@@ -170,16 +173,18 @@ public with sharing class BrokerLeadCreationActions {
                 newLead.put('Company_Name__c', input.companyName.trim());
             }
             
-            if (String.isNotBlank(input.projectInterest)) {
-                Id projectId = resolveProjectId(input.projectInterest);
-                if (projectId == null) {
+            // Project logic removed: leads no longer set Project__c
+
+            if (String.isNotBlank(input.relatedUnitId)) {
+                Id unitId = resolveUnitId(input.relatedUnitId);
+                if (unitId == null) {
                     output.status = 'Error';
-                    output.message = 'No project was found for the provided Project / Unit Interest. Please provide a valid project name or Project record ID.';
+                    output.message = 'No unit was found for the provided Unit. Please provide a valid unit name or Unit record ID.';
                     outputs.add(output);
-                    return outputs; 
+                    return outputs;
                 }
-                newLead.Project__c = projectId;
-            } 
+                newLead.Related_Unit__c = unitId;
+            }
             
             if (String.isNotBlank(input.budget)) {
                 newLead.Budget__c = input.budget;
@@ -272,36 +277,38 @@ public with sharing class BrokerLeadCreationActions {
         return null;
     }
 
-    private static Id resolveProjectId(String projectReference) {
-        if (String.isBlank(projectReference)) {
+    // resolveProjectId removed: project functionality deleted
+
+    private static Id resolveUnitId(String unitReference) {
+        if (String.isBlank(unitReference)) {
             return null;
         }
 
-        String trimmedReference = projectReference.trim();
+        String trimmedReference = unitReference.trim();
         Id providedId = parseId(trimmedReference);
-        if (providedId != null && providedId.getSObjectType() == Project__c.SObjectType) {
+        if (providedId != null && providedId.getSObjectType() == Unit__c.SObjectType) {
             return providedId;
         }
 
-        List<Project__c> projects = [
+        List<Unit__c> units = [
             SELECT Id
-            FROM Project__c
+            FROM Unit__c
             WHERE Name = :trimmedReference
             LIMIT 1
         ];
-        if (!projects.isEmpty()) {
-            return projects[0].Id;
+        if (!units.isEmpty()) {
+            return units[0].Id;
         }
 
-        String projectNameLike = '%' + trimmedReference + '%';
-        projects = [
+        String unitNameLike = '%' + trimmedReference + '%';
+        units = [
             SELECT Id
-            FROM Project__c
-            WHERE Name LIKE :projectNameLike
+            FROM Unit__c
+            WHERE Name LIKE :unitNameLike
             ORDER BY CreatedDate DESC
             LIMIT 1
         ];
-        return projects.isEmpty() ? null : projects[0].Id;
+        return units.isEmpty() ? null : units[0].Id;
     }
 
     private static Id parseId(String idText) {

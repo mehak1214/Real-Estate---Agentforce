@@ -2,7 +2,7 @@
  * @description Broker performance actions for Agentforce
  * Retrieves broker sales, conversion, and ranking metrics
  */
-public with sharing class BrokerPerformanceActions {
+public class BrokerPerformanceActions {
 
     public class PerformanceQueryInput {
         @InvocableVariable(label='Period' required=false description='Period: current_month (default), last_month, last_quarter, year_to_date')
@@ -12,6 +12,9 @@ public with sharing class BrokerPerformanceActions {
     public class PerformanceOutput {
         @InvocableVariable(label='Performance Period')
         public String performancePeriod;
+
+        @InvocableVariable(label='Currency Code')
+        public String currencyCode;
         
         @InvocableVariable(label='Monthly Sales Count')
         public Integer monthlySalesCount;
@@ -140,7 +143,7 @@ public with sharing class BrokerPerformanceActions {
                 }
             }
 
-            Integer salesCount = salesOrderIds.isEmpty() ? commissions.size() : salesOrderIds.size();
+            Integer salesCount = salesOrderIds.size();
             
             // Count leads created by broker
             Integer leadsCreated = [
@@ -168,18 +171,24 @@ public with sharing class BrokerPerformanceActions {
             // Calculate ranking (simplified: based on sales count)
             Integer higherRankedBrokers = 0;
             List<AggregateResult> brokerSalesCounts = [
-                SELECT Broker__c brokerId, COUNT(Id) salesCount
+                SELECT Broker__c brokerId, COUNT_DISTINCT(SalesOrder__c) salesCount
                 FROM BrokerCommission__c
                 WHERE Broker__c != null
                 AND CreatedDate >= :periodStartDateTime
                 AND CreatedDate < :periodEndDateTime
                 GROUP BY Broker__c
-            ]; 
+            ];
 
             for (AggregateResult brokerSalesCount : brokerSalesCounts) {
                 // Rank is 1 + number of brokers with strictly higher sales count.
-                if ((Id)brokerSalesCount.get('brokerId') != brokerContact.Id
-                    && (Integer)brokerSalesCount.get('salesCount') > salesCount) {
+                Id otherBrokerId = (Id)brokerSalesCount.get('brokerId');
+                Integer otherSalesCount = 0;
+                Object aggVal = brokerSalesCount.get('salesCount');
+                if (aggVal != null && aggVal instanceof Decimal) {
+                    otherSalesCount = ((Decimal)aggVal).intValue();
+                }
+
+                if (otherBrokerId != brokerContact.Id && otherSalesCount > salesCount) {
                     higherRankedBrokers++;
                 }
             }
@@ -194,6 +203,7 @@ public with sharing class BrokerPerformanceActions {
             
             // Prepare output
             output.performancePeriod = periodLabel;
+            output.currencyCode = UserInfo.getDefaultCurrency();
             output.monthlySalesCount = salesCount;
             output.totalSalesAmount = totalAmount;
             output.createdLeads = leadsCreated;

@@ -214,30 +214,30 @@ Company</description>
         <developerName>Get_Case_Details_16jHn0000010zDj</developerName>
         <genAiPluginInstructions>
             <description>If a user requests to look up a case, gather the necessary details such as case ID or email address.</description>
-            <developerName>instruction_1</developerName>
-            <language xsi:nil="true"/>
-            <masterLabel>Instruction 1</masterLabel>
+            <developerName>instructions_0_1779272144835</developerName>
+            <language>en_US</language>
+            <masterLabel>instructions_0_1779272144835</masterLabel>
             <sortOrder>0</sortOrder>
         </genAiPluginInstructions>
         <genAiPluginInstructions>
             <description>Provide updates on the status of a case based on the information available.</description>
-            <developerName>instruction_2</developerName>
-            <language xsi:nil="true"/>
-            <masterLabel>Instruction 2</masterLabel>
+            <developerName>instructions_0_1779272239669</developerName>
+            <language>en_US</language>
+            <masterLabel>instructions_0_1779272239669</masterLabel>
             <sortOrder>1</sortOrder>
         </genAiPluginInstructions>
         <genAiPluginInstructions>
             <description>Ask clarifying questions if the user provides insufficient information to locate the case.</description>
-            <developerName>instruction_3</developerName>
+            <developerName>instruction_1</developerName>
             <language xsi:nil="true"/>
-            <masterLabel>Instruction 3</masterLabel>
+            <masterLabel>Instruction 1</masterLabel>
             <sortOrder>2</sortOrder>
         </genAiPluginInstructions>
         <genAiPluginInstructions>
             <description>Ensure that the user understands the current status or progress of their case.</description>
-            <developerName>instruction_4</developerName>
+            <developerName>instruction_2</developerName>
             <language xsi:nil="true"/>
-            <masterLabel>Instruction 4</masterLabel>
+            <masterLabel>Instruction 2</masterLabel>
             <sortOrder>3</sortOrder>
         </genAiPluginInstructions>
         <genAiPluginInstructions>
@@ -246,32 +246,58 @@ Company</description>
 Case number, if they have one
 Status filter, if they want open, closed, working, or escalated cases
 Number of cases to show, if they ask for recent cases or a specific count</description>
-            <developerName>instruction_5</developerName>
+            <developerName>instruction_3</developerName>
             <language xsi:nil="true"/>
-            <masterLabel>Instruction 5</masterLabel>
+            <masterLabel>Instruction 3</masterLabel>
             <sortOrder>4</sortOrder>
         </genAiPluginInstructions>
         <genAiPluginInstructions>
             <description>If the broker provides a specific case number, use it directly. If they ask for recent cases without a number, return the most recent broker cases. If they ask for a status, apply the matching filter. If they ask for a count, use that number.</description>
-            <developerName>instruction_6</developerName>
+            <developerName>instruction_4</developerName>
             <language xsi:nil="true"/>
-            <masterLabel>Instruction 6</masterLabel>
+            <masterLabel>Instruction 4</masterLabel>
             <sortOrder>5</sortOrder>
         </genAiPluginInstructions>
         <genAiPluginInstructions>
-            <description>Show only broker-visible details such as:
-
-Case number
-Subject
-Short description
-Status
-Priority
-Created date
-Related Booking, Opportunity, Unit, Commission, or Lead names if available</description>
-            <developerName>instruction_7</developerName>
+            <description>Do not return raw values.
+Always return user-friendly responses with labels and bullet points.</description>
+            <developerName>instruction_5</developerName>
             <language xsi:nil="true"/>
-            <masterLabel>Instruction 7</masterLabel>
+            <masterLabel>Instruction 5</masterLabel>
             <sortOrder>6</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>When displaying case results, format each case as a clearly labeled card like this:
+
+📋 Case #[CaseNumber]
+- Subject: [Subject]
+- Type: [Type]
+- Status: [Status]
+- Priority: [Priority]
+- Created: [CreatedDate]
+- Description: [Description]
+
+Total cases found: [count]
+
+Never display raw field names, IDs, or unformatted data dumps. Always present data in a readable, human-friendly format.</description>
+            <developerName>instruction_6</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>Instruction 6</masterLabel>
+            <sortOrder>7</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>Ensure that the &quot;Get Broker Cases&quot; action is configured to return data in a labeled and user-friendly format, adhering to the example card structure provided in the instructions.</description>
+            <developerName>instructions_0_1779272828790</developerName>
+            <language>en_US</language>
+            <masterLabel>instructions_0_1779272828790</masterLabel>
+            <sortOrder>8</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>Always format case details with clear labels and structured formatting as outlined in the example card template. Avoid displaying raw data or unformatted field names.</description>
+            <developerName>instructions_1_1779272828790</developerName>
+            <language>en_US</language>
+            <masterLabel>instructions_1_1779272828790</masterLabel>
+            <sortOrder>9</sortOrder>
         </genAiPluginInstructions>
         <language>en_US</language>
         <localActionLinks>
@@ -433,6 +459,35 @@ Incentive eligibility if available</description>
             <masterLabel>Instruction 9</masterLabel>
             <sortOrder>9</sortOrder>
         </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>After retrieving performance data, always present results in this structured format:
+
+📊 Performance Summary — [Period Label e.g. &quot;May 2026&quot;]
+
+🏠 Sales
+- Sales Count: [Monthly Sales Count]
+- Total Sales Amount: [Amount or &quot;N/A&quot;]
+
+🎯 Leads
+- Leads Created: [Lead Count or &quot;N/A&quot;]
+- Leads Converted: [Converted Count or &quot;N/A&quot;]
+- Conversion Ratio: [Ratio % or &quot;N/A&quot;]
+
+💵 Commission
+- Total Commission: [Amount or &quot;N/A&quot;]
+- Paid Commission: [Amount or &quot;N/A&quot;]
+- Pending Commission: [Amount or &quot;N/A&quot;]
+
+🏆 Rankings &amp; Incentives
+- Broker Ranking: [Rank or &quot;N/A&quot;]
+- Incentive Eligible: [Yes / No / &quot;N/A&quot;]
+
+Never display raw data arrays or unlabeled field values. If no data is available for a field, show &quot;N/A&quot;. If no records are found for the period, say: &quot;No performance data found for the selected period.&quot;</description>
+            <developerName>instructions_0_1779272596130</developerName>
+            <language>en_US</language>
+            <masterLabel>instructions_0_1779272596130</masterLabel>
+            <sortOrder>10</sortOrder>
+        </genAiPluginInstructions>
         <language>en_US</language>
         <localActionLinks>
             <functionName>Get_Broker_Performance_179Hn0000001I7s</functionName>
@@ -562,17 +617,28 @@ Delayed commission</description>
             <sortOrder>7</sortOrder>
         </genAiPluginInstructions>
         <genAiPluginInstructions>
-            <description>Show only broker-visible commission data. Include:
+            <description>After retrieving commission data, always present results in this structured format:
 
-Commission record name or number if available
-Sales order
-Unit
-Broker name
-Unit cost
-Commission amount
-Commission percentage
-Status
-Payout date if available</description>
+💼 Commission Summary
+
+For each commission record, show:
+- Commission #: [Record Name/Number]
+- Unit: [Unit Name]
+- Sales Order: [Sales Order]
+- Unit Cost: [Unit Cost]
+- Commission %: [Commission Percentage]
+- Commission Amount: [Commission Amount]
+- Status: [Status]
+- Payout Date: [Payout Date or &quot;Pending&quot;]
+
+At the end, show a summary:
+─────────────────────
+Total Records: [count]
+Total Commission: [sum]
+Paid: [paid amount]
+Pending: [pending amount]
+
+Never show raw field dumps, Salesforce IDs, internal notes, or unformatted data. If no records are found, say: &quot;No commission records found for the selected filter.&quot;</description>
             <developerName>instruction_8</developerName>
             <language xsi:nil="true"/>
             <masterLabel>Instruction 8</masterLabel>
@@ -693,6 +759,24 @@ Ask for booking reference if they want to provide or not</description>
             <language xsi:nil="true"/>
             <masterLabel>Instruction 7</masterLabel>
             <sortOrder>6</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>After creating a case, confirm success with a structured message:
+
+✅ Case Created Successfully
+
+- Case Number: [CaseNumber]
+- Subject: [Subject]  
+- Type: [Type]
+- Priority: [Priority]
+- Status: [Status]
+- Created: [CreatedDate]
+
+Never display raw field values or system output directly. Always present results in a clean, readable format.</description>
+            <developerName>instructions_0_1779272481942</developerName>
+            <language>en_US</language>
+            <masterLabel>instructions_0_1779272481942</masterLabel>
+            <sortOrder>7</sortOrder>
         </genAiPluginInstructions>
         <language>en_US</language>
         <localActionLinks>
@@ -831,6 +915,34 @@ Status</description>
             <language xsi:nil="true"/>
             <masterLabel>Instruction 8</masterLabel>
             <sortOrder>7</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>After retrieving payment plan data, always present results in this structured format:
+
+🏗️ Payment Plan — [Property/Unit Name]
+
+Start with a summary:
+- Total Amount: [Total]
+- Paid Amount: [Total Paid]
+- Outstanding Balance: [Balance]
+- Next Due Date: [Nearest upcoming due date]
+
+Then list each installment as:
+─────────────────────
+Installment [Number]
+- Due Date: [Date]
+- Amount Due: [Amount]
+- Paid Amount: [Paid]
+- Balance: [Balance]
+- Status: [Paid / Upcoming / Overdue]
+
+Use 🔴 for Overdue, 🟡 for Upcoming, ✅ for Paid next to the Status label.
+
+Never show raw field dumps, Salesforce record IDs, or unformatted data. If no payment plan is found, say: &quot;No payment plan found for the provided reference.&quot;</description>
+            <developerName>instructions_0_1779272620238</developerName>
+            <language>en_US</language>
+            <masterLabel>instructions_0_1779272620238</masterLabel>
+            <sortOrder>8</sortOrder>
         </genAiPluginInstructions>
         <language>en_US</language>
         <localActionLinks>

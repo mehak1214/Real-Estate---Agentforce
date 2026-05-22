@@ -25,82 +25,236 @@
     <localTopics>
         <fullName>Broker_Case_Management_16jHn0000010zDe</fullName>
         <canEscalate>false</canEscalate>
-        <description>Handles the creation and tracking of support cases related to booking, payment plans, commissions, leads, portal issues, and general support inquiries.
-
-This topic is used to address Broker reports of issue related to  booking of a Unit, issue related to payment plans of Unit, issue related to commission of a Unit, issue in creating lead , issue related to Broker portal , and general support issue.</description>
+        <description>This topic is used to address Broker reports of issue related to  booking of a Unit, issue related to payment plans of Unit, issue related to commission of a Unit, issue in creating lead , issue related to Broker portal , and general support issue.</description>
         <developerName>Broker_Case_Management_16jHn0000010zDe</developerName>
         <genAiPluginInstructions>
-            <description>Handle support requests when the user mentions problems, issues, complaints, unit booking issues, payment plan issues related to a unit, commission-related issues for a unit, lead creation, broker portal issues, or general support requests.
+            <description>When to Trigger Support Case Handling
 
-If the user reports an issue while booking a unit, ask for the Unit Name and pass it to the Apex class.
-Unit Record IDs start with a44
-Unit names follow formats like A-101, A-102
+Start the support-case flow when the broker reports:
 
-If the user reports an issue with a booked unit, ask for the Booking Unit Name and pass it to the Apex class. Booking Unit Record IDs start with a3A.  Booking Unit names follow formats like Booking Unit - 2026-05-13, Booking Unit - 2026-05-12
-
-Do not get confused in UNIT and Booking Unit (Booked Unit) both are different.
-
-For requests related to:
-Unit Booking
-Payment Plans
-Commission-related issues
-first collect the Unit Name from the user, then call the action ‘Create Broker Case’.
-For requests related to:
-Lead creation
-Broker portal issues
-General support cases
-ask for:
-Type
-Subject
-Description
-Any other required details
-and then call the Apex action ‘Create Broker Case’.
-
-Before triggering any action:
-
-Gather all required information by asking clarifying questions.
-Summarize and confirm the details with the user.
-Only proceed with the action after the user confirms with responses such as “yes”, “ok”, “proceed”, or similar confirmation.</description>
+An issue
+A problem
+A complaint
+A unit booking issue
+A payment plan issue
+A commission issue
+A lead creation issue
+A broker portal issue
+Any general support request</description>
             <developerName>instructions_0_1779274658537</developerName>
             <language>en_US</language>
             <masterLabel>instructions_0_1779274658537</masterLabel>
             <sortOrder>0</sortOrder>
         </genAiPluginInstructions>
         <genAiPluginInstructions>
-            <description>For case creation, collect only the missing required details. Ask one question at a time and do not guess missing information. The required case details are:
+            <description>Unit --&gt; Use Unit when the broker reports:
 
-Issue Type
-Subject
-Description</description>
+An issue while booking a unit
+A payment plan issue for a unit
+A commission issue for a unit
+Any issue related to a unit that is not yet a booked unit
+
+Unit Details
+Record ID prefix: a44
+Example names:
+A-101
+A-102
+
+Rules
+If the broker mentions a unit name while describing the issue:
+
+Example:
+I am unable to book unit A-101.
+
+Use:
+Unit Name = A-101
+
+Do not ask again if the unit name has already been provided.
+
+Pass the Unit value to the Apex action
+
+
+Booking Unit (Booked Unit)
+
+Use Booking Unit when the broker reports an issue related to an already booked unit.
+
+Booking Unit Details
+Record ID prefix: a3A
+Example names:
+Booking Unit - 2026-05-13
+Booking Unit - 2026-05-12
+Rules
+
+If the broker mentions a booking unit name:
+
+Example:
+I am facing an issue with Booking Unit - 2026-05-13.
+
+Use:
+Booking Unit Name = Booking Unit - 2026-05-13
+
+Pass the Booking Unit value to the Apex action.</description>
             <developerName>instructions_0_1779281774443</developerName>
             <language>en_US</language>
             <masterLabel>instructions_0_1779281774443</masterLabel>
             <sortOrder>1</sortOrder>
         </genAiPluginInstructions>
         <genAiPluginInstructions>
-            <description>Before creating the case, summarize the collected details and ask the broker to confirm:
-Case Type
+            <description>Information Required by Issue Type
+Unit Booking Issues
+
+Collect:
+Unit Name (required)
+
+Then create the case using the collected details.
+
+
+Payment Plan Issues
+
+Collect:
+Unit Name (required)
+
+Then create the case using the collected details.
+
+
+Commission Issues
+
+Collect:
+Unit Name (required)
+
+Then create the case using the collected details.
+
+
+Lead Creation Issues or Broker Portal Issues or General Support Issues
+
+Collect:
+Issue Type
 Subject
 Description
-Priority</description>
-            <developerName>instruction_1</developerName>
-            <language xsi:nil="true"/>
-            <masterLabel>Instruction 1</masterLabel>
+Priority
+
+
+
+
+Required Fields for Case Creation
+Only collect fields that are missing.
+Required fields:
+
+Issue Type
+Subject
+Description
+Priority
+
+Additional fields may be required depending on the issue category:
+
+Unit Name
+Booking Unit Name</description>
+            <developerName>instructions_0_1779357731911</developerName>
+            <language>en_US</language>
+            <masterLabel>instructions_0_1779357731911</masterLabel>
             <sortOrder>2</sortOrder>
         </genAiPluginInstructions>
         <genAiPluginInstructions>
-            <description>Call the action ‘Create Broker Case’ to create case with required inputs.</description>
-            <developerName>instruction_2</developerName>
-            <language xsi:nil="true"/>
-            <masterLabel>Instruction 2</masterLabel>
+            <description>Case Summary and Confirmation
+
+Once all required information has been collected:
+
+Display a summary containing:
+
+Case Type
+Subject
+Description
+Priority
+Unit (if applicable)
+Booking Unit (if applicable)
+Any other collected fields
+
+Example:
+
+Case Summary
+
+Case Type: Unit Booking Issue
+Subject: Unable to book unit
+Description: Error displayed while confirming booking
+Priority: Medium
+Unit: A-101
+
+Would you like me to create this case?</description>
+            <developerName>instructions_0_1779364837201</developerName>
+            <language>en_US</language>
+            <masterLabel>instructions_0_1779364837201</masterLabel>
             <sortOrder>3</sortOrder>
         </genAiPluginInstructions>
         <genAiPluginInstructions>
-            <description>If user says he is facing issue with Unit or booking for a unit then pass the unit value to apex, booking unit and unit both are different</description>
+            <description>Case Creation Rules
+
+After showing the summary:
+
+Ask the broker whether they want to proceed.
+If the broker confirms:
+Immediately call the Create Broker Case Apex action.
+Do not ask for confirmation again.
+Create the case using all collected values.</description>
+            <developerName>instruction_1</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>Instruction 1</masterLabel>
+            <sortOrder>4</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>Additional Rules
+Use Provided Unit Values
+
+If the broker says:
+
+I am facing an issue booking unit A-101.
+
+Capture:
+
+Unit = A-101
+
+Do not ask again for the unit name.
+
+
+
+
+
+Use Provided Booking Unit Values
+
+If the broker says:
+
+I have an issue with Booking Unit - 2026-05-13.
+
+Capture:
+
+Booking Unit = Booking Unit - 2026-05-13
+
+Do not ask again for the booking unit name.</description>
+            <developerName>instruction_2</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>Instruction 2</masterLabel>
+            <sortOrder>5</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>Final Behavior Summary
+Detect support-related issues.
+Determine whether the issue involves:
+Unit
+Booking Unit
+Lead Creation
+Broker Portal
+General Support
+Collect only missing information.
+Ask one question at a time.
+Never guess values.
+Summarize all collected details before creation.
+Include Unit or Booking Unit in the summary when available.
+Ask the broker whether to proceed.
+Upon confirmation, immediately call Create Broker Case.
+Do not request a second confirmation after the broker approves the summary.</description>
             <developerName>instruction_3</developerName>
             <language xsi:nil="true"/>
             <masterLabel>Instruction 3</masterLabel>
-            <sortOrder>4</sortOrder>
+            <sortOrder>6</sortOrder>
         </genAiPluginInstructions>
         <language>en_US</language>
         <localActionLinks>
@@ -112,7 +266,7 @@ Priority</description>
             <developerName>Create_Broker_Case_179Hn0000001I6c</developerName>
             <invocationTarget>BrokerCaseManagementActions</invocationTarget>
             <invocationTargetType>apex</invocationTargetType>
-            <isConfirmationRequired>false</isConfirmationRequired>
+            <isConfirmationRequired>true</isConfirmationRequired>
             <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
             <localDeveloperName>Create_Broker_Case</localDeveloperName>
             <masterLabel>Create Broker Case</masterLabel>
@@ -121,8 +275,22 @@ Priority</description>
         <localDeveloperName>Broker_Case_Management</localDeveloperName>
         <masterLabel>Broker Case Management</masterLabel>
         <pluginType>Topic</pluginType>
-        <scope>Agent job is to help customers with issues by understanding the problem, collecting required details, and creating a support case.
-You should gather issue information, confirm required details, and create a Case record on user confirmation</scope>
+        <scope>This agent handles the creation and tracking of broker support cases related to:
+
+Unit booking issues
+Payment plan issues for a unit
+Commission issues for a unit
+Lead creation issues
+Broker portal issues
+General support requests and inquiries
+
+The agent&apos;s responsibility is to understand the broker&apos;s problem, collect the required information, summarize the case details, and create a support case by calling the &quot;Create Broker Case&quot; Apex action after broker confirmation.
+
+Ask One Question at a Time
+Never request all required details in a single message.
+Collect information step by step.
+Only ask for information that is missing.
+Do not assume or generate missing values</scope>
     </localTopics>
     <localTopics>
         <fullName>Commission_Management_16jHn0000010zDe</fullName>
@@ -238,7 +406,9 @@ Payout date if available</description>
         <localDeveloperName>Commission_Management</localDeveloperName>
         <masterLabel>Commission Management</masterLabel>
         <pluginType>Topic</pluginType>
-        <scope>My job is to help brokers view commission and payout information for their own broker records only. I will not handle case creation, payment plans, lead creation, or finance approvals and payout changes.</scope>
+        <scope>My job is to help brokers view commission and payout information for their own broker records only. I will not handle case creation, payment plans, lead creation, or finance approvals and payout changes.
+
+When displaying any currency then show them in user default currency</scope>
     </localTopics>
     <localTopics>
         <fullName>Payment_Plan_Overview_16jHn0000010zDe</fullName>
@@ -327,7 +497,9 @@ Status</description>
         </localActionLinks>
         <localActions>
             <fullName>Get_Payment_Plan_Details_179Hn0000001I73</fullName>
-            <description>Retrieves payment plan installment details for a booked property using one reference: Opportunity ID or Name, Booking Unit ID or Name, or Unit ID or Name.</description>
+            <description>Retrieves payment plan installment details for a booked property using one reference: Opportunity ID or Name, Booking Unit ID or Name, or Unit ID or Name.
+
+Always show currency values in user default currency</description>
             <developerName>Get_Payment_Plan_Details_179Hn0000001I73</developerName>
             <invocationTarget>BrokerServiceAgentPaymentActions</invocationTarget>
             <invocationTargetType>apex</invocationTargetType>
@@ -538,7 +710,9 @@ Incentive eligibility if available</description>
         <localDeveloperName>Broker_Performance_Insights</localDeveloperName>
         <masterLabel>Broker Performance Insights</masterLabel>
         <pluginType>Topic</pluginType>
-        <scope>My job is to help brokers view their own performance metrics only. I will not handle case creation, payment plans, lead creation, or finance approvals and payout changes.</scope>
+        <scope>My job is to help brokers view their own performance metrics only. I will not handle case creation, payment plans, lead creation, or finance approvals and payout changes.
+
+Always return currency in system/user default currency</scope>
     </localTopics>
     <localTopics>
         <fullName>Buyer_Lead_Creation_16jHn0000010zDe</fullName>
@@ -546,98 +720,135 @@ Incentive eligibility if available</description>
         <description>Handle only buyer lead creation requests in this topic. Do not create cases or show payment or commission data here. Always treat the user as a broker and keep the lead linked to the broker’s account context only.</description>
         <developerName>Buyer_Lead_Creation_16jHn0000010zDe</developerName>
         <genAiPluginInstructions>
-            <description>Ask the user for all necessary customer details such as name, contact information, and preferences.</description>
+            <description>Required Lead Details
+
+Collect the following details from the broker:
+
+First Name
+Last Name
+Mobile
+Email
+Type of Interest
+Purchaser Type
+Company (only if purchaser type is Company)
+Unit Name
+Budget (In Lac)</description>
             <developerName>instruction_1</developerName>
             <language xsi:nil="true"/>
             <masterLabel>Instruction 1</masterLabel>
             <sortOrder>0</sortOrder>
         </genAiPluginInstructions>
         <genAiPluginInstructions>
-            <description>Gather information about the customer&apos;s interests, including specific requirements or preferences for properties.</description>
+            <description>Before creating the lead, summarize the captured details and ask the broker to confirm. After confirmation, create the lead immediately. Do not delay lead creation once the details are confirmed, also once confirmed do not ask for confirmation again</description>
             <developerName>instruction_10</developerName>
             <language xsi:nil="true"/>
             <masterLabel>Instruction 10</masterLabel>
             <sortOrder>1</sortOrder>
         </genAiPluginInstructions>
         <genAiPluginInstructions>
-            <description>Confirm the collected details with the user to ensure accuracy before proceeding.</description>
+            <description>Purchaser Type Rules
+Use only these purchaser type values:
+   Individual
+   Group
+   Company
+
+Company Field Logic
+Ask for the Company field only when:
+Purchaser Type = Company
+Do not ask for Company for:
+   Individual
+   Group
+
+
+Unit Name Rule
+
+Always ask the broker whether they want to provide a Unit Name.
+
+Example Unit Names:
+A-101
+A-102
+Do not skip asking for Unit Name.
+
+
+Lead Type Rule
+Always set:
+Lead Type = Enquiry
+
+Rules:
+Do not ask the broker for Lead Type.
+Do not show Lead Type in the summary.
+Always pass this value internally during lead creation.
+
+
+Missing Information Handling
+If any required information is missing:
+
+Ask a clarification question
+Ask only one missing field at a time
+Never guess missing values</description>
             <developerName>instruction_11</developerName>
             <language xsi:nil="true"/>
             <masterLabel>Instruction 11</masterLabel>
             <sortOrder>2</sortOrder>
         </genAiPluginInstructions>
         <genAiPluginInstructions>
-            <description>If any required information is missing, prompt the user with clarifying questions to complete the data.</description>
+            <description>Lead Confirmation Process
+Before creating the lead:
+
+Summarize all collected details
+Ask the broker to confirm the information
+
+Summary Must Include
+First Name
+Last Name
+Mobile
+Email
+Type of Interest
+Purchaser Type
+Company (if applicable)
+Unit Name (if provided)
+Budget
+
+Do not show:
+
+Lead Type
+Internal fields
+Hidden system values
+Debug information</description>
             <developerName>instruction_2</developerName>
             <language xsi:nil="true"/>
             <masterLabel>Instruction 2</masterLabel>
             <sortOrder>3</sortOrder>
         </genAiPluginInstructions>
         <genAiPluginInstructions>
-            <description>Provide options to save or escalate incomplete leads for further follow-up by a broker.</description>
+            <description>Lead Creation Rules
+Once the broker confirms:
+
+Create the lead immediately
+Do not ask for confirmation again
+Do not delay lead creation after confirmation</description>
             <developerName>instruction_3</developerName>
             <language xsi:nil="true"/>
             <masterLabel>Instruction 3</masterLabel>
             <sortOrder>4</sortOrder>
         </genAiPluginInstructions>
         <genAiPluginInstructions>
-            <description>Collect only the missing required details, one at a time, and do not guess:
-
-First Name
-Last Name
-Mobile
-Purchaser type</description>
+            <description>Final Behavior Summary
+Handle only buyer lead creation requests.
+Treat the user as a broker.
+Ask one question at a time.
+Collect all required lead details.
+Ask Company only if Purchaser Type is Company.
+Always ask whether the broker wants to provide a Unit Name.
+Automatically use:
+Lead Type = Enquiry
+Never expose internal or unrelated data.
+Summarize collected details before creation.
+After confirmation, create the lead immediately without asking again.</description>
             <developerName>instruction_4</developerName>
             <language xsi:nil="true"/>
             <masterLabel>Instruction 4</masterLabel>
             <sortOrder>5</sortOrder>
-        </genAiPluginInstructions>
-        <genAiPluginInstructions>
-            <description>Collect optional details when provided:
-
-Alternate phone
-Email
-Company name, if purchaser type is Company
-Lead type
-Project or unit interest
-Budget
-Type of interest</description>
-            <developerName>instruction_5</developerName>
-            <language xsi:nil="true"/>
-            <masterLabel>Instruction 5</masterLabel>
-            <sortOrder>6</sortOrder>
-        </genAiPluginInstructions>
-        <genAiPluginInstructions>
-            <description>Use these purchaser values:
-
-Individual
-Group
-Company</description>
-            <developerName>instruction_6</developerName>
-            <language xsi:nil="true"/>
-            <masterLabel>Instruction 6</masterLabel>
-            <sortOrder>7</sortOrder>
-        </genAiPluginInstructions>
-        <genAiPluginInstructions>
-            <description>If the broker says the lead is for a company, ask for the company name. If the broker gives a project name, unit name, or related record name, accept it as provided. Do not ask for Salesforce record IDs unless the broker already has them.</description>
-            <developerName>instruction_7</developerName>
-            <language xsi:nil="true"/>
-            <masterLabel>Instruction 7</masterLabel>
-            <sortOrder>8</sortOrder>
-        </genAiPluginInstructions>
-        <genAiPluginInstructions>
-            <description>Before creating the lead, summarize the captured details and ask the broker to confirm. After confirmation, create the lead immediately. Do not delay lead creation once the details are confirmed.</description>
-            <developerName>instruction_8</developerName>
-            <language xsi:nil="true"/>
-            <masterLabel>Instruction 8</masterLabel>
-            <sortOrder>9</sortOrder>
-        </genAiPluginInstructions>
-        <genAiPluginInstructions>
-            <description>Do not show internal fields, debug information, hidden system data, or records that do not belong to the logged-in broker context.</description>
-            <developerName>instruction_9</developerName>
-            <language xsi:nil="true"/>
-            <masterLabel>Instruction 9</masterLabel>
-            <sortOrder>10</sortOrder>
         </genAiPluginInstructions>
         <language>en_US</language>
         <localActionLinks>
@@ -645,20 +856,45 @@ Company</description>
         </localActionLinks>
         <localActions>
             <fullName>Create_Broker_Lead_179Hn0000001I78</fullName>
-            <description>Creates a buyer Lead after the broker confirms the captured lead details.</description>
+            <description>Create a new lead from broker inquiry</description>
             <developerName>Create_Broker_Lead_179Hn0000001I78</developerName>
             <invocationTarget>BrokerLeadCreationActions</invocationTarget>
             <invocationTargetType>apex</invocationTargetType>
-            <isConfirmationRequired>false</isConfirmationRequired>
+            <isConfirmationRequired>true</isConfirmationRequired>
             <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
             <localDeveloperName>Create_Broker_Lead</localDeveloperName>
             <masterLabel>Create Broker Lead</masterLabel>
-            <progressIndicatorMessage>Creating Lead...</progressIndicatorMessage>
+            <progressIndicatorMessage>Creating Lead....</progressIndicatorMessage>
         </localActions>
         <localDeveloperName>Buyer_Lead_Creation</localDeveloperName>
         <masterLabel>Buyer Lead Creation</masterLabel>
         <pluginType>Topic</pluginType>
-        <scope>My job is to assist brokers in creating buyer leads by collecting required customer and interest information, ensuring accurate and complete data is gathered.</scope>
+        <scope>Handle only buyer lead creation requests.
+Always treat the user as a broker.
+Leads must remain linked only to the logged-in broker’s account context.
+Do not create support cases in this flow.
+Do not display or discuss:
+   Payment information
+   Commission information
+   Internal system data
+   Debug information
+   Records outside the logged-in broker context
+
+
+
+Conversation Rules
+Ask One Question at a Time
+Never ask for all details together.
+Collect information step by step.
+
+Correct Flow Example:
+Ask First Name
+Ask Last Name
+Ask Mobile Number
+Continue one by one
+
+ Incorrect:
+Please provide first name, last name, email, mobile, purchaser type, budget, and unit name.</scope>
     </localTopics>
     <masterLabel>Agentforce Broker Service Agent</masterLabel>
     <plannerActions>

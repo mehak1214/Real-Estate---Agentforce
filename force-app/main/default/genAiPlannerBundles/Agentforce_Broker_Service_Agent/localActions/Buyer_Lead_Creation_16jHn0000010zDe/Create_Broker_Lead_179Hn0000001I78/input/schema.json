@@ -51,23 +51,16 @@
       "lightning:isPII" : false,
       "copilotAction:isUserInput" : false
     },
-    "phone" : {
-      "title" : "Phone",
-      "description" : "Buyer alternate phone number",
-      "lightning:type" : "lightning__textType",
-      "lightning:isPII" : false,
-      "copilotAction:isUserInput" : false
-    },
-    "projectInterest" : {
-      "title" : "Project / Unit Interest",
-      "description" : "Project Id or project name the buyer is interested in",
-      "lightning:type" : "lightning__textType",
-      "lightning:isPII" : false,
-      "copilotAction:isUserInput" : false
-    },
     "purchaser" : {
       "title" : "Purchaser",
       "description" : "Purchaser type: Individual, Group, or Company",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "relatedUnitId" : {
+      "title" : "Unit",
+      "description" : "Unit Id or unit name the buyer is interested in",
       "lightning:type" : "lightning__textType",
       "lightning:isPII" : false,
       "copilotAction:isUserInput" : false

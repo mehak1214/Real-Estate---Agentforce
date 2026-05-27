@@ -256,7 +256,7 @@ subagent CaseManagement:
 
              AFTER BROKER CONFIRMS:
              Immediately call the {!@actions.create_broker_case} action with the collected details.
-             Do not pass brokerContactId. Apex resolves the broker contact from User.ContactId, with User.ContactId__c as an admin testing fallback.
+             Pass endUserContactId as brokerContactId when the portal session provides it.
              Leave bookingUnitId, relatedOpportunityId, relatedUnitId, relatedCommissionId, and relatedLeadId blank unless the broker explicitly provides them.
              Do not delay case creation after confirmation.
              Do not tell the broker the case is created unless the action returns a Success status.
@@ -408,7 +408,7 @@ subagent Payment_Plan:
 
              STEP 2 — CALL THE ACTION:
              Once a supported reference is available, immediately call {!@actions.get_payment_plan_details}.
-             Do not pass brokerContactId. Apex resolves the broker contact from User.ContactId, with User.ContactId__c as an admin testing fallback.
+             Pass endUserContactId as brokerContactId when the portal session provides it.
              Pass opportunityId when the broker provides either an Opportunity ID or Opportunity Name.
              Pass bookingUnitId when the broker provides either a Booking Unit ID or Booking Unit Name.
              Pass unitId when the broker provides either a Unit ID or Unit Name.
@@ -570,6 +570,7 @@ subagent Lead_Creation:
              Before creating the lead, summarize the captured lead details once and ask the broker to confirm.
              Do not create the lead until the broker confirms.
              After the broker confirms, immediately call {!@actions.create_buyer_lead} with the collected details. After successful lead creation, tell the broker the lead was created and show the leadName output and status if available. Do not show or ask for internal Salesforce Lead Ids.
+             Pass endUserContactId as brokerContactId when the portal session provides it.
              If a duplicate lead is found by the configured action, explain that a matching lead may already exist and show only broker-accessible duplicate details.
              Do not expose leads belonging to another broker, internal assignment rules, debug logs, hidden fields, or system fields.
              If the broker asks to update or convert a lead, explain that this subagent is currently configured for lead creation unless an approved action is available.
@@ -681,7 +682,7 @@ subagent Commission_Status:
              Only show commission information related to the logged-in broker account or broker contact.
              If the broker asks for a specific status, pass it as statusFilter. If the broker provides a lookback period in days, pass it as daysBack.
              When the broker asks for commission status or payout information, immediately call {!@actions.get_commission_status} with the appropriate filters.
-             Do not pass brokerContactId. Apex resolves the contact from User.ContactId, with User.ContactId__c as an admin testing fallback.
+             Pass endUserContactId as brokerContactId when the portal session provides it.
              When showing commission details, summarize the result clearly using an itemized list.
              Include commission record name or number if available, sales order, unit, broker name, unit cost, commission amount, commission percentage, status, and payout or paid date if available.
              Always format dates in a human readable format.
@@ -794,6 +795,7 @@ subagent Broker_Performance:
         instructions: ->
             |Use this subagent when the broker asks about broker performance, monthly sales, sales count, conversion ratio, ranking, lead conversion, commission performance, target achievement, incentive eligibility, or broker KPIs.
              Only show performance information related to the logged-in broker account or broker contact.
+             Pass endUserContactId as brokerContactId when the portal session provides it.
              When the broker asks for performance metrics, immediately call {!@actions.get_broker_performance} with the appropriate period filter.
              If the broker asks for last month, last quarter, or year to date, pass period as last_month, last_quarter, or year_to_date. Otherwise leave period blank for current month.
              If the broker does not provide a date range, default to the current calendar month.

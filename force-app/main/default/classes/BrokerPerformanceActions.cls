@@ -5,6 +5,9 @@
 public class BrokerPerformanceActions {
 
     public class PerformanceQueryInput {
+        @InvocableVariable(label='Broker Contact ID' required=false description='Portal user contact id from session context')
+        public Id brokerContactId;
+
         @InvocableVariable(label='Period' required=false description='Period: current_month (default), last_month, last_quarter, year_to_date')
         public String period;
     }
@@ -74,7 +77,7 @@ public class BrokerPerformanceActions {
         PerformanceOutput output = new PerformanceOutput();
         
         try {
-            Contact brokerContact = resolveLoggedInBrokerContact();
+            Contact brokerContact = resolveBrokerContact(input == null ? null : input.brokerContactId);
             if (brokerContact == null) {
                 output.status = 'Error';
                 output.message = 'No broker contact is linked to this user. Please contact your administrator.';
@@ -149,7 +152,7 @@ public class BrokerPerformanceActions {
             Integer leadsCreated = [
                 SELECT COUNT()
                 FROM Lead
-                WHERE CreatedById = :UserInfo.getUserId()
+                WHERE Channel_Partner__c = :brokerContact.AccountId
                 AND CreatedDate >= :periodStartDateTime
                 AND CreatedDate < :periodEndDateTime
             ];
@@ -158,7 +161,7 @@ public class BrokerPerformanceActions {
             Integer leadsConverted = [
                 SELECT COUNT()
                 FROM Lead
-                WHERE CreatedById = :UserInfo.getUserId()
+                WHERE Channel_Partner__c = :brokerContact.AccountId
                 AND IsConverted = true
                 AND CreatedDate >= :periodStartDateTime
                 AND CreatedDate < :periodEndDateTime
@@ -226,6 +229,21 @@ public class BrokerPerformanceActions {
         
         outputs.add(output);
         return outputs;
+    }
+
+    private static Contact resolveBrokerContact(Id requestedContactId) {
+        if (requestedContactId != null && requestedContactId.getSObjectType() == Contact.SObjectType) {
+            List<Contact> requestedContacts = [
+                SELECT Id, AccountId
+                FROM Contact
+                WHERE Id = :requestedContactId
+                LIMIT 1
+            ];
+            if (!requestedContacts.isEmpty()) {
+                return requestedContacts[0];
+            }
+        }
+        return resolveLoggedInBrokerContact();
     }
 
     private static Contact resolveLoggedInBrokerContact() {

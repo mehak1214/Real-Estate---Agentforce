@@ -5,6 +5,9 @@
 public with sharing class BrokerLeadCreationActions {
 
     public class LeadCreateInput {
+        @InvocableVariable(label='Broker Contact ID' required=false description='Portal user contact id from session context')
+        public Id brokerContactId;
+
         @InvocableVariable(label='First Name' required=true description='Buyer first name')
         public String firstName;
         
@@ -74,6 +77,7 @@ public with sharing class BrokerLeadCreationActions {
         LeadCreateInput input = inputs[0];
         LeadCreateOutput output = new LeadCreateOutput();
         Id createdLeadId = null;
+        Contact brokerContact = null;
         
         try {
             // Validate required fields
@@ -131,7 +135,7 @@ public with sharing class BrokerLeadCreationActions {
             }
             
             // Get logged-in broker contact
-            Contact brokerContact = resolveLoggedInBrokerContact();
+            brokerContact = resolveBrokerContact(input == null ? null : input.brokerContactId);
             if (brokerContact == null || brokerContact.AccountId == null) {
                 output.status = 'Error';
                 output.message = 'No broker contact is linked to this user. Please contact your administrator.';
@@ -217,7 +221,6 @@ public with sharing class BrokerLeadCreationActions {
         // Send notification email to broker contact (outside lead creation try-catch)
         // Email errors are logged but don't affect lead creation response
         if (output.status == 'Success' && createdLeadId != null) {
-            Contact brokerContact = resolveLoggedInBrokerContact();
             Lead leadForEmail = queryLeadForEmail(createdLeadId);
             if (brokerContact != null && brokerContact.Id != null && leadForEmail != null) {
                 sendLeadCreationEmail(brokerContact.Id, leadForEmail);
@@ -226,6 +229,21 @@ public with sharing class BrokerLeadCreationActions {
         
         outputs.add(output);
         return outputs;
+    }
+
+    private static Contact resolveBrokerContact(Id requestedContactId) {
+        if (requestedContactId != null && requestedContactId.getSObjectType() == Contact.SObjectType) {
+            List<Contact> requestedContacts = [
+                SELECT Id, AccountId
+                FROM Contact
+                WHERE Id = :requestedContactId
+                LIMIT 1
+            ];
+            if (!requestedContacts.isEmpty()) {
+                return requestedContacts[0];
+            }
+        }
+        return resolveLoggedInBrokerContact();
     }
 
     private static Contact resolveLoggedInBrokerContact() {

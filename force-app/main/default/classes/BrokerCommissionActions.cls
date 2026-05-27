@@ -5,6 +5,9 @@
 public with sharing class BrokerCommissionActions {
 
     public class CommissionQueryInput {
+        @InvocableVariable(label='Broker Contact ID' required=false description='Portal user contact id from session context')
+        public Id brokerContactId;
+
         @InvocableVariable(label='Date Range (Days)' required=false description='Number of days to look back (default: current month)')
         public Integer daysBack;
         
@@ -97,7 +100,7 @@ public with sharing class BrokerCommissionActions {
         CommissionOutput output = new CommissionOutput();
         
         try {
-            Contact brokerContact = resolveLoggedInBrokerContact();
+            Contact brokerContact = resolveBrokerContact(input == null ? null : input.brokerContactId);
             if (brokerContact == null) {
                 output.status = 'Error';
                 output.message = 'No broker contact is linked to this user. Please contact your administrator.';
@@ -192,6 +195,21 @@ public with sharing class BrokerCommissionActions {
         
         outputs.add(output);
         return outputs;
+    }
+
+    private static Contact resolveBrokerContact(Id requestedContactId) {
+        if (requestedContactId != null && requestedContactId.getSObjectType() == Contact.SObjectType) {
+            List<Contact> requestedContacts = [
+                SELECT Id, AccountId
+                FROM Contact
+                WHERE Id = :requestedContactId
+                LIMIT 1
+            ];
+            if (!requestedContacts.isEmpty()) {
+                return requestedContacts[0];
+            }
+        }
+        return resolveLoggedInBrokerContact();
     }
 
     private static Contact resolveLoggedInBrokerContact() {

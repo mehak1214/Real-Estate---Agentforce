@@ -87,7 +87,7 @@ public with sharing class BrokerCaseManagementActions {
             }
             
 
-            Id brokerContactId = resolveLoggedInBrokerContactId();
+            Id brokerContactId = resolveBrokerContactId(req == null ? null : req.brokerContactId);
             if (brokerContactId == null) {
                 res.status  = 'Error';
                 res.message = 'No broker contact is linked to this user. Please contact your administrator.';
@@ -205,7 +205,7 @@ public with sharing class BrokerCaseManagementActions {
             try {
                 Id emailContactId = (req != null && req.brokerContactId != null) ? req.brokerContactId : newCase.ContactId;
                 if (emailContactId == null) {
-                    emailContactId = resolveLoggedInBrokerContactId();
+                    emailContactId = resolveBrokerContactId(null);
                 }
                 sendCaseCreationEmail(inserted, emailContactId);
             } catch (Exception e) {
@@ -227,6 +227,13 @@ public with sharing class BrokerCaseManagementActions {
 
         responses.add(res);
         return responses;
+    }
+
+    private static Id resolveBrokerContactId(Id requestedContactId) {
+        if (requestedContactId != null && requestedContactId.getSObjectType() == Contact.SObjectType) {
+            return requestedContactId;
+        }
+        return resolveLoggedInBrokerContactId();
     }
 
     private static Id resolveLoggedInBrokerContactId() {

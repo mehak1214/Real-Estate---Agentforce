@@ -4,6 +4,9 @@
 public with sharing class BrokerServiceAgentPaymentActions {
 
     public class PaymentPlanRequest {
+        @InvocableVariable(label='Broker Contact ID')
+        public Id brokerContactId;
+
         @InvocableVariable(label='Opportunity ID or Name')
         public String opportunityId;
 
@@ -151,7 +154,7 @@ public with sharing class BrokerServiceAgentPaymentActions {
                     continue;
                 }
 
-                Contact brokerContact = resolveLoggedInBrokerContact();
+                Contact brokerContact = resolveBrokerContact(req == null ? null : req.brokerContactId);
                 if (brokerContact == null || brokerContact.AccountId == null) {
                     response.status = 'Error';
                     response.message = 'No broker contact is linked to this user. Please contact your administrator.';
@@ -484,6 +487,21 @@ public with sharing class BrokerServiceAgentPaymentActions {
             return 'Please provide an Opportunity ID or Name, Booking Unit ID or Name, or Unit ID or Name.';
         }
         return null;
+    }
+
+    private static Contact resolveBrokerContact(Id requestedContactId) {
+        if (requestedContactId != null && requestedContactId.getSObjectType() == Contact.SObjectType) {
+            List<Contact> requestedContacts = [
+                SELECT Id, AccountId
+                FROM Contact
+                WHERE Id = :requestedContactId
+                LIMIT 1
+            ];
+            if (!requestedContacts.isEmpty()) {
+                return requestedContacts[0];
+            }
+        }
+        return resolveLoggedInBrokerContact();
     }
 
     private static Contact resolveLoggedInBrokerContact() {

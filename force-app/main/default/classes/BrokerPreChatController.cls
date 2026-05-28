@@ -1,19 +1,17 @@
 public with sharing class BrokerPreChatController {
 
-    @AuraEnabled(cacheable=true)
-    public static String getContactId() {
-        // Get the Contact linked to the logged-in portal user
-        User currentUser = [
-            SELECT ContactId 
-            FROM User 
-            WHERE Id = :UserInfo.getUserId() 
-            LIMIT 1
-        ];
-
-        if (currentUser.ContactId == null) {
-            throw new AuraHandledException('No Contact associated with this user.');
-        }
-
-        return currentUser.ContactId;
+   @InvocableMethod
+public static List<Output> execute(List<Input> inputs) {
+    String contactId = inputs[0].input_brokerContactId;
+    
+    // Fallback: if contactId is null/empty, get from logged-in user
+    if (String.isBlank(contactId)) {
+        User u = [SELECT ContactId FROM User 
+                  WHERE Id = :UserInfo.getUserId() 
+                  LIMIT 1];
+        contactId = u.ContactId;
     }
+    
+    // rest of your logic using contactId
+}
 }

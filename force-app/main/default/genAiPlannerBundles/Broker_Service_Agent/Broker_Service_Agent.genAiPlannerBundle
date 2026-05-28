@@ -3,38 +3,32 @@
     <attributeMappings>
         <attributeName>Broker_Support_and_Issue_Resolution_16jHn0000010zFt.Create_Broker_Case_179Hn0000001IRX.input_brokerContactId</attributeName>
         <attributeType>CustomPluginFunctionAttribute</attributeType>
-        <mappingTargetName>endUserContactId</mappingTargetName>
-        <mappingType>Variable</mappingType>
+        <mappingTargetName>ContactId</mappingTargetName>
+        <mappingType>ContextVariable</mappingType>
     </attributeMappings>
     <attributeMappings>
         <attributeName>Broker_Performance_Overview_16jHn0000010zFt.Get_Broker_Performance_179Hn0000001IRc.input_brokerContactId</attributeName>
         <attributeType>CustomPluginFunctionAttribute</attributeType>
-        <mappingTargetName>endUserContactId</mappingTargetName>
-        <mappingType>Variable</mappingType>
+        <mappingTargetName>ContactId</mappingTargetName>
+        <mappingType>ContextVariable</mappingType>
     </attributeMappings>
     <attributeMappings>
         <attributeName>Case_Lookup_and_Tracking_16jHn0000010zFt.Get_Broker_Cases_179Hn0000001IrH.input_brokerContactId</attributeName>
         <attributeType>CustomPluginFunctionAttribute</attributeType>
-        <mappingTargetName>endUserContactId</mappingTargetName>
-        <mappingType>Variable</mappingType>
+        <mappingTargetName>ContactId</mappingTargetName>
+        <mappingType>ContextVariable</mappingType>
     </attributeMappings>
     <attributeMappings>
         <attributeName>Buyer_Lead_Creation_16jHn0000010zFt.Create_Broker_Lead_179Hn0000001IrM.input_brokerContactId</attributeName>
         <attributeType>CustomPluginFunctionAttribute</attributeType>
-        <mappingTargetName>endUserContactId</mappingTargetName>
-        <mappingType>Variable</mappingType>
-    </attributeMappings>
-    <attributeMappings>
-        <attributeName>Payment_Plan_Inquiries_16jHn0000010zFt.Get_Payment_Plan_Details_179Hn0000001IrR.input_brokerContactId</attributeName>
-        <attributeType>CustomPluginFunctionAttribute</attributeType>
-        <mappingTargetName>endUserContactId</mappingTargetName>
-        <mappingType>Variable</mappingType>
+        <mappingTargetName>ContactId</mappingTargetName>
+        <mappingType>ContextVariable</mappingType>
     </attributeMappings>
     <attributeMappings>
         <attributeName>Commission_Management_16jHn0000010zFt.Get_Commission_Status_179Hn0000001IrW.input_brokerContactId</attributeName>
         <attributeType>CustomPluginFunctionAttribute</attributeType>
-        <mappingTargetName>endUserContactId</mappingTargetName>
-        <mappingType>Variable</mappingType>
+        <mappingTargetName>ContactId</mappingTargetName>
+        <mappingType>ContextVariable</mappingType>
     </attributeMappings>
     <description>Broker-facing service assistant for case support, payment plan queries, lead creation, commission status, and broker performance insights.</description>
     <localActionLinks>

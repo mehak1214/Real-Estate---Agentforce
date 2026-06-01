@@ -1,0 +1,2 @@
+Name,Retained_Id__c,Vat__c,VAT_Transaction__c,VAT_GL_Account__c,Is_Active__c
+Dubai VAT 5 Percent,VAT-DXB-005,5,Dubai residential inventory VAT standard rate,VAT GL account for Dubai real estate,true

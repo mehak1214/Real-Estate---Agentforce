@@ -151,7 +151,7 @@ public with sharing class BrokerLeadCreationActions {
                 ? input.companyName.trim()
                 : input.firstName + ' ' + input.lastName;
             newLead.Status = 'Open';
-            newLead.LeadSource = 'Broker Agent';
+            newLead.LeadSource = 'Web';
             newLead.OwnerId = UserInfo.getUserId();
             newLead.MobilePhone = input.mobile;
             newLead.Purchaser__c = purchaser;

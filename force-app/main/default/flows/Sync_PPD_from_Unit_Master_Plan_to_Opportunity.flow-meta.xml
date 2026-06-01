@@ -134,28 +134,6 @@
         </rules>
     </decisions>
     <decisions>
-        <name>Is_Inventory_Found</name>
-        <label>Is Inventory Found ?</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <defaultConnectorLabel>No</defaultConnectorLabel>
-        <rules>
-            <name>Yes</name>
-            <conditionLogic>and</conditionLogic>
-            <conditions>
-                <leftValueReference>Get_Inventory</leftValueReference>
-                <operator>IsNull</operator>
-                <rightValue>
-                    <booleanValue>false</booleanValue>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>Get_Payment_Plan</targetReference>
-            </connector>
-            <label>Yes</label>
-        </rules>
-    </decisions>
-    <decisions>
         <name>Is_Payment_Plan_Found</name>
         <label>Is Payment Plan Found ?</label>
         <locationX>0</locationX>
@@ -183,8 +161,8 @@
         <dataType>Date</dataType>
         <expression>ADDMONTHS({!$Record.Opportunity__r.CloseDate},{!Loop_Over_Payment_Detail_Plans.Seq__c})</expression>
     </formulas>
-    <interviewLabel>Sync Payment Plan Details from Unit to Opportunity {!$Flow.CurrentDateTime}</interviewLabel>
-    <label>Sync Payment Plan Details from Unit to Opportunity</label>
+    <interviewLabel>Sync PPD from Unit Master Plan to Opportunity {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Sync PPD from Unit Master Plan to Opportunity</label>
     <loops>
         <name>Loop_Over_Payment_Detail_Plans</name>
         <label>Loop Over Payment Detail Plans</label>
@@ -226,27 +204,6 @@
         <inputReference>PaymentPlanDetails</inputReference>
     </recordCreates>
     <recordLookups>
-        <name>Get_Inventory</name>
-        <label>Get Inventory</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
-        <connector>
-            <targetReference>Is_Inventory_Found</targetReference>
-        </connector>
-        <filterLogic>and</filterLogic>
-        <filters>
-            <field>Inventory_ID_18__c</field>
-            <operator>EqualTo</operator>
-            <value>
-                <elementReference>$Record.Inventory__c</elementReference>
-            </value>
-        </filters>
-        <getFirstRecordOnly>true</getFirstRecordOnly>
-        <object>Inventory__c</object>
-        <storeOutputAutomatically>true</storeOutputAutomatically>
-    </recordLookups>
-    <recordLookups>
         <name>Get_Payment_Plan</name>
         <label>Get Payment Plan</label>
         <locationX>0</locationX>
@@ -257,10 +214,10 @@
         </connector>
         <filterLogic>and</filterLogic>
         <filters>
-            <field>Property__c</field>
+            <field>Unit__c</field>
             <operator>EqualTo</operator>
             <value>
-                <elementReference>Get_Inventory.Inventory_ID_18__c</elementReference>
+                <elementReference>$Record.Unit__c</elementReference>
             </value>
         </filters>
         <filters>
@@ -299,7 +256,7 @@
         <locationX>0</locationX>
         <locationY>0</locationY>
         <connector>
-            <targetReference>Get_Inventory</targetReference>
+            <targetReference>Get_Payment_Plan</targetReference>
         </connector>
         <filterLogic>and</filterLogic>
         <filters>
@@ -310,7 +267,7 @@
             </value>
         </filters>
         <filters>
-            <field>Inventory__c</field>
+            <field>Unit__c</field>
             <operator>IsNull</operator>
             <value>
                 <booleanValue>false</booleanValue>
@@ -320,7 +277,7 @@
         <recordTriggerType>Create</recordTriggerType>
         <triggerType>RecordAfterSave</triggerType>
     </start>
-    <status>Inactive</status>
+    <status>Active</status>
     <variables>
         <name>PaymentPlanDetails</name>
         <dataType>SObject</dataType>

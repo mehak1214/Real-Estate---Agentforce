@@ -1,0 +1,2 @@
+Name__c,Yardi_GlCode__c,Retained_Id__c,Source_System__c,GL_Type__c,GL_Type_Description__c,Fusion_Code__c,Category__c,Balance__c,Debit__c,Credit__c,Ending_Balance__c,Legal_Entity__c
+Dubai Receivables GL,GL-10001,ARGL-DXB-001,Dubai Real Estate Seed,Revenue,Revenue account for Dubai residential inventory,FUS-GL-10001,Dubai,0,0,0,0,Meraas

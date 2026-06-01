@@ -1,0 +1,2 @@
+Name,EBS_Segment_1__c,Full_Legal_Name_of_Entity__c,Source_System__c,VAT_Group__c,Tax_Registration_Number__c,Tax_Registered__c,Registered_Address__c,Operating_Unit__c,Email_address__c,GL_Segment_1__c,Invoice_Total_Unpaid_Amount__c,Invoice_Total_Paid_Amount__c,FA_GL_Account__c
+Dubai Development Legal Entity,ARLE-DXB-001,Dubai Land Development LLC,Dubai Real Estate Seed,Dubai VAT Group A,TRN-100200300,true,Downtown Dubai, Dubai, UAE,Dubai,legal.entity@dubai-real-estate.example,DXB-LE-001,0,0,GL-10001

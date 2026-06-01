@@ -1,0 +1,2 @@
+Name,EBS_Bank_Account_ID__c,Retained_Id__c,Source_System__c,Swift_Code__c,Project_Bank_Type__c,Merchant_Name__c,Merchant_Id__c,Legal_Entity__c,Is_DHLE__c,Project_Code__c,Project_Property_Code__c,Project__r.Unique_External_Key__c,Property__r.Unique_External_Key__c
+Dubai Escrow Bank Account,ARBANK-DXB-001,ARBANK-RET-001,Dubai Real Estate Seed,DUBAIEFX,Escrow,Dubai Escrow Merchant,MCH-DXB-001,Dubai Development Legal Entity,true,DXB-PRJ-001,DXB-PRJ-001-P1,SKYLINE_HEIGHTS_DXB,SKYLINE_HEIGHTS_DXB_RES_A

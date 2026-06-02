@@ -8,87 +8,10 @@
         <locationX>0</locationX>
         <locationY>0</locationY>
         <assignmentItems>
-            <assignToReference>var_PPD.Amount__c</assignToReference>
-            <operator>Assign</operator>
-            <value>
-                <elementReference>Loop_Over_Payment_Detail_Plans.Amount__c</elementReference>
-            </value>
-        </assignmentItems>
-        <assignmentItems>
-            <assignToReference>var_PPD.Percent__c</assignToReference>
-            <operator>Assign</operator>
-            <value>
-                <elementReference>Loop_Over_Payment_Detail_Plans.Percent__c</elementReference>
-            </value>
-        </assignmentItems>
-        <assignmentItems>
-            <assignToReference>var_PPD.Seq__c</assignToReference>
-            <operator>Assign</operator>
-            <value>
-                <elementReference>Loop_Over_Payment_Detail_Plans.Seq__c</elementReference>
-            </value>
-        </assignmentItems>
-        <assignmentItems>
-            <assignToReference>var_PPD.RecordTypeId</assignToReference>
-            <operator>Assign</operator>
-            <value>
-                <elementReference>Loop_Over_Payment_Detail_Plans.RecordTypeId</elementReference>
-            </value>
-        </assignmentItems>
-        <assignmentItems>
-            <assignToReference>var_PPD.Opportunity__c</assignToReference>
+            <assignToReference>Loop_Over_Payment_Detail_Plans.Opportunity__c</assignToReference>
             <operator>Assign</operator>
             <value>
                 <elementReference>$Record.Opportunity__c</elementReference>
-            </value>
-        </assignmentItems>
-        <assignmentItems>
-            <assignToReference>var_PPD.Charge_Code__c</assignToReference>
-            <operator>Assign</operator>
-            <value>
-                <elementReference>Loop_Over_Payment_Detail_Plans.Charge_Code__c</elementReference>
-            </value>
-        </assignmentItems>
-        <assignmentItems>
-            <assignToReference>var_PPD.Instalment_Type__c</assignToReference>
-            <operator>Assign</operator>
-            <value>
-                <stringValue>Fixed Date</stringValue>
-            </value>
-        </assignmentItems>
-        <assignmentItems>
-            <assignToReference>var_PPD.Installment_Type__c</assignToReference>
-            <operator>Assign</operator>
-            <value>
-                <stringValue>Fixed Date</stringValue>
-            </value>
-        </assignmentItems>
-        <assignmentItems>
-            <assignToReference>var_PPD.Invoice_Due_Date__c</assignToReference>
-            <operator>Assign</operator>
-            <value>
-                <elementReference>DueDate</elementReference>
-            </value>
-        </assignmentItems>
-        <assignmentItems>
-            <assignToReference>var_PPD.Cheque_Date__c</assignToReference>
-            <operator>Assign</operator>
-            <value>
-                <elementReference>DueDate</elementReference>
-            </value>
-        </assignmentItems>
-        <assignmentItems>
-            <assignToReference>var_PPD.Status__c</assignToReference>
-            <operator>Assign</operator>
-            <value>
-                <stringValue>Draft</stringValue>
-            </value>
-        </assignmentItems>
-        <assignmentItems>
-            <assignToReference>var_PPD.Installment_No__c</assignToReference>
-            <operator>Assign</operator>
-            <value>
-                <elementReference>Loop_Over_Payment_Detail_Plans.Installment_No__c</elementReference>
             </value>
         </assignmentItems>
         <connector>
@@ -104,7 +27,7 @@
             <assignToReference>PaymentPlanDetails</assignToReference>
             <operator>Add</operator>
             <value>
-                <elementReference>var_PPD</elementReference>
+                <elementReference>Loop_Over_Payment_Detail_Plans</elementReference>
             </value>
         </assignmentItems>
         <connector>
@@ -156,11 +79,6 @@
         </rules>
     </decisions>
     <environments>Default</environments>
-    <formulas>
-        <name>DueDate</name>
-        <dataType>Date</dataType>
-        <expression>ADDMONTHS({!$Record.Opportunity__r.CloseDate},{!Loop_Over_Payment_Detail_Plans.Seq__c})</expression>
-    </formulas>
     <interviewLabel>Sync PPD from Unit Master Plan to Opportunity {!$Flow.CurrentDateTime}</interviewLabel>
     <label>Sync PPD from Unit Master Plan to Opportunity</label>
     <loops>
@@ -174,7 +92,7 @@
             <targetReference>Assign_Opportunity</targetReference>
         </nextValueConnector>
         <noMoreValuesConnector>
-            <targetReference>Insert_PPD</targetReference>
+            <targetReference>Update_PPD</targetReference>
         </noMoreValuesConnector>
     </loops>
     <processMetadataValues>
@@ -196,13 +114,13 @@
         </value>
     </processMetadataValues>
     <processType>AutoLaunchedFlow</processType>
-    <recordCreates>
-        <name>Insert_PPD</name>
-        <label>Insert PPD</label>
+    <recordUpdates>
+        <name>Update_PPD</name>
+        <label>Update PPD</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <inputReference>PaymentPlanDetails</inputReference>
-    </recordCreates>
+    </recordUpdates>
     <recordLookups>
         <name>Get_Payment_Plan</name>
         <label>Get Payment Plan</label>
@@ -248,6 +166,13 @@
                 <elementReference>Get_Payment_Plan.Id</elementReference>
             </value>
         </filters>
+        <filters>
+            <field>Opportunity__c</field>
+            <operator>IsNull</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
         <getFirstRecordOnly>false</getFirstRecordOnly>
         <object>Payment_Plan_Detail__c</object>
         <storeOutputAutomatically>true</storeOutputAutomatically>
@@ -282,14 +207,6 @@
         <name>PaymentPlanDetails</name>
         <dataType>SObject</dataType>
         <isCollection>true</isCollection>
-        <isInput>false</isInput>
-        <isOutput>false</isOutput>
-        <objectType>Payment_Plan_Detail__c</objectType>
-    </variables>
-    <variables>
-        <name>var_PPD</name>
-        <dataType>SObject</dataType>
-        <isCollection>false</isCollection>
         <isInput>false</isInput>
         <isOutput>false</isOutput>
         <objectType>Payment_Plan_Detail__c</objectType>

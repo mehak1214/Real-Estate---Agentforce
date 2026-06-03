@@ -356,14 +356,24 @@ public with sharing class BrokerCaseManagementActions {
             String body = buildCaseCreationBody(recipientName, caseDetails);
 
             // Create and send email
+            System.debug(LoggingLevel.INFO, 'Preparing broker case notification email for contactId=' + contactId + ', email=' + contact.Email + ', caseId=' + caseRecord.Id + ', subject=' + subject);
             Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
             mail.setToAddresses(new List<String>{contact.Email});
             mail.setSubject(subject);
             mail.setPlainTextBody(body);
             mail.setSaveAsActivity(false);
 
-            Messaging.sendEmail(new List<Messaging.SingleEmailMessage>{mail});
-            System.debug(LoggingLevel.INFO, 'Broker case notification email sent to: ' + contact.Email);
+            Messaging.SendEmailResult[] sendResults = Messaging.sendEmail(new List<Messaging.SingleEmailMessage>{mail});
+            if (sendResults != null && !sendResults.isEmpty() && sendResults[0].isSuccess()) {
+                System.debug(LoggingLevel.INFO, 'Broker case notification email sent successfully to: ' + contact.Email);
+            } else {
+                System.debug(LoggingLevel.ERROR, 'Broker case notification email failed for: ' + contact.Email);
+                if (sendResults != null && !sendResults.isEmpty() && sendResults[0].getErrors() != null) {
+                    for (Messaging.SendEmailError emailError : sendResults[0].getErrors()) {
+                        System.debug(LoggingLevel.ERROR, 'Broker case notification email error: ' + emailError.getMessage());
+                    }
+                }
+            }
 
         } catch (QueryException qe) {
             System.debug(LoggingLevel.ERROR, 'Query error sending broker case email: ' + qe.getMessage());

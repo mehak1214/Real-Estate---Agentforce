@@ -69,7 +69,7 @@
         <connector>
             <targetReference>Opportunity_Selection</targetReference>
         </connector>
-        <filterLogic>1 AND (2 OR 3)</filterLogic>
+        <filterLogic>1 AND (2 OR 3 OR 4)</filterLogic>
         <filters>
             <field>AccountId</field>
             <operator>EqualTo</operator>
@@ -89,6 +89,13 @@
             <operator>EqualTo</operator>
             <value>
                 <stringValue>Reserved</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>StageName</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Sold</stringValue>
             </value>
         </filters>
         <getFirstRecordOnly>false</getFirstRecordOnly>

@@ -3,7 +3,8 @@
 <head>
 <style>
     @page {
-        margin: 55px 60px 70px 60px;
+        size: A4;
+        margin: 55px 65px 75px 65px;
         @bottom-center {
             content: element(footer);
         }
@@ -16,253 +17,323 @@
         line-height: 1.55;
     }
 
-    /* ── Running footer ─────────────────────────────────────── */
+    /* ── Running footer every page ──────────────────────────── */
     #page-footer {
         position: running(footer);
-        font-size: 8.5pt;
+        font-size: 8pt;
+        font-weight: bold;
         text-align: center;
-        border-top: 1px solid #000;
-        padding-top: 4px;
+        color: #000;
+        line-height: 1.5;
     }
 
-    /* ── Cover / first block ────────────────────────────────── */
+    /* ── General paragraphs ─────────────────────────────────── */
+    p {
+        margin: 4px 0;
+        text-align: justify;
+    }
+
+    .bold      { font-weight: bold; }
+    .underline { text-decoration: underline; }
+
+    /* ── Logo shared style ──────────────────────────────────── */
+    .logo-wrap img {
+        height: 21px;
+        width: auto;
+    }
+
+    /* ═══════════════════════════════════
+       COVER PAGE STYLES
+    ═══════════════════════════════════ */
+    .cover-logo {
+        margin-bottom: 110px;
+        width: 20%;
+    }
+
     .cover-date {
-        text-align: right;
-        font-size: 10pt;
-        margin-bottom: 8px;
+        font-size: 10.5pt;
+        font-weight: bold;
+        margin-bottom: 55px;
+        text-align: center;
     }
 
     .cover-title {
         text-align: center;
-        font-size: 13pt;
+        font-size: 14pt;
         font-weight: bold;
-        text-transform: uppercase;
-        margin: 30px 0 6px 0;
-        letter-spacing: 0.5px;
+        margin-bottom: 36px;
     }
 
-    .cover-subtitle {
+    .cover-between {
         text-align: center;
-        font-size: 11pt;
+        font-size: 10.5pt;
+        font-weight: normal;
+        margin-bottom: 36px;
+    }
+
+    .cover-party-name {
+        text-align: center;
+        font-size: 14pt;
         font-weight: bold;
-        margin: 0 0 30px 0;
+        margin-bottom: 36px;
     }
 
-    /* ── General text ───────────────────────────────────────── */
-    p {
-        margin: 6px 0;
+    .cover-and {
+        text-align: center;
+        font-size: 10.5pt;
+        font-weight: bold;
+        margin-bottom: 36px;
     }
 
-    .bold   { font-weight: bold; }
-    .italic { font-style: italic; }
-    .underline { text-decoration: underline; }
-    .center { text-align: center; }
+    .cover-agent-stamp {
+        text-align: right;
+        font-size: 8.5pt;
+        margin-top: 90px;
+    }
 
-    /* ── Section headings ───────────────────────────────────── */
+    .cover-page-stamp {
+        text-align: center;
+        font-weight: bold;
+        font-size: 8.5pt;
+        margin-top: 8px;
+        line-height: 1.6;
+    }
+
+    /* ═══════════════════════════════════
+       INNER PAGES
+    ═══════════════════════════════════ */
+    .page-logo {
+        margin-bottom: 18px;
+    }
+
+    /* Section number headings */
     .section-num {
         font-weight: bold;
-        margin-top: 14px;
-        margin-bottom: 4px;
+        margin-top: 16px;
+        margin-bottom: 3px;
+        text-align: left;
     }
 
+    /* Sub-heading bold (4.1, 4.2) */
     .clause-heading {
         font-weight: bold;
-        text-decoration: underline;
-        margin-top: 14px;
-        margin-bottom: 4px;
+        margin-top: 12px;
+        margin-bottom: 3px;
+        text-align: left;
     }
 
-    /* ── Bullet / sub-list paragraphs ───────────────────────── */
+    /* Indented sub-clause paragraphs */
     .sub {
-        margin-left: 22px;
+        margin-left: 28px;
         margin-top: 4px;
         margin-bottom: 4px;
+        text-align: justify;
     }
 
-    .sub-alpha {
-        margin-left: 40px;
+    .sub2 {
+        margin-left: 55px;
         margin-top: 3px;
         margin-bottom: 3px;
+        text-align: justify;
     }
 
-    /* ── Banking details table ──────────────────────────────── */
+    /* Clause body indented (3.1, 6.1 etc) */
+    .clause-body {
+        margin-left: 28px;
+        margin-top: 4px;
+        margin-bottom: 4px;
+        text-align: justify;
+    }
+
+    /* BACKGROUND / AGREED TERMS large centered heading */
+    .major-heading {
+        font-weight: bold;
+        text-align: center;
+        font-size: 10.5pt;
+        margin-top: 16px;
+        margin-bottom: 10px;
+    }
+
+    /* "Initial and Stamp of the Agent" bottom right */
+    .agent-stamp {
+        text-align: right;
+        font-size: 8.5pt;
+        margin-top: 12px;
+        margin-bottom: 4px;
+    }
+
+    /* ── Banking table ──────────────────────────────────────── */
     table.banking {
-        width: 70%;
+        width: 85%;
         border-collapse: collapse;
-        margin: 10px 0 14px 0;
+        margin: 8px 0 14px 0;
         font-size: 10pt;
     }
     table.banking td {
         border: 1px solid #000;
-        padding: 5px 8px;
+        padding: 5px 9px;
     }
-    table.banking td.label {
+    table.banking td.lbl {
         font-weight: bold;
-        width: 38%;
-        background-color: #f5f5f5;
+        width: 34%;
     }
 
     /* ── Signature table ────────────────────────────────────── */
-    table.signature {
+    table.sig {
         width: 100%;
         border-collapse: collapse;
-        margin-top: 36px;
+        margin-top: 24px;
         font-size: 10pt;
     }
-    table.signature td {
+    table.sig td {
         border: 1px solid #000;
-        padding: 10px 12px;
+        padding: 11px 13px;
         width: 50%;
         vertical-align: top;
     }
-    table.signature .sig-label {
-        font-weight: bold;
-        margin-bottom: 4px;
-    }
-    table.signature .sig-line {
-        border-top: 1px solid #555;
-        margin-top: 40px;
-        padding-top: 4px;
-        font-size: 9pt;
-        color: #555;
-    }
-
-    /* ── Agreement number stamp ─────────────────────────────── */
-    .agreement-stamp {
-        text-align: center;
-        font-weight: bold;
-        font-size: 10.5pt;
-        margin-top: 20px;
-    }
-
-    /* ── Horizontal rule ────────────────────────────────────── */
-    hr {
-        border: none;
-        border-top: 1px solid #000;
-        margin: 16px 0;
+    table.sig .sig-spacer {
+        height: 70px;
     }
 
     /* ── Page break ─────────────────────────────────────────── */
-    .page-break {
-        page-break-after: always;
-    }
+    .pb { page-break-after: always; }
 </style>
 </head>
 <body>
 
-<!-- ═══════════════════════════════════════════════════════════
-     RUNNING FOOTER (repeats on every page)
-════════════════════════════════════════════════════════════ -->
+<!-- RUNNING FOOTER (every page) -->
 <div id="page-footer">
-    <apex:outputText value="{!brokerApp.Name}" /> &#160;|&#160;
-    Agreement No: <apex:outputText value="{!brokerApp.Name}" /> &#160;|&#160;
-    Initial and Stamp of the Agent
+    <apex:outputText value="{!brokerApp.Name}" /><br/>
+    <apex:outputText value="{!brokerApp.CommercialLicenseNumber__c}" />
 </div>
 
 
-<!-- ═══════════════════════════════════════════════════════════
+<!-- ═══════════════════════════════════════════════════════
      PAGE 1 – COVER
-════════════════════════════════════════════════════════════ -->
-<div class="cover-date">
-    <span class="bold">DATE: <apex:outputText value="{!currentDateFormatted}" /></span>
+═══════════════════════════════════════════════════════ -->
+<div class="cover-logo">
+    <img src="{!$Resource.imteazlogo}" alt="Imtiaz Developments" />
 </div>
+
+<div class="cover-date">DATE:&#160;<apex:outputText value="{!currentDateFormatted}" /></div>
 
 <div class="cover-title">REAL ESTATE BROKERAGE AGREEMENT</div>
-<div class="cover-subtitle">
-    between IMTIAZ DEVELOPMENTS LLC<br/>
-    And <apex:outputText value="{!brokerApp.Name}" />
+
+<div class="cover-between">between</div>
+
+<div class="cover-party-name">IMTIAZ DEVELOPMENTS LLC</div>
+
+<div class="cover-and">And</div>
+
+<div class="cover-party-name"><apex:outputText value="{!brokerApp.Name}" /></div>
+
+<div class="cover-agent-stamp">Initial and Stamp of the Agent</div>
+
+<div class="cover-page-stamp">
+    Page 1 of 9<br/>
+    <apex:outputText value="{!brokerApp.Name}" /><br/>
+    <apex:outputText value="{!brokerApp.CommercialLicenseNumber__c}" />
 </div>
 
-<hr/>
+<div class="pb"></div>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     PAGE 2 – PARTIES + BACKGROUND
+═══════════════════════════════════════════════════════ -->
+<div class="page-logo logo-wrap">
+    <img src="{!$Resource.imteazlogo}" alt="Imtiaz Developments" />
+</div>
 
 <p>
     This <span class="bold">REAL ESTATE BROKERAGE AGREEMENT</span> is made on
-    <span class="bold"><apex:outputText value="{!currentDateFormatted}" /></span>.
+    <span class="bold"><apex:outputText value="{!currentDateFormatted}" />.</span>
 </p>
 
-<p>between:</p>
+<p style="margin-top:10px;">between:</p>
 
-<p>
-    <span class="bold">IMTIAZ DEVELOPMENTS LLC.</span> a company incorporated in Dubai,
-    with commercial registration no. <span class="bold">CN-XXXXXXX</span>, whose address is at
-    P.O. Box XXXXX, Dubai, UAE (the <span class="bold">Developer</span>). All references in
-    this Agreement to the Developer shall include Imtiaz Developments LLC. and its Subsidiaries
+<p style="margin-top:10px;">
+    1.&#160;&#160;&#160;<span class="bold">IMTIAZ DEVELOPMENTS LLC.</span> a company incorporated in Abu Dhabi,
+    with commercial registration no.<span class="bold">CN-1144938</span>, whose address is at
+    Park Heights Square - Suite-204, Level-2, Building-01 - Dubai Hills - Dubai - UAE. All references
+    in this Agreement to the Developer shall include Imtiaz Developments LLC . and its Subsidiaries
     (as defined herein below), who shall also be a Party to this Agreement.
 </p>
 
-<p style="margin: 8px 30px;">- and -</p>
+<p style="margin-top:8px;">and</p>
 
-<p>
-    <span class="bold"><apex:outputText value="{!brokerApp.Name}" /></span>, a company
-    incorporated under commercial registration n.
+<p style="margin-top:8px;">
+    2.&#160;&#160;&#160;<span class="bold"><apex:outputText value="{!brokerApp.Name}" /></span>,
+    a company incorporated under commercial registration n.&#160;
     <span class="bold"><apex:outputText value="{!brokerApp.CommercialLicenseNumber__c}" /></span>
-    and address in UAE at <apex:outputText value="{!fullAddress}" />, UAE
-    (the <span class="bold">Broker</span>).
+    and address in UAE at&#160;<apex:outputText value="{!fullAddress}" />.
 </p>
 
-<p>
+<p style="margin-top:8px;">
     (The Developer and the Broker are referred to collectively in this Agreement as the
     <span class="bold">Parties</span> and individually as a <span class="bold">Party</span>).
 </p>
 
-<hr/>
-
-<p class="bold">BROKER BANKING DETAILS:</p>
+<p class="bold" style="margin-top:14px;">BROKER BANKING DETAILS:</p>
 
 <table class="banking">
     <tr>
-        <td class="label">Account Name:</td>
-        <td><apex:outputText value="{!brokerApp.Name}" /></td>
+        <td class="lbl">Account Name:</td>
+        <td><apex:outputText value="{!brokerApp.CompanyName__c}" /></td>
     </tr>
     <tr>
-        <td class="label">Bank Name:</td>
-        <td>&#160;</td>
+        <td class="lbl">Bank Name:</td>
+        <td><apex:outputText value="{!brokerApp.BankName__c}" /></td>
     </tr>
     <tr>
-        <td class="label">Account no.:</td>
-        <td>&#160;</td>
+        <td class="lbl">Account no.:</td>
+        <td><apex:outputText value="{!brokerApp.Account_Number__c}" /></td>
     </tr>
     <tr>
-        <td class="label">IBAN Number:</td>
+        <td class="lbl">IBAN Number:</td>
         <td><apex:outputText value="{!brokerApp.IBAN__c}" /></td>
     </tr>
     <tr>
-        <td class="label">TRN Number:</td>
+        <td class="lbl">TRN Number:</td>
         <td><apex:outputText value="{!brokerApp.TaxRegistrationNumber__c}" /></td>
     </tr>
 </table>
 
-<div class="page-break"></div>
+<div class="major-heading">BACKGROUND</div>
 
-
-<!-- ═══════════════════════════════════════════════════════════
-     PAGE 2 – BACKGROUND + AGREED TERMS
-════════════════════════════════════════════════════════════ -->
-
-<p class="clause-heading">BACKGROUND</p>
-
-<p>
-    The Developer is a leading real estate developer and the owner, either directly or through
-    its Subsidiaries, of real estate units within different Projects developed in the United Arab
-    Emirates (the <span class="bold">Units</span>).
-</p>
-<p>
-    The Developer wishes to appoint the Broker to sell the Units in the Projects already existing
-    or developed from time to time by the Developer or its Subsidiaries on a non-exclusive basis
-    for a period ending after 1 year or twelve consecutive months as of the Commencement Date of
-    this Agreement (the <span class="bold">Expiry Date</span>).
-</p>
-<p>
-    The Broker has agreed to accept the appointment on the terms and conditions set out in this
-    Agreement.
+<p class="sub">
+    (A)&#160;&#160;The Developer is a leading real estate developer and the owner, either directly or
+    through its Subsidiaries, of real estate units within different Projects developed in the United
+    Arab Emirates (the <span class="bold">Units</span>).
 </p>
 
-<hr/>
+<p class="sub" style="margin-top:6px;">
+    (B)&#160;&#160;The Developer wishes to appoint the Broker to sell the Units in the Projects already
+    existing or developed from time to time by the Developer or its Subsidiaries on a non-exclusive
+    basis for a period ending after 1 year or twelve consecutive months as of the Commencement Date
+    of this Agreement (the <span class="bold">Expiry Date</span>).
+</p>
 
-<p class="clause-heading">AGREED TERMS</p>
+<p class="sub" style="margin-top:6px;">
+    (C)&#160;&#160;The Broker has agreed to accept the appointment on the terms and conditions set out in
+    this Agreement.
+</p>
 
-<!-- CLAUSE 1 -->
-<p class="section-num">1. Definitions and Interpretation</p>
+<div class="agent-stamp">Initial and Stamp of the Agent</div>
+
+<div class="pb"></div>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     PAGE 3 – AGREED TERMS / CLAUSE 1 (first half)
+═══════════════════════════════════════════════════════ -->
+<div class="page-logo logo-wrap">
+    <img src="{!$Resource.imteazlogo}" alt="Imtiaz Developments" />
+</div>
+
+<div class="major-heading">AGREED TERMS</div>
+
+<p class="section-num">1.&#160;&#160;&#160;&#160;Definitions and Interpretation:</p>
 
 <p>The Parties agree that in this Agreement the following words and expressions have the following meanings:</p>
 
@@ -271,11 +342,13 @@
     will enter into with the Broker containing all particular terms and conditions (including but not
     limited to any Commissions, Administration Fees to which the Broker shall be entitled) under which
     the Broker will market the Units for each Project pursuant to the general terms and conditions set
-    forth herein. The Addendum shall be in writing and may be in the form of a letter from the Developer
-    to the Broker requesting the Broker to accept in writing the particular terms and conditions included
-    therein and which shall form an integral part of this Agreement. The Addendum and its acceptance
-    shall be dated. <span class="bold">Any Addendum without a date or whose date is not certain shall
-    not be considered a valid Addendum and shall not be deemed to be part of this Agreement.</span>
+    forth herein. The Addendum shall be in writing and may be in the form of a letter from the
+    Developer to the Broker requesting the Broker to accept in writing the particular terms and
+    conditions included therein and which shall form an integral part of this Agreement. The Addendum
+    and its acceptance shall be dated.
+    <span class="bold"><span class="underline">Any Addendum without a date or whose date is not
+    certain shall not be considered a valid Addendum and shall not be deemed to be part of this
+    Agreement.</span></span>
 </p>
 
 <p class="sub">
@@ -320,15 +393,27 @@
 
 <p class="sub">
     "<span class="bold">Commission</span>" is the monetary entitlement of the Broker for referring a
-    Buyer to the Developer which results in the entering into a legally binding Contract under the laws
-    of the United Arab Emirates which the Parties agree will be calculated in the manner specified in
-    the Addendum specific for a relevant Project.
+    Buyer to the Developer which results in the entering into a legally binding Contract under the
+    laws of the United Arab Emirates which the Parties agree will be calculated in the manner
+    specified in the Addendum specific for a relevant Project.
 </p>
+
+<div class="agent-stamp">Initial and Stamp of the Agent</div>
+
+<div class="pb"></div>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     PAGE 4 – CLAUSE 1 (second half) + CLAUSE 2
+═══════════════════════════════════════════════════════ -->
+<div class="page-logo logo-wrap">
+    <img src="{!$Resource.imteazlogo}" alt="Imtiaz Developments" />
+</div>
 
 <p class="sub">
     "<span class="bold">Contract</span>" means a sale and purchase agreement (SPA) in respect of the
-    Unit(s), which is legally binding under the laws of the United Arab Emirates, signed by and between
-    the Developer and a Buyer.
+    Unit(s), which is legally binding under the laws of the United Arab Emirates, signed by and
+    between the Developer and a Buyer.
 </p>
 
 <p class="sub">
@@ -337,9 +422,9 @@
 </p>
 
 <p class="sub">
-    "<span class="bold">Project</span>" means any real estate development project already existing and
-    owned by the Developer or a Subsidiary at the date of this Agreement or to be carried out by the
-    Developer or a Subsidiary in the territory.
+    "<span class="bold">Project</span>" means any real estate development project already existing
+    and owned by the Developer or a Subsidiary at the date of this Agreement or to be carried out by
+    the Developer or a Subsidiary in the territory.
 </p>
 
 <p class="sub">
@@ -380,25 +465,33 @@
     imposition in the jurisdiction of incorporation of the Broker.
 </p>
 
+<p class="section-num" style="margin-top:16px;">2.&#160;&#160;&#160;&#160;Term:</p>
 
-<!-- CLAUSE 2 -->
-<p class="section-num">2. Term</p>
-
-<p>
-    This Agreement will come into effect on the Commencement Date and will continue in full force
-    and effect until the Expiry Date. The Agreement shall <span class="bold">be automatically renewed
-    for a subsequent period of one year,</span> thus extending the Term, unless a notice is sent by
-    one Party to the other Party, 30 days prior to the Expiry Date or any extensions thereof, advising
+<p class="clause-body">
+    This Agreement will come into effect on the Commencement Date and will continue in full force and
+    effect until the Expiry Date. The Agreement shall <span class="bold">be automatically renewed for
+    a subsequent period of one year,</span> thus extending the Term, unless a notice is sent by one
+    Party to the other Party, 30 days prior to the Expiry Date or any extensions thereof, advising
     the other Party of its resolution not to renew the Agreement, or unless terminated in accordance
     with Clause 7.
 </p>
 
+<div class="agent-stamp">Initial and Stamp of the Agent</div>
 
-<!-- CLAUSE 3 -->
-<p class="section-num">3. Appointment</p>
+<div class="pb"></div>
 
-<p>
-    The Developer hereby appoints the Broker, effective as of the Commencement Date, as the
+
+<!-- ═══════════════════════════════════════════════════════
+     PAGE 5 – CLAUSE 3
+═══════════════════════════════════════════════════════ -->
+<div class="page-logo logo-wrap">
+    <img src="{!$Resource.imteazlogo}" alt="Imtiaz Developments" />
+</div>
+
+<p class="section-num">3.&#160;&#160;&#160;&#160;Appointment:</p>
+
+<p class="clause-body">
+    3.1.&#160;&#160;The Developer hereby appoints the Broker, effective as of the Commencement Date, as the
     Developer's non-exclusive agent to sell the Units in the Territory until the Expiry Date. The
     Broker hereby accepts the appointment (the <span class="bold">Appointment</span>) on the terms
     set out in this Agreement and in the Addendum which the Developer and/or a Subsidiary and the
@@ -407,324 +500,358 @@
     the Developer and/or a Subsidiary in the Territory.
 </p>
 
-<p>
-    The Broker will operate by identifying suitable Buyers for the Units and introducing them to the
-    Developer and assisting the Buyer(s) in completing the Sales Procedures.
+<p class="clause-body">
+    3.2.&#160;&#160;The Broker will operate by identifying suitable Buyers for the Units and introducing them
+    to the Developer and assisting the Buyer(s) in completing the Sales Procedures.
 </p>
 
-<p>
-    The Broker acknowledges and agrees to operate as an independent agent, and nothing in this
-    Agreement or the Addendum will be construed to create any partnership, agency, or employment
+<p class="clause-body">
+    3.3.&#160;&#160;The Broker acknowledges and agrees to operate as an independent agent, and nothing in
+    this Agreement or the Addendum will be construed to create any partnership, agency, or employment
     relationship of any kind between Developer and Broker.
 </p>
 
-<p>
-    The scope of the Appointment may only be varied by the written and signed agreement of both
-    Parties. It is agreed that neither Party shall have the right to unilaterally modify any of the
-    terms, conditions, percentages or amounts which have been agreed upon in this Agreement or the
-    Addendum. The Parties agree that these matters may only be amended by the written and signed
+<p class="clause-body">
+    3.4.&#160;&#160;The scope of the Appointment may only be varied by the written and signed agreement of
+    both Parties. It is agreed that neither Party shall have the right to unilaterally modify any of
+    the terms, conditions, percentages or amounts which have been agreed upon in this Agreement or
+    the Addendum. The Parties agree that these matters may only be amended by the written and signed
     agreement of both Parties.
 </p>
 
-<p>
-    The Broker agrees to offer the Developer's Units for sale to potential Buyers at such prices and
-    on such terms and conditions as the Developer shall authorize in writing during the term of this
-    Agreement.
+<p class="clause-body">
+    3.5.&#160;&#160;The Broker agrees to offer the Developer's Units for sale to potential Buyers at such
+    prices and on such terms and conditions as the Developer shall authorize in writing during the
+    term of this Agreement.
 </p>
 
-<p>
-    The Developer understands and agrees that any dispute regarding the sale of the Units will be
-    strictly limited between the Developer and any potential or current Buyer. The Broker will hold
-    no responsibility for any disputes. Any involvement of the Broker in such matters will be
-    strictly limited to acting as a mediator between the Developer and the Buyer.
+<p class="clause-body">
+    3.6.&#160;&#160;The Developer understands and agrees that any dispute regarding the sale of the Units
+    will be strictly limited between the Developer and any potential or current Buyer. The Broker
+    will hold no responsibility for any disputes. Any involvement of the Broker in such matters will
+    be strictly limited to acting as a mediator between the Developer and the Buyer.
 </p>
 
-<p>
-    If the Broker accepts the particular terms and conditions of an Addendum, it shall send to the
-    Developer confirmation in writing of the acceptance of the Appointment for that specific Project
-    which is the subject matter of the Addendum. The Broker acknowledges that the Commission and
-    Administration Fees payable may vary significantly from one Addendum to the other and amongst
+<p class="clause-body">
+    3.7.&#160;&#160;If the Broker accepts the particular terms and conditions of an Addendum, it shall send
+    to the Developer confirmation in writing of the acceptance of the Appointment for that specific
+    Project which is the subject matter of the Addendum. The Broker acknowledges that the Commission
+    and Administration Fees payable may vary significantly from one Addendum to the other and amongst
     Projects, and from existing Projects to future ones proposed by the Developer. It being agreed
     that the Broker is under no obligation to accept the particular terms and conditions of an
     Addendum and therefore may refuse to represent the Developer on a specific Project, whilst still
     representing the Developer on other Projects.
 </p>
 
+<p class="section-num" style="margin-top:16px;">4.&#160;&#160;&#160;&#160;Obligations of the Parties:</p>
 
-<!-- CLAUSE 4 -->
-<p class="section-num">4. Obligations of the Parties</p>
+<p class="clause-heading">4.1.&#160;&#160;Obligations and Rights of the Broker:</p>
 
-<p class="clause-heading">Obligations and Rights of the Broker:</p>
+<div class="agent-stamp">Initial and Stamp of the Agent</div>
+
+<div class="pb"></div>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     PAGE 6 – CLAUSE 4 obligations
+═══════════════════════════════════════════════════════ -->
+<div class="page-logo logo-wrap">
+    <img src="{!$Resource.imteazlogo}" alt="Imtiaz Developments" />
+</div>
 
 <p class="sub">
-    (a) The Broker shall at all times use its reasonable efforts to promote the sale of the Units
-    and to refer enquiries for Units from potential Buyers to the Developer, when the Broker is not
-    able to address them by herself/himself.
+    (a)&#160;&#160;The Broker shall at all times use its reasonable efforts to promote the sale of the
+    Units and to refer enquiries for Units from potential Buyers to the Developer, when the Broker
+    is not able to address them by herself/himself.
 </p>
 
 <p class="sub">
-    (b) The Broker shall advertise a Unit or a Project in any form of advertisement medium
+    (b)&#160;&#160;The Broker shall advertise a Unit or a Project in any form of advertisement medium
     including, but not limited to, brochures, magazines, social media, newspapers, signs, website
     or any other globally accessible medium. The Broker shall conduct any advertising campaign with
     the prior written consent of the Developer and in alignment with the Developer's branding
-    guidelines. Any violation of the prohibitions set forth in this clause 4.1(b) shall constitute
+    guidelines. Any violation of the prohibitions set forth in this clause 4.1 (b) shall constitute
     a material violation of this Agreement, and as a consequence the Developer shall terminate this
     Agreement with immediate effect, and any Commissions either accrued, pending or outstanding at
     the time of such violation shall be forfeited.
 </p>
 
 <p class="sub">
-    (c) The Broker shall not promote any Units for sale at any price other than the target Sale
-    Prices indicated by the Developer and shall not promise any discount other than as may for the
-    time be fixed by the Developer, but in any case, never without the prior written consent of the
-    Developer.
+    (c)&#160;&#160;The Broker shall not to promote any Units for sale at any price other than the target
+    Sale Prices indicated by the Developer and shall not promise any discount other than as may for
+    the time be fixed by the Developer, but in any case, never without the prior written consent of
+    the Developer.
 </p>
 
 <p class="sub">
-    (d) The Broker shall assist the Developer during all the Sales Procedures and may be requested
-    to conduct negotiations on behalf of the Developer.
+    (d)&#160;&#160;The Broker shall assist the Developer during all the Sales Procedures and may be
+    requested to conduct negotiations on behalf of the Developer.
 </p>
 
 <p class="sub">
-    (e) The Developer will arrange for the preparation of the Contract for signing between the
+    (e)&#160;&#160;The Developer will arrange for the preparation of the Contract for signing between the
     Developer and the Buyer and the Broker will assist in coordinating the execution of the Contract.
 </p>
 
 <p class="sub">
-    (f) The Broker will not receive and accept, on behalf of the Developer, any payments, cheques
-    or reservation deposits from the Buyer, which must always be made directly to the Developer.
+    (f)&#160;&#160;The Broker will not receive and accept, on behalf of the Developer, any payments,
+    cheques or reservation deposits from the Buyer, which must always be made directly to the
+    Developer.
 </p>
 
 <p class="sub">
-    (g) The Broker will carry out the Appointment pursuant to Clause 3 above in compliance with
-    the Applicable Law.
+    (g)&#160;&#160;The Broker will carry out the Appointment pursuant to Clause 3.1 above in compliance
+    with the Applicable Law.
 </p>
 
-<p class="clause-heading">Obligations and Rights of the Developer:</p>
-
-<p>The Developer represents and warrants to the Broker that:</p>
-
-<p class="sub">(a) It is the sole owner of the Units.</p>
-
-<p class="sub">(b) It has the exclusive right and lawful authority to sell and transfer the Units.</p>
+<p class="clause-heading" style="margin-top:14px;">4.2.&#160;&#160;Obligations and Rights of the Developer:</p>
 
 <p class="sub">
-    (c) The Units are free or shall be free from encumbrances at the time of transfer to the Buyers.
+    (a)&#160;&#160;The Developer represents and warrants to the Broker that:
 </p>
+
+<p class="sub2">
+    (i)&#160;&#160;It is the sole owner of the Units.
+</p>
+<p class="sub2">
+    (ii)&#160;&#160;it has the exclusive right and lawful authority to sell and transfer the Units.
+</p>
+<p class="sub2">
+    (iii)&#160;&#160;the Units are free or shall be free from encumbrances at the time of transfer to
+    the Buyers.
+</p>
+
+<p class="sub" style="margin-top:6px;">
+    (b)&#160;&#160;As of the date of this Agreement, the Developer may have direct connection and
+    negotiations with the Buyer(s) without the prior approval of the Broker.
+</p>
+
+<div class="agent-stamp">Initial and Stamp of the Agent</div>
+
+<div class="pb"></div>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     PAGE 7 – CLAUSE 4(c) + CLAUSES 5 + 6
+═══════════════════════════════════════════════════════ -->
+<div class="page-logo logo-wrap">
+    <img src="{!$Resource.imteazlogo}" alt="Imtiaz Developments" />
+</div>
 
 <p class="sub">
-    (d) As of the date of this Agreement, the Developer may have direct connection and negotiations
-    with the Buyer(s) without the prior approval of the Broker.
+    (c)&#160;&#160;The Developer shall give written notice to the Broker of any changes in the Sale
+    Prices, the range of the Units prices and/or the conditions of sale as soon as these resolutions
+    of the Developers are implemented.
 </p>
 
-<p class="sub">
-    (e) The Developer shall give written notice to the Broker of any changes in the Sale Prices, the
-    range of the Units prices and/or the conditions of sale as soon as these resolutions of the
-    Developers are implemented.
-</p>
-
-
-<!-- CLAUSE 5 -->
-<p class="section-num">5. Representations and Warranties of the Broker</p>
+<p class="section-num" style="margin-top:16px;">5.&#160;&#160;&#160;&#160;Representations and Warranties of the Broker:</p>
 
 <p>The Broker represents and warrants to the Developer:</p>
 
 <p class="sub">
-    (a) It has all requisite authorizations to execute, deliver and perform its obligations under
-    this Agreement.
+    (a)&#160;&#160;it has all requisite authorizations to execute, deliver and perform its obligations
+    under this Agreement.
 </p>
 
 <p class="sub">
-    (b) This Agreement is a legal, valid and binding obligation of the Broker enforceable against
-    it in accordance with its terms.
+    (b)&#160;&#160;this Agreement is a legal, valid and binding obligation of the Broker enforceable
+    against it in accordance with its terms.
 </p>
 
 <p class="sub">
-    (c) It shall never present itself to any Buyer as an employee of the Developer and/or as having
-    exclusivity rights over the commercial representation of the Units vis-à-vis any Buyer or third
-    party.
+    (c)&#160;&#160;it shall never present itself to any Buyer as an employee of the Developer and/or as
+    having exclusivity rights over the commercial representation of the Units vis-&#224;-vis any Buyer
+    or third party.
 </p>
 
 <p class="sub">
-    (d) It shall provide the Developer – in case of disagreement as to the Broker's entitlement to
-    a Commission and Administration Fee – with any documentation with respect to a Contract
-    evidencing the facts and events which have resulted in the lead generation of that particular
-    Buyer.
+    (d)&#160;&#160;it shall provide the Developer &#8211; in case of disagreement as to the Broker&#8217;s
+    entitlement to a Commission and Administration Fee &#8211; with any documentation with respect to a
+    Contract evidencing the facts and event which have resulted in the lead generation of that
+    particular Buyer,
 </p>
+
+<p style="margin-left:48px; margin-top:2px; margin-bottom:4px;">and</p>
 
 <p class="sub">
-    (e) It shall not add to, integrate with or fund all or part of its compensation hereunder with
-    moneys, in-kind consideration, or any other advantage (be that material or immaterial) received
-    from any third party, employees of the Developer, or Buyers, regardless of the circumstances,
-    in conjunction with the promotion or marketing of the sale of the Units. Such action shall be
-    conclusively presumed to constitute a "<span class="bold">kickback</span>", and it will
-    constitute a material violation of this Agreement, and as a consequence the Developer shall
-    terminate this Agreement with immediate effect, and any Commissions either accrued, pending or
-    outstanding at the time of such violation shall be forfeited. This clause shall be cumulative
-    to and not affected by any further remedy available by Applicable Law against the Broker for
-    receiving kickbacks.
+    (e)&#160;&#160;it shall not add to, integrate with or fund all or part of his compensation hereunder
+    with moneys, in-kind consideration, or any other advantage (be that material or immaterial)
+    received from any third party, employees of the Developer, or Buyers, regardless of the
+    circumstances, in conjunction with the promotion or marketing of the sale of the Units. Such
+    action shall be conclusively presumed to constitute a
+    "<span class="bold">kickback</span>", and it will constitute a material violation of this
+    Agreement, and as a consequence the Developer shall terminate this Agreement with immediate
+    effect, and any Commissions either accrued, pending or outstanding at the time of such violation
+    shall be forfeited. This clause shall be cumulative to and not affected by any further remedy
+    available by Applicable Law against the Broker for receiving kickbacks.
 </p>
 
+<p class="section-num" style="margin-top:16px;">6.&#160;&#160;&#160;&#160;Commission and Administration Fee:</p>
 
-<!-- CLAUSE 6 -->
-<p class="section-num">6. Commission and Administration Fee</p>
-
-<p>
-    6.1 The Developer shall pay the Commission and the Administration Fee, as defined and agreed
-    upon by the Parties in each Addendum relevant to a specific Project, to the Broker for any
-    completed sales of Units <span class="bold">only during</span> the Term. For the avoidance of
-    doubt, <span class="bold">any sales of Units completed after the Expiry Date, or any extensions
-    thereof, shall not entitle the Broker to any Commissions.</span>
+<p class="clause-body">
+    6.1&#160;&#160;The Developer shall pay the Commission and the Administration Fee, as defined and
+    agreed upon by the Parties in each Addendum relevant to a specific Project, to the Broker for
+    any completed sales of Units <span class="bold"><span class="underline">only during</span></span>
+    the Term. For the avoidance of doubt,
+    <span class="bold"><span class="underline">any sales of Units completed after the Expiry Date,
+    or any extensions thereof, shall not entitle the Broker to any
+    Commissions.</span></span>
 </p>
 
-<p>
-    6.2 For purposes of this Clause 6, a sale shall be deemed completed on the date a Contract
-    between the Developer and Buyer is signed (and all documentation required by the Developer
-    under a Contract has been provided by the Buyer), irrespective of whether the Contract is
-    performed or not by the Buyer for any reason whatsoever. The Developer undertakes and agrees to
-    pay the Commission and the Administration Fee to the Broker within 45 calendar days of the date
-    on which the Contract is duly signed between the Developer and the Buyer, and all required
-    payment is cleared by the Buyer.
+<p class="clause-body" style="margin-top:6px;">
+    6.2&#160;&#160;For purposes of this Clause 6, a sale shall be deemed completed on the date a Contract
+    between the Developer and Buyer is signed (and all documentation required by the Developer under
+    a Contract has been provided by the Buyer), irrespective of whether the Contract is performed or
+    not by the Buyer for any reason whatsoever. The Developer undertakes and agrees to pay the
+    Commission and the Administration Fee to the Broker within 45 calendar days of the date on which
 </p>
 
-<p>
-    6.4 The Parties agree that the amount of the Commission and the Administration Fee are exclusive
-    of any VAT (if applicable).
+<div class="agent-stamp">Initial and Stamp of the Agent</div>
+
+<div class="pb"></div>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     PAGE 8 – CLAUSE 6(cont) + CLAUSES 7–10
+═══════════════════════════════════════════════════════ -->
+<div class="page-logo logo-wrap">
+    <img src="{!$Resource.imteazlogo}" alt="Imtiaz Developments" />
+</div>
+
+<p class="clause-body">
+    the Contract is duly signed between the Developer and the Buyer, and all required payment is
+    cleared by the Buyer.
 </p>
 
-
-<!-- CLAUSE 7 -->
-<p class="section-num">7. Termination</p>
-
-<p>
-    7.1 Either Party may give 14 (fourteen) days' written notice to the other Party and on expiry
-    of such notice this Agreement will terminate.
+<p class="clause-body" style="margin-top:6px;">
+    6.4&#160;&#160;The Parties agree that the amount of the Commission and the Administration Fee are
+    exclusive of any VAT (if applicable).
 </p>
 
-<p>
-    7.2 Termination of this Agreement shall not prejudice any rights of the Broker to the
-    Commissions or Administration Fees accruing up until the date of termination.
+<p class="section-num" style="margin-top:16px;">7.&#160;&#160;&#160;&#160;Termination:</p>
+
+<p class="clause-body">
+    7.1.&#160;&#160;Either Party may give 14 (fourteen) days&#8217; written notice to the other Party and on
+    expiry of such notice this Agreement will terminate.
 </p>
 
-<p>
-    7.3 Upon termination of this Agreement the Broker will provide the Developer with a list of all
-    Buyers that were identified during the Term of this Agreement as a result of any introduction,
-    referral, direction or nomination made by the Broker, as sufficiently evidenced by email
-    correspondence in writing.
+<p class="clause-body" style="margin-top:5px;">
+    7.2.&#160;&#160;<span class="underline">Termination of this Agreement shall not prejudice any rights
+    of the Broker to the Commissions or Administration Fees accruing up until the date of
+    termination.</span>
 </p>
 
+<p class="clause-body" style="margin-top:5px;">
+    7.3.&#160;&#160;Upon termination of this Agreement the Broker will provide the Developer with a list
+    of all Buyers that were identified during the Term of this Agreement as a result of any
+    introduction, referral, direction or nomination made by the Broker, as sufficiently evidenced by
+    email correspondence in writing.
+</p>
 
-<!-- CLAUSE 8 -->
-<p class="section-num">8. Confidentiality</p>
+<p class="section-num" style="margin-top:16px;">8.&#160;&#160;&#160;&#160;Confidentiality:</p>
 
-<p>
-    8.1 The Parties agree that they will consider all information furnished by either Party to the
-    other Party as confidential no matter the simplicity of the information, including financial
+<p class="clause-body">
+    8.1.&#160;&#160;The Parties agree that they will consider all information furnished by either Party to
+    the other Party as confidential no matter the simplicity of the information, including financial
     information, names and nationalities, and any other information related to the transaction and
     subject to this Agreement.
 </p>
 
-<p>
-    8.2 Any information containing personal data shall be handled in accordance with all privacy
-    laws and regulations applicable in the United Arab Emirates during the Term of this Agreement.
-</p>
-
-
-<!-- CLAUSE 9 -->
-<p class="section-num">9. Assignment and Sub-Contracting</p>
-
-<p>
-    Neither Party may assign, sub-license, transfer, create a charge over or otherwise dispose of
-    any of its rights or sub-contract, transfer or otherwise dispose of any of its obligations
-    under this Agreement without the prior written consent of the other Party.
-</p>
-
-
-<!-- CLAUSE 10 -->
-<p class="section-num">10. Further Assurance</p>
-
-<p>
-    Each Party undertakes, at the request and cost and expense of the other Party, to sign all
-    documents and to do all other acts, which may be necessary to give full effect to this
+<p class="clause-body" style="margin-top:5px;">
+    8.2.&#160;&#160;Any information containing personal data shall be handled in accordance with all
+    privacy laws and regulations applicable in the United Arab Emirates during the Term of this
     Agreement.
 </p>
 
+<p class="section-num" style="margin-top:16px;">9.&#160;&#160;&#160;&#160;Assignment and Sub-Contracting:</p>
 
-<!-- CLAUSE 11 -->
-<p class="section-num">11. Costs</p>
+<p class="clause-body">
+    Neither Party may assign, sub-license, transfer, create a charge over or otherwise dispose of
+    any of its rights or sub-contract, transfer or otherwise dispose of any of its obligations under
+    this Agreement without the prior written consent of the other Party.
+</p>
 
-<p>
+<p class="section-num" style="margin-top:16px;">10.&#160;&#160;&#160;&#160;Further Assurance:</p>
+
+<p class="clause-body">
+    Each Party undertakes, at the request and cost and expense of the other Party, to sign all
+    documents and to do all other acts, which may be necessary to give full effect to this Agreement.
+</p>
+
+<div class="agent-stamp">Initial and Stamp of the Agent</div>
+
+<div class="pb"></div>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     PAGE 9 – CLAUSES 11–13 + SIGNATURES
+═══════════════════════════════════════════════════════ -->
+<div class="page-logo logo-wrap">
+    <img src="{!$Resource.imteazlogo}" alt="Imtiaz Developments" />
+</div>
+
+<p class="section-num">11.&#160;&#160;&#160;&#160;Costs:</p>
+
+<p class="clause-body">
     Each Party shall pay the costs and expenses incurred by it in connection with the entering into
     of this Agreement.
 </p>
 
+<p class="section-num" style="margin-top:16px;">12.&#160;&#160;&#160;&#160;Entire Agreement:</p>
 
-<!-- CLAUSE 12 -->
-<p class="section-num">12. Entire Agreement</p>
-
-<p>
+<p class="clause-body">
     This Agreement, the documents referred to in it and any agreements relating to this Agreement
     entered into on the date of this Agreement between the Parties contain the entire agreement
     between the Parties relating to the transactions contemplated by this Agreement and supersede
     all previous agreements between the Parties relating to those transactions.
 </p>
 
+<p class="section-num" style="margin-top:16px;">13.&#160;&#160;&#160;&#160;Governing Law and Disputes:</p>
 
-<!-- CLAUSE 13 -->
-<p class="section-num">13. Governing Law and Disputes</p>
-
-<p>
+<p class="clause-body">
     The construction, validity and performance of this Agreement shall be governed and construed in
     accordance with the Applicable Laws. The Parties hereby submit to the exclusive jurisdiction of
-    the Courts of Dubai, with respect to any dispute arising out of this Agreement or any
-    transaction contemplated hereby.
+    the Courts of Dubai, with respect to any dispute arising out of this Agreement or any transaction
+    contemplated hereby.
 </p>
 
-<hr/>
+<div class="agent-stamp">Initial and Stamp of the Agent</div>
 
-<!-- SIGNATURE BLOCK -->
-<table class="signature">
+<!-- SIGNATURE TABLE -->
+<table class="sig">
     <tr>
         <td>
-            <p class="sig-label">For, and on behalf of, the Developer and its Subsidiaries:</p>
-            <p><span class="bold">IMTIAZ DEVELOPMENTS LLC</span></p>
-            <br/>
-            <p>Represented by: ________________________________</p>
-            <br/>
-            <p>Designation: ________________________________</p>
-            <br/><br/>
-            <p>Signature &amp; Stamp:</p>
-            <div class="sig-line">Authorised Signatory – Imtiaz Developments LLC</div>
+            <p>For, and on behalf of, the <span class="bold">Developer</span> and its
+            <span class="bold">Subsidiaries</span>:</p>
+            <p style="margin-top:8px;">Represented by:</p>
+            <p style="margin-top:6px;">Designation:</p>
+            <p style="margin-top:6px;">Signature &amp; Stamp:</p>
+            <div class="sig-spacer"></div>
         </td>
         <td>
-            <p class="sig-label">
-                Broker: <apex:outputText value="{!brokerApp.Name}" />
-            </p>
-            <br/>
             <p>
-                Represented by:
-                <span class="bold">
+                Broker:&#160;<span class="bold"><apex:outputText value="{!brokerApp.Name}" /></span>
+            </p>
+            <p style="margin-top:8px;">
+                Represented by:&#160;<span class="bold">
                     <apex:outputText value="{!IF(applicant != null, applicant.Name, '')}" />
                 </span>
             </p>
-            <br/>
-            <p>
-                Designation:
-                <span class="bold">
+            <p style="margin-top:6px;">
+                Designation:&#160;<span class="bold">
                     <apex:outputText value="{!IF(applicant != null, applicant.Designation__c, '')}" />
                 </span>
             </p>
-            <br/><br/>
-            <p>Signature &amp; Stamp:</p>
-            <div class="sig-line">
-                Authorised Signatory – <apex:outputText value="{!brokerApp.Name}" />
-            </div>
+            <p style="margin-top:6px;">Signature &amp; Stamp:</p>
+            <div class="sig-spacer"></div>
         </td>
     </tr>
 </table>
 
-<!-- Agreement stamp -->
-<div class="agreement-stamp" style="margin-top:30px;">
+<div class="agent-stamp" style="margin-top:14px;">Initial and Stamp of the Agent</div>
+
+<div style="text-align:center; font-weight:bold; font-size:8.5pt; margin-top:8px; line-height:1.6;">
+    Page 9 of 9<br/>
     <apex:outputText value="{!brokerApp.Name}" /><br/>
     <apex:outputText value="{!brokerApp.CommercialLicenseNumber__c}" />
 </div>

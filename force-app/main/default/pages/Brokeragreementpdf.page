@@ -10,13 +10,6 @@
         }
     }
 
-    /* Suppress running footer on the cover page */
-    @page :first {
-        @bottom-center {
-            content: none;
-        }
-    }
-
     body {
         font-family: Arial, sans-serif;
         font-size: 10.5pt;
@@ -33,17 +26,28 @@
         line-height: 1.5;
     }
 
+    #page-footer .page-line:before {
+        content: "Page " counter(page) " of " counter(pages);
+    }
+
     .bold      { font-weight: bold; }
     .underline { text-decoration: underline; }
 </style>
 </head>
 <body>
 
+<!-- RUNNING FOOTER (all pages) -->
+<div id="page-footer">
+    <div class="page-line"></div>
+    <apex:outputText value="{!brokerApp.Name}" /><br/>
+    <apex:outputText value="{!brokerApp.CommercialLicenseNumber__c}" />
+</div>
+
 
 <!-- ═══════════════════════════════════════════════════════
      PAGE 1 – COVER
 ═══════════════════════════════════════════════════════ -->
-<div style="position: relative; height: 246mm; page-break-after: always; overflow: hidden;">
+<div style="position: relative; height: 230mm; page-break-after: always; overflow: hidden;">
 
     <!-- Logo: top-left, large -->
     <div style="display: block; width: 25%; margin-bottom: 0;">
@@ -65,24 +69,7 @@
         <div style="text-align: center; font-size: 14pt; font-weight: bold; margin-bottom: 30px;"><apex:outputText value="{!brokerApp.Name}" /></div>
     </div>
 
-    <!-- Bottom: stamp right + page info center -->
-    <div style="position: absolute; bottom: 0; left: 0; right: 0;">
-        <div style="text-align: right; font-size: 8.5pt; margin-bottom: 6px;">Initial and Stamp of the Agent</div>
-        <div style="text-align: center; font-weight: bold; font-size: 8.5pt; line-height: 1.6;">
-            Page 1 of 9<br/>
-            <apex:outputText value="{!brokerApp.Name}" /><br/>
-            <apex:outputText value="{!brokerApp.CommercialLicenseNumber__c}" />
-        </div>
-    </div>
-
 </div>
-
-<!-- RUNNING FOOTER (pages 2 onwards — placed here so running(footer) starts after cover) -->
-<div id="page-footer">
-    <apex:outputText value="{!brokerApp.Name}" /><br/>
-    <apex:outputText value="{!brokerApp.CommercialLicenseNumber__c}" />
-</div>
-
 
 <!-- ═══════════════════════════════════════════════════════
      PAGE 2 – PARTIES + BACKGROUND
@@ -695,12 +682,6 @@
 </table>
 
 <div style="text-align: right; font-size: 8.5pt; margin-top: 14px; margin-bottom: 4px;">Initial and Stamp of the Agent</div>
-
-<div style="text-align:center; font-weight:bold; font-size:8.5pt; margin-top:8px; line-height:1.6;">
-    Page 9 of 9<br/>
-    <apex:outputText value="{!brokerApp.Name}" /><br/>
-    <apex:outputText value="{!brokerApp.CommercialLicenseNumber__c}" />
-</div>
 
 </body>
 </html>

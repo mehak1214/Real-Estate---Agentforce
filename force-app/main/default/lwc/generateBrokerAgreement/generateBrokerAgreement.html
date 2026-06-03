@@ -1,0 +1,51 @@
+<template>
+    <lightning-card title="Generate Broker Agreement">
+
+        <div style="padding: 1rem 1.5rem;">
+
+            <!-- Confirmation message -->
+            <template if:false={isLoading}>
+                <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:1.25rem;">
+                    <lightning-icon
+                        icon-name="doctype:pdf"
+                        size="medium">
+                    </lightning-icon>
+                    <p style="margin:0; font-size:14px; color:#3e3e3c;">
+                        Click <strong>Generate</strong> to create and attach the
+                        Broker Agreement PDF to this record.
+                    </p>
+                </div>
+            </template>
+
+            <!-- Loading state -->
+            <template if:true={isLoading}>
+                <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:1.25rem;">
+                    <lightning-spinner
+                        alternative-text="Generating..."
+                        size="small">
+                    </lightning-spinner>
+                    <p style="margin:0; font-size:14px; color:#3e3e3c;">
+                        Generating PDF, please wait&hellip;
+                    </p>
+                </div>
+            </template>
+
+            <!-- Action buttons -->
+            <div style="display:flex; gap:0.5rem; justify-content:flex-end;">
+                <lightning-button
+                    label="Cancel"
+                    onclick={handleCancel}
+                    disabled={isLoading}>
+                </lightning-button>
+                <lightning-button
+                    label="Generate"
+                    variant="brand"
+                    onclick={handleGenerate}
+                    disabled={isLoading}>
+                </lightning-button>
+            </div>
+
+        </div>
+
+    </lightning-card>
+</template>

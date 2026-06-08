@@ -31,10 +31,15 @@ public with sharing class BrokerLeadCreationActions {
         @InvocableVariable(label='Lead Type' required=false description='Lead type: Enquiry or Booking')
         public String leadType;
         
-        // project removed: only unit is captured now
+        // project and unit removed: typology is captured now
 
+        /*
         @InvocableVariable(label='Unit' required=false description='Unit Id or unit name the buyer is interested in')
         public String relatedUnitId;
+        */
+
+        @InvocableVariable(label='Typology' required=false description='Typology the buyer is interested in')
+        public String typology;
         
         @InvocableVariable(label='Budget' required=false description='Budget if available (in Lac or currency)')
         public String budget;
@@ -154,6 +159,7 @@ public with sharing class BrokerLeadCreationActions {
             newLead.LeadSource = 'Web';
             newLead.OwnerId = UserInfo.getUserId();
             newLead.MobilePhone = input.mobile;
+            newLead.Phone = input.mobile; 
             newLead.Purchaser__c = purchaser;
             newLead.Lead_Type__c = leadType;
             newLead.Channel_Partner__c = brokerContact.AccountId;
@@ -177,8 +183,8 @@ public with sharing class BrokerLeadCreationActions {
                 newLead.put('Company_Name__c', input.companyName.trim());
             }
             
-            // Project logic removed: leads no longer set Project__c
-
+            // Project and unit logic removed: leads no longer set Project__c or Related_Unit__c.
+            /*
             if (String.isNotBlank(input.relatedUnitId)) {
                 Id unitId = resolveUnitId(input.relatedUnitId);
                 if (unitId == null) {
@@ -188,6 +194,12 @@ public with sharing class BrokerLeadCreationActions {
                     return outputs;
                 }
                 newLead.Related_Unit__c = unitId;
+            }
+            */
+
+            if (String.isNotBlank(input.typology)
+                && Schema.sObjectType.Lead.fields.getMap().containsKey('Typology__c')) {
+                newLead.put('Typology__c', input.typology.trim());
             }
             
             if (String.isNotBlank(input.budget)) {
@@ -297,6 +309,7 @@ public with sharing class BrokerLeadCreationActions {
 
     // resolveProjectId removed: project functionality deleted
 
+    /*
     private static Id resolveUnitId(String unitReference) {
         if (String.isBlank(unitReference)) {
             return null;
@@ -328,6 +341,7 @@ public with sharing class BrokerLeadCreationActions {
         ];
         return units.isEmpty() ? null : units[0].Id;
     }
+    */
 
     private static Id parseId(String idText) {
         try {

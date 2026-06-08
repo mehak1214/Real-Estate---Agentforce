@@ -25,7 +25,7 @@
     <localTopics>
         <fullName>Broker_Case_Management_16jHn0000010zDe</fullName>
         <canEscalate>false</canEscalate>
-        <description>This topic is used to address Broker reports of issue related to  booking of a Unit, issue related to payment plans of Unit, issue related to commission of a Unit, issue in creating lead , issue related to Broker portal , and general support issue.</description>
+        <description>This topic is used to address Broker reports of issue related to booking of a Unit, payment plans of Unit, commission of a Unit, issue in creating lead, broker portal support issues that are not portal account creation, and general support issue.</description>
         <developerName>Broker_Case_Management_16jHn0000010zDe</developerName>
         <genAiPluginInstructions>
             <description>RULE - Strictly follow this rule never show raw data in response. 
@@ -277,6 +277,21 @@ Always ask information one by one never ask all information at once</description
             <masterLabel>Instruction 3</masterLabel>
             <sortOrder>8</sortOrder>
         </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>HARD ROUTING EXCLUSION:
+
+Do not handle requests to create, add, invite, register, or set up another broker portal account, broker portal user, broker login, portal login, team member access, staff access, or agency user access.
+
+Do not ask for case priority for these requests.
+Do not create a support case for these requests.
+Do not use Create Broker Case for these requests.
+
+If the broker is asking to create access or login for another person, this is portal account creation, not a support case.</description>
+            <developerName>instruction_portal_account_exclusion</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>Portal Account Exclusion</masterLabel>
+            <sortOrder>9</sortOrder>
+        </genAiPluginInstructions>
         <language>en_US</language>
         <localActionLinks>
             <functionName>Create_Broker_Case</functionName>
@@ -308,7 +323,7 @@ Unit booking issues
 Payment plan issues for a unit
 Commission issues for a unit
 Lead creation issues
-Broker portal issues
+Broker portal support issues, except portal account/user/login creation
 General support requests and inquiries
 
 The agent&apos;s responsibility is to understand the broker&apos;s problem, collect the required information, summarize the case details, and create a support case by calling the &quot;Create Broker Case&quot; Apex action after broker confirmation.
@@ -970,6 +985,18 @@ if user is saying any person is interested then take that persons name and if yo
             <masterLabel>Instruction 2</masterLabel>
             <sortOrder>6</sortOrder>
         </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>HARD ROUTING EXCLUSION:
+
+Do not handle requests to create broker portal users, broker portal accounts, broker logins, portal logins, team member access, staff access, or access for another broker agency user.
+
+A broker portal account request is not a buyer lead.
+Do not collect purchaser, typology, budget, or type of interest for portal account creation requests.</description>
+            <developerName>instruction_portal_account_exclusion</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>Portal Account Exclusion</masterLabel>
+            <sortOrder>7</sortOrder>
+        </genAiPluginInstructions>
         <language>en_US</language>
         <localActionLinks>
             <functionName>Create_Broker_Lead1_179Hn0000001I78</functionName>
@@ -1032,7 +1059,7 @@ Ask Last Name
 Ask Mobile Number
 Continue one by one
 
- Incorrect:
+Incorrect:
 Please provide first name, last name, email, mobile, purchaser type, budget, and Typology name.</scope>
     </localTopics>
     <masterLabel>Agentforce Broker Service Agent</masterLabel>

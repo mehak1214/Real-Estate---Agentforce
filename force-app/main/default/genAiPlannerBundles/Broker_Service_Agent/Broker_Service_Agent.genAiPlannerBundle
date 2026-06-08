@@ -30,6 +30,12 @@
         <mappingTargetName>ContactId</mappingTargetName>
         <mappingType>ContextVariable</mappingType>
     </attributeMappings>
+    <attributeMappings>
+        <attributeName>Broker_Portal_Account_Management_16jHn0000010zFt.Create_Broker_Portal_Account_179Hn0000001IrP.input_brokerContactId</attributeName>
+        <attributeType>CustomPluginFunctionAttribute</attributeType>
+        <mappingTargetName>ContactId</mappingTargetName>
+        <mappingType>ContextVariable</mappingType>
+    </attributeMappings>
     <description>Broker-facing service assistant for case support, payment plan queries, lead creation, commission status, and broker performance insights.</description>
     <localActionLinks>
         <genAiFunctionName>AnswerQuestionsWithKnowledge_16jHn0000010zFt</genAiFunctionName>
@@ -51,6 +57,9 @@
     </localTopicLinks>
     <localTopicLinks>
         <genAiPluginName>Payment_Plan_Inquiries_16jHn0000010zFt</genAiPluginName>
+    </localTopicLinks>
+    <localTopicLinks>
+        <genAiPluginName>Broker_Portal_Account_Management_16jHn0000010zFt</genAiPluginName>
     </localTopicLinks>
     <localTopics>
         <fullName>Buyer_Lead_Creation_16jHn0000010zFt</fullName>
@@ -834,6 +843,75 @@ Portal user contact ID from session context. Pass endUserContactId when availabl
         <masterLabel>Payment Plan Inquiries</masterLabel>
         <pluginType>Topic</pluginType>
         <scope>My job is to provide information about payment plans, including showing installment details, paid amounts, due amounts, and outstanding balances for booked properties. I will not handle requests outside of payment-related queries for booked properties.</scope>
+    </localTopics>
+    <localTopics>
+        <fullName>Broker_Portal_Account_Management_16jHn0000010zFt</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Handle requests from a broker to create another broker portal login under the same broker account.</description>
+        <developerName>Broker_Portal_Account_Management_16jHn0000010zFt</developerName>
+        <genAiPluginInstructions>
+            <description>Use this topic only when the broker asks to create, add, invite, register, or set up another broker portal account or login for a person in their broker agency.</description>
+            <developerName>instruction_1</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>Instruction 1</masterLabel>
+            <sortOrder>0</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>Collect one missing field at a time. Required fields are First Name, Last Name, and Email. Optional fields are Mobile, Phone, and Title.</description>
+            <developerName>instruction_2</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>Instruction 2</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>Before creating the portal account, summarize the captured person details and ask the broker to confirm. After confirmation, call Create Broker Portal Account immediately and do not ask for confirmation again.</description>
+            <developerName>instruction_3</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>Instruction 3</masterLabel>
+            <sortOrder>2</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>Do not ask for or expose Salesforce profile, license, user id, contact id, debug data, or internal setup details. The Apex action always uses Partner Community Login and Partner Broker Portal Login User.</description>
+            <developerName>instruction_4</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>Instruction 4</masterLabel>
+            <sortOrder>3</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localActionLinks>
+            <functionName>Create_Broker_Portal_Account_179Hn0000001IrP</functionName>
+        </localActionLinks>
+        <localActions>
+            <fullName>Create_Broker_Portal_Account_179Hn0000001IrP</fullName>
+            <description>Creates or reuses a broker Contact under the logged-in broker account and queues creation of a Partner Community Login portal user with the Partner Broker Portal Login User profile.
+Portal user contact ID from session context. Pass endUserContactId when available.</description>
+            <developerName>Create_Broker_Portal_Account_179Hn0000001IrP</developerName>
+            <invocationTarget>BrokerPortalAccountActions</invocationTarget>
+            <invocationTargetType>apex</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>Create_Broker_Portal_Account</localDeveloperName>
+            <mappingAttributes>
+                <label>brokerContactId</label>
+                <name>input_brokerContactId</name>
+                <parameterName>brokerContactId</parameterName>
+                <parameterType>input</parameterType>
+            </mappingAttributes>
+            <masterLabel>Create Broker Portal Account</masterLabel>
+            <progressIndicatorMessage>Creating portal account...</progressIndicatorMessage>
+        </localActions>
+        <localDeveloperName>Broker_Portal_Account_Management</localDeveloperName>
+        <masterLabel>Broker Portal Account Management</masterLabel>
+        <pluginType>Topic</pluginType>
+        <scope>Handle only broker portal account creation requests.
+Always treat the user as a broker.
+Create the new broker portal login only under the logged-in broker&apos;s account context.
+Ask one question at a time.
+Collect First Name, Last Name, and Email.
+Mobile, Phone, and Title are optional.
+Summarize the captured details before creation.
+After the broker confirms, call Create Broker Portal Account immediately.
+Do not discuss internal profile, license, contact id, user id, or setup data with the broker.</scope>
     </localTopics>
     <masterLabel>Broker Service Agent</masterLabel>
     <plannerActions>

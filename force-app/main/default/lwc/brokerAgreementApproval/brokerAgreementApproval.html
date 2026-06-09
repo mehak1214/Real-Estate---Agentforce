@@ -1,0 +1,91 @@
+<template>
+    <lightning-quick-action-panel header="Broker Agreement Review">
+
+        <!-- Loading -->
+        <template if:true={isLoading}>
+            <div class="slds-p-around_large slds-align_absolute-center">
+                <lightning-spinner alternative-text="Loading agreement..." size="medium"></lightning-spinner>
+                <p class="slds-text-body_small slds-text-color_weak slds-m-top_medium">
+                    Loading agreement...
+                </p>
+            </div>
+        </template>
+
+        <template if:false={isLoading}>
+
+            <!-- Error / no document state -->
+            <template if:true={hasError}>
+                <div class="slds-p-around_medium">
+                    <div class="slds-scoped-notification slds-media slds-media_center slds-scoped-notification_error" role="alert">
+                        <div class="slds-media__figure slds-scoped-notification__figure">
+                            <lightning-icon icon-name="utility:error" alternative-text="error" size="small" variant="inverse"></lightning-icon>
+                        </div>
+                        <div class="slds-media__body">
+                            <p class="slds-text-body_small">{errorMessage}</p>
+                        </div>
+                    </div>
+                </div>
+            </template>
+
+            <!-- Document loaded state -->
+            <template if:false={hasError}>
+                <div class="slds-p-around_medium">
+
+                    <!-- Document info card -->
+                    <div class="slds-box slds-theme_default slds-m-bottom_medium">
+                        <div class="slds-media slds-media_center">
+                            <div class="slds-media__figure">
+                                <lightning-icon icon-name="doctype:pdf" size="large"></lightning-icon>
+                            </div>
+                            <div class="slds-media__body">
+                                <p class="slds-text-heading_small">{document.name}</p>
+                                <p class="slds-text-body_small slds-text-color_weak slds-m-top_xx-small">
+                                    Created: {document.createdDate} &bull; Size: {document.size}
+                                </p>
+                                <lightning-button
+                                    label="Preview Document"
+                                    variant="brand-outline"
+                                    icon-name="utility:preview"
+                                    onclick={handlePreviewDocument}
+                                    class="slds-m-top_small">
+                                </lightning-button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Instruction notice -->
+                    <div class="slds-scoped-notification slds-media slds-media_center slds-scoped-notification_light" role="status">
+                        <div class="slds-media__figure slds-scoped-notification__figure">
+                            <lightning-icon icon-name="utility:info" alternative-text="info" size="small"></lightning-icon>
+                        </div>
+                        <div class="slds-media__body">
+                            <p class="slds-text-body_small">
+                                Click <strong>Preview Document</strong> to review the agreement,
+                                then click <strong>Approve</strong> to confirm.
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+            </template>
+
+        </template>
+
+        <!-- Footer -->
+        <div slot="footer">
+            <lightning-button
+                label="Cancel"
+                onclick={handleClose}
+                disabled={isApproving}>
+            </lightning-button>
+            <lightning-button
+                variant="brand"
+                label={approveLabel}
+                onclick={handleApprove}
+                disabled={isApproveDisabled}
+                class="slds-m-left_small">
+            </lightning-button>
+        </div>
+
+    </lightning-quick-action-panel>
+</template>

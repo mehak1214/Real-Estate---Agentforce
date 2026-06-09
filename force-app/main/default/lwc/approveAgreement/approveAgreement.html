@@ -1,0 +1,26 @@
+<template>
+    <lightning-quick-action-panel header="Approve Agreement">
+
+        <div class="slds-p-around_medium">
+            <p>
+                Are you sure you want to approve this Broker Agreement?
+            </p>
+        </div>
+
+        <div slot="footer">
+            <lightning-button
+                label="Cancel"
+                onclick={handleCancel}>
+            </lightning-button>
+
+            <lightning-button
+                class="slds-m-left_small"
+                variant="brand"
+                label="Approve"
+                onclick={handleApprove}
+                disabled={isLoading}>
+            </lightning-button>
+        </div>
+
+    </lightning-quick-action-panel>
+</template>

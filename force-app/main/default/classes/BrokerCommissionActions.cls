@@ -42,6 +42,9 @@ public with sharing class BrokerCommissionActions {
         
         @InvocableVariable(label='Status')
         public String status;
+
+        @InvocableVariable(label='Due Date')
+        public Date dueDate;
         
         @InvocableVariable(label='Payout Date')
         public Date payoutDate;
@@ -124,7 +127,7 @@ public with sharing class BrokerCommissionActions {
             // Build query for commissions
             String query = 'SELECT Id, Name, Unit_Cost__c, Commission_Amount__c, ' +
                           'CommissionAmount__c, CommissionPercentage__c, Commission_Percent__c, ' +
-                          'Status__c, ' +
+                          'Status__c, Due_Date__c, ' +
                           'SalesOrder__c, SalesOrder__r.Name, Unit__c, Unit__r.Name, Broker__c, Broker__r.Name, CreatedDate ' +
                           'FROM BrokerCommission__c ' +
                           'WHERE Broker__c = :brokerContactId ' +
@@ -159,6 +162,7 @@ public with sharing class BrokerCommissionActions {
                                              commission.CommissionPercentage__c : 
                                              commission.Commission_Percent__c;
                 record.status = commission.Status__c;
+                record.dueDate = commission.Due_Date__c;
                 record.relatedReference = String.isNotBlank(record.salesOrder)
                     ? record.salesOrder
                     : record.unit;

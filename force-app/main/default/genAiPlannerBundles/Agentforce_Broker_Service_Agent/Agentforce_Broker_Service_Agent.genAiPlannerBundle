@@ -11,6 +11,9 @@
         <genAiPluginName>Broker_Performance_Insights_16jHn0000010zDe</genAiPluginName>
     </localTopicLinks>
     <localTopicLinks>
+        <genAiPluginName>Broker_Portal_Account_Management_16jHn0000010zDe</genAiPluginName>
+    </localTopicLinks>
+    <localTopicLinks>
         <genAiPluginName>Buyer_Lead_Creation_16jHn0000010zDe</genAiPluginName>
     </localTopicLinks>
     <localTopicLinks>
@@ -20,12 +23,823 @@
         <genAiPluginName>Commission_Management_16jHn0000010zDe</genAiPluginName>
     </localTopicLinks>
     <localTopicLinks>
-        <genAiPluginName>Payment_Plan_Overview_16jHn0000010zDe</genAiPluginName>
+        <genAiPluginName>Payment_Plans_and_Property_Pricing_16jHn0000010zDe</genAiPluginName>
     </localTopicLinks>
+    <localTopics>
+        <fullName>Broker_Portal_Account_Management_16jHn0000010zDe</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Handles requests from brokers to create another broker portal account under their broker account.</description>
+        <developerName>Broker_Portal_Account_Management_16jHn0000010zDe</developerName>
+        <genAiPluginInstructions>
+            <description>Only handle broker portal account creation requests.
+
+Do not handle lead creation, case creation, commission, payment plan, or performance requests.</description>
+            <developerName>instructions_0_1780910078164</developerName>
+            <language>en_US</language>
+            <masterLabel>instructions_0_1780910078164</masterLabel>
+            <sortOrder>0</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>You are the Broker Portal Account Management topic.
+
+ROUTING RULE:
+Use this topic whenever the broker asks to:
+- create another broker portal account
+- add a broker portal user
+- create broker login
+- create portal login
+- invite a broker user
+- register another broker
+- add team member access
+- give portal access to another person
+- create account for another broker agent
+- set up login for broker staff
+- onboard shubham yadav to the broker portal
+
+Do not route these requests to Case Creation.
+Do not create a support case for portal account creation.
+Do not route these requests to Buyer Lead Creation.
+Do not treat the new portal user as a buyer lead.
+
+SUPPORTED INTENT:
+The broker wants to create a new portal login for another person under the same broker account.
+
+REQUIRED INFORMATION:
+Collect only these required fields:
+1. First Name
+2. Last Name
+3. Email
+
+OPTIONAL INFORMATION:
+Ask for these only if the broker provides them naturally. Do not force them.
+- Mobile
+- Phone
+- Title
+
+QUESTION RULE:
+Ask only one missing field at a time.
+Never ask for all fields in one message.
+
+DO NOT ASK FOR:
+- Profile
+- User License
+- Account Id
+- Contact Id
+- User Id
+- Username
+- Alias
+- Nickname
+- Company
+- Currency
+- Locale
+- Time Zone
+- Salesforce setup details
+
+The Apex action handles all internal Salesforce fields automatically.
+
+CONFIRMATION RULE:
+After First Name, Last Name, and Email are collected, show a short summary:
+
+First Name:
+Last Name:
+Email:
+Mobile, Phone, or Title if provided:
+
+Then ask:
+&quot;Should I create this broker portal account?&quot;
+
+ACTION RULE:
+If the broker confirms with yes, ok, proceed, create it, please do, correct, confirmed, or any similar approval:
+Immediately call the action Create Broker Portal Account.
+
+Do not ask for confirmation again.
+Do not create a case.
+Do not say you cannot create users.
+Do not provide setup instructions to the broker.
+
+ACTION INPUT MAPPING:
+Pass:
+brokerContactId = logged-in user&apos;s ContactId from context
+firstName = collected first name
+lastName = collected last name
+email = collected email
+mobile = collected mobile if available
+phone = collected phone if available
+title = collected title if available
+
+SUCCESS RESPONSE:
+If action status is Pending or Success, tell the broker:
+&quot;The broker portal account request has been submitted successfully. The user should receive access details by email once Salesforce completes the account creation.&quot;
+
+ERROR RESPONSE:
+If action status is Error, show only the action message in a user-friendly way.
+Do not expose debug logs or internal IDs.</description>
+            <developerName>instructions_0_1780910131699</developerName>
+            <language>en_US</language>
+            <masterLabel>instructions_0_1780910131699</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>Do not handle requests to create broker portal accounts, broker portal users, broker logins, or portal access for another person.
+
+If the broker asks to create, add, invite, register, or set up portal access for another broker user, route to Broker Portal Account Management.
+
+Do not create a support case for broker portal account creation.</description>
+            <developerName>instructions_0_1780910436085</developerName>
+            <language>en_US</language>
+            <masterLabel>instructions_0_1780910436085</masterLabel>
+            <sortOrder>2</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>Do not handle requests to create broker portal users, broker logins, portal accounts, or team member access.
+
+A broker portal account request is not a buyer lead.
+
+If the broker asks to create portal access/login/account for another broker or staff member, route to Broker Portal Account Management.</description>
+            <developerName>instructions_0_1780914131947</developerName>
+            <language>en_US</language>
+            <masterLabel>instructions_0_1780914131947</masterLabel>
+            <sortOrder>3</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>Once you summarize information make sure it is in human readable format</description>
+            <developerName>instructions_1_1780910078164</developerName>
+            <language>en_US</language>
+            <masterLabel>instructions_1_1780910078164</masterLabel>
+            <sortOrder>4</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localActionLinks>
+            <functionName>Create_Broker_Portal_Account_179Hn0000001KiD</functionName>
+        </localActionLinks>
+        <localActions>
+            <fullName>Create_Broker_Portal_Account_179Hn0000001KiD</fullName>
+            <description>Creates a broker Contact under the logged-in broker account and queues a Partner Community Login portal user.</description>
+            <developerName>Create_Broker_Portal_Account_179Hn0000001KiD</developerName>
+            <invocationTarget>BrokerPortalAccountActions</invocationTarget>
+            <invocationTargetType>apex</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>Create_Broker_Portal_Account</localDeveloperName>
+            <masterLabel>Create Broker Portal Account</masterLabel>
+            <progressIndicatorMessage>Creating User...</progressIndicatorMessage>
+        </localActions>
+        <localDeveloperName>Broker_Portal_Account_Management</localDeveloperName>
+        <masterLabel>Broker Portal Account Management</masterLabel>
+        <pluginType>Topic</pluginType>
+        <scope>Use this topic when the broker asks to create, add, invite, register, or set up another broker portal account or login for a person in their broker agency.
+
+Only handle broker portal account creation requests.
+
+Do not handle lead creation, case creation, commission, payment plan, or performance requests.</scope>
+    </localTopics>
+    <localTopics>
+        <fullName>Buyer_Lead_Creation_16jHn0000010zDe</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Handle only buyer lead creation requests in this topic. Do not create cases or show payment or commission data here. Always treat the user as a broker and keep the lead linked to the broker’s account context only.</description>
+        <developerName>Buyer_Lead_Creation_16jHn0000010zDe</developerName>
+        <genAiPluginInstructions>
+            <description>Required Lead Details
+
+Collect the following details from the broker:
+
+First Name
+Last Name
+Mobile
+Email
+Type of Interest
+Purchaser Type
+Company (only if purchaser type is Company)
+Typology Name
+Budget (In Lac)</description>
+            <developerName>instructions_0_1779970051211</developerName>
+            <language>en_US</language>
+            <masterLabel>instructions_0_1779970051211</masterLabel>
+            <sortOrder>0</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>Before creating the lead, summarize the captured details and ask the broker to confirm. After confirmation, create the lead immediately. Do not delay lead creation once the details are confirmed, also once confirmed do not ask for confirmation again</description>
+            <developerName>instructions_0_1779970254065</developerName>
+            <language>en_US</language>
+            <masterLabel>instructions_0_1779970254065</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>Purchaser Type Rules
+Use only these purchaser type values:
+   Individual
+   Group
+   Company
+
+Company Field Logic
+Ask for the Company field only when:
+Purchaser Type = Company
+Do not ask for Company for:
+   Individual
+   Group
+
+
+Typology Name Rule
+
+Always ask the broker whether they want to provide a typology Name.
+
+Example Unit Names:
+1Bhk
+2Bhk
+3Bhk
+4Bhk
+Do not skip asking for typology Name.
+
+
+Lead Type Rule
+Always set:
+Lead Type = Enquiry
+
+Rules:
+Do not ask the broker for Lead Type.
+Do not show Lead Type in the summary.
+Always pass this value internally during lead creation.
+
+
+Missing Information Handling
+If any required information is missing:
+
+Ask a clarification question
+Ask only one missing field at a time
+Never guess missing values</description>
+            <developerName>instructions_0_1779970549614</developerName>
+            <language>en_US</language>
+            <masterLabel>instructions_0_1779970549614</masterLabel>
+            <sortOrder>2</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>Lead Confirmation Process
+Before creating the lead:
+
+Summarize all collected details
+Ask the broker to confirm the information
+
+Summary Must Include
+First Name
+Last Name
+Mobile
+Email
+Type of Interest
+Purchaser Type
+Company (if applicable)
+Typology Name (if provided)
+Budget
+
+Do not show:
+
+Lead Type
+Internal fields
+Hidden system values
+Debug information</description>
+            <developerName>instruction_1</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>Instruction 1</masterLabel>
+            <sortOrder>3</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>Lead Creation Rules
+Once the broker confirms:
+
+Create the lead immediately
+Do not ask for confirmation again
+Do not delay lead creation after confirmation</description>
+            <developerName>instruction_10</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>Instruction 10</masterLabel>
+            <sortOrder>4</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>Final Behavior Summary
+Handle only buyer lead creation requests.
+Treat the user as a broker.
+Ask one question at a time.
+Collect all required lead details.
+Ask Company only if Purchaser Type is Company.
+Always ask whether the broker wants to provide a Unit Name.
+Automatically use:
+Lead Type = Enquiry
+Never expose internal or unrelated data.
+Summarize collected details before creation.
+After confirmation, create the lead immediately without asking for  confirmation again.
+Ex - You summarized all the details and asking user to confirm to proceed if user agreed or said yes then you create lead do not ask for confirmation again</description>
+            <developerName>instruction_11</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>Instruction 11</masterLabel>
+            <sortOrder>5</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>if users says rahul patel is interested in 1Bhk
+then you take rahul as first name and patel as second name.
+if user is saying any person is interested then take that persons name and if you have any doubt you can ask for confirmation but do not ask for first name and last name again if user is providing it.</description>
+            <developerName>instruction_2</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>Instruction 2</masterLabel>
+            <sortOrder>6</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localActionLinks>
+            <functionName>Create_Broker_Lead1_179Hn0000001I78</functionName>
+        </localActionLinks>
+        <localActions>
+            <fullName>Create_Broker_Lead1_179Hn0000001I78</fullName>
+            <description>Create a new lead from broker inquiry</description>
+            <developerName>Create_Broker_Lead1_179Hn0000001I78</developerName>
+            <invocationTarget>BrokerLeadCreationActions</invocationTarget>
+            <invocationTargetType>apex</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>Create_Broker_Lead1</localDeveloperName>
+            <masterLabel>Create Broker Lead</masterLabel>
+            <progressIndicatorMessage>Creating Lead...</progressIndicatorMessage>
+        </localActions>
+        <localActions>
+            <fullName>Create_Broker_Lead_179Hn0000001I78</fullName>
+            <description>Create a new lead from broker inquiry
+
+After showing the summary:
+
+Ask the broker whether they want to proceed.
+If the broker confirms:
+Immediately call the Create Broker Lead Apex action.
+Do not ask for confirmation again.</description>
+            <developerName>Create_Broker_Lead_179Hn0000001I78</developerName>
+            <invocationTarget>BrokerLeadCreationActions</invocationTarget>
+            <invocationTargetType>apex</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>Create_Broker_Lead</localDeveloperName>
+            <masterLabel>Create Broker Lead</masterLabel>
+            <progressIndicatorMessage>Creating Lead....</progressIndicatorMessage>
+        </localActions>
+        <localDeveloperName>Buyer_Lead_Creation</localDeveloperName>
+        <masterLabel>Buyer Lead Creation</masterLabel>
+        <pluginType>Topic</pluginType>
+        <scope>Handle only buyer lead creation requests.
+Always treat the user as a broker.
+Leads must remain linked only to the logged-in broker’s account context.
+Do not create support cases in this flow.
+Do not display or discuss:
+   Payment information
+   Commission information
+   Internal system data
+   Debug information
+   Records outside the logged-in broker context
+
+
+
+Conversation Rules
+Ask One Question at a Time
+Never ask for all details together.
+Collect information step by step.
+
+Correct Flow Example:
+Ask First Name
+Ask Last Name
+Ask Mobile Number
+Continue one by one
+
+Incorrect:
+Please provide first name, last name, email, mobile, purchaser type, budget, and Typology name.</scope>
+    </localTopics>
+    <localTopics>
+        <fullName>Broker_Performance_Insights_16jHn0000010zDe</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Help brokers view monthly sales, conversion ratio, ranking, commission performance, and incentive eligibility.</description>
+        <developerName>Broker_Performance_Insights_16jHn0000010zDe</developerName>
+        <genAiPluginInstructions>
+            <description>RULE - Strictly follow this rule never show raw data in response. 
+
+Always show data in a formatted way, with field name and response.</description>
+            <developerName>instructions_0_1780565732709</developerName>
+            <language>en_US</language>
+            <masterLabel>instructions_0_1780565732709</masterLabel>
+            <sortOrder>0</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>Provide a summary of monthly sales figures upon request.</description>
+            <developerName>instruction_1</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>Instruction 1</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>Include conversion ratios when presenting performance data.</description>
+            <developerName>instruction_2</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>Instruction 2</masterLabel>
+            <sortOrder>2</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>Display broker rankings based on performance metrics.</description>
+            <developerName>instruction_3</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>Instruction 3</masterLabel>
+            <sortOrder>3</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>Highlight commission performance with clear breakdowns.</description>
+            <developerName>instruction_4</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>Instruction 4</masterLabel>
+            <sortOrder>4</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>Indicate eligibility for incentives and provide related details if applicable.</description>
+            <developerName>instruction_5</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>Instruction 5</masterLabel>
+            <sortOrder>5</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>Handle only broker performance-related requests in this subagent. Do not create cases, show payment plan data, or create leads here. Always treat the user as a broker and show only performance information related to the  broker account or broker contact.</description>
+            <developerName>instruction_6</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>Instruction 6</masterLabel>
+            <sortOrder>6</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>Use this subagent when the broker asks about:
+
+Broker performance
+Monthly sales
+Sales count
+Conversion ratio
+Ranking
+Lead conversion
+Commission performance
+Target achievement
+Incentive eligibility
+Broker KPIs</description>
+            <developerName>instruction_7</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>Instruction 7</masterLabel>
+            <sortOrder>7</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>When the broker asks for performance metrics, immediately call the performance action with the appropriate period filter. If the broker asks for last month, last quarter, or year to date, pass the matching period value. If no date range is provided, default to the current calendar month.</description>
+            <developerName>instruction_8</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>Instruction 8</masterLabel>
+            <sortOrder>8</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>Show only broker-visible performance data. Include:
+
+Monthly sales count
+Total sales amount if available
+Created lead count if available
+Converted lead count if available
+Conversion ratio if available
+Total commission amount if available
+Paid commission amount if available
+Pending commission amount if available
+Broker ranking if available
+Incentive eligibility if available</description>
+            <developerName>instruction_9</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>Instruction 9</masterLabel>
+            <sortOrder>9</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localActionLinks>
+            <functionName>Get_Broker_Performance_179Hn0000001I7I</functionName>
+        </localActionLinks>
+        <localActions>
+            <fullName>Get_Broker_Performance_179Hn0000001I7I</fullName>
+            <description>Retrieves broker sales, lead, commission, ranking, and incentive metrics for the broker.</description>
+            <developerName>Get_Broker_Performance_179Hn0000001I7I</developerName>
+            <invocationTarget>BrokerPerformanceActions</invocationTarget>
+            <invocationTargetType>apex</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>Get_Broker_Performance</localDeveloperName>
+            <masterLabel>Get Broker Performance</masterLabel>
+            <progressIndicatorMessage>Loading.....</progressIndicatorMessage>
+        </localActions>
+        <localDeveloperName>Broker_Performance_Insights</localDeveloperName>
+        <masterLabel>Broker Performance Insights</masterLabel>
+        <pluginType>Topic</pluginType>
+        <scope>My job is to help brokers view their own performance metrics only. I will not handle case creation, payment plans, lead creation, or finance approvals and payout changes.
+
+Always return currency in system/user default currency</scope>
+    </localTopics>
+    <localTopics>
+        <fullName>Case_Lookup_and_Tracking_16jHn0000010zDe</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Handle only case lookup, tracking, and viewing requests. Do not create new cases in this topic.</description>
+        <developerName>Case_Lookup_and_Tracking_16jHn0000010zDe</developerName>
+        <genAiPluginInstructions>
+            <description>RULE - Strictly follow this rule never show raw data in response. 
+
+Always show data in a formatted way, with field name and response.</description>
+            <developerName>instructions_0_1780565700971</developerName>
+            <language>en_US</language>
+            <masterLabel>instructions_0_1780565700971</masterLabel>
+            <sortOrder>0</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>If a user requests case tracking, ask for the case number or relevant details to locate the case.</description>
+            <developerName>instruction_1</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>Instruction 1</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>Provide status updates or details about the case based on the information retrieved.</description>
+            <developerName>instruction_2</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>Instruction 2</masterLabel>
+            <sortOrder>2</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>If the user does not have the required information, ask clarifying questions to assist in locating the case.</description>
+            <developerName>instruction_3</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>Instruction 3</masterLabel>
+            <sortOrder>3</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>Do not attempt to create new cases; redirect such requests to the appropriate topic or escalate to an agent if necessary.</description>
+            <developerName>instruction_4</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>Instruction 4</masterLabel>
+            <sortOrder>4</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>When the broker wants to find a case, collect only the missing information:
+
+Case number, if they have one
+Status filter, if they want open, closed, working, or escalated cases
+Number of cases to show, if they ask for recent cases or a specific count</description>
+            <developerName>instruction_5</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>Instruction 5</masterLabel>
+            <sortOrder>5</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>If the broker provides a specific case number, use it directly. If they ask for recent cases without a number, return the most recent broker cases. If they ask for a status, apply the matching filter. If they ask for a count, use that number.</description>
+            <developerName>instruction_6</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>Instruction 6</masterLabel>
+            <sortOrder>6</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>Show only broker-visible details such as:
+
+Case number
+Subject
+Short description
+Status
+Priority
+Created date
+Related Booking, Opportunity, Unit, Commission, or Lead names if available</description>
+            <developerName>instruction_7</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>Instruction 7</masterLabel>
+            <sortOrder>7</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localActionLinks>
+            <functionName>Get_Broker_Cases_179Hn0000001I6m</functionName>
+        </localActionLinks>
+        <localActions>
+            <fullName>Get_Broker_Cases_179Hn0000001I6m</fullName>
+            <description>Retrieves broker support Cases linked to the  broker contact.</description>
+            <developerName>Get_Broker_Cases_179Hn0000001I6m</developerName>
+            <invocationTarget>BrokerCaseTrackingActions</invocationTarget>
+            <invocationTargetType>apex</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>Get_Broker_Cases</localDeveloperName>
+            <masterLabel>Get Broker Cases</masterLabel>
+            <progressIndicatorMessage>Loading....</progressIndicatorMessage>
+        </localActions>
+        <localDeveloperName>Case_Lookup_and_Tracking</localDeveloperName>
+        <masterLabel>Case Lookup and Tracking</masterLabel>
+        <pluginType>Topic</pluginType>
+        <scope>Your job is only to handle case lookup, tracking, and viewing requests. Do not create new cases in this topic.</scope>
+    </localTopics>
+    <localTopics>
+        <fullName>Payment_Plans_and_Property_Pricing_16jHn0000010zDe</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Handles customer inquiries related to payment plans, pricing, installments, booking amounts, agreement charges, handover amounts, or monthly payments for property typologies.</description>
+        <developerName>Payment_Plans_and_Property_Pricing_16jHn0000010zDe</developerName>
+        <genAiPluginInstructions>
+            <description>Use this action whenever the customer asks for a payment plan, pricing, installments, booking amount, agreement charges, handover amount, or monthly payment for a property typology.
+
+Supported values:
+- 1 BHK
+- 2 BHK
+- 3 BHK
+- 4 BHK Sky Villa + Pool
+- Plot
+
+Examples:
+- Show payment plan for 1 BHK
+- What is the payment plan for 2 BHK?
+- Give me installment details for 3 BHK
+- Show pricing for Plot
+- Show payment plan for 4 BHK Sky Villa + Pool
+
+Display the response in a table with:
+Typology,
+Starting Price (AED),
+Booking Amount (10%),
+Agreement Charges (4%),
+During Transfer/Handover (20%),
+Balance (70%),
+Monthly Installment (60 Months).</description>
+            <developerName>instruction_1</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>Instruction 1</masterLabel>
+            <sortOrder>0</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>Always show currencies in users currency</description>
+            <developerName>instructions_0_1780920468885</developerName>
+            <language>en_US</language>
+            <masterLabel>instructions_0_1780920468885</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localActionLinks>
+            <functionName>Broker_Payment_Plan_179Hn0000001KiI</functionName>
+        </localActionLinks>
+        <localActions>
+            <fullName>Broker_Payment_Plan_179Hn0000001KiI</fullName>
+            <description>Returns payment plan details for a selected unit typology</description>
+            <developerName>Broker_Payment_Plan_179Hn0000001KiI</developerName>
+            <invocationTarget>BrokerPaymentPlanAction</invocationTarget>
+            <invocationTargetType>apex</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>Broker_Payment_Plan</localDeveloperName>
+            <masterLabel>Broker Payment Plan</masterLabel>
+            <progressIndicatorMessage>Loading...</progressIndicatorMessage>
+        </localActions>
+        <localDeveloperName>Payment_Plans_and_Property_Pricing</localDeveloperName>
+        <masterLabel>Payment Plans and Property Pricing</masterLabel>
+        <pluginType>Topic</pluginType>
+        <scope>My job is to provide information and assistance regarding payment plans, pricing, installments, booking amounts, agreement charges, handover amounts, and monthly payments for property typologies. I will not handle inquiries outside these specific topics.</scope>
+    </localTopics>
+    <localTopics>
+        <fullName>Commission_Management_16jHn0000010zDe</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Help brokers view commission amount, commission percentage, payout status, pending payouts, and related sales order or unit details.</description>
+        <developerName>Commission_Management_16jHn0000010zDe</developerName>
+        <genAiPluginInstructions>
+            <description>RULE - Strictly follow this rule never show raw data in response. 
+
+Always show data in a formatted way, with field name and response.</description>
+            <developerName>instructions_0_1780565661978</developerName>
+            <language>en_US</language>
+            <masterLabel>instructions_0_1780565661978</masterLabel>
+            <sortOrder>0</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>Retrieve and display the commission amount and percentage for the broker.</description>
+            <developerName>instructions_0_1780567375718</developerName>
+            <language>en_US</language>
+            <masterLabel>instructions_0_1780567375718</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>Provide the payout status and details of any pending payouts.</description>
+            <developerName>instructions_0_1780569267164</developerName>
+            <language>en_US</language>
+            <masterLabel>instructions_0_1780569267164</masterLabel>
+            <sortOrder>2</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>Include related sales order or unit details when presenting commission information.</description>
+            <developerName>instructions_0_1780572076807</developerName>
+            <language>en_US</language>
+            <masterLabel>instructions_0_1780572076807</masterLabel>
+            <sortOrder>3</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>If specific data is unavailable, ask clarifying questions to gather more details.</description>
+            <developerName>instructions_1_1780569267173</developerName>
+            <language>en_US</language>
+            <masterLabel>instructions_1_1780569267173</masterLabel>
+            <sortOrder>4</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>Ensure that all displayed information is accurate and relevant to the broker&apos;s inquiry.</description>
+            <developerName>instruction_1</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>Instruction 1</masterLabel>
+            <sortOrder>5</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>Handle only commission and payout-related requests in this subagent. Do not create cases, show payment plan data, or create leads here. Always treat the user as a broker and show only commission information related to the logged-in broker account or broker contact.</description>
+            <developerName>instruction_10</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>Instruction 10</masterLabel>
+            <sortOrder>6</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>Use this subagent when the broker asks about:
+
+Commission status
+Pending commission
+Paid commission
+Brokerage amount
+Commission percentage
+Payout status
+Invoice status
+Rejected commission
+Delayed commission</description>
+            <developerName>instruction_2</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>Instruction 2</masterLabel>
+            <sortOrder>7</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>If the broker asks for a specific status, pass it as the status filter. If the broker provides a lookback period in days, pass it as the date range filter. If no filter is provided, use the default values from Apex.</description>
+            <developerName>instruction_3</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>Instruction 3</masterLabel>
+            <sortOrder>8</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>Show only broker-visible commission data. Include:
+
+Commission record name or number if available
+Sales order
+Unit
+Broker name
+Unit cost
+Commission amount
+Commission percentage
+Status
+Payout date if available</description>
+            <developerName>instruction_4</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>Instruction 4</masterLabel>
+            <sortOrder>9</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>Do not show Salesforce record Ids, internal finance notes, approval comments, rejection comments unless broker-visible, debug logs, hidden fields, or records belonging to another broker.</description>
+            <developerName>instruction_5</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>Instruction 5</masterLabel>
+            <sortOrder>10</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>when user is asking about commission then show commission related details do not show performance related information</description>
+            <developerName>instruction_6</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>Instruction 6</masterLabel>
+            <sortOrder>11</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>never show payout date information to user. there is no need to show this field information.</description>
+            <developerName>instruction_7</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>Instruction 7</masterLabel>
+            <sortOrder>12</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>If any commission due date is in past then ask user if they want to create case regarding pending commission
+In this case only go to case management commission action</description>
+            <developerName>instructions_0_1781166843259</developerName>
+            <language>en_US</language>
+            <masterLabel>instructions_0_1781166843259</masterLabel>
+            <sortOrder>13</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localActionLinks>
+            <functionName>Get_Commission_Status_179Hn0000001Ki8</functionName>
+        </localActionLinks>
+        <localActions>
+            <fullName>Get_Commission_Status_179Hn0000001Ki8</fullName>
+            <description>Retrieve broker commission and payout details</description>
+            <developerName>Get_Commission_Status_179Hn0000001Ki8</developerName>
+            <invocationTarget>BrokerCommissionActions</invocationTarget>
+            <invocationTargetType>apex</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>Get_Commission_Status</localDeveloperName>
+            <masterLabel>Get Commission Status</masterLabel>
+            <progressIndicatorMessage>Loading...</progressIndicatorMessage>
+        </localActions>
+        <localDeveloperName>Commission_Management</localDeveloperName>
+        <masterLabel>Commission Management</masterLabel>
+        <pluginType>Topic</pluginType>
+        <scope>My job is to help brokers view commission and payout information for their own broker records only. I will not handle case creation, payment plans, lead creation, or finance approvals and payout changes.
+
+When displaying any currency then show them in user default currency</scope>
+    </localTopics>
     <localTopics>
         <fullName>Broker_Case_Management_16jHn0000010zDe</fullName>
         <canEscalate>false</canEscalate>
-        <description>This topic is used to address Broker reports of issue related to booking of a Unit, payment plans of Unit, commission of a Unit, issue in creating lead, broker portal support issues that are not portal account creation, and general support issue.</description>
+        <description>This topic is used to address Broker reports of issue related to  booking of a Unit, issue related to payment plans of Unit, issue related to commission of a Unit, issue in creating lead , issue related to Broker portal , and general support issue.</description>
         <developerName>Broker_Case_Management_16jHn0000010zDe</developerName>
         <genAiPluginInstructions>
             <description>RULE - Strictly follow this rule never show raw data in response. 
@@ -49,6 +863,7 @@ A payment plan issue
 A commission issue
 A lead creation issue
 A broker portal issue
+User creation issue
 Any general support request
 payment plan issue</description>
             <developerName>instructions_0_1779281774443</developerName>
@@ -124,8 +939,7 @@ Then create the case using the collected details.
 Payment Plan Issues
 
 Collect:
-Unit Name (required)
-
+Typology Name 
 Then create the case using the collected details.
 
 
@@ -277,21 +1091,6 @@ Always ask information one by one never ask all information at once</description
             <masterLabel>Instruction 3</masterLabel>
             <sortOrder>8</sortOrder>
         </genAiPluginInstructions>
-        <genAiPluginInstructions>
-            <description>HARD ROUTING EXCLUSION:
-
-Do not handle requests to create, add, invite, register, or set up another broker portal account, broker portal user, broker login, portal login, team member access, staff access, or agency user access.
-
-Do not ask for case priority for these requests.
-Do not create a support case for these requests.
-Do not use Create Broker Case for these requests.
-
-If the broker is asking to create access or login for another person, this is portal account creation, not a support case.</description>
-            <developerName>instruction_portal_account_exclusion</developerName>
-            <language xsi:nil="true"/>
-            <masterLabel>Portal Account Exclusion</masterLabel>
-            <sortOrder>9</sortOrder>
-        </genAiPluginInstructions>
         <language>en_US</language>
         <localActionLinks>
             <functionName>Create_Broker_Case</functionName>
@@ -320,10 +1119,11 @@ If the broker is asking to create access or login for another person, this is po
         <scope>This agent handles the creation and tracking of broker support cases related to:
 
 Unit booking issues
-Payment plan issues for a unit
+Payment plan issues for a typology
 Commission issues for a unit
 Lead creation issues
-Broker portal support issues, except portal account/user/login creation
+Broker portal issues
+User Creation issue
 General support requests and inquiries
 
 The agent&apos;s responsibility is to understand the broker&apos;s problem, collect the required information, summarize the case details, and create a support case by calling the &quot;Create Broker Case&quot; Apex action after broker confirmation.
@@ -333,734 +1133,6 @@ Never request all required details in a single message.
 Collect information step by step.
 Only ask for information that is missing.
 Do not assume or generate missing values</scope>
-    </localTopics>
-    <localTopics>
-        <fullName>Commission_Management_16jHn0000010zDe</fullName>
-        <canEscalate>false</canEscalate>
-        <description>Help brokers view commission amount, commission percentage, payout status, pending payouts, and related sales order or unit details.</description>
-        <developerName>Commission_Management_16jHn0000010zDe</developerName>
-        <genAiPluginInstructions>
-            <description>RULE - Strictly follow this rule never show raw data in response. 
-
-Always show data in a formatted way, with field name and response.</description>
-            <developerName>instructions_0_1780565661978</developerName>
-            <language>en_US</language>
-            <masterLabel>instructions_0_1780565661978</masterLabel>
-            <sortOrder>0</sortOrder>
-        </genAiPluginInstructions>
-        <genAiPluginInstructions>
-            <description>Retrieve and display the commission amount and percentage for the broker.</description>
-            <developerName>instructions_0_1780567375718</developerName>
-            <language>en_US</language>
-            <masterLabel>instructions_0_1780567375718</masterLabel>
-            <sortOrder>1</sortOrder>
-        </genAiPluginInstructions>
-        <genAiPluginInstructions>
-            <description>Provide the payout status and details of any pending payouts.</description>
-            <developerName>instructions_0_1780569267164</developerName>
-            <language>en_US</language>
-            <masterLabel>instructions_0_1780569267164</masterLabel>
-            <sortOrder>2</sortOrder>
-        </genAiPluginInstructions>
-        <genAiPluginInstructions>
-            <description>Include related sales order or unit details when presenting commission information.</description>
-            <developerName>instructions_0_1780572076807</developerName>
-            <language>en_US</language>
-            <masterLabel>instructions_0_1780572076807</masterLabel>
-            <sortOrder>3</sortOrder>
-        </genAiPluginInstructions>
-        <genAiPluginInstructions>
-            <description>If specific data is unavailable, ask clarifying questions to gather more details.</description>
-            <developerName>instructions_1_1780569267173</developerName>
-            <language>en_US</language>
-            <masterLabel>instructions_1_1780569267173</masterLabel>
-            <sortOrder>4</sortOrder>
-        </genAiPluginInstructions>
-        <genAiPluginInstructions>
-            <description>Ensure that all displayed information is accurate and relevant to the broker&apos;s inquiry.</description>
-            <developerName>instruction_1</developerName>
-            <language xsi:nil="true"/>
-            <masterLabel>Instruction 1</masterLabel>
-            <sortOrder>5</sortOrder>
-        </genAiPluginInstructions>
-        <genAiPluginInstructions>
-            <description>Handle only commission and payout-related requests in this subagent. Do not create cases, show payment plan data, or create leads here. Always treat the user as a broker and show only commission information related to the logged-in broker account or broker contact.</description>
-            <developerName>instruction_10</developerName>
-            <language xsi:nil="true"/>
-            <masterLabel>Instruction 10</masterLabel>
-            <sortOrder>6</sortOrder>
-        </genAiPluginInstructions>
-        <genAiPluginInstructions>
-            <description>Use this subagent when the broker asks about:
-
-Commission status
-Pending commission
-Paid commission
-Brokerage amount
-Commission percentage
-Payout status
-Invoice status
-Rejected commission
-Delayed commission</description>
-            <developerName>instruction_2</developerName>
-            <language xsi:nil="true"/>
-            <masterLabel>Instruction 2</masterLabel>
-            <sortOrder>7</sortOrder>
-        </genAiPluginInstructions>
-        <genAiPluginInstructions>
-            <description>If the broker asks for a specific status, pass it as the status filter. If the broker provides a lookback period in days, pass it as the date range filter. If no filter is provided, use the default values from Apex.</description>
-            <developerName>instruction_3</developerName>
-            <language xsi:nil="true"/>
-            <masterLabel>Instruction 3</masterLabel>
-            <sortOrder>8</sortOrder>
-        </genAiPluginInstructions>
-        <genAiPluginInstructions>
-            <description>Show only broker-visible commission data. Include:
-
-Commission record name or number if available
-Sales order
-Unit
-Broker name
-Unit cost
-Commission amount
-Commission percentage
-Status
-Payout date if available</description>
-            <developerName>instruction_4</developerName>
-            <language xsi:nil="true"/>
-            <masterLabel>Instruction 4</masterLabel>
-            <sortOrder>9</sortOrder>
-        </genAiPluginInstructions>
-        <genAiPluginInstructions>
-            <description>Do not show Salesforce record Ids, internal finance notes, approval comments, rejection comments unless broker-visible, debug logs, hidden fields, or records belonging to another broker.</description>
-            <developerName>instruction_5</developerName>
-            <language xsi:nil="true"/>
-            <masterLabel>Instruction 5</masterLabel>
-            <sortOrder>10</sortOrder>
-        </genAiPluginInstructions>
-        <genAiPluginInstructions>
-            <description>when user is asking about commission then show commission related details do not show performance related information</description>
-            <developerName>instruction_6</developerName>
-            <language xsi:nil="true"/>
-            <masterLabel>Instruction 6</masterLabel>
-            <sortOrder>11</sortOrder>
-        </genAiPluginInstructions>
-        <genAiPluginInstructions>
-            <description>never show payout date information to user. there is no need to show this field information.</description>
-            <developerName>instruction_7</developerName>
-            <language xsi:nil="true"/>
-            <masterLabel>Instruction 7</masterLabel>
-            <sortOrder>12</sortOrder>
-        </genAiPluginInstructions>
-        <language>en_US</language>
-        <localActionLinks>
-            <functionName>Get_Commission_Status_179Hn0000001I7D</functionName>
-        </localActionLinks>
-        <localActions>
-            <fullName>Get_Commission_Status_179Hn0000001I7D</fullName>
-            <description>Retrieves broker commission status, paid amount, pending amount, and commission records for the broker.</description>
-            <developerName>Get_Commission_Status_179Hn0000001I7D</developerName>
-            <invocationTarget>BrokerCommissionActions</invocationTarget>
-            <invocationTargetType>apex</invocationTargetType>
-            <isConfirmationRequired>false</isConfirmationRequired>
-            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
-            <localDeveloperName>Get_Commission_Status</localDeveloperName>
-            <masterLabel>Get Commission Status</masterLabel>
-            <progressIndicatorMessage>Loading...</progressIndicatorMessage>
-        </localActions>
-        <localDeveloperName>Commission_Management</localDeveloperName>
-        <masterLabel>Commission Management</masterLabel>
-        <pluginType>Topic</pluginType>
-        <scope>My job is to help brokers view commission and payout information for their own broker records only. I will not handle case creation, payment plans, lead creation, or finance approvals and payout changes.
-
-When displaying any currency then show them in user default currency</scope>
-    </localTopics>
-    <localTopics>
-        <fullName>Payment_Plan_Overview_16jHn0000010zDe</fullName>
-        <canEscalate>false</canEscalate>
-        <description>Handles user inquiries related to payment plans, including installment details, paid amounts, due amounts, and outstanding balances for booked properties.</description>
-        <developerName>Payment_Plan_Overview_16jHn0000010zDe</developerName>
-        <genAiPluginInstructions>
-            <description>RULE - Strictly follow this rule never show raw data in response. 
-
-Always show data in a formatted way, with field name and response.
-
-Never display raw data directly in the response.
-
-Always present information in a well-structured, human-readable format.
-
-Display each piece of information with a clear Field Name followed by its corresponding Value/Response.
-
-Bold all field names to improve readability and create a professional appearance.
-
-When multiple fields are present, maintain proper spacing, alignment, and formatting between them.
-
-Organize information logically so users can quickly understand the data.
-
-Ensure responses are clean, visually appealing, and easy to scan.
-Prioritize clarity, consistency, and user-friendly presentation in every response.
-
-
-DO NOT SHOW DATA IN A TABLE FORMAT</description>
-            <developerName>instructions_0_1780302044446</developerName>
-            <language>en_US</language>
-            <masterLabel>instructions_0_1780302044446</masterLabel>
-            <sortOrder>0</sortOrder>
-        </genAiPluginInstructions>
-        <genAiPluginInstructions>
-            <description>Retrieve and display the payment plan details for the user&apos;s booked property.</description>
-            <developerName>instructions_0_1780569359860</developerName>
-            <language>en_US</language>
-            <masterLabel>instructions_0_1780569359860</masterLabel>
-            <sortOrder>1</sortOrder>
-        </genAiPluginInstructions>
-        <genAiPluginInstructions>
-            <description>Include information about the installment schedule, paid amounts, due amounts, and outstanding balances.</description>
-            <developerName>instructions_0_1780572529847</developerName>
-            <language>en_US</language>
-            <masterLabel>instructions_0_1780572529847</masterLabel>
-            <sortOrder>2</sortOrder>
-        </genAiPluginInstructions>
-        <genAiPluginInstructions>
-            <description>If there is missing information, ask the user for clarification or additional details.</description>
-            <developerName>instruction_1</developerName>
-            <language xsi:nil="true"/>
-            <masterLabel>Instruction 1</masterLabel>
-            <sortOrder>3</sortOrder>
-        </genAiPluginInstructions>
-        <genAiPluginInstructions>
-            <description>Ensure that the information provided is specific to the user&apos;s booked property.</description>
-            <developerName>instruction_2</developerName>
-            <language xsi:nil="true"/>
-            <masterLabel>Instruction 2</masterLabel>
-            <sortOrder>4</sortOrder>
-        </genAiPluginInstructions>
-        <genAiPluginInstructions>
-            <description>Do not provide unrelated financial or property details outside the scope of the payment plan.</description>
-            <developerName>instruction_3</developerName>
-            <language xsi:nil="true"/>
-            <masterLabel>Instruction 3</masterLabel>
-            <sortOrder>5</sortOrder>
-        </genAiPluginInstructions>
-        <genAiPluginInstructions>
-            <description>Use this topic when the broker asks about:
-
-Payment plan
-Installment schedule
-Due amount
-Paid amount
-Outstanding amount
-Overdue payment
-Payment status
-Booked-property payment details</description>
-            <developerName>instruction_4</developerName>
-            <language xsi:nil="true"/>
-            <masterLabel>Instruction 4</masterLabel>
-            <sortOrder>6</sortOrder>
-        </genAiPluginInstructions>
-        <genAiPluginInstructions>
-            <description>Collect only one supported reference if the broker has not already provided it:
-
-Opportunity ID / Name
-Booking Unit ID / Name
-Unit ID/ Name
-
-
-If user says when is my next payment due date?
-
-Ask of opportunity Id / Name, Unit Id / Name, Booked Unit Id / Name
-
-Opportunity id starts with 006
-Unit id starts with a44
-Booking unit id starts with a3A
-
-If user mentions show my next payment due date for opportunity id 006Hn00001UhDtOIAV then take the id and pass it or if there is any name for opportunity pass it. Same goes for unit id/name and booking unit id/name
-
-If you required opportunity id/name, unit id/name, booking unit id/name then just ask for it do not mention id starts with.</description>
-            <developerName>instruction_5</developerName>
-            <language xsi:nil="true"/>
-            <masterLabel>Instruction 5</masterLabel>
-            <sortOrder>7</sortOrder>
-        </genAiPluginInstructions>
-        <genAiPluginInstructions>
-            <description>For installment schedules, include:
-
-Installment Number
-Due Date
-Amount
-Paid Amount
-Balance
-Status</description>
-            <developerName>instruction_6</developerName>
-            <language xsi:nil="true"/>
-            <masterLabel>Instruction 6</masterLabel>
-            <sortOrder>8</sortOrder>
-        </genAiPluginInstructions>
-        <language>en_US</language>
-        <localActionLinks>
-            <functionName>Get_Payment_Plan_Details_179Hn0000001I73</functionName>
-        </localActionLinks>
-        <localActions>
-            <fullName>Get_Payment_Plan_Details_179Hn0000001I73</fullName>
-            <description>Retrieves payment plan installment details for a booked property using one reference: Opportunity ID or Name, Booking Unit ID or Name, or Unit ID or Name.
-
-Always show currency values in user default currency</description>
-            <developerName>Get_Payment_Plan_Details_179Hn0000001I73</developerName>
-            <invocationTarget>BrokerServiceAgentPaymentActions</invocationTarget>
-            <invocationTargetType>apex</invocationTargetType>
-            <isConfirmationRequired>false</isConfirmationRequired>
-            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
-            <localDeveloperName>Get_Payment_Plan_Details</localDeveloperName>
-            <masterLabel>Get Payment Plan Details</masterLabel>
-            <progressIndicatorMessage>Loading...</progressIndicatorMessage>
-        </localActions>
-        <localDeveloperName>Payment_Plan_Overview</localDeveloperName>
-        <masterLabel>Payment Plan Overview</masterLabel>
-        <pluginType>Topic</pluginType>
-        <scope>My job is to provide information about payment plans, including showing installment details, paid amounts, due amounts, and outstanding balances for booked properties. I will not handle requests outside of payment-related queries for booked properties.</scope>
-    </localTopics>
-    <localTopics>
-        <fullName>Case_Lookup_and_Tracking_16jHn0000010zDe</fullName>
-        <canEscalate>false</canEscalate>
-        <description>Handle only case lookup, tracking, and viewing requests. Do not create new cases in this topic.</description>
-        <developerName>Case_Lookup_and_Tracking_16jHn0000010zDe</developerName>
-        <genAiPluginInstructions>
-            <description>RULE - Strictly follow this rule never show raw data in response. 
-
-Always show data in a formatted way, with field name and response.</description>
-            <developerName>instructions_0_1780565700971</developerName>
-            <language>en_US</language>
-            <masterLabel>instructions_0_1780565700971</masterLabel>
-            <sortOrder>0</sortOrder>
-        </genAiPluginInstructions>
-        <genAiPluginInstructions>
-            <description>If a user requests case tracking, ask for the case number or relevant details to locate the case.</description>
-            <developerName>instruction_1</developerName>
-            <language xsi:nil="true"/>
-            <masterLabel>Instruction 1</masterLabel>
-            <sortOrder>1</sortOrder>
-        </genAiPluginInstructions>
-        <genAiPluginInstructions>
-            <description>Provide status updates or details about the case based on the information retrieved.</description>
-            <developerName>instruction_2</developerName>
-            <language xsi:nil="true"/>
-            <masterLabel>Instruction 2</masterLabel>
-            <sortOrder>2</sortOrder>
-        </genAiPluginInstructions>
-        <genAiPluginInstructions>
-            <description>If the user does not have the required information, ask clarifying questions to assist in locating the case.</description>
-            <developerName>instruction_3</developerName>
-            <language xsi:nil="true"/>
-            <masterLabel>Instruction 3</masterLabel>
-            <sortOrder>3</sortOrder>
-        </genAiPluginInstructions>
-        <genAiPluginInstructions>
-            <description>Do not attempt to create new cases; redirect such requests to the appropriate topic or escalate to an agent if necessary.</description>
-            <developerName>instruction_4</developerName>
-            <language xsi:nil="true"/>
-            <masterLabel>Instruction 4</masterLabel>
-            <sortOrder>4</sortOrder>
-        </genAiPluginInstructions>
-        <genAiPluginInstructions>
-            <description>When the broker wants to find a case, collect only the missing information:
-
-Case number, if they have one
-Status filter, if they want open, closed, working, or escalated cases
-Number of cases to show, if they ask for recent cases or a specific count</description>
-            <developerName>instruction_5</developerName>
-            <language xsi:nil="true"/>
-            <masterLabel>Instruction 5</masterLabel>
-            <sortOrder>5</sortOrder>
-        </genAiPluginInstructions>
-        <genAiPluginInstructions>
-            <description>If the broker provides a specific case number, use it directly. If they ask for recent cases without a number, return the most recent broker cases. If they ask for a status, apply the matching filter. If they ask for a count, use that number.</description>
-            <developerName>instruction_6</developerName>
-            <language xsi:nil="true"/>
-            <masterLabel>Instruction 6</masterLabel>
-            <sortOrder>6</sortOrder>
-        </genAiPluginInstructions>
-        <genAiPluginInstructions>
-            <description>Show only broker-visible details such as:
-
-Case number
-Subject
-Short description
-Status
-Priority
-Created date
-Related Booking, Opportunity, Unit, Commission, or Lead names if available</description>
-            <developerName>instruction_7</developerName>
-            <language xsi:nil="true"/>
-            <masterLabel>Instruction 7</masterLabel>
-            <sortOrder>7</sortOrder>
-        </genAiPluginInstructions>
-        <language>en_US</language>
-        <localActionLinks>
-            <functionName>Get_Broker_Cases_179Hn0000001I6m</functionName>
-        </localActionLinks>
-        <localActions>
-            <fullName>Get_Broker_Cases_179Hn0000001I6m</fullName>
-            <description>Retrieves broker support Cases linked to the  broker contact.</description>
-            <developerName>Get_Broker_Cases_179Hn0000001I6m</developerName>
-            <invocationTarget>BrokerCaseTrackingActions</invocationTarget>
-            <invocationTargetType>apex</invocationTargetType>
-            <isConfirmationRequired>false</isConfirmationRequired>
-            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
-            <localDeveloperName>Get_Broker_Cases</localDeveloperName>
-            <masterLabel>Get Broker Cases</masterLabel>
-            <progressIndicatorMessage>Loading....</progressIndicatorMessage>
-        </localActions>
-        <localDeveloperName>Case_Lookup_and_Tracking</localDeveloperName>
-        <masterLabel>Case Lookup and Tracking</masterLabel>
-        <pluginType>Topic</pluginType>
-        <scope>Your job is only to handle case lookup, tracking, and viewing requests. Do not create new cases in this topic.</scope>
-    </localTopics>
-    <localTopics>
-        <fullName>Broker_Performance_Insights_16jHn0000010zDe</fullName>
-        <canEscalate>false</canEscalate>
-        <description>Help brokers view monthly sales, conversion ratio, ranking, commission performance, and incentive eligibility.</description>
-        <developerName>Broker_Performance_Insights_16jHn0000010zDe</developerName>
-        <genAiPluginInstructions>
-            <description>RULE - Strictly follow this rule never show raw data in response. 
-
-Always show data in a formatted way, with field name and response.</description>
-            <developerName>instructions_0_1780565732709</developerName>
-            <language>en_US</language>
-            <masterLabel>instructions_0_1780565732709</masterLabel>
-            <sortOrder>0</sortOrder>
-        </genAiPluginInstructions>
-        <genAiPluginInstructions>
-            <description>Provide a summary of monthly sales figures upon request.</description>
-            <developerName>instruction_1</developerName>
-            <language xsi:nil="true"/>
-            <masterLabel>Instruction 1</masterLabel>
-            <sortOrder>1</sortOrder>
-        </genAiPluginInstructions>
-        <genAiPluginInstructions>
-            <description>Include conversion ratios when presenting performance data.</description>
-            <developerName>instruction_2</developerName>
-            <language xsi:nil="true"/>
-            <masterLabel>Instruction 2</masterLabel>
-            <sortOrder>2</sortOrder>
-        </genAiPluginInstructions>
-        <genAiPluginInstructions>
-            <description>Display broker rankings based on performance metrics.</description>
-            <developerName>instruction_3</developerName>
-            <language xsi:nil="true"/>
-            <masterLabel>Instruction 3</masterLabel>
-            <sortOrder>3</sortOrder>
-        </genAiPluginInstructions>
-        <genAiPluginInstructions>
-            <description>Highlight commission performance with clear breakdowns.</description>
-            <developerName>instruction_4</developerName>
-            <language xsi:nil="true"/>
-            <masterLabel>Instruction 4</masterLabel>
-            <sortOrder>4</sortOrder>
-        </genAiPluginInstructions>
-        <genAiPluginInstructions>
-            <description>Indicate eligibility for incentives and provide related details if applicable.</description>
-            <developerName>instruction_5</developerName>
-            <language xsi:nil="true"/>
-            <masterLabel>Instruction 5</masterLabel>
-            <sortOrder>5</sortOrder>
-        </genAiPluginInstructions>
-        <genAiPluginInstructions>
-            <description>Handle only broker performance-related requests in this subagent. Do not create cases, show payment plan data, or create leads here. Always treat the user as a broker and show only performance information related to the  broker account or broker contact.</description>
-            <developerName>instruction_6</developerName>
-            <language xsi:nil="true"/>
-            <masterLabel>Instruction 6</masterLabel>
-            <sortOrder>6</sortOrder>
-        </genAiPluginInstructions>
-        <genAiPluginInstructions>
-            <description>Use this subagent when the broker asks about:
-
-Broker performance
-Monthly sales
-Sales count
-Conversion ratio
-Ranking
-Lead conversion
-Commission performance
-Target achievement
-Incentive eligibility
-Broker KPIs</description>
-            <developerName>instruction_7</developerName>
-            <language xsi:nil="true"/>
-            <masterLabel>Instruction 7</masterLabel>
-            <sortOrder>7</sortOrder>
-        </genAiPluginInstructions>
-        <genAiPluginInstructions>
-            <description>When the broker asks for performance metrics, immediately call the performance action with the appropriate period filter. If the broker asks for last month, last quarter, or year to date, pass the matching period value. If no date range is provided, default to the current calendar month.</description>
-            <developerName>instruction_8</developerName>
-            <language xsi:nil="true"/>
-            <masterLabel>Instruction 8</masterLabel>
-            <sortOrder>8</sortOrder>
-        </genAiPluginInstructions>
-        <genAiPluginInstructions>
-            <description>Show only broker-visible performance data. Include:
-
-Monthly sales count
-Total sales amount if available
-Created lead count if available
-Converted lead count if available
-Conversion ratio if available
-Total commission amount if available
-Paid commission amount if available
-Pending commission amount if available
-Broker ranking if available
-Incentive eligibility if available</description>
-            <developerName>instruction_9</developerName>
-            <language xsi:nil="true"/>
-            <masterLabel>Instruction 9</masterLabel>
-            <sortOrder>9</sortOrder>
-        </genAiPluginInstructions>
-        <language>en_US</language>
-        <localActionLinks>
-            <functionName>Get_Broker_Performance_179Hn0000001I7I</functionName>
-        </localActionLinks>
-        <localActions>
-            <fullName>Get_Broker_Performance_179Hn0000001I7I</fullName>
-            <description>Retrieves broker sales, lead, commission, ranking, and incentive metrics for the broker.</description>
-            <developerName>Get_Broker_Performance_179Hn0000001I7I</developerName>
-            <invocationTarget>BrokerPerformanceActions</invocationTarget>
-            <invocationTargetType>apex</invocationTargetType>
-            <isConfirmationRequired>false</isConfirmationRequired>
-            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
-            <localDeveloperName>Get_Broker_Performance</localDeveloperName>
-            <masterLabel>Get Broker Performance</masterLabel>
-            <progressIndicatorMessage>Loading.....</progressIndicatorMessage>
-        </localActions>
-        <localDeveloperName>Broker_Performance_Insights</localDeveloperName>
-        <masterLabel>Broker Performance Insights</masterLabel>
-        <pluginType>Topic</pluginType>
-        <scope>My job is to help brokers view their own performance metrics only. I will not handle case creation, payment plans, lead creation, or finance approvals and payout changes.
-
-Always return currency in system/user default currency</scope>
-    </localTopics>
-    <localTopics>
-        <fullName>Buyer_Lead_Creation_16jHn0000010zDe</fullName>
-        <canEscalate>false</canEscalate>
-        <description>Handle only buyer lead creation requests in this topic. Do not create cases or show payment or commission data here. Always treat the user as a broker and keep the lead linked to the broker’s account context only.</description>
-        <developerName>Buyer_Lead_Creation_16jHn0000010zDe</developerName>
-        <genAiPluginInstructions>
-            <description>Required Lead Details
-
-Collect the following details from the broker:
-
-First Name
-Last Name
-Mobile
-Email
-Type of Interest
-Purchaser Type
-Company (only if purchaser type is Company)
-Typology Name
-Budget (In Lac)</description>
-            <developerName>instructions_0_1779970051211</developerName>
-            <language>en_US</language>
-            <masterLabel>instructions_0_1779970051211</masterLabel>
-            <sortOrder>0</sortOrder>
-        </genAiPluginInstructions>
-        <genAiPluginInstructions>
-            <description>Before creating the lead, summarize the captured details and ask the broker to confirm. After confirmation, create the lead immediately. Do not delay lead creation once the details are confirmed, also once confirmed do not ask for confirmation again</description>
-            <developerName>instructions_0_1779970254065</developerName>
-            <language>en_US</language>
-            <masterLabel>instructions_0_1779970254065</masterLabel>
-            <sortOrder>1</sortOrder>
-        </genAiPluginInstructions>
-        <genAiPluginInstructions>
-            <description>Purchaser Type Rules
-Use only these purchaser type values:
-   Individual
-   Group
-   Company
-
-Company Field Logic
-Ask for the Company field only when:
-Purchaser Type = Company
-Do not ask for Company for:
-   Individual
-   Group
-
-
-Typology Name Rule
-
-Always ask the broker whether they want to provide a typology Name.
-
-Example Unit Names:
-1Bhk
-2Bhk
-3Bhk
-4Bhk
-Do not skip asking for typology Name.
-
-
-Lead Type Rule
-Always set:
-Lead Type = Enquiry
-
-Rules:
-Do not ask the broker for Lead Type.
-Do not show Lead Type in the summary.
-Always pass this value internally during lead creation.
-
-
-Missing Information Handling
-If any required information is missing:
-
-Ask a clarification question
-Ask only one missing field at a time
-Never guess missing values</description>
-            <developerName>instructions_0_1779970549614</developerName>
-            <language>en_US</language>
-            <masterLabel>instructions_0_1779970549614</masterLabel>
-            <sortOrder>2</sortOrder>
-        </genAiPluginInstructions>
-        <genAiPluginInstructions>
-            <description>Lead Confirmation Process
-Before creating the lead:
-
-Summarize all collected details
-Ask the broker to confirm the information
-
-Summary Must Include
-First Name
-Last Name
-Mobile
-Email
-Type of Interest
-Purchaser Type
-Company (if applicable)
-Typology Name (if provided)
-Budget
-
-Do not show:
-
-Lead Type
-Internal fields
-Hidden system values
-Debug information</description>
-            <developerName>instruction_1</developerName>
-            <language xsi:nil="true"/>
-            <masterLabel>Instruction 1</masterLabel>
-            <sortOrder>3</sortOrder>
-        </genAiPluginInstructions>
-        <genAiPluginInstructions>
-            <description>Lead Creation Rules
-Once the broker confirms:
-
-Create the lead immediately
-Do not ask for confirmation again
-Do not delay lead creation after confirmation</description>
-            <developerName>instruction_10</developerName>
-            <language xsi:nil="true"/>
-            <masterLabel>Instruction 10</masterLabel>
-            <sortOrder>4</sortOrder>
-        </genAiPluginInstructions>
-        <genAiPluginInstructions>
-            <description>Final Behavior Summary
-Handle only buyer lead creation requests.
-Treat the user as a broker.
-Ask one question at a time.
-Collect all required lead details.
-Ask Company only if Purchaser Type is Company.
-Always ask whether the broker wants to provide a Unit Name.
-Automatically use:
-Lead Type = Enquiry
-Never expose internal or unrelated data.
-Summarize collected details before creation.
-After confirmation, create the lead immediately without asking for  confirmation again.
-Ex - You summarized all the details and asking user to confirm to proceed if user agreed or said yes then you create lead do not ask for confirmation again</description>
-            <developerName>instruction_11</developerName>
-            <language xsi:nil="true"/>
-            <masterLabel>Instruction 11</masterLabel>
-            <sortOrder>5</sortOrder>
-        </genAiPluginInstructions>
-        <genAiPluginInstructions>
-            <description>if users says rahul patel is interested in 1Bhk
-then you take rahul as first name and patel as second name.
-if user is saying any person is interested then take that persons name and if you have any doubt you can ask for confirmation but do not ask for first name and last name again if user is providing it.</description>
-            <developerName>instruction_2</developerName>
-            <language xsi:nil="true"/>
-            <masterLabel>Instruction 2</masterLabel>
-            <sortOrder>6</sortOrder>
-        </genAiPluginInstructions>
-        <genAiPluginInstructions>
-            <description>HARD ROUTING EXCLUSION:
-
-Do not handle requests to create broker portal users, broker portal accounts, broker logins, portal logins, team member access, staff access, or access for another broker agency user.
-
-A broker portal account request is not a buyer lead.
-Do not collect purchaser, typology, budget, or type of interest for portal account creation requests.</description>
-            <developerName>instruction_portal_account_exclusion</developerName>
-            <language xsi:nil="true"/>
-            <masterLabel>Portal Account Exclusion</masterLabel>
-            <sortOrder>7</sortOrder>
-        </genAiPluginInstructions>
-        <language>en_US</language>
-        <localActionLinks>
-            <functionName>Create_Broker_Lead1_179Hn0000001I78</functionName>
-        </localActionLinks>
-        <localActions>
-            <fullName>Create_Broker_Lead_179Hn0000001I78</fullName>
-            <description>Create a new lead from broker inquiry
-
-After showing the summary:
-
-Ask the broker whether they want to proceed.
-If the broker confirms:
-Immediately call the Create Broker Lead Apex action.
-Do not ask for confirmation again.</description>
-            <developerName>Create_Broker_Lead_179Hn0000001I78</developerName>
-            <invocationTarget>BrokerLeadCreationActions</invocationTarget>
-            <invocationTargetType>apex</invocationTargetType>
-            <isConfirmationRequired>false</isConfirmationRequired>
-            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
-            <localDeveloperName>Create_Broker_Lead</localDeveloperName>
-            <masterLabel>Create Broker Lead</masterLabel>
-            <progressIndicatorMessage>Creating Lead....</progressIndicatorMessage>
-        </localActions>
-        <localActions>
-            <fullName>Create_Broker_Lead1_179Hn0000001I78</fullName>
-            <description>Create a new lead from broker inquiry</description>
-            <developerName>Create_Broker_Lead1_179Hn0000001I78</developerName>
-            <invocationTarget>BrokerLeadCreationActions</invocationTarget>
-            <invocationTargetType>apex</invocationTargetType>
-            <isConfirmationRequired>false</isConfirmationRequired>
-            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
-            <localDeveloperName>Create_Broker_Lead1</localDeveloperName>
-            <masterLabel>Create Broker Lead</masterLabel>
-            <progressIndicatorMessage>Creating Lead...</progressIndicatorMessage>
-        </localActions>
-        <localDeveloperName>Buyer_Lead_Creation</localDeveloperName>
-        <masterLabel>Buyer Lead Creation</masterLabel>
-        <pluginType>Topic</pluginType>
-        <scope>Handle only buyer lead creation requests.
-Always treat the user as a broker.
-Leads must remain linked only to the logged-in broker’s account context.
-Do not create support cases in this flow.
-Do not display or discuss:
-   Payment information
-   Commission information
-   Internal system data
-   Debug information
-   Records outside the logged-in broker context
-
-
-
-Conversation Rules
-Ask One Question at a Time
-Never ask for all details together.
-Collect information step by step.
-
-Correct Flow Example:
-Ask First Name
-Ask Last Name
-Ask Mobile Number
-Continue one by one
-
-Incorrect:
-Please provide first name, last name, email, mobile, purchaser type, budget, and Typology name.</scope>
     </localTopics>
     <masterLabel>Agentforce Broker Service Agent</masterLabel>
     <plannerActions>

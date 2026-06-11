@@ -1,0 +1,14 @@
+{
+  "required" : [ "typology" ],
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "typology" : {
+      "title" : "Typology",
+      "description" : "Unit Typology",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    }
+  },
+  "lightning:type" : "lightning__objectType"
+}

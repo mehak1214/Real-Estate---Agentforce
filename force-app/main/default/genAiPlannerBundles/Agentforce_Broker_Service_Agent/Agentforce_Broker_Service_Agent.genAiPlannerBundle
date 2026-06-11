@@ -28,10 +28,10 @@
     <localTopics>
         <fullName>Broker_Portal_Account_Management_16jHn0000010zDe</fullName>
         <canEscalate>false</canEscalate>
-        <description>Handles requests from brokers to create another broker portal account under their broker account.</description>
+        <description>Handles requests from brokers to create another broker portal user under their broker account.</description>
         <developerName>Broker_Portal_Account_Management_16jHn0000010zDe</developerName>
         <genAiPluginInstructions>
-            <description>Only handle broker portal account creation requests.
+            <description>Only handle broker portal user creation requests. 
 
 Do not handle lead creation, case creation, commission, payment plan, or performance requests.</description>
             <developerName>instructions_0_1780910078164</developerName>
@@ -40,11 +40,11 @@ Do not handle lead creation, case creation, commission, payment plan, or perform
             <sortOrder>0</sortOrder>
         </genAiPluginInstructions>
         <genAiPluginInstructions>
-            <description>You are the Broker Portal Account Management topic.
+            <description>You are the Broker Portal User Management topic.
 
 ROUTING RULE:
 Use this topic whenever the broker asks to:
-- create another broker portal account
+- create another broker portal user
 - add a broker portal user
 - create broker login
 - create portal login
@@ -54,7 +54,8 @@ Use this topic whenever the broker asks to:
 - give portal access to another person
 - create account for another broker agent
 - set up login for broker staff
-- onboard shubham yadav to the broker portal
+- onboard shubham yadav to the broker portal 
+   - (take shubham as first name and yadav as last name)
 
 Do not route these requests to Case Creation.
 Do not create a support case for portal account creation.
@@ -98,12 +99,7 @@ DO NOT ASK FOR:
 The Apex action handles all internal Salesforce fields automatically.
 
 CONFIRMATION RULE:
-After First Name, Last Name, and Email are collected, show a short summary:
-
-First Name:
-Last Name:
-Email:
-Mobile, Phone, or Title if provided:
+After First Name, Last Name, and Email are collected, show a short summary in organized way:
 
 Then ask:
 &quot;Should I create this broker portal account?&quot;
@@ -117,19 +113,11 @@ Do not create a case.
 Do not say you cannot create users.
 Do not provide setup instructions to the broker.
 
-ACTION INPUT MAPPING:
-Pass:
-brokerContactId = logged-in user&apos;s ContactId from context
-firstName = collected first name
-lastName = collected last name
-email = collected email
-mobile = collected mobile if available
-phone = collected phone if available
-title = collected title if available
+
 
 SUCCESS RESPONSE:
 If action status is Pending or Success, tell the broker:
-&quot;The broker portal account request has been submitted successfully. The user should receive access details by email once Salesforce completes the account creation.&quot;
+&quot;The broker portal user request has been submitted successfully.&quot;
 
 ERROR RESPONSE:
 If action status is Error, show only the action message in a user-friendly way.
@@ -161,13 +149,6 @@ If the broker asks to create portal access/login/account for another broker or s
             <masterLabel>instructions_0_1780914131947</masterLabel>
             <sortOrder>3</sortOrder>
         </genAiPluginInstructions>
-        <genAiPluginInstructions>
-            <description>Once you summarize information make sure it is in human readable format</description>
-            <developerName>instructions_1_1780910078164</developerName>
-            <language>en_US</language>
-            <masterLabel>instructions_1_1780910078164</masterLabel>
-            <sortOrder>4</sortOrder>
-        </genAiPluginInstructions>
         <language>en_US</language>
         <localActionLinks>
             <functionName>Create_Broker_Portal_Account_179Hn0000001KiD</functionName>
@@ -187,9 +168,9 @@ If the broker asks to create portal access/login/account for another broker or s
         <localDeveloperName>Broker_Portal_Account_Management</localDeveloperName>
         <masterLabel>Broker Portal Account Management</masterLabel>
         <pluginType>Topic</pluginType>
-        <scope>Use this topic when the broker asks to create, add, invite, register, or set up another broker portal account or login for a person in their broker agency.
+        <scope>Use this topic when the broker asks to create, add, invite, register, or set up another broker portal user or login for a person in their broker agency.
 
-Only handle broker portal account creation requests.
+Only handle broker portal user creation requests.
 
 Do not handle lead creation, case creation, commission, payment plan, or performance requests.</scope>
     </localTopics>
@@ -654,21 +635,24 @@ Agreement Charges (4%),
 During Transfer/Handover (20%),
 Balance (70%),
 Monthly Installment (60 Months).</description>
-            <developerName>instruction_1</developerName>
-            <language xsi:nil="true"/>
-            <masterLabel>Instruction 1</masterLabel>
+            <developerName>instructions_0_1780920468885</developerName>
+            <language>en_US</language>
+            <masterLabel>instructions_0_1780920468885</masterLabel>
             <sortOrder>0</sortOrder>
         </genAiPluginInstructions>
         <genAiPluginInstructions>
             <description>Always show currencies in users currency</description>
-            <developerName>instructions_0_1780920468885</developerName>
-            <language>en_US</language>
-            <masterLabel>instructions_0_1780920468885</masterLabel>
+            <developerName>instruction_1</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>Instruction 1</masterLabel>
             <sortOrder>1</sortOrder>
         </genAiPluginInstructions>
         <language>en_US</language>
         <localActionLinks>
             <functionName>Broker_Payment_Plan_179Hn0000001KiI</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName xsi:nil="true"/>
         </localActionLinks>
         <localActions>
             <fullName>Broker_Payment_Plan_179Hn0000001KiI</fullName>

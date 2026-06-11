@@ -156,14 +156,14 @@ public with sharing class BrokerLeadCreationActions {
                 ? input.companyName.trim()
                 : input.firstName + ' ' + input.lastName;
             newLead.Status = 'Open';
-            newLead.LeadSource = 'Broker Agent';
+            newLead.LeadSource = 'Web';
             newLead.OwnerId = UserInfo.getUserId();
             newLead.MobilePhone = input.mobile;
             newLead.Phone = input.mobile; 
             newLead.Purchaser__c = purchaser;
             newLead.Lead_Type__c = leadType;
             newLead.Channel_Partner__c = brokerContact.AccountId;
-            newLead.OwnerId = '005Hn00000JIi8LIAT';
+            //newLead.OwnerId = '005Hn00000JIi8LIAT';
             if (Schema.sObjectType.Lead.fields.getMap().containsKey('BrokerAgentContact__c')) {
                 newLead.put('BrokerAgentContact__c', brokerContact.Id);
             }

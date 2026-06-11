@@ -12,7 +12,7 @@
     },
     "balanceAED" : {
       "title" : "balanceAED",
-      "description" : "Balance",
+      "description" : "balance in AED",
       "lightning:type" : "lightning__numberType",
       "lightning:isPII" : false,
       "copilotAction:isDisplayable" : true,
@@ -21,7 +21,7 @@
     },
     "bookingAmountAED" : {
       "title" : "bookingAmountAED",
-      "description" : "Booking Amount",
+      "description" : "booking amount",
       "lightning:type" : "lightning__numberType",
       "lightning:isPII" : false,
       "copilotAction:isDisplayable" : true,
@@ -30,7 +30,7 @@
     },
     "installmentDurationMonths" : {
       "title" : "installmentDurationMonths",
-      "description" : "Installment Duration (Months)",
+      "description" : "installment duration",
       "lightning:type" : "lightning__integerType",
       "lightning:isPII" : false,
       "copilotAction:isDisplayable" : true,
@@ -39,7 +39,7 @@
     },
     "monthlyInstallmentAED" : {
       "title" : "monthlyInstallmentAED",
-      "description" : "Monthly Installment",
+      "description" : "montly installment",
       "lightning:type" : "lightning__numberType",
       "lightning:isPII" : false,
       "copilotAction:isDisplayable" : true,
@@ -48,8 +48,17 @@
     },
     "paymentPlanSummary" : {
       "title" : "paymentPlanSummary",
-      "description" : "Payment Plan Summary",
+      "description" : "payment plan summary",
       "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isDisplayable" : true,
+      "copilotAction:isUsedByPlanner" : true,
+      "copilotAction:useHydratedPrompt" : false
+    },
+    "plotSizeSqft" : {
+      "title" : "plotSizeSqft",
+      "description" : "plot size in sqft",
+      "lightning:type" : "lightning__numberType",
       "lightning:isPII" : false,
       "copilotAction:isDisplayable" : true,
       "copilotAction:isUsedByPlanner" : true,
@@ -57,7 +66,7 @@
     },
     "startingPriceAED" : {
       "title" : "startingPriceAED",
-      "description" : "Starting Price",
+      "description" : "starting price",
       "lightning:type" : "lightning__numberType",
       "lightning:isPII" : false,
       "copilotAction:isDisplayable" : true,
@@ -66,7 +75,7 @@
     },
     "transferHandoverAED" : {
       "title" : "transferHandoverAED",
-      "description" : "Transfer Handover",
+      "description" : "transfer and handover",
       "lightning:type" : "lightning__numberType",
       "lightning:isPII" : false,
       "copilotAction:isDisplayable" : true,
@@ -75,7 +84,7 @@
     },
     "typology" : {
       "title" : "typology",
-      "description" : "Typology",
+      "description" : "typology",
       "lightning:type" : "lightning__textType",
       "lightning:isPII" : false,
       "copilotAction:isDisplayable" : true,

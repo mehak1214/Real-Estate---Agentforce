@@ -10,6 +10,12 @@ private class BrokerSiteVisitActionsTest {
         request.opportunityId = data.opportunity.Id;
         request.startTime = data.startTime;
         request.endTime = data.endTime;
+        request.visitRating = 'Hot';
+        request.visitType = 'Home Visit';
+        request.configurationInterestedIn = '1 BHK';
+        request.budgetInLac = '2 - 2.5 CR';
+        request.walkInSource = 'Channel Partner';
+        request.siteVisitRemark = 'Booked through Agentforce test.';
 
         Test.startTest();
         List<BrokerSiteVisitActions.Response> responses =
@@ -21,7 +27,9 @@ private class BrokerSiteVisitActionsTest {
         Assert.isNotNull(responses[0].siteVisitId, 'Site visit should be created.');
 
         Site_Visit__c siteVisit = [
-            SELECT Opportunity__c, Sales_Rep__c, Start_Time__c, End_Time__c, Visit_Status__c
+            SELECT Opportunity__c, Sales_Rep__c, Start_Time__c, End_Time__c, Visit_Status__c,
+                Visit_Rating__c, Visit_Type__c, Configuration__c, Budget_in_Lac__c,
+                Lead_Source_Major__c, Site_Visit_Remark__c
             FROM Site_Visit__c
             WHERE Id = :responses[0].siteVisitId
             LIMIT 1
@@ -29,6 +37,12 @@ private class BrokerSiteVisitActionsTest {
         Assert.areEqual(data.opportunity.Id, siteVisit.Opportunity__c, 'Opportunity should be linked.');
         Assert.areEqual(data.salesRep.Id, siteVisit.Sales_Rep__c, 'Opportunity Sales Rep should be used.');
         Assert.areEqual('Scheduled', siteVisit.Visit_Status__c, 'Visit should be scheduled.');
+        Assert.areEqual('Hot', siteVisit.Visit_Rating__c, 'Visit rating should be captured.');
+        Assert.areEqual('Home Visit', siteVisit.Visit_Type__c, 'Visit type should be captured.');
+        Assert.areEqual('1 BHK', siteVisit.Configuration__c, 'Configuration should be captured.');
+        Assert.areEqual('2 - 2.5 CR', siteVisit.Budget_in_Lac__c, 'Budget should be captured.');
+        Assert.areEqual('Channel Partner', siteVisit.Lead_Source_Major__c, 'Walk-In Source should be captured.');
+        Assert.areEqual('Booked through Agentforce test.', siteVisit.Site_Visit_Remark__c, 'Remark should be captured.');
     }
 
     @isTest

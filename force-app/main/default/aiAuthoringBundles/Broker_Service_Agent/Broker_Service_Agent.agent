@@ -504,6 +504,41 @@ subagent Site_Visit_Booking:
                     description: "Requested site visit end date and time."
                     is_required: True
                     complex_data_type_name: "lightning__dateTimeType"
+                visitRating: string
+                    label: "Visit Rating"
+                    description: "Optional visit rating. Allowed values: Hot, Warm, Cold, Booked, Lost, Client Left."
+                    is_required: False
+                    complex_data_type_name: "lightning__textType"
+                visitType: string
+                    label: "Visit Type"
+                    description: "Visit type. Allowed values: Site Visit, Home Visit. Defaults to Site Visit."
+                    is_required: False
+                    complex_data_type_name: "lightning__textType"
+                configurationInterestedIn: string
+                    label: "Configuration Interested In"
+                    description: "Customer configuration interest such as 1 BHK, 2 BHK, 3 BHK, 4 BHK, Duplex, Retail, or project-specific configuration."
+                    is_required: False
+                    complex_data_type_name: "lightning__textType"
+                budgetInLac: string
+                    label: "Budget in Lac"
+                    description: "Customer budget value."
+                    is_required: False
+                    complex_data_type_name: "lightning__textType"
+                walkInSource: string
+                    label: "Walk-In Source"
+                    description: "Walk-In Source. Defaults to Channel Partner for broker bookings if omitted."
+                    is_required: False
+                    complex_data_type_name: "lightning__textType"
+                walkInSubSource: string
+                    label: "Walk-In Sub Source"
+                    description: "Optional Walk-In Sub Source."
+                    is_required: False
+                    complex_data_type_name: "lightning__textType"
+                siteVisitRemark: string
+                    label: "Site Visit Remark"
+                    description: "Optional site visit remarks."
+                    is_required: False
+                    complex_data_type_name: "lightning__textType"
             outputs:
                 siteVisitId: string
                     label: "Site Visit ID"
@@ -537,9 +572,20 @@ subagent Site_Visit_Booking:
              - Opportunity ID or Opportunity name
              - Requested visit start date and time
              - Requested visit end date and time
+             Also collect these business fields if the broker provides them or they are needed in the conversation:
+             - Visit Rating: Hot, Warm, Cold, Booked, Lost, Client Left
+             - Visit Type: Site Visit or Home Visit
+             - Configuration Interested In
+             - Budget in Lac
+             - Walk-In Source
+             - Walk-In Sub Source
+             - Site Visit Remark
              Sales Rep is optional. If the broker does not provide one, leave salesRepId blank so Apex uses the Opportunity Sales Rep.
+             If Visit Type is missing, leave it blank so Apex defaults to Site Visit.
+             If Walk-In Source is missing, leave it blank so Apex defaults to Channel Partner for broker bookings.
+             Do not collect or pass ESVF Date, ESVF Date & Time, ESVF Status, Visit Number, or Opportunity Project Name; these are system/derived fields.
              Do not ask the broker for a Salesforce Sales Rep ID. Only pass salesRepId when the ID is already available from context.
-             Before creating the site visit, summarize the Opportunity and requested visit time once and ask the broker to confirm.
+             Before creating the site visit, summarize the Opportunity, requested visit time, and captured business fields once and ask the broker to confirm.
              After confirmation, immediately call {!@actions.book_site_visit}.
              Pass endUserContactId as brokerContactId when the portal session provides it.
              If the action returns Error, show the returned message. Common errors include unavailable Sales Rep time or capacity already full.
@@ -553,6 +599,13 @@ subagent Site_Visit_Booking:
                 with salesRepId = ...
                 with startTime = ...
                 with endTime = ...
+                with visitRating = ...
+                with visitType = ...
+                with configurationInterestedIn = ...
+                with budgetInLac = ...
+                with walkInSource = ...
+                with walkInSubSource = ...
+                with siteVisitRemark = ...
 
 subagent Lead_Creation:
     label: "Lead Creation"

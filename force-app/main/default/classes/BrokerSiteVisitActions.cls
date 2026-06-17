@@ -18,6 +18,27 @@ public with sharing class BrokerSiteVisitActions {
 
         @InvocableVariable(label='End Time' required=true description='Site visit end date and time')
         public DateTime endTime;
+
+        @InvocableVariable(label='Visit Rating' required=false description='Visit rating such as Hot, Warm, Cold, Booked, Lost, or Client Left')
+        public String visitRating;
+
+        @InvocableVariable(label='Visit Type' required=false description='Visit type: Site Visit or Home Visit. Defaults to Site Visit.')
+        public String visitType;
+
+        @InvocableVariable(label='Configuration Interested In' required=false description='Customer configuration interest such as 1 BHK, 2 BHK, or 3 BHK')
+        public String configurationInterestedIn;
+
+        @InvocableVariable(label='Budget in Lac' required=false description='Customer budget in lac')
+        public String budgetInLac;
+
+        @InvocableVariable(label='Walk-In Source' required=false description='Walk-In Source. Defaults to Channel Partner when omitted.')
+        public String walkInSource;
+
+        @InvocableVariable(label='Walk-In Sub Source' required=false description='Walk-In Sub Source')
+        public String walkInSubSource;
+
+        @InvocableVariable(label='Site Visit Remark' required=false description='Optional site visit remarks')
+        public String siteVisitRemark;
     }
 
     public class Response {
@@ -106,9 +127,23 @@ public with sharing class BrokerSiteVisitActions {
             siteVisit.End_Time__c = request.endTime;
             siteVisit.Scheduled_Date__c = request.startTime.date();
             siteVisit.Visit_Status__c = 'Scheduled';
-            siteVisit.ESVF_Date_Time__c = request.startTime;
             siteVisit.Project__c = opportunity.Project__c;
             siteVisit.Channel_Partner__c = opportunity.Channel_Partner__c;
+            siteVisit.Visit_Rating__c = String.isBlank(request.visitRating) ? opportunity.Visit_Rating__c : request.visitRating;
+            siteVisit.Visit_Type__c = String.isBlank(request.visitType) ? 'Site Visit' : request.visitType;
+            siteVisit.Configuration__c = String.isBlank(request.configurationInterestedIn)
+                ? opportunity.Configuration_interested_in__c
+                : request.configurationInterestedIn;
+            siteVisit.Budget_in_Lac__c = String.isBlank(request.budgetInLac) ? opportunity.Budget__c : request.budgetInLac;
+            siteVisit.Lead_Source_Major__c = String.isBlank(request.walkInSource)
+                ? defaultText(opportunity.Walk_In_Source__c, 'Channel Partner')
+                : request.walkInSource;
+            siteVisit.Lead_Source_Minor__c = String.isBlank(request.walkInSubSource)
+                ? opportunity.Walk_In_Sub_Source__c
+                : request.walkInSubSource;
+            siteVisit.Site_Visit_Remark__c = String.isBlank(request.siteVisitRemark)
+                ? opportunity.Site_Visit_Remark__c
+                : request.siteVisitRemark;
 
             Database.SaveResult saveResult = Database.insert(siteVisit, false);
             if(!saveResult.isSuccess()) {
@@ -214,7 +249,9 @@ public with sharing class BrokerSiteVisitActions {
         List<Opportunity> opportunities;
         if(opportunityId != null) {
             opportunities = [
-                SELECT Id, Name, Sales_Rep__c, Project__c, Channel_Partner__c
+                SELECT Id, Name, Sales_Rep__c, Project__c, Channel_Partner__c,
+                    Visit_Rating__c, Configuration_interested_in__c, Budget__c,
+                    Walk_In_Source__c, Walk_In_Sub_Source__c, Site_Visit_Remark__c
                 FROM Opportunity
                 WHERE Id = :opportunityId
                 LIMIT 1
@@ -222,7 +259,9 @@ public with sharing class BrokerSiteVisitActions {
         } else {
             String nameLike = '%' + searchText + '%';
             opportunities = [
-                SELECT Id, Name, Sales_Rep__c, Project__c, Channel_Partner__c
+                SELECT Id, Name, Sales_Rep__c, Project__c, Channel_Partner__c,
+                    Visit_Rating__c, Configuration_interested_in__c, Budget__c,
+                    Walk_In_Source__c, Walk_In_Sub_Source__c, Site_Visit_Remark__c
                 FROM Opportunity
                 WHERE Name LIKE :nameLike
                 ORDER BY CreatedDate DESC
@@ -240,6 +279,10 @@ public with sharing class BrokerSiteVisitActions {
         }
 
         return opportunity;
+    }
+
+    private static String defaultText(String value, String fallback) {
+        return String.isBlank(value) ? fallback : value;
     }
 
     private static Team_Member__c queryEligibleSalesRep(Id salesRepId) {

@@ -1,0 +1,92 @@
+<template>
+    <lightning-card title="Document Review" icon-name="standard:document" class="slds-card_boundary custom-card">
+        <div class="main-container">
+            <div class="header-section slds-m-bottom_medium">
+                <p class="slds-text-color_weak">Select missing documents to trigger a Request for Information (RFI).</p>
+            </div>
+
+            <div class="doc-list">
+                <template for:each={documents} for:item="doc">
+                    <!-- The expanded details now live INSIDE the doc-row so the border wraps nicely -->
+                    <div key={doc.key} class="doc-row">
+                        
+                        <!-- Main Row Content -->
+                        <div class="slds-grid slds-grid_vertical-align-center">
+                            <div class="doc-checkbox">
+                                <lightning-input 
+                                    type="checkbox" 
+                                    variant="label-hidden"
+                                    data-key={doc.key}
+                                    disabled={doc.uploaded}
+                                    onchange={handleSelect}>
+                                </lightning-input>
+                            </div>
+
+                            <div class="doc-info slds-col slds-m-left_small">
+                                <span class="doc-name">{doc.name}</span>
+                            </div>
+
+                            <div class="doc-action slds-grid slds-grid_vertical-align-center">
+                                <template if:true={doc.uploaded}>
+                                    <span class="badge badge-success">
+                                        <lightning-icon icon-name="utility:check" size="xx-small" variant="inverse" class="slds-m-right_xx-small"></lightning-icon>
+                                        Verified
+                                    </span>
+                                </template>
+                                <template if:false={doc.uploaded}>
+                                    <span class="badge badge-missing">Pending</span>
+                                    
+                                    <!-- Chevron Button -->
+                                    <!-- Inside your doc-action div -->
+                                    <lightning-button-icon 
+                                        icon-name={doc.iconName} 
+                                        variant="bare" 
+                                        size="medium" 
+                                        class="slds-m-left_x-small"
+                                        data-key={doc.key}
+                                        onclick={toggleDetails}
+                                        alternative-text="View Details">
+                                    </lightning-button-icon>
+                                </template>
+                                &nbsp;
+                                <!-- Inside the .doc-action div, before or after the badge -->
+                                <template if:true={doc.contentDocumentId}>
+                                    <lightning-button-icon 
+                                        icon-name="utility:preview" 
+                                        variant="bare" 
+                                        size="medium" 
+                                        class="slds-m-right_x-small"
+                                        data-id={doc.contentDocumentId}
+                                        onclick={handlePreview}
+                                        alternative-text="Preview Document">
+                                    </lightning-button-icon>
+                                </template>
+                            </div>
+                        </div>
+
+                        <!-- Expandable Details Section -->
+                        <template if:true={doc.isExpanded}>
+                            <div class="doc-details">
+                                <lightning-icon icon-name="utility:info" size="xx-small" variant="error" class="slds-m-right_xx-small"></lightning-icon>
+                                <span class="slds-text-color_error slds-text-body_small">{doc.pendingReason}</span>
+                            </div>
+                        </template>
+
+                    </div>
+                </template>
+            </div>
+
+            <div class="footer-actions slds-m-top_medium">
+                <lightning-button label="Send RFI" variant="neutral" onclick={handleRFI}></lightning-button>
+                
+                <lightning-button 
+                    label="Submit to Legal" 
+                    variant="brand" 
+                    onclick={handleSubmit} 
+                    disabled={isSubmitDisabled} 
+                    class="slds-m-left_small">
+                </lightning-button>
+            </div>
+        </div>
+    </lightning-card>
+</template>

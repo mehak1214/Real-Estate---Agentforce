@@ -2,7 +2,7 @@ system:
     instructions: |
         You are Broker Service Agent, a professional broker support assistant for the real estate broker portal.
 
-        You help brokers create support cases, check booked-property payment plans, create buyer leads, view commission and payout status, and understand broker performance.
+        You help brokers create support cases, check booked-property payment plans, create buyer leads, book site visits, view commission and payout status, and understand broker performance.
 
         Use a concise, polite, business-focused, and action-oriented tone.
 
@@ -19,7 +19,7 @@ system:
 
     messages:
         welcome: |
-            Hi, I'm your Broker Service Agent. I can help you create support cases, check payment plans, create buyer leads, view commission status, and review broker performance.
+            Hi, I'm your Broker Service Agent. I can help you create support cases, check payment plans, create buyer leads, book site visits, view commission status, and review broker performance.
 
             How can I help you?
         error: "Sorry, it looks like something has gone wrong."
@@ -90,12 +90,14 @@ start_agent agent_router:
             |Select the best tool to call based on conversation history and user's intent.
              Route payment plan, payment schedule, installment, due amount, paid amount, outstanding amount, overdue payment, and booked-property payment detail requests to Payment_Plan.
              Route lead creation or buyer inquiry requests to Lead_Creation.
+             Route site visit booking, schedule visit, property visit, project visit, visit appointment, and reschedule site visit requests to Site_Visit_Booking.
              Route commission, brokerage, payout, and invoice status requests to Commission_Status.
              Route broker KPI, monthly sales, ranking, incentive, target, and conversion ratio requests to Broker_Performance.
              Route support case, ticket, issue, complaint, booking issue, payment issue, commission issue, and portal issue requests to CaseManagement.
         actions:
             go_to_Payment_Plan: @utils.transition to @subagent.Payment_Plan
             go_to_Lead_Creation: @utils.transition to @subagent.Lead_Creation
+            go_to_Site_Visit_Booking: @utils.transition to @subagent.Site_Visit_Booking
             go_to_Commission_Status: @utils.transition to @subagent.Commission_Status
             go_to_Broker_Performance: @utils.transition to @subagent.Broker_Performance
             go_to_CaseManagement: @utils.transition to @subagent.CaseManagement
@@ -461,6 +463,96 @@ subagent Payment_Plan:
                 with opportunityId = ...
                 with bookingUnitId = ...
                 with unitId = ...
+
+subagent Site_Visit_Booking:
+    label: "Site Visit Booking"
+    description: |
+        Helps brokers book site visits for broker-accessible Opportunities using a requested date and time.
+    actions:
+        book_site_visit:
+            label: "Book Site Visit"
+            description: "Creates a Site Visit for an Opportunity after checking the selected Sales Rep availability and visit capacity."
+            target: "apex://BrokerSiteVisitActions"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            inputs:
+                brokerContactId: string
+                    label: "Broker Contact ID"
+                    description: "Portal user contact id from session context."
+                    is_required: False
+                    complex_data_type_name: "lightning__textType"
+                    is_user_input: False
+                    is_displayable: False
+                opportunityId: string
+                    label: "Opportunity ID or Name"
+                    description: "Opportunity record ID or Opportunity name for which the site visit should be booked."
+                    is_required: True
+                    complex_data_type_name: "lightning__textType"
+                salesRepId: string
+                    label: "Sales Rep ID"
+                    description: "Optional Team Member ID for the Sales Rep. Leave blank to use the Opportunity Sales Rep."
+                    is_required: False
+                    complex_data_type_name: "lightning__textType"
+                    is_displayable: False
+                startTime: dateTime
+                    label: "Start Time"
+                    description: "Requested site visit start date and time."
+                    is_required: True
+                    complex_data_type_name: "lightning__dateTimeType"
+                endTime: dateTime
+                    label: "End Time"
+                    description: "Requested site visit end date and time."
+                    is_required: True
+                    complex_data_type_name: "lightning__dateTimeType"
+            outputs:
+                siteVisitId: string
+                    label: "Site Visit ID"
+                    description: "Created Site Visit record ID."
+                    is_displayable: False
+                siteVisitName: string
+                    label: "Site Visit Name"
+                    description: "Broker-visible Site Visit number."
+                    is_displayable: True
+                opportunityName: string
+                    label: "Opportunity Name"
+                    description: "Opportunity for which the site visit was booked."
+                    is_displayable: True
+                salesRepName: string
+                    label: "Sales Rep Name"
+                    description: "Sales Rep assigned to the site visit."
+                    is_displayable: True
+                status: string
+                    label: "Status"
+                    description: "Action result status."
+                    is_displayable: False
+                message: string
+                    label: "Message"
+                    description: "Broker-visible action response message."
+                    is_displayable: True
+    reasoning:
+        instructions: ->
+            |Use this subagent when the broker wants to book, schedule, create, or reschedule a site visit or property/project visit.
+             Only create site visits for Opportunities related to the logged-in broker account or broker contact.
+             Collect the following details before booking:
+             - Opportunity ID or Opportunity name
+             - Requested visit start date and time
+             - Requested visit end date and time
+             Sales Rep is optional. If the broker does not provide one, leave salesRepId blank so Apex uses the Opportunity Sales Rep.
+             Do not ask the broker for a Salesforce Sales Rep ID. Only pass salesRepId when the ID is already available from context.
+             Before creating the site visit, summarize the Opportunity and requested visit time once and ask the broker to confirm.
+             After confirmation, immediately call {!@actions.book_site_visit}.
+             Pass endUserContactId as brokerContactId when the portal session provides it.
+             If the action returns Error, show the returned message. Common errors include unavailable Sales Rep time or capacity already full.
+             Do not tell the broker the visit is booked unless the action returns Success.
+             Do not show internal Salesforce IDs.
+             Ask one clear follow-up question at a time when required information is missing.
+        actions:
+            book_site_visit: @actions.book_site_visit
+                with brokerContactId = ...
+                with opportunityId = ...
+                with salesRepId = ...
+                with startTime = ...
+                with endTime = ...
 
 subagent Lead_Creation:
     label: "Lead Creation"

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>My_Site_Visit</fullName>
+    <columns>NAME</columns>
+    <columns>Project__c</columns>
+    <columns>First_Name__c</columns>
+    <columns>Last_Name__c</columns>
+    <columns>Mobile_Number__c</columns>
+    <columns>Email_Id__c</columns>
+    <columns>Opportunity__c</columns>
+    <columns>Budget_in_Lac__c</columns>
+    <columns>Configuration__c</columns>
+    <columns>Occupation__c</columns>
+    <columns>Site_Visit_Remark__c</columns>
+    <columns>Sales_Rep_Submit__c</columns>
+    <columns>Sales_Rep_Submit_Date_Time__c</columns>
+    <filterScope>Mine</filterScope>
+    <label>My Site Visit</label>
+</ListView>

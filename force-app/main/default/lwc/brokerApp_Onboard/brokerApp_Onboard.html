@@ -1,0 +1,293 @@
+<template>
+<lightning-card title="Registration Form" icon-name="standard:record_lookup">
+    <div class="main-container custom-background">
+        
+        <template if:true={isThankYou}>
+                <div class="thankyou-wrapper animate-fade-in">
+                    
+                    <div class="thankyou-card">
+                        
+                        <div class="success-icon">
+                            <lightning-icon 
+                                icon-name="utility:success" 
+                                size="large" 
+                                variant="success">
+                            </lightning-icon>
+                        </div>
+
+                        <h1 class="thankyou-title">Application Submitted Successfully 🎉</h1>
+                        
+                        <!-- NEW: Application ID Display -->
+                        <div class="slds-m-vertical_medium slds-p-around_medium" style="background: #f0fdf4; border-radius: 8px; border: 1px dashed #22c55e;">
+                            <p class="slds-text-title_caps slds-m-bottom_none" style="color: #166534;">Application Number</p>
+                            <h2 class="slds-text-heading_large" style="color: #15803d; font-weight: 800;">{generatedAppNumber}</h2>
+                        </div>
+                        <p class="thankyou-subtitle">
+                            Your documents have been uploaded successfully.
+                        </p>
+
+                        <p class="thankyou-desc">
+                            Our team will review your application and get back to you shortly.
+                        </p>
+
+                        <div class="thankyou-actions">
+                            <lightning-button 
+                                label="Submit Another Application" 
+                                variant="brand" 
+                                onclick={handleRestart}>
+                            </lightning-button>
+
+                            <lightning-button 
+                                label="Go to Dashboard" 
+                                variant="neutral" 
+                                class="slds-m-left_small"
+                                onclick={handleRestart}>
+                            </lightning-button>
+                        </div>
+
+                    </div>
+                </div>
+        </template>
+
+        <template if:false={isThankYou}>
+            <div class="slds-p-horizontal_large slds-p-top_medium">
+                <lightning-progress-indicator current-step={step} type="path" variant="base">
+                    <lightning-progress-step label="Mode" value="selection"></lightning-progress-step>
+                    <lightning-progress-step label="Upload" value="upload"></lightning-progress-step>
+                    <lightning-progress-step label="Verify" value="form"></lightning-progress-step>
+                </lightning-progress-indicator>
+            </div>
+        
+
+            <div class="content-body slds-p-around_large">
+                <template if:true={isSelection}>
+                    <div class="slds-align_absolute-center animate-fade-in">
+                        <div class="selection-wrapper">
+                            <h2 class="hero-text slds-m-bottom_large">How would you like to provide your details?</h2>
+                            <div class="slds-grid slds-gutters_medium">
+                                <div class="slds-col slds-size_1-of-2">
+                                    <div class="option-card ai-card" onclick={handleUploadOption}>
+                                        <div class="icon-circle">
+                                            <lightning-icon icon-name="utility:magicwand" size="medium"></lightning-icon>
+                                        </div>
+                                        <h3>Auto-Extract (AI)</h3>
+                                        <p>Upload documents and let AI fill the form for you.</p>
+                                    </div>
+                                </div>
+                                <div class="slds-col slds-size_1-of-2">
+                                    <div class="option-card manual-card" onclick={handleManualOption}>
+                                        <div class="icon-circle">
+                                            <lightning-icon icon-name="utility:edit_form" size="medium"></lightning-icon>
+                                        </div>
+                                        <h3>Manual Entry</h3>
+                                        <p>Fill out the application information manually.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+
+                <template if:true={isUpload}>
+                    <div class="animate-fade-in">
+                        <template if:true={hasDocumentErrors}>
+<div class="slds-box slds-theme_error slds-m-bottom_medium">
+
+    <b>Company Name Mismatch Found</b>
+
+    <template
+        for:each={documentErrorList}
+        for:item="err">
+
+        <p key={err.doc}>
+            <b>{err.doc}</b> :
+            {err.message}
+        </p>
+
+    </template>
+
+</div>
+</template>
+                        <div class="upload-grid">
+                            <template for:each={documents} for:item="doc" for:index="index">
+                                <div key={doc.key} class="compact-upload-card">
+                                    <div class="doc-info">
+                                        <lightning-icon icon-name="doctype:pdf" size="small" class="slds-m-right_small"></lightning-icon>
+                                        <span class="doc-name">{doc.name}</span>
+                                    </div>
+                                    <div class="upload-actions">
+                                        <template if:true={doc.contentVersionId}>
+                                            <lightning-icon icon-name="utility:success" variant="success" size="xx-small" class="slds-m-right_small"></lightning-icon>
+                                        </template>
+                                        <lightning-file-upload
+                                            class="compact-uploader"
+                                            data-index={index}
+                                            label={doc.statusLabel}
+                                            variant="label-hidden"
+                                            record-id={recordId}
+                                            accept=".pdf,.jpg,.jpeg,.png"
+                                            onuploadfinished={handleFileUpload}>
+                                        </lightning-file-upload>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+
+                        <div class="footer-actions">
+                            <lightning-button label="Back" variant="neutral" onclick={handleBack}></lightning-button>
+                            <lightning-button label="Analyze & Continue" variant="brand" onclick={handleSubmitDocuments} icon-name="utility:forward" class="slds-m-left_small"></lightning-button>
+                        </div>
+                    </div>
+                </template>
+
+                
+                <template if:true={isForm}>
+                    <div class="animate-fade-in">
+                        
+                        <div class="glass-card slds-m-bottom_medium">
+                            <div class="card-header">
+                                <lightning-icon icon-name="standard:account" size="xx-small" class="slds-m-right_x-small"></lightning-icon>
+                                Company & License Details
+                            </div>
+                            <div class="slds-grid slds-wrap slds-gutters_small slds-p-around_medium">
+                                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+
+                                    <!-- <lightning-input label="Company Name" name="brokerAppName" value={formData.brokerAppName} onchange={handleChange}></lightning-input>
+                                    <lightning-input label="Type of Establishment" name="establishmentType" value={formData.establishmentType} onchange={handleChange}></lightning-input>
+                                    <lightning-input label="Agency Type" name="agencyType" value={formData.agencyType} onchange={handleChange}></lightning-input> -->
+                                    <lightning-input label="Company Name" name="brokerAppName" value={formData.brokerAppName} onchange={handleChange}></lightning-input>
+                                    <lightning-input label="Type of Establishment" name="establishmentType" value={formData.establishmentType} onchange={handleChange}></lightning-input>
+                                    <lightning-input label="Agency Type" name="agencyType" value={formData.agencyType} onchange={handleChange}></lightning-input>
+                                </div>
+                                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                                    <lightning-input label="Commercial License Number" name="licenseNumber" value={formData.licenseNumber} onchange={handleChange}></lightning-input>
+                                    <lightning-input type="date" label="License Expiry" name="licenseExpiry" value={formData.licenseExpiry} onchange={handleChange}></lightning-input>
+                                    <lightning-input label="License Type" name="licenseType" value={formData.licenseType} onchange={handleChange}></lightning-input>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="slds-grid slds-wrap slds-gutters_medium">
+                            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                                <div class="glass-card full-height">
+                                    <div class="card-header">Registered Address</div>
+                                    <div class="slds-p-around_medium">
+                                        <lightning-input label="Address Line 1" name="address1" value={formData.address1} onchange={handleChange}></lightning-input>
+                                        <lightning-input label="Address Line 2" name="address2" value={formData.address2} onchange={handleChange}></lightning-input>
+                                        <div class="slds-grid slds-gutters_small">
+                                            <div class="slds-col slds-size_1-of-2"><lightning-input label="City" name="city" value={formData.city} onchange={handleChange}></lightning-input></div>
+                                            <div class="slds-col slds-size_1-of-2"><lightning-input label="State" name="state" value={formData.state} onchange={handleChange}></lightning-input></div>
+                                        </div>
+                                        <div class="slds-grid slds-gutters_small">
+                                            <div class="slds-col slds-size_1-of-2"><lightning-input label="Emirate " name="Emirate" value="Abu Dhabi" onchange={handleChange}></lightning-input></lightning-input></div>
+                                            <div class="slds-col slds-size_1-of-2"><lightning-input label="Country" name="country" value={formData.country} onchange={handleChange}></lightning-input></lightning-input></div>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                                <div class="glass-card full-height">
+                                    <div class="card-header">Banking Information</div>
+                                    <div class="slds-p-around_medium">
+                                        <lightning-input label="Bank Name" name="bankName" value={formData.bankName} onchange={handleChange}></lightning-input>
+                                        <lightning-input label="Account Number" name="accountNumber" value={formData.accountNumber} onchange={handleChange}></lightning-input>
+                                        <lightning-input label="Bank Branch" name="bankBranch" value={formData.bankBranch} onchange={handleChange}></lightning-input>
+                                        <!-- <lightning-input label="Bank Branch" name="bankBranch" value={formData.bankBranch} onchange={handleChange}></lightning-input> -->
+                                        <lightning-input label="IBAN" name="iban" value={formData.iban} onchange={handleChange}></lightning-input>
+                                        <!-- <lightning-input label="IBAN" name="IBAN" value={formData.iban} onchange={handleChange}></lightning-input> -->
+                                        <div class="slds-grid slds-gutters_small">
+                                            <div class="slds-col slds-size_1-of-2"><lightning-input label="Bank Country" name="bankCountry" value={formData.bankCountry} onchange={handleChange}></lightning-input></div>
+                                            <div class="slds-col slds-size_1-of-2"><lightning-input label="Swift Code" name="swiftCode" value={formData.swiftCode} onchange={handleChange}></lightning-input></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="glass-card slds-m-top_medium">
+                            <div class="card-header">Contact & Identity</div>
+                            <div class="slds-grid slds-wrap slds-gutters_small slds-p-around_medium">
+                                <div class="slds-col slds-size_1-of-3"><lightning-input label="Applicant Name" name="applicantName" value={formData.applicantName} onchange={handleChange}></lightning-input></div>
+                                <div class="slds-col slds-size_1-of-3"><lightning-input label="Email Address" type="email" name="email" value={formData.email} onchange={handleChange}></lightning-input></div>
+                                <div class="slds-col slds-size_1-of-3">
+                                    <lightning-input label="Phone Number" name="phone" value={formData.phone} onchange={handleChange}></lightning-input>
+                                    <!-- <lightning-input label="Passport Expiry" type="date" name="passportExpiry" value={formData.passportExpiry} onchange={handleChange}></lightning-input> -->
+                                    <!-- <lightning-input label="Phone Number" type="tel" name="phone" value={formData.phone} onchange={handleChange}></lightning-input> -->
+                                </div>
+                                <div class="slds-col slds-size_1-of-3">
+                                    <lightning-input label="Passport Number" name="passportNumber" value={formData.passportNumber} onchange={handleChange}></lightning-input>
+                                    
+                                </div>
+                                <div class="slds-col slds-size_1-of-3">
+                                    <lightning-input label="Passport Expiry Date" type="date" name="passportExpiry" value={formData.passportExpiry} onchange={handleChange}></lightning-input>
+                                </div>
+
+                                    
+                                <!-- <div class="slds-col slds-size_1-of-3"><lightning-input type="date" label="Passport Expiry" name="passportExpiry" value={formData.passportExpiry} onchange={handleChange}></lightning-input></div> -->
+                            </div>
+                        </div>
+
+                        <div class="glass-card slds-m-top_medium">
+                            <div class="card-header">
+                                <lightning-icon icon-name="utility:priority" size="xx-small" class="slds-m-right_x-small"></lightning-icon>
+                                Trade License Details
+                            </div>
+                            <div class="slds-grid slds-wrap slds-gutters_small slds-p-around_medium">
+                                <!-- <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3"><lightning-input label="Trade License" name="tradeLicense" value={formData.tradeLicense} onchange={handleChange}></lightning-input></div> -->
+                                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3"><lightning-input label="Trade License No" name="tradeLicenseNo" value={formData.tradeLicenseNumber} onchange={handleChange}></lightning-input></div>
+                                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3"><lightning-input label="Trade Name" name="tradeName" value={formData.tradeName} onchange={handleChange}></lightning-input></div>
+                                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3"><lightning-input type="date" label="Trade Issue Date" name="tradeIssueDate" value={formData.tradeIssueDate} onchange={handleChange}></lightning-input></div>
+                                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3"><lightning-input type="date" label="Trade Expiry Date" name="tradeExpiryDate" value={formData.tradeExpiryDate} onchange={handleChange}></lightning-input></div>
+                                <!-- <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3"><lightning-input label="Main License No" name="tradeMainLicenseNo" value={formData.tradeMainLicenseNo} onchange={handleChange}></lightning-input></div> -->
+                                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3"><lightning-input label="Register No" name="tradeRegisterNo" value="3643348756" onchange={handleChange}></lightning-input></div>
+                                <!-- <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3"><lightning-input label="DCCI No" name="tradeDcciNo" value={formData.tradeDcciNo} onchange={handleChange}></lightning-input></div> -->
+                            </div>
+                        </div>
+
+                        <div class="glass-card slds-m-top_medium">
+                            <div class="card-header">
+                                <lightning-icon icon-name="utility:shield" size="xx-small" class="slds-m-right_x-small"></lightning-icon>
+                                RERA Information
+                            </div>
+                            <div class="slds-grid slds-wrap slds-gutters_small slds-p-around_medium">
+                                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3"><lightning-input label="RERA Trade Name" name="reraTradeName" value={formData.reraTradeName} onchange={handleChange}></lightning-input></div>
+                                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3"><lightning-input label="RERA License No" name="reraLicenseNo" value={formData.reraLicenseNo} onchange={handleChange}></lightning-input></div>
+                                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3"><lightning-input label="RERA Registration No" name="reraRegistrationNo" value={formData.reraRegistrationNo} onchange={handleChange}></lightning-input></div>
+                                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3"><lightning-input type="date" label="RERA Registration Date" name="reraRegistrationDate" value={formData.reraRegistrationDate} onchange={handleChange}></lightning-input></div>
+                                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3"><lightning-input type="date" label="RERA Expiry Date" name="reraExpiryDate" value={formData.reraExpiryDate} onchange={handleChange}></lightning-input></div>
+                            </div>
+                        </div>
+
+                        <div class="glass-card slds-m-top_medium">
+                            <div class="card-header">
+                                <lightning-icon icon-name="utility:identity_verified" size="xx-small" class="slds-m-right_x-small"></lightning-icon>
+                                Tax Registration & Identity
+                            </div>
+                            <div class="slds-grid slds-wrap slds-gutters_small slds-p-around_medium">
+                                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3"><lightning-input label="Vat/Tax Registration No" name="taxRegistrationNumber" value={formData.taxRegistrationNumber} onchange={handleChange}></lightning-input></div>
+                                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3"><lightning-input label="VAT Undertaking issue date" name="taxRegistrationDate" value={formData.taxRegistrationDate} onchange={handleChange}></lightning-input></div>
+                                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3"><lightning-input label="ID Number" name="idNumber" value={formData.nationalIdNumber} onchange={handleChange}></lightning-input></div>
+                                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3"><lightning-input label="ID Type" name="idType" value={formData.idType} onchange={handleChange}></lightning-input></div>
+                                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3"><lightning-input label="Nationality" name="nationality" value={formData.nationality} onchange={handleChange}></lightning-input></div>
+                            </div>
+                        </div>
+                        <div class="footer-actions sticky-footer slds-m-top_large">
+                            <lightning-button label="Back to Upload" variant="neutral" onclick={handleBack}></lightning-button>
+                            <lightning-button label="Submit Application" variant="brand" onclick={handleSave} icon-name="utility:save" class="slds-m-left_small"></lightning-button>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </template>
+
+        <template if:true={isLoading}>
+            <div class="custom-overlay">
+                <lightning-spinner variant="brand" size="large"></lightning-spinner>
+                <p class="loader-text">Our AI is reading your documents...</p>
+            </div>
+        </template>
+    </div>
+
+</lightning-card>
+</template>

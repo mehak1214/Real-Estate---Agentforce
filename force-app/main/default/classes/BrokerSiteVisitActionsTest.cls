@@ -8,8 +8,9 @@ private class BrokerSiteVisitActionsTest {
         BrokerSiteVisitActions.Request request = new BrokerSiteVisitActions.Request();
         request.brokerContactId = data.brokerContact.Id;
         request.opportunityId = data.opportunity.Id;
-        request.startTime = data.startTime;
-        request.endTime = data.endTime;
+        request.visitDate = data.startTime.date();
+        request.startTimeText = '10:00 AM';
+        request.endTimeText = '10:30 AM';
         request.visitRating = 'Hot';
         request.visitType = 'Home Visit';
         request.configurationInterestedIn = '1 BHK';
@@ -52,8 +53,9 @@ private class BrokerSiteVisitActionsTest {
         BrokerSiteVisitActions.Request request = new BrokerSiteVisitActions.Request();
         request.brokerContactId = data.brokerContact.Id;
         request.opportunityId = data.opportunity.Id;
-        request.startTime = data.startTime;
-        request.endTime = data.endTime;
+        request.visitDate = data.startTime.date();
+        request.startTimeText = '10:00 AM';
+        request.endTimeText = '10:30 AM';
 
         Test.startTest();
         List<BrokerSiteVisitActions.Response> responses =

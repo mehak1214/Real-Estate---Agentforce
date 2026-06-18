@@ -39,7 +39,7 @@ trigger SiteVisitCapacityTrigger on Site_Visit__c (before insert, before update)
         SELECT Id, Sales_Rep__c, Start_Time__c, End_Time__c
         FROM Site_Visit_Availability__c
         WHERE Sales_Rep__c IN :salesRepIds
-          AND Status__c = 'Available'
+          AND (Status__c = 'Available' OR Status__c = null)
           AND Start_Time__c <= :maxEndTime
           AND End_Time__c >= :minStartTime
     ]) {
@@ -76,7 +76,7 @@ trigger SiteVisitCapacityTrigger on Site_Visit__c (before insert, before update)
         }
 
         if(!hasAvailableSlot) {
-            newVisit.addError('Selected Sales Rep is not available for this site visit time.');
+            newVisit.addError('Selected Sales Rep is not available for this site visit time. Please check that the same Sales Rep has an Available Site Visit Availability record covering the full Start Time to End Time.');
             continue;
         }
 

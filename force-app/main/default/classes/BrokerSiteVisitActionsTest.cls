@@ -11,12 +11,10 @@ private class BrokerSiteVisitActionsTest {
         request.visitDate = data.startTime.date();
         request.startTimeText = '10:00 AM';
         request.endTimeText = '10:30 AM';
-        request.visitRating = 'Hot';
         request.visitType = 'Home Visit';
         request.configurationInterestedIn = '1 BHK';
         request.budgetInLac = '2 - 2.5 CR';
         request.walkInSource = 'Channel Partner';
-        request.siteVisitRemark = 'Booked through Agentforce test.';
 
         Test.startTest();
         List<BrokerSiteVisitActions.Response> responses =
@@ -94,7 +92,9 @@ private class BrokerSiteVisitActionsTest {
             StageName = 'Prospecting',
             CloseDate = Date.today().addDays(30),
             Channel_Partner__c = brokerAccount.Id,
-            Sales_Rep__c = salesRep.Id
+            Sales_Rep__c = salesRep.Id,
+            Visit_Rating__c = 'Hot',
+            Site_Visit_Remark__c = 'Booked through Agentforce test.'
         );
         insert opportunity;
 

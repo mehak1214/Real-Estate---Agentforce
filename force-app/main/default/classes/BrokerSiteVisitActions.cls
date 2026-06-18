@@ -28,6 +28,9 @@ public with sharing class BrokerSiteVisitActions {
         @InvocableVariable(label='End Time' required=false description='Site visit end date and time. Fallback only; prefer Visit Date and End Time Text.')
         public DateTime endTime;
 
+        @InvocableVariable(label='Visit Rating' required=false description='Visit rating such as Hot, Warm, Cold, Booked, Lost, or Client Left')
+        public String visitRating;
+
         @InvocableVariable(label='Visit Type' required=false description='Visit type: Site Visit or Home Visit. Defaults to Site Visit.')
         public String visitType;
 
@@ -39,6 +42,12 @@ public with sharing class BrokerSiteVisitActions {
 
         @InvocableVariable(label='Walk-In Source' required=false description='Walk-In Source. Defaults to Channel Partner when omitted.')
         public String walkInSource;
+
+        @InvocableVariable(label='Walk-In Sub Source' required=false description='Walk-In Sub Source')
+        public String walkInSubSource;
+
+        @InvocableVariable(label='Site Visit Remark' required=false description='Optional site visit remarks')
+        public String siteVisitRemark;
     }
 
     public class Response {
@@ -144,7 +153,7 @@ public with sharing class BrokerSiteVisitActions {
             siteVisit.Visit_Status__c = 'Scheduled';
             siteVisit.Project__c = opportunity.Project__c;
             siteVisit.Channel_Partner__c = opportunity.Channel_Partner__c;
-            siteVisit.Visit_Rating__c = opportunity.Visit_Rating__c;
+            siteVisit.Visit_Rating__c = String.isBlank(request.visitRating) ? opportunity.Visit_Rating__c : request.visitRating;
             siteVisit.Visit_Type__c = String.isBlank(request.visitType) ? 'Site Visit' : request.visitType;
             siteVisit.Configuration__c = String.isBlank(request.configurationInterestedIn)
                 ? opportunity.Configuration_interested_in__c
@@ -153,8 +162,12 @@ public with sharing class BrokerSiteVisitActions {
             siteVisit.Lead_Source_Major__c = String.isBlank(request.walkInSource)
                 ? defaultText(opportunity.Walk_In_Source__c, 'Channel Partner')
                 : request.walkInSource;
-            siteVisit.Lead_Source_Minor__c = opportunity.Walk_In_Sub_Source__c;
-            siteVisit.Site_Visit_Remark__c = opportunity.Site_Visit_Remark__c;
+            siteVisit.Lead_Source_Minor__c = String.isBlank(request.walkInSubSource)
+                ? opportunity.Walk_In_Sub_Source__c
+                : request.walkInSubSource;
+            siteVisit.Site_Visit_Remark__c = String.isBlank(request.siteVisitRemark)
+                ? opportunity.Site_Visit_Remark__c
+                : request.siteVisitRemark;
 
             Database.SaveResult saveResult = Database.insert(siteVisit, false);
             if(!saveResult.isSuccess()) {
@@ -357,7 +370,7 @@ public with sharing class BrokerSiteVisitActions {
                     return queryEligibleSalesRepById(parsedId);
                 }
             } catch(Exception e) {
-                // Not a valid ID — fall through to name search
+                // Not a valid ID; fall through to name search.
             }
 
             // Search by name (partial match, most recently created)

@@ -469,6 +469,53 @@ subagent Site_Visit_Booking:
     description: |
         Helps brokers book site visits for broker-accessible Opportunities using a requested date and time.
     actions:
+        get_site_visits:
+            label: "Get Site Visits"
+            description: "Shows broker-accessible Site Visits, optionally filtered by Opportunity or Visit Status."
+            target: "apex://BrokerSiteVisitListActions"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            inputs:
+                brokerContactId: string
+                    label: "Broker Contact ID"
+                    description: "Portal user contact id from session context."
+                    is_required: False
+                    complex_data_type_name: "lightning__textType"
+                    is_user_input: False
+                    is_displayable: False
+                opportunityId: string
+                    label: "Opportunity ID or Name"
+                    description: "Optional Opportunity record ID or Opportunity name to filter site visits."
+                    is_required: False
+                    complex_data_type_name: "lightning__textType"
+                visitStatus: string
+                    label: "Visit Status"
+                    description: "Optional visit status filter. Use Scheduled, Completed, Cancelled, or No Show."
+                    is_required: False
+                    complex_data_type_name: "lightning__textType"
+                limitSize: integer
+                    label: "Limit Size"
+                    description: "Maximum number of site visits to return."
+                    is_required: False
+                    complex_data_type_name: "lightning__integerType"
+            outputs:
+                status: string
+                    label: "Status"
+                    description: "Action result status."
+                    is_displayable: False
+                message: string
+                    label: "Message"
+                    description: "Broker-visible action response message."
+                    is_displayable: True
+                recordCount: integer
+                    label: "Record Count"
+                    description: "Number of site visits returned."
+                    is_displayable: True
+                siteVisits: list[object]
+                    label: "Site Visits"
+                    description: "Broker-visible site visit summaries."
+                    complex_data_type_name: "@apexClassType/c__BrokerSiteVisitListActions$SiteVisitSummary"
+                    is_displayable: True
         book_site_visit:
             label: "Book Site Visit"
             description: "Creates a Site Visit for an Opportunity after checking the selected Sales Rep availability and visit capacity."
@@ -579,10 +626,95 @@ subagent Site_Visit_Booking:
                     label: "Message"
                     description: "Broker-visible action response message."
                     is_displayable: True
+        reschedule_site_visit:
+            label: "Reschedule Site Visit"
+            description: "Updates an existing broker-accessible Site Visit to a new date/time after checking Sales Rep availability and capacity."
+            target: "apex://BrokerSiteVisitRescheduleActions"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            inputs:
+                brokerContactId: string
+                    label: "Broker Contact ID"
+                    description: "Portal user contact id from session context."
+                    is_required: False
+                    complex_data_type_name: "lightning__textType"
+                    is_user_input: False
+                    is_displayable: False
+                siteVisitIdOrName: string
+                    label: "Site Visit ID or Name"
+                    description: "Site Visit record ID or Site Visit number/name to reschedule."
+                    is_required: True
+                    complex_data_type_name: "lightning__textType"
+                salesRepIdOrName: string
+                    label: "Sales Rep ID or Name"
+                    description: "Optional new Team Member ID or name for the Sales Rep. Leave blank to keep current Sales Rep."
+                    is_required: False
+                    complex_data_type_name: "lightning__textType"
+                    is_displayable: False
+                visitDate: date
+                    label: "Visit Date"
+                    description: "New site visit date."
+                    is_required: True
+                    complex_data_type_name: "lightning__dateType"
+                startTimeText: string
+                    label: "Start Time Text"
+                    description: "New local start time as text, such as 3:00 PM or 15:00."
+                    is_required: True
+                    complex_data_type_name: "lightning__textType"
+                endTimeText: string
+                    label: "End Time Text"
+                    description: "New local end time as text, such as 4:00 PM or 16:00."
+                    is_required: True
+                    complex_data_type_name: "lightning__textType"
+                startTime: dateTime
+                    label: "Start Time"
+                    description: "Fallback start datetime only. Prefer Visit Date and Start Time Text."
+                    is_required: False
+                    complex_data_type_name: "lightning__dateTimeType"
+                endTime: dateTime
+                    label: "End Time"
+                    description: "Fallback end datetime only. Prefer Visit Date and End Time Text."
+                    is_required: False
+                    complex_data_type_name: "lightning__dateTimeType"
+            outputs:
+                siteVisitId: string
+                    label: "Site Visit ID"
+                    description: "Updated Site Visit record ID."
+                    is_displayable: False
+                siteVisitName: string
+                    label: "Site Visit Name"
+                    description: "Broker-visible Site Visit number."
+                    is_displayable: True
+                opportunityName: string
+                    label: "Opportunity Name"
+                    description: "Opportunity for the site visit."
+                    is_displayable: True
+                salesRepName: string
+                    label: "Sales Rep Name"
+                    description: "Sales Rep assigned to the rescheduled site visit."
+                    is_displayable: True
+                startTime: dateTime
+                    label: "Start Time"
+                    description: "Rescheduled start time."
+                    is_displayable: True
+                endTime: dateTime
+                    label: "End Time"
+                    description: "Rescheduled end time."
+                    is_displayable: True
+                status: string
+                    label: "Status"
+                    description: "Action result status."
+                    is_displayable: False
+                message: string
+                    label: "Message"
+                    description: "Broker-visible action response message."
+                    is_displayable: True
     reasoning:
         instructions: ->
-            |Use this subagent when the broker wants to book, schedule, create, or reschedule a site visit or property/project visit.
+            |Use this subagent when the broker wants to view, list, check, book, schedule, create, or reschedule a site visit or property/project visit.
              Only create site visits for Opportunities related to the logged-in broker account or broker contact.
+             If the broker asks to see, view, list, check, or show their site visits, call {!@actions.get_site_visits}. Use visitStatus when they ask for scheduled, completed, cancelled, or no-show visits. Use opportunityId when they mention a specific Opportunity.
+             If the broker asks to reschedule a site visit, first identify the Site Visit by Site Visit number/name or by listing their visits if they have not provided one. Then collect the new visit date, local start time, and local end time. Confirm once before calling {!@actions.reschedule_site_visit}.
              Collect the following details before booking:
              - Opportunity ID or Opportunity name
              - Requested visit date
@@ -609,6 +741,11 @@ subagent Site_Visit_Booking:
              Do not show internal Salesforce IDs.
              Ask one clear follow-up question at a time when required information is missing.
         actions:
+            get_site_visits: @actions.get_site_visits
+                with brokerContactId = ...
+                with opportunityId = ...
+                with visitStatus = ...
+                with limitSize = ...
             book_site_visit: @actions.book_site_visit
                 with brokerContactId = ...
                 with opportunityId = ...
@@ -625,6 +762,15 @@ subagent Site_Visit_Booking:
                 with walkInSource = ...
                 with walkInSubSource = ...
                 with siteVisitRemark = ...
+            reschedule_site_visit: @actions.reschedule_site_visit
+                with brokerContactId = ...
+                with siteVisitIdOrName = ...
+                with salesRepIdOrName = ...
+                with visitDate = ...
+                with startTimeText = ...
+                with endTimeText = ...
+                with startTime = ...
+                with endTime = ...
 
 subagent Lead_Creation:
     label: "Lead Creation"

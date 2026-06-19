@@ -32,7 +32,7 @@
                         <div class="kpi-subtext">{filteredCount} shown with current filters</div>
                     </template>
                 </div>
-                <div class="kpi-icon-wrap"><lightning-icon icon-name="utility:cube" size="small"></lightning-icon></div>
+                <div class="kpi-icon-wrap"><lightning-icon icon-name="utility:product" size="small"></lightning-icon></div>
             </div>
             <div class="kpi-card kpi-indigo">
                 <div class="kpi-content">
@@ -45,7 +45,7 @@
                         <div class="kpi-subtext">Child commission records across all orders</div>
                     </template>
                 </div>
-                <div class="kpi-icon-wrap"><lightning-icon icon-name="utility:moneybag" size="small"></lightning-icon></div>
+                <div class="kpi-icon-wrap"><lightning-icon icon-name="utility:snippet" size="small"></lightning-icon></div>
             </div>
             <div class="kpi-card kpi-green">
                 <div class="kpi-content">
@@ -63,7 +63,7 @@
                         </template>
                     </template>
                 </div>
-                <div class="kpi-icon-wrap"><lightning-icon icon-name="utility:wallet" size="small"></lightning-icon></div>
+                <div class="kpi-icon-wrap"><lightning-icon icon-name="utility:currency" size="small"></lightning-icon></div>
             </div>
         </div>
 
@@ -139,23 +139,23 @@
                             <div class="child-area">
                                 <div class="child-table">
                                     <div class="child-header">
+                                        <div class="cth-col"></div>
                                         <div class="cth-col">BROKER</div>
-                                        <div class="cth-col">UNIT / DETAILS</div>
-                                        <div class="cth-col">COMMISSION AMOUNT</div>
+                                        <div class="cth-col">UNIT</div>
+                                        <template for:each={order.commissionHeaders} for:item="h">
+                                            <div class="cth-col" key={h.id}>{h.label}</div>
+                                        </template>
+                                        <div class="cth-col">COMM AMOUNT</div>
                                         <div class="cth-col">STATUS</div>
                                     </div>
                                     <template for:each={order.commissions} for:item="comm">
                                         <div class="child-row" key={comm.id}>
-                                            <div class="tree-line"></div>
+                                            <div class="tree-line-container"><div class="tree-line"></div></div>
                                             <div class="ctd-col fw-bold text-dark">{comm.brokerName}</div>
-                                            <div class="ctd-col text-gray fs-small details-col">
-                                                <template if:true={comm.unitName}>
-                                                    <span class="mr-3">Unit: {comm.unitName}</span>
-                                                </template>
-                                                <template for:each={comm.detailFields} for:item="f">
-                                                    <span key={f.apiName} class="mr-3">{f.label}: {f.displayValue}</span>
-                                                </template>
-                                            </div>
+                                            <div class="ctd-col text-gray fs-small">{comm.unitName}</div>
+                                            <template for:each={comm.detailFields} for:item="f">
+                                                <div class="ctd-col text-gray fs-small" key={f.apiName}>{f.displayValue}</div>
+                                            </template>
                                             <div class="ctd-col fw-bold text-teal">{comm.commissionAmountDisplay}</div>
                                             <div class="ctd-col">
                                                 <span class="pill" data-tone={comm.statusTone}>{comm.statusLabel}</span>
@@ -163,9 +163,9 @@
                                         </div>
                                     </template>
                                     <template if:false={order.hasCommissions}>
-                                        <div class="child-row no-commissions text-gray" style="padding-left: 16px;">
-                                            <div class="tree-line"></div>
-                                            No broker commission entries found.
+                                        <div class="child-row no-commissions text-gray">
+                                            <div class="tree-line-container"><div class="tree-line"></div></div>
+                                            <div style="grid-column: 2 / -1;">No broker commission entries found.</div>
                                         </div>
                                     </template>
                                 </div>

@@ -105,12 +105,20 @@ export default class BrokerSalesOrderCommissions extends LightningElement {
         const orderNumber = orderNumberField && orderNumberField.value ? orderNumberField.value : order.name;
         const statusLabel = order.status || 'No Status';
         const commissionTotal = commissions.reduce((sum, c) => sum + (Number(c.commissionAmountRaw) || 0), 0);
+        
+        const commissionHeaders = [];
+        if (commissions.length > 0) {
+            commissions[0].detailFields.forEach(f => {
+                commissionHeaders.push({ id: f.apiName, label: f.label });
+            });
+        }
 
         return {
             ...order,
             isExpanded: false,
             rowClass: 'order-group',
             chevClass: '',
+            commissionHeaders,
             orderNumber,
             statusLabel,
             statusTone: this.statusTone(statusLabel),

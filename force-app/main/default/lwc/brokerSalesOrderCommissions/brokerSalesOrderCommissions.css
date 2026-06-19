@@ -338,7 +338,7 @@
 }
 .child-header {
     display: grid;
-    grid-template-columns: 2.5fr 3.5fr 2fr 1.5fr;
+    grid-template-columns: 48px 1.5fr 1fr 1.5fr 1.5fr 1fr 1.5fr 1.5fr;
     padding-bottom: 12px;
     border-bottom: 1px solid rgba(226, 232, 240, 0.6);
     margin-bottom: 8px;
@@ -353,7 +353,7 @@
 
 .child-row {
     display: grid;
-    grid-template-columns: 2.5fr 3.5fr 2fr 1.5fr;
+    grid-template-columns: 48px 1.5fr 1fr 1.5fr 1.5fr 1fr 1.5fr 1.5fr;
     padding: 12px 0;
     border-bottom: 1px solid rgba(226, 232, 240, 0.6);
     position: relative;
@@ -373,15 +373,20 @@
     display: inline-block;
 }
 
+.tree-line-container {
+    position: relative;
+    height: 100%;
+    width: 100%;
+}
 .tree-line {
     position: absolute;
-    left: -38px;
-    top: -12px;
+    left: 24px;
+    top: -24px;
     width: 24px;
-    height: 32px;
-    border-left: 1px solid var(--c-border);
-    border-bottom: 1px solid var(--c-border);
-    border-bottom-left-radius: 4px;
+    height: 38px;
+    border-left: 2px solid var(--c-border);
+    border-bottom: 2px solid var(--c-border);
+    border-bottom-left-radius: 6px;
 }
 
 /* SKELETON LOADING STATE */

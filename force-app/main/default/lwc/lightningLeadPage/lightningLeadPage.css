@@ -103,8 +103,7 @@
     font-size: 12.5px;
     font-weight: 600;
     white-space: nowrap;
-    width: 100%;
-    margin-top: 14px;
+    flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -161,15 +160,22 @@
 .badge-low { background: #e0f2fe; color: #0284c7; }
 
 /* Status Pill */
+.card-footer {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 12px;
+}
+
 .status-pill {
     display: inline-block;
-    margin-top: 10px;
-    padding: 4px 10px;
+    padding: 6px 12px;
     border-radius: 6px;
     font-size: 12px;
     background: #f8fafc;
     border: 1px solid #cbd5e1;
     color: #475569;
+    white-space: nowrap;
 }
 
 /* Commission Alert */

@@ -44,9 +44,9 @@
                     <button class="close-icon" onclick={closeViewModal} title="Close">✖</button>
                 </div>
                 <div class="modal-body">
-                    <div class="visit-action-row">
+                    <!-- <div class="visit-action-row">
                         <button class="site-visit-btn" onclick={openSiteVisitModal}>Create Site Visit</button>
-                    </div>
+                    </div> -->
 
                     <template if:true={selectedLead.hasUnitAssigned}>
                         <div class="commission-banner">
@@ -136,9 +136,10 @@
                     <div class="lead-info">No Unit Assigned</div>
                 </template>
 
-                <div class="status-pill">Status: {lead.Status}</div>
-
-                <button class="site-visit-card-btn" data-id={lead.Id} onclick={openSiteVisitModal}>📅 Create Site Visit</button>
+                <div class="card-footer">
+                    <div class="status-pill">Status: {lead.Status}</div>
+                    <button class="site-visit-card-btn" data-id={lead.Id} onclick={openSiteVisitModal}>📅 Create Site Visit</button>
+                </div>
             </div>
         </template>
     </div>

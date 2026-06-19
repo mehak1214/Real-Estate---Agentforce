@@ -12,8 +12,13 @@
             <sorted>false</sorted>
             <value>
                 <fullName>Scheduled</fullName>
-                <default>false</default>
+                <default>true</default>
                 <label>Scheduled</label>
+            </value>
+            <value>
+                <fullName>Re-Visit</fullName>
+                <default>false</default>
+                <label>Re-Visit</label>
             </value>
             <value>
                 <fullName>Completed</fullName>
@@ -21,14 +26,14 @@
                 <label>Completed</label>
             </value>
             <value>
-                <fullName>Cancelled</fullName>
-                <default>false</default>
-                <label>Cancelled</label>
-            </value>
-            <value>
                 <fullName>No Show</fullName>
                 <default>false</default>
                 <label>No Show</label>
+            </value>
+            <value>
+                <fullName>Cancelled</fullName>
+                <default>false</default>
+                <label>Cancelled</label>
             </value>
         </valueSetDefinition>
     </valueSet>

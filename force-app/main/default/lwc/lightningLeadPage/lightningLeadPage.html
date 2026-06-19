@@ -1,0 +1,132 @@
+<template>
+    <div class="header">
+        <h2>My Brokerage Leads</h2>
+        <button class="new-btn" onclick={openCreateModal}>+ New Lead</button>
+    </div>
+
+    <template if:true={showCreateModal}>
+        <div class="modal-backdrop">
+            <div class="modal">
+                <div class="premium-header">
+                    <h3>✨ Create New Lead</h3>
+                    <button class="close-icon" onclick={closeCreateModal} title="Close">✖</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-grid">
+                        <lightning-input label="First Name" data-field="firstName" onchange={handleChange}></lightning-input>
+                        <lightning-input label="Last Name" data-field="lastName" onchange={handleChange} required></lightning-input>
+                        <lightning-input label="Phone" data-field="phone" type="tel" onchange={handleChange} required></lightning-input>
+                        <lightning-input label="Email" data-field="email" type="email" onchange={handleChange}></lightning-input>
+                        
+                        <lightning-input label="Budget (AED)" data-field="budget" onchange={handleChange}></lightning-input>
+                        <!-- <lightning-input label="Target Location" data-field="location" onchange={handleChange}></lightning-input> -->
+                        <lightning-combobox label="Rating" data-field="rating" options={ratingOptions} onchange={handleChange}></lightning-combobox>
+                        <lightning-combobox label="Project Type" data-field="projectType" options={projectTypeOptions} onchange={handleChange} class="slds-col slds-size_2-of-2"></lightning-combobox>
+                        <lightning-combobox label="Type of Interest" data-field="typeOfInterest" options={typeOfInterestOptions} onchange={handleChange}></lightning-combobox>
+                        <lightning-combobox label="Purchaser" data-field="purchaser" options={purchaserOptions} onchange={handleChange}></lightning-combobox>
+                        <lightning-input label="Agent Name" value={agentName} disabled></lightning-input>
+                        <lightning-input label="Agency Name" value={agencyName} disabled></lightning-input>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-cancel" onclick={closeCreateModal}>Cancel</button>
+                    <button class="btn-save" onclick={saveLead}>Submit Lead</button>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template if:true={showViewModal}>
+        <div class="modal-backdrop">
+            <div class="modal view-modal">
+                <div class="premium-header header-view">
+                    <h3>📄 Lead Details: {selectedLead.Name}</h3>
+                    <button class="close-icon" onclick={closeViewModal} title="Close">✖</button>
+                </div>
+                <div class="modal-body">
+                    
+                    <template if:true={selectedLead.hasUnitAssigned}>
+                        <div class="commission-banner">
+                            <!-- ⭐ Unit Assigned ({selectedLead.unitName}) - <strong>2% Brokerage Confirmed</strong> -->
+                            ⭐ <strong>2% Brokerage Confirmed</strong>
+                        </div>
+                    </template>
+
+                    <div class="read-only-grid">
+                        <div class="ro-item">
+                            <span class="ro-label">Lead Number</span>
+                            <span class="ro-value">{selectedLead.Lead_Number__c}</span>
+                        </div>
+                        <div class="ro-item">
+                            <span class="ro-label">Rating</span>
+                            <span class={selectedLead.priorityClass}>{selectedLead.computedPriority}</span>
+                        </div>
+                        <div class="ro-item">
+                            <span class="ro-label">Phone</span>
+                            <span class="ro-value">{selectedLead.Phone}</span>
+                        </div>
+                        <div class="ro-item">
+                            <span class="ro-label">Email</span>
+                            <span class="ro-value">{selectedLead.Email}</span>
+                        </div>
+                        <div class="ro-item">
+                            <span class="ro-label">Budget</span>
+                            <span class="ro-value">AED {selectedLead.Budget__c}</span>
+                        </div>
+                        <div class="ro-item">
+                            <span class="ro-label">Status</span>
+                            <span class="ro-value">{selectedLead.Status}</span>
+                        </div>
+                        <!-- <div class="ro-item">
+                            <span class="ro-label">Target Location</span>
+                            <span class="ro-value">{selectedLead.Location_Interested_in__c}</span>
+                        </div> -->
+                        <div class="ro-item">
+                            <span class="ro-label">Project Type</span>
+                            <span class="ro-value">{selectedLead.Project_Type__c}</span>
+                        </div>
+                        <div class="ro-item">
+                            <span class="ro-label">Management Rep</span>
+                            <span class="ro-value">{selectedLead.Lead_Owner_Name__c}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <div class="lead-grid">
+        <template for:each={leads} for:item="lead">
+            <div key={lead.Id} class={lead.cardClass} onclick={openViewModal} data-id={lead.Id}>
+
+                <div class="card-header">
+                    <div class="lead-number">{lead.Lead_Number__c}</div>
+                    <div class={lead.priorityClass}>
+                        <template if:true={lead.isHighPriority}>🔥 </template>
+                        {lead.computedPriority}
+                    </div>
+                </div>
+
+                <div class="lead-info name-title">👤 {lead.Name}</div>
+                <div class="lead-info">📞 {lead.Phone}</div>
+                <div class="lead-info">📧 {lead.Email}</div>
+
+                <div class="divider"></div>
+
+                <div class="lead-info">💰 Budget: AED {lead.Budget__c} </div>
+
+                <template if:true={lead.estimatedBrokerage}>
+                    <div class="unit-assigned">
+                        🏆 Unit Assigned<br/>
+                        <strong>Est. Brokerage: {lead.estimatedBrokerage}</strong>
+                    </div>
+                </template>
+                <template if:false={lead.estimatedBrokerage}>
+                    <div class="lead-info">No Unit Assigned</div>
+                </template>
+
+                <div class="status-pill">Status: {lead.Status}</div>
+            </div>
+        </template>
+    </div>
+</template>

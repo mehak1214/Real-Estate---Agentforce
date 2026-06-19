@@ -112,12 +112,13 @@
 
                 <div class="card-header">
                     <div class="lead-number">{lead.Lead_Number__c}</div>
-                    <button class="site-visit-card-btn" data-id={lead.Id} onclick={openSiteVisitModal}>Create Site Visit</button>
                     <div class={lead.priorityClass}>
                         <template if:true={lead.isHighPriority}>🔥 </template>
                         {lead.computedPriority}
                     </div>
                 </div>
+
+                <button class="site-visit-card-btn" data-id={lead.Id} onclick={openSiteVisitModal}>📅 Create Site Visit</button>
 
                 <div class="lead-info name-title">👤 {lead.Name}</div>
                 <div class="lead-info">📞 {lead.Phone}</div>

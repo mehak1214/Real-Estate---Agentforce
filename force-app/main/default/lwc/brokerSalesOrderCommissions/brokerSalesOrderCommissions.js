@@ -92,7 +92,10 @@ export default class BrokerSalesOrderCommissions extends LightningElement {
             detailFields: detailFields.filter((field) => 
                 field.apiName !== 'Sales_Order_Number__c' 
                 && !(field.label && field.label.toLowerCase().includes('booking unit'))
-            ),
+            ).map(field => ({
+                ...field,
+                isStatusField: field.label && field.label.toLowerCase().includes('status')
+            })),
             commissions,
             searchText: [
                 orderNumber,

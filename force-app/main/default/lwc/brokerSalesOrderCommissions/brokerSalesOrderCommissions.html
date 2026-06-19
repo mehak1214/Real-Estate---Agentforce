@@ -86,13 +86,25 @@
                                         <!-- Left Side: Order Details -->
                                         <div class="order-details-section detail-tile">
                                             <h3 class="section-title">ORDER DETAILS</h3>
-                                            <div class="details-list">
-                                                <template for:each={order.detailFields} for:item="field">
-                                                    <div class="detail-item" key={field.apiName}>
-                                                        <span class="detail-label">{field.label}</span>
-                                                        <span class="detail-value">{field.displayValue}</span>
+                                            <div class="commission-card">
+                                                <div class="card-border" data-tone={order.statusTone}></div>
+                                                <div class="card-content">
+                                                    <div class="card-bottom">
+                                                        <template for:each={order.detailFields} for:item="field">
+                                                            <div class="bottom-item" key={field.apiName}>
+                                                                <span class="bottom-label">{field.label}</span>
+                                                                <template if:true={field.isStatusField}>
+                                                                    <span class="bottom-value">
+                                                                        <span class="status-pill status-pill-small" data-tone={order.statusTone}>{field.displayValue}</span>
+                                                                    </span>
+                                                                </template>
+                                                                <template if:false={field.isStatusField}>
+                                                                    <span class="bottom-value">{field.displayValue}</span>
+                                                                </template>
+                                                            </div>
+                                                        </template>
                                                     </div>
-                                                </template>
+                                                </div>
                                             </div>
                                         </div>
 
@@ -109,8 +121,8 @@
                                                                     <div class="broker-name">{comm.brokerName}</div>
                                                                 </div>
                                                                 <div class="broker-amount-wrap">
-                                                                    <div class="broker-amount">{comm.commissionAmountDisplay}</div>
                                                                     <span class="status-pill status-pill-small" data-tone={comm.statusTone}>{comm.statusLabel}</span>
+                                                                    <div class="broker-amount">{comm.commissionAmountDisplay}</div>
                                                                 </div>
                                                             </div>
                                                             <div class="card-bottom">

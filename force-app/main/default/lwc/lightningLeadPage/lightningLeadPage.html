@@ -44,7 +44,10 @@
                     <button class="close-icon" onclick={closeViewModal} title="Close">✖</button>
                 </div>
                 <div class="modal-body">
-                    
+                    <div class="visit-action-row">
+                        <button class="site-visit-btn" onclick={openSiteVisitModal}>Create Site Visit</button>
+                    </div>
+
                     <template if:true={selectedLead.hasUnitAssigned}>
                         <div class="commission-banner">
                             <!-- ⭐ Unit Assigned ({selectedLead.unitName}) - <strong>2% Brokerage Confirmed</strong> -->
@@ -95,12 +98,21 @@
         </div>
     </template>
 
+    <template if:true={showSiteVisitModal}>
+        <c-broker-site-visit-scheduler
+            lead-id={selectedLead.Id}
+            onclose={closeSiteVisitModal}
+            onscheduled={handleSiteVisitScheduled}>
+        </c-broker-site-visit-scheduler>
+    </template>
+
     <div class="lead-grid">
         <template for:each={leads} for:item="lead">
             <div key={lead.Id} class={lead.cardClass} onclick={openViewModal} data-id={lead.Id}>
 
                 <div class="card-header">
                     <div class="lead-number">{lead.Lead_Number__c}</div>
+                    <button class="site-visit-card-btn" data-id={lead.Id} onclick={openSiteVisitModal}>Create Site Visit</button>
                     <div class={lead.priorityClass}>
                         <template if:true={lead.isHighPriority}>🔥 </template>
                         {lead.computedPriority}

@@ -1,0 +1,71 @@
+<template>
+    <div class="modal-backdrop">
+        <section class="modal" role="dialog" aria-modal="true" aria-label="Create Site Visit">
+            <header class="modal-header">
+                <div>
+                    <p class="eyebrow">Site Visit</p>
+                    <h2>Create Site Visit</h2>
+                </div>
+                <button class="icon-button" type="button" onclick={handleCancel} title="Close">x</button>
+            </header>
+
+            <div class="modal-body">
+                <template if:true={isLoading}>
+                    <lightning-spinner alternative-text="Loading"></lightning-spinner>
+                </template>
+
+                <div class="form-stack">
+                    <lightning-combobox
+                        label="Project"
+                        value={projectId}
+                        options={projectOptions}
+                        onchange={handleProjectChange}
+                        required>
+                    </lightning-combobox>
+
+                    <lightning-input
+                        label="Sales Manager"
+                        value={salesManagerDisplay}
+                        disabled>
+                    </lightning-input>
+
+                    <lightning-input
+                        label="Site Visit Date"
+                        type="date"
+                        value={visitDate}
+                        onchange={handleDateChange}
+                        required>
+                    </lightning-input>
+
+                    <lightning-combobox
+                        label="Available Slots"
+                        value={availableSlot}
+                        options={slotOptions}
+                        onchange={handleSlotChange}
+                        disabled={disableSlotSelection}
+                        required>
+                    </lightning-combobox>
+
+                    <lightning-combobox
+                        label="Configuration"
+                        value={configuration}
+                        options={configurationOptions}
+                        onchange={handleConfigurationChange}
+                        required>
+                    </lightning-combobox>
+
+                    <lightning-input
+                        label="Budget"
+                        value={budget}
+                        onchange={handleBudgetChange}>
+                    </lightning-input>
+                </div>
+            </div>
+
+            <footer class="modal-footer">
+                <button class="btn-cancel" type="button" onclick={handleCancel}>Cancel</button>
+                <button class="btn-save" type="button" onclick={handleSave} disabled={disableSave}>Schedule Visit</button>
+            </footer>
+        </section>
+    </div>
+</template>

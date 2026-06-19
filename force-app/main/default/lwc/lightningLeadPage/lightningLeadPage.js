@@ -12,6 +12,7 @@ export default class LightningLeadPage extends LightningElement {
 
     showCreateModal = false;
     showViewModal = false;
+    showSiteVisitModal = false;
     @track selectedLead = {};
 
     agentName = ''; agencyName = '';
@@ -81,6 +82,21 @@ export default class LightningLeadPage extends LightningElement {
     closeCreateModal() { this.showCreateModal = false; this.clearForm(); }
     openViewModal(event) { this.selectedLead = this.leads.find(l => l.Id === event.currentTarget.dataset.id); this.showViewModal = true; }
     closeViewModal() { this.showViewModal = false; this.selectedLead = {}; }
+    openSiteVisitModal(event) {
+        event.stopPropagation();
+        const leadId = event.currentTarget.dataset.id;
+        if (leadId) {
+            this.selectedLead = this.leads.find(l => l.Id === leadId);
+        }
+        this.showSiteVisitModal = true;
+    }
+    closeSiteVisitModal() { this.showSiteVisitModal = false; }
+    handleSiteVisitScheduled() {
+        this.showSiteVisitModal = false;
+        this.showViewModal = false;
+        this.selectedLead = {};
+        return refreshApex(this.wiredLeadsResult);
+    }
 
     handleChange(event) { this[event.target.dataset.field] = event.target.value; }
 

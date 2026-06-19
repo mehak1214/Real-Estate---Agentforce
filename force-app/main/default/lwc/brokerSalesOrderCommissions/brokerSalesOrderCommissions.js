@@ -73,7 +73,6 @@ export default class BrokerSalesOrderCommissions extends LightningElement {
         const detailFields = this.decorateFields(order.fields);
         const orderNumberField = detailFields.find((field) => field.apiName === 'Sales_Order_Number__c');
         const orderNumber = orderNumberField && orderNumberField.value ? orderNumberField.value : order.name;
-        const projectUnitLabel = [order.projectName, order.unitName].filter(Boolean).join(' \u00b7 ') || 'No project or unit linked';
         const statusLabel = order.status || 'No Status';
         const commissionTotal = commissions.reduce((sum, c) => sum + (Number(c.commissionAmountRaw) || 0), 0);
 
@@ -84,7 +83,8 @@ export default class BrokerSalesOrderCommissions extends LightningElement {
             orderNumber,
             statusLabel,
             statusTone: this.statusTone(statusLabel),
-            projectUnitLabel,
+            projectNameDisplay: order.projectName || '\u2014',
+            unitNameDisplay: order.unitName || '\u2014',
             netAmountDisplay: this.formatCurrencyString(order.netAmount),
             commissionCount: commissions.length,
             commissionTotalDisplay: this.formatCurrency(commissionTotal),
@@ -94,7 +94,8 @@ export default class BrokerSalesOrderCommissions extends LightningElement {
             searchText: [
                 orderNumber,
                 statusLabel,
-                projectUnitLabel,
+                order.projectName,
+                order.unitName,
                 order.netAmount,
                 ...detailFields.map((field) => field.value),
                 ...commissions.flatMap((commission) => commission.detailFields.map((field) => field.value))

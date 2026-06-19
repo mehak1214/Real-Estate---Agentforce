@@ -170,7 +170,7 @@ h1 {
 .ledger-header,
 .ledger-row {
     display: grid;
-    grid-template-columns: 18px 148px minmax(0, 1fr) 130px 110px 28px;
+    grid-template-columns: 18px 148px minmax(0, 1fr) minmax(0, 1fr) 130px 110px 28px;
     align-items: center;
     gap: 16px;
 }
@@ -293,7 +293,8 @@ h1 {
 [data-tone="warning"] .order-status-label { color: var(--tone-warning); }
 [data-tone="danger"] .order-status-label { color: var(--tone-danger); }
 
-.col-project {
+.col-project,
+.col-unit {
     overflow: hidden;
     color: var(--ink-soft);
     font-size: 13px;
@@ -548,6 +549,11 @@ h1 {
         grid-template-columns: 14px 120px minmax(0, 1fr) 100px 24px;
     }
 
+    .ledger-header .col-unit,
+    .ledger-row .col-unit {
+        display: none;
+    }
+
     .ledger-header .col-commissions,
     .ledger-row .col-commissions {
         display: none;
@@ -596,7 +602,8 @@ h1 {
         grid-template-columns: 12px minmax(0, 1fr) 90px 22px;
     }
 
-    .col-project {
+    .col-project,
+    .col-unit {
         display: none;
     }
 

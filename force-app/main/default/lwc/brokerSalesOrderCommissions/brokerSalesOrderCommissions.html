@@ -57,7 +57,8 @@
                         <div class="ledger-header">
                             <span class="col-status"></span>
                             <span class="col-order">Sales Order</span>
-                            <span class="col-project">Project / Unit</span>
+                            <span class="col-project">Project</span>
+                            <span class="col-unit">Unit</span>
                             <span class="col-amount">Net Amount</span>
                             <span class="col-commissions">Commissions</span>
                             <span class="col-chev"></span>
@@ -74,7 +75,8 @@
                                         <span class="order-number">{order.orderNumber}</span>
                                         <span class="order-status-label">{order.statusLabel}</span>
                                     </span>
-                                    <span class="col-project">{order.projectUnitLabel}</span>
+                                    <span class="col-project">{order.projectNameDisplay}</span>
+                                    <span class="col-unit">{order.unitNameDisplay}</span>
                                     <span class="col-amount">{order.netAmountDisplay}</span>
                                     <span class="col-commissions">
                                         <span class="commission-count">{order.commissionCount}</span>

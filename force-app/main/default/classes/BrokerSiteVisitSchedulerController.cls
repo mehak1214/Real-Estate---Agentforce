@@ -39,6 +39,13 @@ public with sharing class BrokerSiteVisitSchedulerController {
         @AuraEnabled public String message;
     }
 
+    private class SalesManagerContext {
+        Id userId;
+        String userName;
+        String reportingManagerName;
+        Id teamMemberId;
+    }
+
     @AuraEnabled(cacheable=true)
     public static SiteVisitDefaultsDTO getSiteVisitDefaults(Id leadId) {
         if(leadId == null) {
@@ -47,25 +54,22 @@ public with sharing class BrokerSiteVisitSchedulerController {
 
         Lead leadRecord = [
             SELECT Id, Project__c, Project__r.Name, Configuration_interested_in__c, Budget__c,
-                Sales_Rep__c, Sales_Rep__r.Name, Sales_Rep__r.Manager__c,
-                Sales_Rep__r.Reporting_Manager__r.Name
+                OwnerId
             FROM Lead
             WHERE Id = :leadId
             LIMIT 1
         ];
 
-        Team_Member__c salesManager = resolveSalesManager(leadRecord);
+        SalesManagerContext salesManager = resolveSalesManager(leadRecord);
 
         SiteVisitDefaultsDTO defaults = new SiteVisitDefaultsDTO();
         defaults.leadId = leadRecord.Id;
         defaults.projectId = leadRecord.Project__c;
         defaults.projectName = leadRecord.Project__r == null ? null : leadRecord.Project__r.Name;
-        defaults.salesManagerId = salesManager == null ? null : salesManager.Id;
-        defaults.salesManagerName = salesManager == null ? null : salesManager.Name;
+        defaults.salesManagerId = salesManager == null ? null : salesManager.userId;
+        defaults.salesManagerName = salesManager == null ? null : salesManager.userName;
         if(salesManager != null) {
-            defaults.reportingManagerName = String.isNotBlank(salesManager.Manager__c)
-                ? salesManager.Manager__c
-                : salesManager.Reporting_Manager__r == null ? null : salesManager.Reporting_Manager__r.Name;
+            defaults.reportingManagerName = salesManager.reportingManagerName;
         }
         defaults.configuration = leadRecord.Configuration_interested_in__c;
         defaults.budget = leadRecord.Budget__c;
@@ -84,13 +88,12 @@ public with sharing class BrokerSiteVisitSchedulerController {
         }
 
         Lead leadRecord = [
-            SELECT Id, Sales_Rep__c, Sales_Rep__r.Name, Sales_Rep__r.Manager__c,
-                Sales_Rep__r.Reporting_Manager__r.Name
+            SELECT Id, OwnerId
             FROM Lead
             WHERE Id = :leadId
             LIMIT 1
         ];
-        Team_Member__c salesManager = resolveSalesManager(leadRecord);
+        SalesManagerContext salesManager = resolveSalesManager(leadRecord);
         if(salesManager == null) {
             return new List<SlotDTO>();
         }
@@ -102,7 +105,7 @@ public with sharing class BrokerSiteVisitSchedulerController {
         for(Site_Visit_Availability__c availability : [
             SELECT Available_Slots__c
             FROM Site_Visit_Availability__c
-            WHERE Sales_Rep__c = :salesManager.Id
+            WHERE Sales_Manager__c = :salesManager.userId
               AND (Status__c = 'Available' OR Status__c = null)
               AND Start_Time__c < :dayEnd
               AND End_Time__c > :dayStart
@@ -123,7 +126,7 @@ public with sharing class BrokerSiteVisitSchedulerController {
             Integer bookedCount = [
                 SELECT COUNT()
                 FROM Site_Visit__c
-                WHERE Sales_Rep__c = :salesManager.Id
+                WHERE Sales_Rep__r.User__c = :salesManager.userId
                   AND Scheduled_Date__c = :visitDate
                   AND Start_Time__c = :slotRange.startTime
                   AND End_Time__c = :slotRange.endTime
@@ -172,8 +175,7 @@ public with sharing class BrokerSiteVisitSchedulerController {
 
         Lead leadRecord = [
             SELECT Id, IsConverted, Channel_Partner__c, Project__c, Configuration_interested_in__c,
-                Budget__c, Sales_Rep__c, Sales_Rep__r.Name, Sales_Rep__r.Manager__c,
-                Sales_Rep__r.Reporting_Manager__r.Name
+                Budget__c, OwnerId
             FROM Lead
             WHERE Id = :leadId
             LIMIT 1
@@ -182,23 +184,26 @@ public with sharing class BrokerSiteVisitSchedulerController {
             throw new AuraHandledException('This Lead is already converted.');
         }
 
-        Team_Member__c salesManager = resolveSalesManager(leadRecord);
+        SalesManagerContext salesManager = resolveSalesManager(leadRecord);
         if(salesManager == null) {
             throw new AuraHandledException('No Sales Manager is available for this broker Lead.');
+        }
+        if(salesManager.teamMemberId == null) {
+            throw new AuraHandledException('No active Team Member is mapped to the Lead Owner.');
         }
 
         SlotRange slotRange = parseSlotRange(visitDate, availableSlot);
         if(slotRange == null) {
             throw new AuraHandledException('Selected slot is not valid.');
         }
-        if(!isConfiguredAvailableSlot(salesManager.Id, visitDate, availableSlot)) {
+        if(!isConfiguredAvailableSlot(salesManager.userId, visitDate, availableSlot)) {
             throw new AuraHandledException('Selected slot is not available for this Sales Manager.');
         }
 
         Integer bookedCount = [
             SELECT COUNT()
             FROM Site_Visit__c
-            WHERE Sales_Rep__c = :salesManager.Id
+            WHERE Sales_Rep__r.User__c = :salesManager.userId
               AND Scheduled_Date__c = :visitDate
               AND Start_Time__c = :slotRange.startTime
               AND End_Time__c = :slotRange.endTime
@@ -207,6 +212,8 @@ public with sharing class BrokerSiteVisitSchedulerController {
         if(bookedCount >= SLOT_CAPACITY) {
             throw new AuraHandledException('This slot is already fully booked. Please choose another available slot.');
         }
+
+        Id brokerContactId = resolveBrokerContactId();
 
         leadRecord.Project__c = projectId;
         leadRecord.Configuration_interested_in__c = configuration;
@@ -221,6 +228,7 @@ public with sharing class BrokerSiteVisitSchedulerController {
         if(!convertResult.isSuccess()) {
             throw new AuraHandledException(convertResult.getErrors()[0].getMessage());
         }
+        Id convertedContactId = convertResult.getContactId();
 
         Opportunity convertedOpportunity = [
             SELECT Id, Name
@@ -230,17 +238,21 @@ public with sharing class BrokerSiteVisitSchedulerController {
         ];
         convertedOpportunity.Project__c = projectId;
         convertedOpportunity.Channel_Partner__c = leadRecord.Channel_Partner__c;
-        convertedOpportunity.Sales_Rep__c = salesManager.Id;
+        convertedOpportunity.Sales_Rep__c = salesManager.teamMemberId;
+        convertedOpportunity.Primary_Contact__c = convertedContactId;
         convertedOpportunity.Configuration_interested_in__c = configuration;
         convertedOpportunity.Budget__c = budget;
+        putIfFieldExists(convertedOpportunity, 'BrokerAgentContact__c', brokerContactId);
         update convertedOpportunity;
 
         Site_Visit__c siteVisit = new Site_Visit__c();
         siteVisit.Lead__c = leadRecord.Id;
         siteVisit.Opportunity__c = convertedOpportunity.Id;
         siteVisit.Channel_Partner__c = leadRecord.Channel_Partner__c;
+        siteVisit.Contact__c = convertedContactId;
+        siteVisit.Broker__c = brokerContactId;
         siteVisit.Project__c = projectId;
-        siteVisit.Sales_Rep__c = salesManager.Id;
+        siteVisit.Sales_Rep__c = salesManager.teamMemberId;
         siteVisit.Scheduled_Date__c = visitDate;
         siteVisit.Start_Time__c = slotRange.startTime;
         siteVisit.End_Time__c = slotRange.endTime;
@@ -267,37 +279,88 @@ public with sharing class BrokerSiteVisitSchedulerController {
         return result;
     }
 
-    private static Team_Member__c resolveSalesManager(Lead leadRecord) {
-        Id salesManagerId = leadRecord == null ? null : leadRecord.Sales_Rep__c;
-
-        List<Team_Member__c> managers;
-        if(salesManagerId != null) {
-            managers = [
-                SELECT Id, Name, Manager__c, Reporting_Manager__r.Name
-                FROM Team_Member__c
-                WHERE Id = :salesManagerId
-                  AND Active__c = true
-                  AND SV_Availability__c = true
-                LIMIT 1
-            ];
-            if(!managers.isEmpty()) {
-                return managers[0];
-            }
+    private static SalesManagerContext resolveSalesManager(Lead leadRecord) {
+        if(leadRecord == null || leadRecord.OwnerId == null || leadRecord.OwnerId.getSObjectType() != User.SObjectType) {
+            return null;
         }
 
-        managers = [
-            SELECT Id, Name, Manager__c, Reporting_Manager__r.Name
-            FROM Team_Member__c
-            WHERE Active__c = true
-              AND SV_Availability__c = true
-            ORDER BY CreatedDate DESC
+        User ownerUser = [
+            SELECT Id, FirstName, LastName, Name, Manager.FirstName, Manager.LastName, Manager.Name
+            FROM User
+            WHERE Id = :leadRecord.OwnerId
             LIMIT 1
         ];
-        return managers.isEmpty() ? null : managers[0];
+
+        SalesManagerContext context = new SalesManagerContext();
+        context.userId = ownerUser.Id;
+        context.userName = buildUserDisplayName(ownerUser);
+        context.reportingManagerName = ownerUser.Manager == null ? null : buildUserDisplayName(ownerUser.Manager);
+
+        List<Team_Member__c> teamMembers = [
+            SELECT Id
+            FROM Team_Member__c
+            WHERE User__c = :ownerUser.Id
+              AND Active__c = true
+              AND SV_Availability__c = true
+            LIMIT 1
+        ];
+        if(!teamMembers.isEmpty()) {
+            context.teamMemberId = teamMembers[0].Id;
+        }
+        return context;
     }
 
-    private static Boolean isConfiguredAvailableSlot(Id salesManagerId, Date visitDate, String availableSlot) {
-        if(salesManagerId == null || visitDate == null || String.isBlank(availableSlot)) {
+    private static String buildUserDisplayName(User userRecord) {
+        if(userRecord == null) {
+            return null;
+        }
+        String fullName = '';
+        if(String.isNotBlank(userRecord.FirstName)) {
+            fullName += userRecord.FirstName.trim();
+        }
+        if(String.isNotBlank(userRecord.LastName)) {
+            fullName += String.isBlank(fullName) ? userRecord.LastName.trim() : ' ' + userRecord.LastName.trim();
+        }
+        return String.isBlank(fullName) ? userRecord.Name : fullName;
+    }
+
+    private static Id resolveBrokerContactId() {
+        User currentUser = [
+            SELECT ContactId, ContactId__c
+            FROM User
+            WHERE Id = :UserInfo.getUserId()
+            LIMIT 1
+        ];
+        if(currentUser.ContactId != null) {
+            return currentUser.ContactId;
+        }
+        return parseContactId(currentUser.ContactId__c);
+    }
+
+    private static Id parseContactId(String contactIdText) {
+        if(String.isBlank(contactIdText)) {
+            return null;
+        }
+        try {
+            Id contactId = Id.valueOf(contactIdText.trim());
+            return contactId.getSObjectType() == Contact.SObjectType ? contactId : null;
+        } catch(Exception e) {
+            return null;
+        }
+    }
+
+    private static void putIfFieldExists(SObject record, String fieldApiName, Object value) {
+        if(record == null || String.isBlank(fieldApiName) || value == null) {
+            return;
+        }
+        Map<String, Schema.SObjectField> fieldMap = record.getSObjectType().getDescribe().fields.getMap();
+        if(fieldMap.containsKey(fieldApiName)) {
+            record.put(fieldApiName, value);
+        }
+    }
+
+    private static Boolean isConfiguredAvailableSlot(Id salesManagerUserId, Date visitDate, String availableSlot) {
+        if(salesManagerUserId == null || visitDate == null || String.isBlank(availableSlot)) {
             return false;
         }
 
@@ -306,7 +369,7 @@ public with sharing class BrokerSiteVisitSchedulerController {
         for(Site_Visit_Availability__c availability : [
             SELECT Available_Slots__c
             FROM Site_Visit_Availability__c
-            WHERE Sales_Rep__c = :salesManagerId
+            WHERE Sales_Manager__c = :salesManagerUserId
               AND (Status__c = 'Available' OR Status__c = null)
               AND Start_Time__c < :dayEnd
               AND End_Time__c > :dayStart

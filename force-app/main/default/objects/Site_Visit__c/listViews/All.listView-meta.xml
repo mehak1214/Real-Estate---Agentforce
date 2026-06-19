@@ -5,6 +5,7 @@
     <columns>Channel_Partner__c</columns>
     <columns>Mobile_Number__c</columns>
     <columns>Project__c</columns>
+    <columns>CREATED_DATE</columns>
     <columns>Visit_Rating__c</columns>
     <columns>Visit_Type__c</columns>
     <columns>Typology_Discussed__c</columns>

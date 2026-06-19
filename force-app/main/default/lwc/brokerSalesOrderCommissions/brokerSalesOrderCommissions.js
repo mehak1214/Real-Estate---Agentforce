@@ -127,10 +127,30 @@ export default class BrokerSalesOrderCommissions extends LightningElement {
     }
 
     decorateFields(fields) {
-        return (fields || []).map((field) => ({
-            ...field,
-            displayValue: field.value || '\u2014'
-        }));
+        return (fields || []).map((field) => {
+            let displayValue = field.value || '\u2014';
+            if (field.value) {
+                if (field.type === 'CURRENCY') {
+                    displayValue = this.formatCurrency(field.value);
+                } else if (field.type === 'PERCENT') {
+                    displayValue = `${field.value}%`;
+                } else if (field.type === 'DATE' || field.type === 'DATETIME') {
+                    try {
+                        const dateVal = new Date(field.value.replace(' ', 'T'));
+                        if (!isNaN(dateVal.getTime())) {
+                            displayValue = dateVal.toLocaleDateString(undefined, {
+                                year: 'numeric',
+                                month: 'short',
+                                day: 'numeric'
+                            });
+                        }
+                    } catch (e) {
+                        // Fallback
+                    }
+                }
+            }
+            return { ...field, displayValue };
+        });
     }
 
     statusTone(status) {

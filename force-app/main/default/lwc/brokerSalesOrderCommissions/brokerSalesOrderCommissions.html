@@ -1,0 +1,166 @@
+<template>
+    <section class="dashboard">
+        <header class="toolbar">
+            <div class="brand">
+                <p class="eyebrow">Broker Portal</p>
+                <h1>Sales Orders &amp; Commissions</h1>
+            </div>
+            <div class="actions">
+                <lightning-input
+                    class="search"
+                    type="search"
+                    variant="label-hidden"
+                    label="Search sales orders"
+                    placeholder="Search order, status, project, unit"
+                    value={searchTerm}
+                    onchange={handleSearch}>
+                </lightning-input>
+                <button class="refresh-btn" type="button" title="Refresh" onclick={handleRefresh}>
+                    <lightning-icon icon-name="utility:refresh" size="xx-small"></lightning-icon>
+                </button>
+            </div>
+        </header>
+
+        <template if:true={isLoading}>
+            <div class="loading">
+                <lightning-spinner alternative-text="Loading sales orders"></lightning-spinner>
+            </div>
+        </template>
+
+        <template if:false={isLoading}>
+            <template if:true={hasError}>
+                <div class="state-panel state-error">
+                    <lightning-icon icon-name="utility:error" size="small"></lightning-icon>
+                    <h2>Unable to load records</h2>
+                    <p>{errorMessage}</p>
+                </div>
+            </template>
+
+            <template if:false={hasError}>
+                <div class="stat-strip">
+                    <div class="stat">
+                        <span class="stat-label">Sales orders</span>
+                        <span class="stat-value">{salesOrderCount}</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Commissions</span>
+                        <span class="stat-value">{commissionCount}</span>
+                    </div>
+                    <div class="stat stat-money">
+                        <span class="stat-label">Total commission</span>
+                        <span class="stat-value">{formattedCommissionTotal}</span>
+                    </div>
+                </div>
+
+                <template if:true={hasOrders}>
+                    <div class="ledger">
+                        <div class="ledger-header">
+                            <span class="col-status"></span>
+                            <span class="col-order">Sales Order</span>
+                            <span class="col-project">Project / Unit</span>
+                            <span class="col-amount">Net Amount</span>
+                            <span class="col-commissions">Commissions</span>
+                            <span class="col-chev"></span>
+                        </div>
+
+                        <template for:each={filteredSalesOrders} for:item="order">
+                            <article key={order.id} class="ledger-row-group" data-tone={order.statusTone}>
+                                <button class="ledger-row" type="button" data-id={order.id} onclick={toggleOrder}>
+                                    <span class="rail"></span>
+                                    <span class="col-status">
+                                        <span class="status-dot"></span>
+                                    </span>
+                                    <span class="col-order">
+                                        <span class="order-number">{order.orderNumber}</span>
+                                        <span class="order-status-label">{order.statusLabel}</span>
+                                    </span>
+                                    <span class="col-project">{order.projectUnitLabel}</span>
+                                    <span class="col-amount">{order.netAmountDisplay}</span>
+                                    <span class="col-commissions">
+                                        <span class="commission-count">{order.commissionCount}</span>
+                                        <span class="commission-total">{order.commissionTotalDisplay}</span>
+                                    </span>
+                                    <span class="col-chev">
+                                        <lightning-icon
+                                            class={order.chevClass}
+                                            icon-name="utility:chevrondown"
+                                            size="xx-small">
+                                        </lightning-icon>
+                                    </span>
+                                </button>
+
+                                <template if:true={order.isExpanded}>
+                                    <div class="ledger-detail">
+                                        <div class="detail-cols">
+                                            <section class="detail-block">
+                                                <h2>Sales order</h2>
+                                                <dl class="kv-list">
+                                                    <template for:each={order.detailFields} for:item="field">
+                                                        <div key={field.apiName} class="kv-row">
+                                                            <dt>{field.label}</dt>
+                                                            <dd title={field.value}>{field.displayValue}</dd>
+                                                        </div>
+                                                    </template>
+                                                </dl>
+                                                <a href={order.recordUrl} target="_blank" rel="noopener" class="text-link">
+                                                    Open sales order &#8599;
+                                                </a>
+                                            </section>
+
+                                            <section class="detail-block commissions-block">
+                                                <h2>Broker commissions</h2>
+
+                                                <template if:true={order.hasCommissions}>
+                                                    <div class="commission-stack">
+                                                        <template for:each={order.commissions} for:item="commission">
+                                                            <article key={commission.id} class="commission-row" data-tone={commission.statusTone}>
+                                                                <span class="rail"></span>
+                                                                <div class="commission-top">
+                                                                    <div class="commission-id">
+                                                                        <span class="commission-broker">{commission.brokerName}</span>
+                                                                        <span class="commission-unit">{commission.unitName}</span>
+                                                                    </div>
+                                                                    <span class="commission-amount">{commission.commissionAmountDisplay}</span>
+                                                                </div>
+                                                                <dl class="kv-list kv-list-inline">
+                                                                    <template for:each={commission.detailFields} for:item="field">
+                                                                        <div key={field.apiName} class="kv-row">
+                                                                            <dt>{field.label}</dt>
+                                                                            <dd title={field.value}>{field.displayValue}</dd>
+                                                                        </div>
+                                                                    </template>
+                                                                    <div class="kv-row">
+                                                                        <dt>Status</dt>
+                                                                        <dd>{commission.statusLabel}</dd>
+                                                                    </div>
+                                                                </dl>
+                                                                <a href={commission.recordUrl} target="_blank" rel="noopener" class="text-link">
+                                                                    Open commission &#8599;
+                                                                </a>
+                                                            </article>
+                                                        </template>
+                                                    </div>
+                                                </template>
+                                                <template if:false={order.hasCommissions}>
+                                                    <p class="empty-note">No broker commission is linked to this sales order.</p>
+                                                </template>
+                                            </section>
+                                        </div>
+                                    </div>
+                                </template>
+                            </article>
+                        </template>
+                    </div>
+                </template>
+
+                <template if:false={hasOrders}>
+                    <div class="state-panel">
+                        <lightning-icon icon-name="utility:table" size="small"></lightning-icon>
+                        <h2>No sales orders found</h2>
+                        <p>Try refreshing or clearing your search.</p>
+                    </div>
+                </template>
+            </template>
+        </template>
+    </section>
+</template>

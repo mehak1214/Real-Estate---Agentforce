@@ -1,167 +1,182 @@
 <template>
-    <div class="page-container">
-        <!-- Header Section -->
-        <div class="header-section">
-            <div class="header-left">
+    <div class="app-container">
+        <!-- Header -->
+        <div class="page-header">
+            <div class="header-titles">
                 <h1 class="page-title">Sales Orders</h1>
-                <p class="page-subtitle">Access all sales and commission details in one place</p>
+                <p class="page-subtitle">Every order with its broker commission entries, in one ledger.</p>
             </div>
-            <div class="header-right">
-                <div class="search-container">
-                    <lightning-icon icon-name="utility:search" size="xx-small" class="search-icon"></lightning-icon>
-                    <input type="text" class="search-input" placeholder="Search by Order ID, Project, Unit" value={searchTerm} oninput={handleSearch} />
-                </div>
-                <button class="refresh-button" onclick={handleRefresh} title="Refresh">
-                    <lightning-icon icon-name="utility:refresh" size="xx-small"></lightning-icon>
-                </button>
-            </div>
+            <button class="btn-refresh" onclick={handleRefresh} title="Refresh" disabled={isLoading}>
+                <lightning-icon icon-name="utility:refresh" size="xx-small" variant="inverse" class={refreshIconClass}></lightning-icon>
+                <span>Refresh</span>
+            </button>
         </div>
 
-        <div class="divider"></div>
+        <template if:true={hasError}>
+            <div class="error-banner">
+                <lightning-icon icon-name="utility:error" size="x-small" variant="error"></lightning-icon>
+                <span>{errorMessage}</span>
+            </div>
+        </template>
 
         <!-- Summary Tiles -->
-        <div class="summary-tiles">
-            <div class="summary-tile">
-                <div class="tile-icon"><lightning-icon icon-name="utility:metrics" size="medium"></lightning-icon></div>
-                <div class="tile-number">{salesOrderCount}</div>
-                <div class="tile-label">Total Orders</div>
+        <div class="kpi-row">
+            <div class="kpi-card kpi-blue">
+                <div class="kpi-content">
+                    <div class="kpi-label">SALES ORDERS</div>
+                    <template if:true={isLoading}>
+                        <div class="skeleton skeleton-kpi"></div>
+                    </template>
+                    <template if:false={isLoading}>
+                        <div class="kpi-value">{salesOrderCount}</div>
+                        <div class="kpi-subtext">{filteredCount} shown with current filters</div>
+                    </template>
+                </div>
+                <div class="kpi-icon-wrap"><lightning-icon icon-name="utility:cube" size="small"></lightning-icon></div>
             </div>
-            <div class="summary-tile">
-                <div class="tile-icon"><lightning-icon icon-name="utility:groups" size="medium"></lightning-icon></div>
-                <div class="tile-number">{commissionCount}</div>
-                <div class="tile-label">Broker Commissions</div>
+            <div class="kpi-card kpi-indigo">
+                <div class="kpi-content">
+                    <div class="kpi-label">BROKER COMMISSION ENTRIES</div>
+                    <template if:true={isLoading}>
+                        <div class="skeleton skeleton-kpi"></div>
+                    </template>
+                    <template if:false={isLoading}>
+                        <div class="kpi-value">{commissionCount}</div>
+                        <div class="kpi-subtext">Child commission records across all orders</div>
+                    </template>
+                </div>
+                <div class="kpi-icon-wrap"><lightning-icon icon-name="utility:moneybag" size="small"></lightning-icon></div>
             </div>
-            <div class="summary-tile">
-                <div class="tile-icon"><lightning-icon icon-name="utility:moneybag" size="medium"></lightning-icon></div>
-                <div class="tile-number">{formattedCommissionTotal}</div>
-                <div class="tile-label">Total Commission Amount</div>
+            <div class="kpi-card kpi-green">
+                <div class="kpi-content">
+                    <div class="kpi-label">TOTAL COMMISSION</div>
+                    <template if:true={isLoading}>
+                        <div class="skeleton skeleton-kpi"></div>
+                    </template>
+                    <template if:false={isLoading}>
+                        <div class="kpi-value">{formattedCommissionTotal}</div>
+                        <template if:true={hasVat}>
+                            <div class="kpi-subtext">Incl. VAT: {formattedCommissionWithVat}</div>
+                        </template>
+                        <template if:false={hasVat}>
+                            <div class="kpi-subtext">Across {commissionCount} commission records</div>
+                        </template>
+                    </template>
+                </div>
+                <div class="kpi-icon-wrap"><lightning-icon icon-name="utility:wallet" size="small"></lightning-icon></div>
             </div>
         </div>
 
-        <!-- Table Container -->
-        <div class="table-container">
-            <div class="table-header-row">
-                <div class="th th-id">ORDER ID</div>
-                <div class="th th-project">PROJECT</div>
-                <div class="th th-unit">UNIT</div>
-                <div class="th th-amount">NET AMOUNT</div>
-                <div class="th th-commission">COMMISSION</div>
-                <div class="th th-status">STATUS</div>
-                <div class="th th-action"></div>
+        <!-- Search & Filters -->
+        <div class="toolbar">
+            <div class="search-box">
+                <lightning-icon icon-name="utility:search" size="x-small"></lightning-icon>
+                <input class="search-input" type="text" placeholder="Search order, customer, or broker..." value={searchTerm} onkeyup={handleSearch} />
+                <template if:true={searchTerm}>
+                    <button class="btn-clear" title="Clear search" onclick={handleClearSearch}>
+                        <lightning-icon icon-name="utility:close" size="xx-small"></lightning-icon>
+                    </button>
+                </template>
+            </div>
+            <div class="btn-filter">
+                <lightning-icon icon-name="utility:filterList" size="x-small"></lightning-icon>
+                <select class="status-select" onchange={handleStatusFilterChange}>
+                    <template for:each={statusOptions} for:item="opt">
+                        <option key={opt.value} value={opt.value} selected={opt.isSelected}>{opt.label}</option>
+                    </template>
+                </select>
+            </div>
+        </div>
+
+        <!-- Data Table -->
+        <div class="data-table">
+            <div class="table-header">
+                <div class="th-col th-chevron"></div>
+                <div class="th-col">ORDER #</div>
+                <div class="th-col">PROJECT</div>
+                <div class="th-col">UNIT</div>
+                <div class="th-col">STATUS</div>
+                <div class="th-col">ORDER VALUE</div>
+                <div class="th-col">COMMISSION TOTAL</div>
             </div>
 
-            <!-- Loading State -->
             <template if:true={isLoading}>
-                <div class="loading-state">
-                    <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
-                </div>
+                <template for:each={skeletonRows} for:item="row">
+                    <div class="skeleton-row" key={row.key}>
+                        <div class="skeleton skeleton-chevron"></div>
+                        <div class="skeleton skeleton-cell"></div>
+                        <div class="skeleton skeleton-cell"></div>
+                        <div class="skeleton skeleton-cell"></div>
+                        <div class="skeleton skeleton-pill"></div>
+                        <div class="skeleton skeleton-cell"></div>
+                        <div class="skeleton skeleton-cell"></div>
+                    </div>
+                </template>
             </template>
-
-            <!-- Table Body -->
             <template if:false={isLoading}>
-                <template if:true={hasOrders}>
-                    <template for:each={filteredSalesOrders} for:item="order">
-                        <div key={order.id} class="table-row-group">
-                            <div class="table-row" onclick={toggleOrder} data-id={order.id}>
-                                <div class="td td-id">{order.orderNumber}</div>
-                                <div class="td td-project">{order.projectNameDisplay}</div>
-                                <div class="td td-unit">{order.unitNameDisplay}</div>
-                                <div class="td td-amount">{order.netAmountDisplay}</div>
-                                <div class="td td-commission">
-                                    <div class="comm-amount-main">{order.commissionTotalDisplay}</div>
-                                    <div class="comm-linked">{order.commissionCount} linked</div>
-                                </div>
-                                <div class="td td-status">
-                                    <span class="status-pill" data-tone={order.statusTone}>{order.statusLabel}</span>
-                                </div>
-                                <div class="td td-action">
-                                    <lightning-icon icon-name="utility:down" size="xx-small" class={order.chevClass}></lightning-icon>
-                                </div>
+                <template for:each={filteredSalesOrders} for:item="order">
+                    <div class={order.rowClass} key={order.id}>
+                        <!-- Parent Row -->
+                        <div class="parent-row" data-id={order.id} onclick={toggleOrder}>
+                            <div class="td-col td-chevron">
+                                <lightning-icon icon-name="utility:chevronright" size="x-small" class={order.chevClass}></lightning-icon>
                             </div>
-                            
-                            <!-- Expanded Detail -->
-                            <template if:true={order.isExpanded}>
-                                <div class="expanded-area">
-                                    <div class="expanded-grid">
-                                        <!-- Left Side: Order Details -->
-                                        <div class="order-details-section detail-tile">
-                                            <h3 class="section-title">ORDER DETAILS</h3>
-                                            <div class="commission-card">
-                                                <div class="card-border" data-tone={order.statusTone}></div>
-                                                <div class="card-content">
-                                                    <div class="card-bottom">
-                                                        <template for:each={order.detailFields} for:item="field">
-                                                            <div class="bottom-item" key={field.apiName}>
-                                                                <span class="bottom-label">{field.label}</span>
-                                                                <template if:true={field.isStatusField}>
-                                                                    <span class="bottom-value">
-                                                                        <span class="status-pill status-pill-small" data-tone={order.statusTone}>{field.displayValue}</span>
-                                                                    </span>
-                                                                </template>
-                                                                <template if:false={field.isStatusField}>
-                                                                    <span class="bottom-value">{field.displayValue}</span>
-                                                                </template>
-                                                            </div>
-                                                        </template>
-                                                    </div>
-                                                </div>
+                            <div class="td-col fw-bold text-dark">{order.orderNumber}</div>
+                            <div class="td-col fw-semibold text-dark">{order.projectNameDisplay}</div>
+                            <div class="td-col text-gray">{order.unitNameDisplay}</div>
+                            <div class="td-col">
+                                <span class="pill" data-tone={order.statusTone}>{order.statusLabel}</span>
+                            </div>
+                            <div class="td-col fw-bold text-dark">{order.netAmountDisplay}</div>
+                            <div class="td-col commission-total-col">
+                                <span class="comm-amount-text">{order.commissionTotalDisplay}</span>
+                                <span class="comm-count-badge">{order.commissionCount}</span>
+                            </div>
+                        </div>
+
+                        <!-- Child Rows (Expanded) -->
+                        <template if:true={order.isExpanded}>
+                            <div class="child-area">
+                                <div class="child-table">
+                                    <div class="child-header">
+                                        <div class="cth-col">BROKER</div>
+                                        <div class="cth-col">UNIT / DETAILS</div>
+                                        <div class="cth-col">COMMISSION AMOUNT</div>
+                                        <div class="cth-col">STATUS</div>
+                                    </div>
+                                    <template for:each={order.commissions} for:item="comm">
+                                        <div class="child-row" key={comm.id}>
+                                            <div class="tree-line"></div>
+                                            <div class="ctd-col fw-bold text-dark">{comm.brokerName}</div>
+                                            <div class="ctd-col text-gray fs-small details-col">
+                                                <template if:true={comm.unitName}>
+                                                    <span class="mr-3">Unit: {comm.unitName}</span>
+                                                </template>
+                                                <template for:each={comm.detailFields} for:item="f">
+                                                    <span key={f.apiName} class="mr-3">{f.label}: {f.displayValue}</span>
+                                                </template>
+                                            </div>
+                                            <div class="ctd-col fw-bold text-teal">{comm.commissionAmountDisplay}</div>
+                                            <div class="ctd-col">
+                                                <span class="pill" data-tone={comm.statusTone}>{comm.statusLabel}</span>
                                             </div>
                                         </div>
-
-                                        <!-- Right Side: Broker Commissions -->
-                                        <div class="broker-commissions-section detail-tile">
-                                            <h3 class="section-title">BROKER COMMISSIONS</h3>
-                                            <template if:true={order.hasCommissions}>
-                                                <template for:each={order.commissions} for:item="comm">
-                                                    <div class="commission-card" key={comm.id}>
-                                                        <div class="card-border" data-tone={comm.statusTone}></div>
-                                                        <div class="card-content">
-                                                            <div class="card-top">
-                                                                <div class="broker-info">
-                                                                    <div class="broker-name">{comm.brokerName}</div>
-                                                                </div>
-                                                                <div class="broker-amount-wrap">
-                                                                    <span class="status-pill status-pill-small" data-tone={comm.statusTone}>{comm.statusLabel}</span>
-                                                                    <div class="broker-amount">{comm.commissionAmountDisplay}</div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="card-bottom">
-                                                                <template if:true={comm.unitName}>
-                                                                    <div class="bottom-item">
-                                                                        <span class="bottom-label">Unit</span>
-                                                                        <span class="bottom-value">{comm.unitName}</span>
-                                                                    </div>
-                                                                </template>
-                                                                <template for:each={comm.detailFields} for:item="f">
-                                                                    <div class="bottom-item" key={f.apiName}>
-                                                                        <span class="bottom-label">{f.label}</span>
-                                                                        <span class="bottom-value">{f.displayValue}</span>
-                                                                    </div>
-                                                                </template>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </template>
-                                            </template>
-                                            <template if:false={order.hasCommissions}>
-                                                <div class="no-commissions">No commissions linked.</div>
-                                            </template>
+                                    </template>
+                                    <template if:false={order.hasCommissions}>
+                                        <div class="child-row no-commissions text-gray" style="padding-left: 16px;">
+                                            <div class="tree-line"></div>
+                                            No broker commission entries found.
                                         </div>
-                                    </div>
+                                    </template>
                                 </div>
-                            </template>
-                        </div>
-                    </template>
+                            </div>
+                        </template>
+                    </div>
                 </template>
-                
                 <template if:false={hasOrders}>
-                    <!-- Empty State -->
-                    <div class="empty-state-container">
-                        <div class="empty-circle-icon">
-                            <lightning-icon icon-name="utility:pie_chart" size="large"></lightning-icon>
-                        </div>
-                        <h2 class="empty-heading">No sales added yet.</h2>
-                        <p class="empty-subtext">Once added it will appear here</p>
+                    <div class="empty-state-container" style="padding: 64px; text-align: center;">
+                        <div class="empty-heading text-dark fw-bold">No orders found</div>
+                        <div class="empty-subtext text-gray">Adjust your search to find what you're looking for.</div>
                     </div>
                 </template>
             </template>

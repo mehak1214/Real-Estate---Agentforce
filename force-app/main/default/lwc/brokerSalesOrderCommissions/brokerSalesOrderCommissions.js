@@ -12,6 +12,7 @@ export default class BrokerSalesOrderCommissions extends LightningElement {
     @track salesOrders = [];
 
     searchTerm = '';
+    statusFilter = 'All';
     isLoading = true;
     errorMessage = '';
     salesOrderCount = 0;
@@ -39,12 +40,41 @@ export default class BrokerSalesOrderCommissions extends LightningElement {
         return this.formatCurrency(this.totalCommissionAmountWithVat);
     }
 
+    get hasVat() {
+        return Number(this.totalCommissionAmountWithVat) > 0;
+    }
+
+    get refreshIconClass() {
+        return this.isLoading ? 'spin' : '';
+    }
+
+    get statusOptions() {
+        const labels = new Set();
+        this.salesOrders.forEach((order) => labels.add(order.statusLabel));
+        return ['All', ...Array.from(labels).sort()].map((label) => ({
+            label: label === 'All' ? 'All statuses' : label,
+            value: label,
+            isSelected: label === this.statusFilter
+        }));
+    }
+
     get filteredSalesOrders() {
         const term = (this.searchTerm || '').trim().toLowerCase();
-        if (!term) {
-            return this.salesOrders;
-        }
-        return this.salesOrders.filter((order) => order.searchText.includes(term));
+        return this.salesOrders.filter((order) => {
+            const statusMatches = this.statusFilter === 'All' || order.statusLabel === this.statusFilter;
+            if (!statusMatches) {
+                return false;
+            }
+            return !term || order.searchText.includes(term);
+        });
+    }
+
+    get filteredCount() {
+        return this.filteredSalesOrders.length;
+    }
+
+    get skeletonRows() {
+        return [{ key: 'sk-1' }, { key: 'sk-2' }, { key: 'sk-3' }, { key: 'sk-4' }, { key: 'sk-5' }];
     }
 
     loadData() {
@@ -79,6 +109,7 @@ export default class BrokerSalesOrderCommissions extends LightningElement {
         return {
             ...order,
             isExpanded: false,
+            rowClass: 'order-group',
             chevClass: '',
             orderNumber,
             statusLabel,
@@ -174,6 +205,19 @@ export default class BrokerSalesOrderCommissions extends LightningElement {
         this.searchTerm = event.target.value;
     }
 
+    handleClearSearch() {
+        this.searchTerm = '';
+        const input = this.template.querySelector('.search-input');
+        if (input) {
+            input.value = '';
+            input.focus();
+        }
+    }
+
+    handleStatusFilterChange(event) {
+        this.statusFilter = event.target.value;
+    }
+
     handleRefresh() {
         this.loadData();
     }
@@ -188,6 +232,7 @@ export default class BrokerSalesOrderCommissions extends LightningElement {
             return {
                 ...order,
                 isExpanded,
+                rowClass: isExpanded ? 'order-group expanded' : 'order-group',
                 chevClass: isExpanded ? 'expanded' : ''
             };
         });

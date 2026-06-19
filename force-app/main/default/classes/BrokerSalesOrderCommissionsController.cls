@@ -53,7 +53,10 @@ public with sharing class BrokerSalesOrderCommissionsController {
         @AuraEnabled public Boolean hasValue;
     }
 
-    @AuraEnabled(cacheable=true)
+    // Not cacheable: the component's Refresh button calls this imperatively and
+    // expects a live read each time. A cacheable method with no parameters would
+    // return the same cached payload on every subsequent click.
+    @AuraEnabled
     public static DashboardDTO getSalesOrderCommissions() {
         Map<String, Schema.SObjectField> salesOrderFieldMap = SalesOrder__c.SObjectType.getDescribe().fields.getMap();
         Map<String, Schema.SObjectField> commissionFieldMap = BrokerCommission__c.SObjectType.getDescribe().fields.getMap();

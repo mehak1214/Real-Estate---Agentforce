@@ -145,8 +145,56 @@ export default class BrokerSiteVisitScheduler extends LightningElement {
     showError(error) {
         this.dispatchEvent(new ShowToastEvent({
             title: 'Error',
-            message: error?.body?.message || error?.message || 'Something went wrong.',
+            message: this.reduceError(error),
             variant: 'error'
         }));
+    }
+
+    reduceError(error) {
+        if (!error) {
+            return 'Something went wrong.';
+        }
+
+        const messages = this.collectErrorMessages(error);
+        if (messages.length) {
+            return messages.join(', ');
+        }
+
+        return error.statusText || error.message || JSON.stringify(error) || 'Something went wrong.';
+    }
+
+    collectErrorMessages(value) {
+        if (!value) {
+            return [];
+        }
+
+        if (typeof value === 'string') {
+            return value ? [value] : [];
+        }
+
+        if (Array.isArray(value)) {
+            return value.flatMap((item) => this.collectErrorMessages(item));
+        }
+
+        const messages = [];
+        if (value.message) {
+            messages.push(value.message);
+        }
+        if (value.pageErrors) {
+            messages.push(...this.collectErrorMessages(value.pageErrors));
+        }
+        if (value.fieldErrors) {
+            messages.push(...this.collectErrorMessages(Object.values(value.fieldErrors)));
+        }
+        if (value.errors) {
+            messages.push(...this.collectErrorMessages(value.errors));
+        }
+        if (value.output) {
+            messages.push(...this.collectErrorMessages(value.output));
+        }
+        if (value.body) {
+            messages.push(...this.collectErrorMessages(value.body));
+        }
+        return [...new Set(messages.filter(Boolean))];
     }
 }

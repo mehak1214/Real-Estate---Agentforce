@@ -43,7 +43,6 @@ public with sharing class BrokerSiteVisitSchedulerController {
         Id userId;
         String userName;
         String reportingManagerName;
-        Id teamMemberId;
     }
 
     @AuraEnabled(cacheable=true)
@@ -126,7 +125,7 @@ public with sharing class BrokerSiteVisitSchedulerController {
             Integer bookedCount = [
                 SELECT COUNT()
                 FROM Site_Visit__c
-                WHERE Sales_Rep__r.User__c = :salesManager.userId
+                WHERE Sales_Manager__c = :salesManager.userId
                   AND Scheduled_Date__c = :visitDate
                   AND Start_Time__c = :slotRange.startTime
                   AND End_Time__c = :slotRange.endTime
@@ -153,6 +152,25 @@ public with sharing class BrokerSiteVisitSchedulerController {
 
     @AuraEnabled
     public static SiteVisitBookingResultDTO createSiteVisitFromLead(
+        Id leadId,
+        Id projectId,
+        Date visitDate,
+        String availableSlot,
+        String configuration,
+        String budget
+    ) {
+        try {
+            return createSiteVisitFromLeadInternal(leadId, projectId, visitDate, availableSlot, configuration, budget);
+        } catch(AuraHandledException e) {
+            throw e;
+        } catch(DmlException e) {
+            throw new AuraHandledException(formatDmlException(e));
+        } catch(Exception e) {
+            throw new AuraHandledException('Unable to schedule site visit: ' + e.getMessage());
+        }
+    }
+
+    private static SiteVisitBookingResultDTO createSiteVisitFromLeadInternal(
         Id leadId,
         Id projectId,
         Date visitDate,
@@ -188,9 +206,6 @@ public with sharing class BrokerSiteVisitSchedulerController {
         if(salesManager == null) {
             throw new AuraHandledException('No Sales Manager is available for this broker Lead.');
         }
-        if(salesManager.teamMemberId == null) {
-            throw new AuraHandledException('No active Team Member is mapped to the Lead Owner.');
-        }
 
         SlotRange slotRange = parseSlotRange(visitDate, availableSlot);
         if(slotRange == null) {
@@ -203,7 +218,7 @@ public with sharing class BrokerSiteVisitSchedulerController {
         Integer bookedCount = [
             SELECT COUNT()
             FROM Site_Visit__c
-            WHERE Sales_Rep__r.User__c = :salesManager.userId
+            WHERE Sales_Manager__c = :salesManager.userId
               AND Scheduled_Date__c = :visitDate
               AND Start_Time__c = :slotRange.startTime
               AND End_Time__c = :slotRange.endTime
@@ -238,7 +253,6 @@ public with sharing class BrokerSiteVisitSchedulerController {
         ];
         convertedOpportunity.Project__c = projectId;
         convertedOpportunity.Channel_Partner__c = leadRecord.Channel_Partner__c;
-        convertedOpportunity.Sales_Rep__c = salesManager.teamMemberId;
         convertedOpportunity.Primary_Contact__c = convertedContactId;
         convertedOpportunity.Configuration_interested_in__c = configuration;
         convertedOpportunity.Budget__c = budget;
@@ -252,7 +266,7 @@ public with sharing class BrokerSiteVisitSchedulerController {
         siteVisit.Contact__c = convertedContactId;
         siteVisit.Broker__c = brokerContactId;
         siteVisit.Project__c = projectId;
-        siteVisit.Sales_Rep__c = salesManager.teamMemberId;
+        siteVisit.Sales_Manager__c = salesManager.userId;
         siteVisit.Scheduled_Date__c = visitDate;
         siteVisit.Start_Time__c = slotRange.startTime;
         siteVisit.End_Time__c = slotRange.endTime;
@@ -279,6 +293,19 @@ public with sharing class BrokerSiteVisitSchedulerController {
         return result;
     }
 
+    private static String formatDmlException(DmlException e) {
+        List<String> messages = new List<String>();
+        for(Integer i = 0; i < e.getNumDml(); i++) {
+            String message = e.getDmlMessage(i);
+            if(String.isNotBlank(message)) {
+                messages.add(message);
+            }
+        }
+        return messages.isEmpty()
+            ? 'Unable to schedule site visit: ' + e.getMessage()
+            : 'Unable to schedule site visit: ' + String.join(messages, ' ');
+    }
+
     private static SalesManagerContext resolveSalesManager(Lead leadRecord) {
         if(leadRecord == null || leadRecord.OwnerId == null || leadRecord.OwnerId.getSObjectType() != User.SObjectType) {
             return null;
@@ -295,18 +322,6 @@ public with sharing class BrokerSiteVisitSchedulerController {
         context.userId = ownerUser.Id;
         context.userName = buildUserDisplayName(ownerUser);
         context.reportingManagerName = ownerUser.Manager == null ? null : buildUserDisplayName(ownerUser.Manager);
-
-        List<Team_Member__c> teamMembers = [
-            SELECT Id
-            FROM Team_Member__c
-            WHERE User__c = :ownerUser.Id
-              AND Active__c = true
-              AND SV_Availability__c = true
-            LIMIT 1
-        ];
-        if(!teamMembers.isEmpty()) {
-            context.teamMemberId = teamMembers[0].Id;
-        }
         return context;
     }
 

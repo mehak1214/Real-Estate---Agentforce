@@ -73,7 +73,7 @@
                                 <div class="expanded-area">
                                     <div class="expanded-grid">
                                         <!-- Left Side: Order Details -->
-                                        <div class="order-details-section">
+                                        <div class="order-details-section detail-tile">
                                             <h3 class="section-title">ORDER DETAILS</h3>
                                             <div class="details-list">
                                                 <template for:each={order.detailFields} for:item="field">
@@ -86,7 +86,7 @@
                                         </div>
 
                                         <!-- Right Side: Broker Commissions -->
-                                        <div class="broker-commissions-section">
+                                        <div class="broker-commissions-section detail-tile">
                                             <h3 class="section-title">BROKER COMMISSIONS</h3>
                                             <template if:true={order.hasCommissions}>
                                                 <template for:each={order.commissions} for:item="comm">

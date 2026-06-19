@@ -5,14 +5,6 @@
             <div class="header-left">
                 <h1 class="page-title">Sales Orders</h1>
                 <p class="page-subtitle">Access all sales and commission details in one place</p>
-                
-                <div class="summary-stats">
-                    <span class="stat-item"><strong>{salesOrderCount}</strong> Orders</span>
-                    <span class="stat-dot">&middot;</span>
-                    <span class="stat-item"><strong>{commissionCount}</strong> Commissions</span>
-                    <span class="stat-dot">&middot;</span>
-                    <span class="stat-item">Total Commission: <span class="stat-amount-green">{formattedCommissionTotal}</span></span>
-                </div>
             </div>
             <div class="header-right">
                 <div class="search-container">
@@ -26,6 +18,25 @@
         </div>
 
         <div class="divider"></div>
+
+        <!-- Summary Tiles -->
+        <div class="summary-tiles">
+            <div class="summary-tile">
+                <div class="tile-icon"><lightning-icon icon-name="utility:metrics" size="medium"></lightning-icon></div>
+                <div class="tile-number">{salesOrderCount}</div>
+                <div class="tile-label">Total Orders</div>
+            </div>
+            <div class="summary-tile">
+                <div class="tile-icon"><lightning-icon icon-name="utility:groups" size="medium"></lightning-icon></div>
+                <div class="tile-number">{commissionCount}</div>
+                <div class="tile-label">Broker Commissions</div>
+            </div>
+            <div class="summary-tile">
+                <div class="tile-icon"><lightning-icon icon-name="utility:moneybag" size="medium"></lightning-icon></div>
+                <div class="tile-number">{formattedCommissionTotal}</div>
+                <div class="tile-label">Total Commission Amount</div>
+            </div>
+        </div>
 
         <!-- Table Container -->
         <div class="table-container">
@@ -98,13 +109,12 @@
                                                                     <div class="broker-name">{comm.brokerName}</div>
                                                                     <div class="broker-unit">{comm.unitName}</div>
                                                                 </div>
-                                                                <div class="broker-amount">{comm.commissionAmountDisplay}</div>
-                                                            </div>
-                                                            <div class="card-bottom">
-                                                                <div class="bottom-item">
-                                                                    <span class="bottom-label">Status</span>
+                                                                <div class="broker-amount-wrap">
+                                                                    <div class="broker-amount">{comm.commissionAmountDisplay}</div>
                                                                     <span class="status-pill status-pill-small" data-tone={comm.statusTone}>{comm.statusLabel}</span>
                                                                 </div>
+                                                            </div>
+                                                            <div class="card-bottom">
                                                                 <template for:each={comm.detailFields} for:item="f">
                                                                     <div class="bottom-item" key={f.apiName}>
                                                                         <span class="bottom-label">{f.label}</span>

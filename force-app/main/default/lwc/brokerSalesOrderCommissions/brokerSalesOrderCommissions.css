@@ -40,25 +40,35 @@
     margin: 0 0 16px 0;
 }
 
-.summary-stats {
-    font-size: 13px;
-    color: var(--color-text-sub);
+.summary-tiles {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin: 24px 0;
+}
+.summary-tile {
+    background: #FFFFFF;
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 32px 24px;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 8px;
+    text-align: center;
 }
-
-.summary-stats strong {
-    color: var(--color-text-main);
+.tile-icon {
+    margin-bottom: 20px;
+    --slds-c-icon-color-foreground-default: var(--color-text-main);
 }
-
-.stat-amount-green {
-    color: var(--color-green);
+.tile-number {
+    font-size: 28px;
     font-weight: 700;
+    color: var(--color-text-main);
+    margin-bottom: 8px;
 }
-
-.stat-dot {
-    color: var(--color-text-light);
+.tile-label {
+    font-size: 14px;
+    color: var(--color-text-sub);
 }
 
 .header-right {
@@ -227,15 +237,22 @@
 .detail-item {
     display: flex;
     justify-content: space-between;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--color-border);
+}
+.detail-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
 }
 .detail-label {
     font-size: 13px;
-    color: var(--color-text-sub);
+    font-weight: 600;
+    color: var(--color-text-main);
 }
 .detail-value {
     font-size: 13px;
-    font-weight: 600;
-    color: var(--color-text-main);
+    font-weight: 400;
+    color: var(--color-text-sub);
     text-align: right;
 }
 
@@ -274,6 +291,12 @@
     font-size: 12px;
     color: var(--color-text-light);
 }
+.broker-amount-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+}
 .broker-amount {
     font-size: 16px;
     font-weight: 700;
@@ -281,23 +304,28 @@
 }
 .card-bottom {
     display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 16px;
+    flex-direction: column;
+    gap: 12px;
 }
 .bottom-item {
     display: flex;
-    align-items: center;
-    gap: 6px;
+    justify-content: space-between;
+    padding-bottom: 8px;
+    border-bottom: 1px dashed var(--color-border);
+}
+.bottom-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
 }
 .bottom-label {
     font-size: 12px;
-    color: var(--color-text-light);
+    font-weight: 600;
+    color: var(--color-text-main);
 }
 .bottom-value {
     font-size: 12px;
-    font-weight: 600;
-    color: var(--color-text-main);
+    font-weight: 400;
+    color: var(--color-text-sub);
 }
 .status-pill-small {
     padding: 2px 8px;

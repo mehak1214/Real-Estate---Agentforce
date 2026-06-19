@@ -118,8 +118,6 @@
                     </div>
                 </div>
 
-                <button class="site-visit-card-btn" data-id={lead.Id} onclick={openSiteVisitModal}>📅 Create Site Visit</button>
-
                 <div class="lead-info name-title">👤 {lead.Name}</div>
                 <div class="lead-info">📞 {lead.Phone}</div>
                 <div class="lead-info">📧 {lead.Email}</div>
@@ -139,6 +137,8 @@
                 </template>
 
                 <div class="status-pill">Status: {lead.Status}</div>
+
+                <button class="site-visit-card-btn" data-id={lead.Id} onclick={openSiteVisitModal}>📅 Create Site Visit</button>
             </div>
         </template>
     </div>

@@ -137,38 +137,48 @@
                         <!-- Child Rows (Expanded) -->
                         <template if:true={order.isExpanded}>
                             <div class="child-area">
-                                <div class="child-table">
-                                    <div class="child-header">
-                                        <div class="cth-col"></div>
-                                        <div class="cth-col">BROKER</div>
-                                        <div class="cth-col">UNIT</div>
-                                        <template for:each={order.commissionHeaders} for:item="h">
-                                            <div class="cth-col" key={h.id}>{h.label}</div>
-                                        </template>
-                                        <div class="cth-col">COMM AMOUNT</div>
-                                        <div class="cth-col">STATUS</div>
-                                    </div>
-                                    <template for:each={order.commissions} for:item="comm">
-                                        <div class="child-row" key={comm.id}>
-                                            <div class="tree-line-container"><div class="tree-line"></div></div>
-                                            <div class="ctd-col fw-bold text-dark">{comm.brokerName}</div>
-                                            <div class="ctd-col text-gray fs-small">{comm.unitName}</div>
-                                            <template for:each={comm.detailFields} for:item="f">
-                                                <div class="ctd-col text-gray fs-small" key={f.apiName}>{f.displayValue}</div>
-                                            </template>
-                                            <div class="ctd-col fw-bold text-teal">{comm.commissionAmountDisplay}</div>
-                                            <div class="ctd-col">
-                                                <span class="pill" data-tone={comm.statusTone}>{comm.statusLabel}</span>
-                                            </div>
-                                        </div>
-                                    </template>
-                                    <template if:false={order.hasCommissions}>
-                                        <div class="child-row no-commissions text-gray">
-                                            <div class="tree-line-container"><div class="tree-line"></div></div>
-                                            <div style="grid-column: 2 / -1;">No broker commission entries found.</div>
-                                        </div>
-                                    </template>
+                                <div class="child-section-title">
+                                    <lightning-icon icon-name="utility:people" size="xx-small"></lightning-icon>
+                                    <span>Broker Commissions ({order.commissionCount})</span>
                                 </div>
+                                <template if:true={order.hasCommissions}>
+                                    <div class="child-bordered-table">
+                                        <table class="commission-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Broker</th>
+                                                    <th>Unit</th>
+                                                    <template for:each={order.commissionHeaders} for:item="h">
+                                                        <th key={h.id}>{h.label}</th>
+                                                    </template>
+                                                    <th>Commission</th>
+                                                    <th>Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <template for:each={order.commissions} for:item="comm">
+                                                    <tr key={comm.id}>
+                                                        <td class="fw-semibold text-dark">{comm.brokerName}</td>
+                                                        <td class="text-gray">{comm.unitName}</td>
+                                                        <template for:each={comm.detailFields} for:item="f">
+                                                            <td key={f.apiName} class="text-gray">{f.displayValue}</td>
+                                                        </template>
+                                                        <td class="fw-bold text-teal">{comm.commissionAmountDisplay}</td>
+                                                        <td>
+                                                            <span class="pill" data-tone={comm.statusTone}>{comm.statusLabel}</span>
+                                                        </td>
+                                                    </tr>
+                                                </template>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </template>
+                                <template if:false={order.hasCommissions}>
+                                    <div class="no-commissions-msg">
+                                        <lightning-icon icon-name="utility:info" size="xx-small"></lightning-icon>
+                                        <span>No broker commission entries found for this order.</span>
+                                    </div>
+                                </template>
                             </div>
                         </template>
                     </div>

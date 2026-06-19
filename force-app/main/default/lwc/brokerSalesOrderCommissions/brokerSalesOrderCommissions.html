@@ -107,7 +107,6 @@
                                                             <div class="card-top">
                                                                 <div class="broker-info">
                                                                     <div class="broker-name">{comm.brokerName}</div>
-                                                                    <div class="broker-unit">{comm.unitName}</div>
                                                                 </div>
                                                                 <div class="broker-amount-wrap">
                                                                     <div class="broker-amount">{comm.commissionAmountDisplay}</div>
@@ -115,6 +114,12 @@
                                                                 </div>
                                                             </div>
                                                             <div class="card-bottom">
+                                                                <template if:true={comm.unitName}>
+                                                                    <div class="bottom-item">
+                                                                        <span class="bottom-label">Unit</span>
+                                                                        <span class="bottom-value">{comm.unitName}</span>
+                                                                    </div>
+                                                                </template>
                                                                 <template for:each={comm.detailFields} for:item="f">
                                                                     <div class="bottom-item" key={f.apiName}>
                                                                         <span class="bottom-label">{f.label}</span>

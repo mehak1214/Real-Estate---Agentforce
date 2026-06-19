@@ -89,7 +89,10 @@ export default class BrokerSalesOrderCommissions extends LightningElement {
             commissionCount: commissions.length,
             commissionTotalDisplay: this.formatCurrency(commissionTotal),
             hasCommissions: commissions.length > 0,
-            detailFields: detailFields.filter((field) => field.apiName !== 'Sales_Order_Number__c'),
+            detailFields: detailFields.filter((field) => 
+                field.apiName !== 'Sales_Order_Number__c' 
+                && !(field.label && field.label.toLowerCase().includes('booking unit'))
+            ),
             commissions,
             searchText: [
                 orderNumber,
@@ -122,6 +125,7 @@ export default class BrokerSalesOrderCommissions extends LightningElement {
                 (field) => field.apiName !== 'Commission_Amount__c'
                     && field.apiName !== 'Broker__c'
                     && field.apiName !== 'Unit__c'
+                    && !(field.label && field.label.toLowerCase().includes('status'))
             )
         };
     }

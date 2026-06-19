@@ -238,7 +238,7 @@
     display: flex;
     justify-content: space-between;
     padding-bottom: 12px;
-    border-bottom: 1px solid var(--color-border);
+    border-bottom: 1px dashed var(--color-border);
 }
 .detail-item:last-child {
     border-bottom: none;
@@ -280,6 +280,14 @@
     justify-content: space-between;
     align-items: flex-start;
     margin-bottom: 16px;
+}
+.small-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--color-text-light);
+    letter-spacing: 0.05em;
+    margin-bottom: 2px;
 }
 .broker-name {
     font-size: 14px;

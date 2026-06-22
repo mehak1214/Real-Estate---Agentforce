@@ -2,45 +2,86 @@ public class CommissionPDFController {
 
     public List<InvoiceLineItem> invoiceLineItems { get; set; }
     public String totalAmount { get; set; }
-    public String totalvatAmount { get; set; }
-    public String totalAmountWithVAT { get; set; }
-    public Decimal vatPercentage { get; set; }
+
+    // Sales Order header fields (populated when salesOrderId is provided)
+    public String salesOrderNumber { get; set; }
+    public String projectName { get; set; }
+    public String unitName { get; set; }
+    public String netAmount { get; set; }
+    public String orderStatus { get; set; }
+    public String invoiceDate { get; set; }
+    public Boolean isSalesOrderMode { get; set; }
 
     private static final String BROKER_COMMISSION_ID_STRING = 'brokerCommissionId';
+    private static final String SALES_ORDER_ID_STRING = 'salesOrderId';
 
     public CommissionPDFController() {
 
+        invoiceLineItems = new List<InvoiceLineItem>();
+        isSalesOrderMode = false;
+
+        String salesOrderId = ApexPages.currentPage().getParameters().get(SALES_ORDER_ID_STRING);
         String recordId = ApexPages.currentPage().getParameters().get(BROKER_COMMISSION_ID_STRING);
 
-        List<BrokerCommission__c> records = [
-            SELECT Id, Name,
-                   CommissionAmount__c,
-                   CommissionPercentage__c,
-                   VATPercentage__c,
-                   TotalCommissionAmountWithVAT__c,
-                   Unit_Cost__c,
-                   Broker__r.Name,
-                   Unit__r.Name
-            FROM BrokerCommission__c
-            WHERE Id = :recordId
-        ];
+        List<BrokerCommission__c> records;
 
-        invoiceLineItems = new List<InvoiceLineItem>();
+        if (String.isNotBlank(salesOrderId)) {
+            // ===== Sales Order mode: query all commissions for this order =====
+            isSalesOrderMode = true;
+            invoiceDate = Date.today().format();
+
+            List<SalesOrder__c> salesOrders = [
+                SELECT Id, Name, Sales_Order_Number__c, Status__c, NetAmount__c,
+                       Project__r.Name, Unit__r.Name
+                FROM SalesOrder__c
+                WHERE Id = :salesOrderId
+                LIMIT 1
+            ];
+
+            if (!salesOrders.isEmpty()) {
+                SalesOrder__c so = salesOrders[0];
+                salesOrderNumber = so.Sales_Order_Number__c != null ? so.Sales_Order_Number__c : so.Name;
+                projectName = so.Project__r != null ? so.Project__r.Name : '';
+                unitName = so.Unit__r != null ? so.Unit__r.Name : '';
+                netAmount = so.NetAmount__c != null ? formatCurrency(so.NetAmount__c) : '';
+                orderStatus = so.Status__c != null ? so.Status__c : '';
+            }
+
+            records = [
+                SELECT Id, Name,
+                       Commission_Amount__c,
+                       Commission_Percent__c,
+                       Unit_Cost__c,
+                       Status__c,
+                       Broker__r.Name,
+                       Unit__r.Name
+                FROM BrokerCommission__c
+                WHERE SalesOrder__c = :salesOrderId
+                ORDER BY CreatedDate ASC
+            ];
+        } else {
+            // ===== Legacy mode: single broker commission =====
+            records = [
+                SELECT Id, Name,
+                       Commission_Amount__c,
+                       Commission_Percent__c,
+                       Unit_Cost__c,
+                       Status__c,
+                       Broker__r.Name,
+                       Unit__r.Name
+                FROM BrokerCommission__c
+                WHERE Id = :recordId
+            ];
+        }
 
         Decimal total = 0;
-        Decimal totalVat = 0;
-        Decimal totalWithVat = 0;
 
         Integer i = 1;
 
         for (BrokerCommission__c bc : records) {
 
-            Decimal amount = bc.CommissionAmount__c != null ? bc.CommissionAmount__c : 0;
-            Decimal vat = (bc.VATPercentage__c != null)
-                ? amount * bc.VATPercentage__c / 100
-                : 0;
-
-            Decimal finalAmount = amount + vat;
+            Decimal amount = bc.Commission_Amount__c != null ? bc.Commission_Amount__c : 0;
+            String statusValue = bc.Status__c != null ? bc.Status__c : '';
 
             invoiceLineItems.add(new InvoiceLineItem(
                 i,
@@ -48,26 +89,25 @@ public class CommissionPDFController {
                 bc.Broker__r != null ? bc.Broker__r.Name : '',
                 bc.Unit__r != null ? bc.Unit__r.Name : '',
                 String.valueOf(bc.Unit_Cost__c),
-                bc.CommissionPercentage__c,
+                bc.Commission_Percent__c,
+                statusValue,
                 format(amount),
-                format(vat),
-                format(finalAmount)
+                format(amount)
             ));
 
             total += amount;
-            totalVat += vat;
-            totalWithVat += finalAmount;
-
-            vatPercentage = bc.VATPercentage__c;
             i++;
         }
 
         totalAmount = format(total);
-        totalvatAmount = format(totalVat);
-        totalAmountWithVAT = format(totalWithVat);
     }
 
     private String format(Decimal val) {
+        if (val == null) return '0.00';
+        return val.setScale(2).format();
+    }
+
+    private String formatCurrency(Decimal val) {
         if (val == null) return '0.00';
         return val.setScale(2).format();
     }
@@ -79,21 +119,21 @@ public class CommissionPDFController {
         public String unit { get; set; }
         public String unitCost { get; set; }
         public Decimal percent { get; set; }
+        public String status { get; set; }
         public String amount { get; set; }
-        public String vat { get; set; }
         public String total { get; set; }
 
         public InvoiceLineItem(Integer srNo, String name, String broker, String unit,
-                               String unitCost, Decimal percent, String amount,
-                               String vat, String total) {
+                               String unitCost, Decimal percent, String status,
+                               String amount, String total) {
             this.srNo = srNo;
             this.name = name;
             this.broker = broker;
             this.unit = unit;
             this.unitCost = unitCost;
             this.percent = percent;
+            this.status = status;
             this.amount = amount;
-            this.vat = vat;
             this.total = total;
         }
     }
@@ -105,7 +145,7 @@ public class CommissionPDFController {
             
             // =====Fetch Broker Commission=====
             BrokerCommission__c bc = [
-                SELECT Id, Name, CommissionAmount__c, TotalCommissionAmountWithVAT__c, Owner.Email, Owner.Name
+                SELECT Id, Name, Commission_Amount__c, Owner.Email, Owner.Name
                 FROM BrokerCommission__c
                 WHERE Id = :recordId
                 LIMIT 1
@@ -141,8 +181,7 @@ public class CommissionPDFController {
             String body = '<html><body>';
             body += '<p>Hi ' + bc.Owner.Name + ',</p>';
             body += '<p>Please find attached your commission invoice.</p>';
-            body += '<p><b>Commission Amount:</b> ' + bc.CommissionAmount__c + '</p>';
-            body += '<p><b>Total with VAT:</b> ' + bc.TotalCommissionAmountWithVAT__c + '</p>';
+            body += '<p><b>Commission Amount:</b> ' + bc.Commission_Amount__c + '</p>';
             body += '<br/><p>Regards,<br/>Team</p>';
             body += '</body></html>';
             

@@ -237,7 +237,7 @@
 
 .table-header {
     display: grid;
-    grid-template-columns: 48px 2fr 2.5fr 2fr 1.5fr 2fr 2fr;
+    grid-template-columns: 48px 1.5fr 2fr 1.5fr 1.2fr 1.5fr 1.5fr 2fr;
     padding: 16px 16px;
     border-bottom: 1px solid var(--c-border);
     background: #FFFFFF;
@@ -263,7 +263,7 @@
 
 .parent-row {
     display: grid;
-    grid-template-columns: 48px 2fr 2.5fr 2fr 1.5fr 2fr 2fr;
+    grid-template-columns: 48px 1.5fr 2fr 1.5fr 1.2fr 1.5fr 1.5fr 2fr;
     padding: 16px 16px;
     align-items: center;
     cursor: pointer;
@@ -327,6 +327,89 @@
 .pill[data-tone="warning"] { background: #FFFBEB; color: #F59E0B; }
 .pill[data-tone="danger"] { background: #FEF2F2; color: #EF4444; }
 .pill[data-tone="neutral"] { background: #F1F5F9; color: #64748B; }
+
+/* INVOICE COLUMN */
+.invoice-col {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.invoice-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-invoice {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    letter-spacing: 0.01em;
+}
+
+.btn-invoice:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+}
+
+.btn-invoice:active {
+    transform: translateY(0);
+}
+
+/* Create Invoice Button */
+.btn-invoice-create {
+    background: linear-gradient(135deg, #14B8A6 0%, #0D9488 100%);
+    color: #FFFFFF;
+}
+.btn-invoice-create lightning-icon {
+    --slds-c-icon-color-foreground-default: #FFFFFF;
+}
+.btn-invoice-create:hover {
+    background: linear-gradient(135deg, #0D9488 0%, #0F766E 100%);
+}
+
+/* Upload Invoice Button */
+.btn-invoice-upload {
+    background: #F1F5F9;
+    color: var(--c-text-sub);
+    border: 1px solid var(--c-border);
+}
+.btn-invoice-upload lightning-icon {
+    --slds-c-icon-color-foreground-default: var(--c-text-sub);
+}
+.btn-invoice-upload:hover {
+    background: #E2E8F0;
+    color: var(--c-text-main);
+    border-color: #CBD5E1;
+}
+
+/* View Invoice Button */
+.btn-invoice-view {
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+    color: #FFFFFF;
+}
+.btn-invoice-view lightning-icon {
+    --slds-c-icon-color-foreground-default: #FFFFFF;
+}
+.btn-invoice-view:hover {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+}
+
+/* Invoice Spinner */
+.invoice-spinner {
+    position: relative;
+    width: 40px;
+    height: 30px;
+}
 
 /* CHILD AREA - Bordered Sub-Table */
 @keyframes slideExpand {
@@ -438,7 +521,7 @@
 }
 .skeleton-row {
     display: grid;
-    grid-template-columns: 48px 2fr 2.5fr 2fr 1.5fr 2fr 2fr;
+    grid-template-columns: 48px 1.5fr 2fr 1.5fr 1.2fr 1.5fr 1.5fr 2fr;
     align-items: center;
     padding: 16px;
     gap: 8px;

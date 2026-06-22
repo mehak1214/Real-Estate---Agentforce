@@ -327,4 +327,207 @@ public with sharing class BrokerSalesOrderCommissionsController {
             return null;
         }
     }
+
+    // ===== Invoice Functionality =====
+
+    public class InvoiceInfoDTO {
+        @AuraEnabled public Boolean hasInvoice;
+        @AuraEnabled public Id contentDocumentId;
+        @AuraEnabled public Id contentVersionId;
+        @AuraEnabled public String fileName;
+    }
+
+    /**
+     * Check which Sales Orders already have an invoice attached.
+     * Looks for ContentDocumentLinks where the document title starts with 'Commission_Invoice_'.
+     */
+    @AuraEnabled
+    public static Map<Id, InvoiceInfoDTO> getInvoiceStatusForOrders(List<Id> salesOrderIds) {
+        Map<Id, InvoiceInfoDTO> result = new Map<Id, InvoiceInfoDTO>();
+
+        if (salesOrderIds == null || salesOrderIds.isEmpty()) {
+            return result;
+        }
+
+        for (Id soId : salesOrderIds) {
+            InvoiceInfoDTO info = new InvoiceInfoDTO();
+            info.hasInvoice = false;
+            result.put(soId, info);
+        }
+
+        List<ContentDocumentLink> links = [
+            SELECT LinkedEntityId, ContentDocumentId, ContentDocument.Title, ContentDocument.LatestPublishedVersionId
+            FROM ContentDocumentLink
+            WHERE LinkedEntityId IN :salesOrderIds
+            AND ContentDocument.Title LIKE 'Commission_Invoice_%'
+            ORDER BY ContentDocument.CreatedDate DESC
+        ];
+
+        Set<Id> docIds = new Set<Id>();
+        for (ContentDocumentLink link : links) {
+            docIds.add(link.ContentDocumentId);
+        }
+
+        Map<Id, Id> docToVersionMap = new Map<Id, Id>();
+        if (!docIds.isEmpty()) {
+            for (ContentVersion cv : [SELECT Id, ContentDocumentId FROM ContentVersion WHERE ContentDocumentId IN :docIds AND IsLatest = true]) {
+                docToVersionMap.put(cv.ContentDocumentId, cv.Id);
+            }
+        }
+
+        for (ContentDocumentLink link : links) {
+            Id entityId = link.LinkedEntityId;
+            if (result.containsKey(entityId) && !result.get(entityId).hasInvoice) {
+                InvoiceInfoDTO info = new InvoiceInfoDTO();
+                info.hasInvoice = true;
+                info.contentDocumentId = link.ContentDocumentId;
+                
+                Id cvId = link.ContentDocument.LatestPublishedVersionId;
+                if (cvId == null) {
+                    cvId = docToVersionMap.get(link.ContentDocumentId);
+                }
+                info.contentVersionId = cvId;
+                info.fileName = link.ContentDocument.Title;
+                result.put(entityId, info);
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Generate an invoice PDF for a Sales Order and attach it as a ContentDocument.
+     */
+    @AuraEnabled
+    public static InvoiceInfoDTO createInvoice(Id salesOrderId) {
+        try {
+            // Get the Sales Order name for the file title
+            SalesOrder__c so = [
+                SELECT Id, Name, Sales_Order_Number__c
+                FROM SalesOrder__c
+                WHERE Id = :salesOrderId
+                LIMIT 1
+            ];
+
+            String orderNumber = so.Sales_Order_Number__c != null ? so.Sales_Order_Number__c : so.Name;
+            String sanitizedOrderNumber = orderNumber.replaceAll('[^a-zA-Z0-9_\\-]', '_');
+            String fileName = 'Commission_Invoice_' + sanitizedOrderNumber;
+
+            // Generate PDF from VF page
+            PageReference pdfPage = Page.CommissionInvoicePDFGenerator;
+            pdfPage.getParameters().put('salesOrderId', salesOrderId);
+
+            Blob pdfBlob;
+            if (Test.isRunningTest()) {
+                pdfBlob = Blob.valueOf('Test PDF Content');
+            } else {
+                pdfBlob = pdfPage.getContentAsPDF();
+            }
+
+            // Create ContentVersion (which auto-creates ContentDocument)
+            ContentVersion cv = new ContentVersion();
+            cv.Title = fileName;
+            cv.PathOnClient = fileName + '.pdf';
+            cv.VersionData = pdfBlob;
+            cv.Origin = 'C'; // Content origin
+            insert cv;
+
+            // Get the auto-created ContentDocumentId
+            ContentVersion insertedCv = [
+                SELECT ContentDocumentId
+                FROM ContentVersion
+                WHERE Id = :cv.Id
+                LIMIT 1
+            ];
+
+            // Link the document to the Sales Order
+            ContentDocumentLink cdl = new ContentDocumentLink();
+            cdl.ContentDocumentId = insertedCv.ContentDocumentId;
+            cdl.LinkedEntityId = salesOrderId;
+            cdl.ShareType = 'V'; // Viewer permission
+            cdl.Visibility = 'AllUsers';
+            insert cdl;
+
+            // Return result
+            InvoiceInfoDTO info = new InvoiceInfoDTO();
+            info.hasInvoice = true;
+            info.contentDocumentId = insertedCv.ContentDocumentId;
+            info.contentVersionId = cv.Id;
+            info.fileName = fileName;
+            return info;
+
+        } catch (Exception e) {
+            throw new AuraHandledException('Failed to create invoice: ' + e.getMessage());
+        }
+    }
+
+    /**
+     * Upload a user-provided invoice file and attach it to a Sales Order.
+     */
+    @AuraEnabled
+    public static InvoiceInfoDTO uploadInvoice(Id salesOrderId, String fileName, String base64Data, String contentType) {
+        try {
+            // Get the Sales Order name for the file title prefix
+            SalesOrder__c so = [
+                SELECT Id, Name, Sales_Order_Number__c
+                FROM SalesOrder__c
+                WHERE Id = :salesOrderId
+                LIMIT 1
+            ];
+
+            String orderNumber = so.Sales_Order_Number__c != null ? so.Sales_Order_Number__c : so.Name;
+            String sanitizedOrderNumber = orderNumber.replaceAll('[^a-zA-Z0-9_\\-]', '_');
+            String docTitle = 'Commission_Invoice_' + sanitizedOrderNumber;
+
+            // Decode and create ContentVersion
+            ContentVersion cv = new ContentVersion();
+            cv.Title = docTitle;
+            cv.PathOnClient = fileName;
+            cv.VersionData = EncodingUtil.base64Decode(base64Data);
+            cv.Origin = 'C';
+            insert cv;
+
+            // Get the auto-created ContentDocumentId
+            ContentVersion insertedCv = [
+                SELECT ContentDocumentId
+                FROM ContentVersion
+                WHERE Id = :cv.Id
+                LIMIT 1
+            ];
+
+            // Link the document to the Sales Order
+            ContentDocumentLink cdl = new ContentDocumentLink();
+            cdl.ContentDocumentId = insertedCv.ContentDocumentId;
+            cdl.LinkedEntityId = salesOrderId;
+            cdl.ShareType = 'V';
+            cdl.Visibility = 'AllUsers';
+            insert cdl;
+
+            // Return result
+            InvoiceInfoDTO info = new InvoiceInfoDTO();
+            info.hasInvoice = true;
+            info.contentDocumentId = insertedCv.ContentDocumentId;
+            info.contentVersionId = cv.Id;
+            info.fileName = docTitle;
+            return info;
+
+        } catch (Exception e) {
+            throw new AuraHandledException('Failed to upload invoice: ' + e.getMessage());
+        }
+    }
+
+    @AuraEnabled
+    public static String getInvoicePdfBase64(Id documentId) {
+        try {
+            ContentVersion cv = [
+                SELECT VersionData 
+                FROM ContentVersion 
+                WHERE ContentDocumentId = :documentId AND IsLatest = true 
+                LIMIT 1
+            ];
+            return EncodingUtil.base64Encode(cv.VersionData);
+        } catch (Exception e) {
+            throw new AuraHandledException('Error fetching PDF: ' + e.getMessage());
+        }
+    }
 }

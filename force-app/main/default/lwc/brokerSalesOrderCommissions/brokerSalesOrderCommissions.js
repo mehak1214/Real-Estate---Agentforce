@@ -1,5 +1,11 @@
 import { LightningElement, track } from 'lwc';
+import { NavigationMixin } from 'lightning/navigation';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import getSalesOrderCommissions from '@salesforce/apex/BrokerSalesOrderCommissionsController.getSalesOrderCommissions';
+import getInvoiceStatusForOrders from '@salesforce/apex/BrokerSalesOrderCommissionsController.getInvoiceStatusForOrders';
+import createInvoice from '@salesforce/apex/BrokerSalesOrderCommissionsController.createInvoice';
+import uploadInvoice from '@salesforce/apex/BrokerSalesOrderCommissionsController.uploadInvoice';
+import getInvoicePdfBase64 from '@salesforce/apex/BrokerSalesOrderCommissionsController.getInvoicePdfBase64';
 import CURRENCY from '@salesforce/i18n/currency';
 
 const STATUS_TONE = {
@@ -8,7 +14,7 @@ const STATUS_TONE = {
     danger: ['cancel', 'reject']
 };
 
-export default class BrokerSalesOrderCommissions extends LightningElement {
+export default class BrokerSalesOrderCommissions extends NavigationMixin(LightningElement) {
     @track salesOrders = [];
 
     searchTerm = '';
@@ -19,6 +25,9 @@ export default class BrokerSalesOrderCommissions extends LightningElement {
     commissionCount = 0;
     totalCommissionAmount = 0;
     totalCommissionAmountWithVat = 0;
+
+    // Invoice tracking
+    _uploadTargetOrderId = null;
 
     connectedCallback() {
         this.loadData();
@@ -88,6 +97,9 @@ export default class BrokerSalesOrderCommissions extends LightningElement {
                 this.totalCommissionAmount = data.totalCommissionAmount || 0;
                 this.totalCommissionAmountWithVat = data.totalCommissionAmountWithVat || 0;
                 this.salesOrders = (data.salesOrders || []).map((order) => this.decorateOrder(order));
+
+                // Load invoice statuses
+                this.loadInvoiceStatuses();
             })
             .catch((error) => {
                 this.errorMessage = this.reduceError(error);
@@ -98,6 +110,34 @@ export default class BrokerSalesOrderCommissions extends LightningElement {
             });
     }
 
+    loadInvoiceStatuses() {
+        const salesOrderIds = this.salesOrders.map((order) => order.id);
+        if (salesOrderIds.length === 0) {
+            return;
+        }
+
+        getInvoiceStatusForOrders({ salesOrderIds })
+            .then((statusMap) => {
+                this.salesOrders = this.salesOrders.map((order) => {
+                    const invoiceInfo = statusMap[order.id];
+                    if (invoiceInfo && invoiceInfo.hasInvoice) {
+                        return {
+                            ...order,
+                            hasInvoice: true,
+                            contentDocumentId: invoiceInfo.contentDocumentId,
+                            contentVersionId: invoiceInfo.contentVersionId,
+                            invoiceFileName: invoiceInfo.fileName
+                        };
+                    }
+                    return { ...order, hasInvoice: false, contentDocumentId: null, contentVersionId: null, invoiceFileName: null };
+                });
+            })
+            .catch((error) => {
+                // Silently handle — invoice status is supplementary
+                console.error('Failed to load invoice statuses:', this.reduceError(error));
+            });
+    }
+
     decorateOrder(order) {
         const commissions = (order.commissions || []).map((commission) => this.decorateCommission(commission));
         const detailFields = this.decorateFields(order.fields);
@@ -105,7 +145,7 @@ export default class BrokerSalesOrderCommissions extends LightningElement {
         const orderNumber = orderNumberField && orderNumberField.value ? orderNumberField.value : order.name;
         const statusLabel = order.status || 'No Status';
         const commissionTotal = commissions.reduce((sum, c) => sum + (Number(c.commissionAmountRaw) || 0), 0);
-        
+
         const commissionHeaders = [];
         if (commissions.length > 0) {
             commissions[0].detailFields.forEach(f => {
@@ -128,14 +168,20 @@ export default class BrokerSalesOrderCommissions extends LightningElement {
             commissionCount: commissions.length,
             commissionTotalDisplay: this.formatCurrency(commissionTotal),
             hasCommissions: commissions.length > 0,
-            detailFields: detailFields.filter((field) => 
-                field.apiName !== 'Sales_Order_Number__c' 
+            detailFields: detailFields.filter((field) =>
+                field.apiName !== 'Sales_Order_Number__c'
                 && !(field.label && field.label.toLowerCase().includes('booking unit'))
             ).map(field => ({
                 ...field,
                 isStatusField: field.label && field.label.toLowerCase().includes('status')
             })),
             commissions,
+            // Invoice state (will be updated after loadInvoiceStatuses)
+            hasInvoice: false,
+            contentDocumentId: null,
+            contentVersionId: null,
+            invoiceFileName: null,
+            invoiceLoading: false,
             searchText: [
                 orderNumber,
                 statusLabel,
@@ -245,6 +291,176 @@ export default class BrokerSalesOrderCommissions extends LightningElement {
             };
         });
     }
+
+    // ===== Invoice Handlers =====
+
+    stopPropagation(event) {
+        event.stopPropagation();
+    }
+
+    handleCreateInvoice(event) {
+        event.stopPropagation();
+        const orderId = event.currentTarget.dataset.id;
+
+        // Set loading state for this specific order
+        this.setOrderInvoiceLoading(orderId, true);
+
+        createInvoice({ salesOrderId: orderId })
+            .then((result) => {
+                this.salesOrders = this.salesOrders.map((order) => {
+                    if (order.id !== orderId) {
+                        return order;
+                    }
+                    return {
+                        ...order,
+                        hasInvoice: true,
+                        contentDocumentId: result.contentDocumentId,
+                        contentVersionId: result.contentVersionId,
+                        invoiceFileName: result.fileName,
+                        invoiceLoading: false
+                    };
+                });
+                this.showToast('Success', 'Invoice created and attached to the Sales Order.', 'success');
+            })
+            .catch((error) => {
+                this.setOrderInvoiceLoading(orderId, false);
+                this.showToast('Error', this.reduceError(error), 'error');
+            });
+    }
+
+    previewModalOpen = false;
+    previewUrl = '';    handleDownloadInvoice(event) {
+        event.stopPropagation();
+        const orderId = event.currentTarget.dataset.id;
+        const order = this.salesOrders.find((o) => o.id === orderId);
+        if (!order) return;
+
+        const docId = order.contentDocumentId;
+
+        if (docId) {
+            // Fetch the PDF securely via Apex and force a local browser download.
+            // This completely bypasses Salesforce Community URL routing errors (errorduringprocessing.jsp).
+            getInvoicePdfBase64({ documentId: docId })
+                .then(base64 => {
+                    const binary = atob(base64);
+                    const array = new Uint8Array(binary.length);
+                    for (let i = 0; i < binary.length; i++) {
+                        array[i] = binary.charCodeAt(i);
+                    }
+                    const blob = new Blob([array], { type: 'application/pdf' });
+                    const blobUrl = URL.createObjectURL(blob);
+                    
+                    const a = document.createElement('a');
+                    a.href = blobUrl;
+                    a.download = order.fileName || 'Invoice.pdf';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    
+                    setTimeout(() => URL.revokeObjectURL(blobUrl), 100);
+                })
+                .catch(error => {
+                    console.error('Error fetching PDF:', error);
+                    this.showToast('Error', 'Could not download the invoice.', 'error');
+                });
+        } else {
+            this.showToast('Error', 'No document available to download.', 'error');
+        }
+    }
+
+    closePreview() {
+        this.previewModalOpen = false;
+        this.previewUrl = '';
+    }
+
+    handleUploadClick(event) {
+        event.stopPropagation();
+        const orderId = event.currentTarget.dataset.id;
+        this._uploadTargetOrderId = orderId;
+
+        // Trigger the hidden file input
+        const fileInput = this.template.querySelector('.invoice-file-input');
+        if (fileInput) {
+            fileInput.value = null; // Reset so the same file can be re-selected
+            fileInput.click();
+        }
+    }
+
+    handleFileSelected(event) {
+        const file = event.target.files[0];
+        if (!file) {
+            return;
+        }
+
+        const orderId = this._uploadTargetOrderId;
+        if (!orderId) {
+            return;
+        }
+
+        // Validate file size (max 10MB)
+        const MAX_FILE_SIZE = 10 * 1024 * 1024;
+        if (file.size > MAX_FILE_SIZE) {
+            this.showToast('Error', 'File size exceeds the 10MB limit.', 'error');
+            return;
+        }
+
+        this.setOrderInvoiceLoading(orderId, true);
+
+        const reader = new FileReader();
+        reader.onload = () => {
+            // Extract base64 data (remove the data:...;base64, prefix)
+            const base64 = reader.result.split(',')[1];
+
+            uploadInvoice({
+                salesOrderId: orderId,
+                fileName: file.name,
+                base64Data: base64,
+                contentType: file.type
+            })
+                .then((result) => {
+                    this.salesOrders = this.salesOrders.map((order) => {
+                        if (order.id !== orderId) {
+                            return order;
+                        }
+                        return {
+                            ...order,
+                            hasInvoice: true,
+                            contentDocumentId: result.contentDocumentId,
+                            contentVersionId: result.contentVersionId,
+                            invoiceFileName: result.fileName,
+                            invoiceLoading: false
+                        };
+                    });
+                    this.showToast('Success', 'Invoice uploaded and attached to the Sales Order.', 'success');
+                })
+                .catch((error) => {
+                    this.setOrderInvoiceLoading(orderId, false);
+                    this.showToast('Error', this.reduceError(error), 'error');
+                });
+        };
+        reader.onerror = () => {
+            this.setOrderInvoiceLoading(orderId, false);
+            this.showToast('Error', 'Failed to read the selected file.', 'error');
+        };
+        reader.readAsDataURL(file);
+    }
+
+    setOrderInvoiceLoading(orderId, isLoading) {
+        this.salesOrders = this.salesOrders.map((order) => {
+            if (order.id !== orderId) {
+                return order;
+            }
+            return { ...order, invoiceLoading: isLoading };
+        });
+    }
+
+    showToast(title, message, variant) {
+        this.dispatchEvent(
+            new ShowToastEvent({ title, message, variant })
+        );
+    }
+
+    // ===== Utility Methods =====
 
     formatCurrencyString(value) {
         if (value === null || value === undefined || value === '') {

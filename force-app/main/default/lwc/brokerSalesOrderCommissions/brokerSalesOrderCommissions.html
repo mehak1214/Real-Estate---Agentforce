@@ -7,7 +7,8 @@
                 <p class="page-subtitle">Every order with its broker commission entries, in one ledger.</p>
             </div>
             <button class="btn-refresh" onclick={handleRefresh} title="Refresh" disabled={isLoading}>
-                <lightning-icon icon-name="utility:refresh" size="xx-small" variant="inverse" class={refreshIconClass}></lightning-icon>
+                <lightning-icon icon-name="utility:refresh" size="xx-small" variant="inverse"
+                    class={refreshIconClass}></lightning-icon>
                 <span>Refresh</span>
             </button>
         </div>
@@ -32,7 +33,8 @@
                         <div class="kpi-subtext">{filteredCount} shown with current filters</div>
                     </template>
                 </div>
-                <div class="kpi-icon-wrap"><lightning-icon icon-name="utility:product" size="small"></lightning-icon></div>
+                <div class="kpi-icon-wrap"><lightning-icon icon-name="utility:product" size="small"></lightning-icon>
+                </div>
             </div>
             <div class="kpi-card kpi-indigo">
                 <div class="kpi-content">
@@ -45,7 +47,8 @@
                         <div class="kpi-subtext">Child commission records across all orders</div>
                     </template>
                 </div>
-                <div class="kpi-icon-wrap"><lightning-icon icon-name="utility:snippet" size="small"></lightning-icon></div>
+                <div class="kpi-icon-wrap"><lightning-icon icon-name="utility:snippet" size="small"></lightning-icon>
+                </div>
             </div>
             <div class="kpi-card kpi-green">
                 <div class="kpi-content">
@@ -63,7 +66,8 @@
                         </template>
                     </template>
                 </div>
-                <div class="kpi-icon-wrap"><lightning-icon icon-name="utility:currency" size="small"></lightning-icon></div>
+                <div class="kpi-icon-wrap"><lightning-icon icon-name="utility:currency" size="small"></lightning-icon>
+                </div>
             </div>
         </div>
 
@@ -71,7 +75,8 @@
         <div class="toolbar">
             <div class="search-box">
                 <lightning-icon icon-name="utility:search" size="x-small"></lightning-icon>
-                <input class="search-input" type="text" placeholder="Search order, customer, or broker..." value={searchTerm} onkeyup={handleSearch} />
+                <input class="search-input" type="text" placeholder="Search order, customer, or broker..."
+                    value={searchTerm} onkeyup={handleSearch} />
                 <template if:true={searchTerm}>
                     <button class="btn-clear" title="Clear search" onclick={handleClearSearch}>
                         <lightning-icon icon-name="utility:close" size="xx-small"></lightning-icon>
@@ -98,6 +103,7 @@
                 <div class="th-col">STATUS</div>
                 <div class="th-col">ORDER VALUE</div>
                 <div class="th-col">COMMISSION TOTAL</div>
+                <div class="th-col">INVOICE</div>
             </div>
 
             <template if:true={isLoading}>
@@ -110,6 +116,7 @@
                         <div class="skeleton skeleton-pill"></div>
                         <div class="skeleton skeleton-cell"></div>
                         <div class="skeleton skeleton-cell"></div>
+                        <div class="skeleton skeleton-cell"></div>
                     </div>
                 </template>
             </template>
@@ -119,7 +126,8 @@
                         <!-- Parent Row -->
                         <div class="parent-row" data-id={order.id} onclick={toggleOrder}>
                             <div class="td-col td-chevron">
-                                <lightning-icon icon-name="utility:chevronright" size="x-small" class={order.chevClass}></lightning-icon>
+                                <lightning-icon icon-name="utility:chevronright" size="x-small"
+                                    class={order.chevClass}></lightning-icon>
                             </div>
                             <div class="td-col fw-bold text-dark">{order.orderNumber}</div>
                             <div class="td-col fw-semibold text-dark">{order.projectNameDisplay}</div>
@@ -131,6 +139,39 @@
                             <div class="td-col commission-total-col">
                                 <span class="comm-amount-text">{order.commissionTotalDisplay}</span>
                                 <span class="comm-count-badge">{order.commissionCount}</span>
+                            </div>
+                            <div class="td-col invoice-col" onclick={stopPropagation}>
+                                <template if:true={order.invoiceLoading}>
+                                    <div class="invoice-spinner">
+                                        <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+                                    </div>
+                                </template>
+                                <template if:false={order.invoiceLoading}>
+                                    <template if:true={order.hasInvoice}>
+                                        <button class="btn-invoice btn-invoice-view" data-id={order.id}
+                                            onclick={handleDownloadInvoice} title="Download Invoice">
+                                            <lightning-icon icon-name="utility:download"
+                                                size="xx-small"></lightning-icon>
+                                            <span>Download Invoice</span>
+                                        </button>
+                                    </template>
+                                    <template if:false={order.hasInvoice}>
+                                        <div class="invoice-actions">
+                                            <button class="btn-invoice btn-invoice-create" data-id={order.id}
+                                                onclick={handleCreateInvoice} title="Generate Invoice PDF">
+                                                <lightning-icon icon-name="utility:new"
+                                                    size="xx-small"></lightning-icon>
+                                                <span>Create</span>
+                                            </button>
+                                            <button class="btn-invoice btn-invoice-upload" data-id={order.id}
+                                                onclick={handleUploadClick} title="Upload Invoice">
+                                                <lightning-icon icon-name="utility:upload"
+                                                    size="xx-small"></lightning-icon>
+                                                <span>Upload</span>
+                                            </button>
+                                        </div>
+                                    </template>
+                                </template>
                             </div>
                         </div>
 
@@ -163,9 +204,11 @@
                                                         <template for:each={comm.detailFields} for:item="f">
                                                             <td key={f.apiName} class="text-gray">{f.displayValue}</td>
                                                         </template>
-                                                        <td class="fw-bold text-teal">{comm.commissionAmountDisplay}</td>
+                                                        <td class="fw-bold text-teal">{comm.commissionAmountDisplay}
+                                                        </td>
                                                         <td>
-                                                            <span class="pill" data-tone={comm.statusTone}>{comm.statusLabel}</span>
+                                                            <span class="pill"
+                                                                data-tone={comm.statusTone}>{comm.statusLabel}</span>
                                                         </td>
                                                     </tr>
                                                 </template>
@@ -192,4 +235,8 @@
             </template>
         </div>
     </div>
+
+    <!-- Hidden file input for invoice upload -->
+    <input type="file" class="invoice-file-input" accept=".pdf,.png,.jpg,.jpeg" onchange={handleFileSelected}
+        style="display:none;" />
 </template>

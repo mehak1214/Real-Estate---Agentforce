@@ -102,7 +102,7 @@
                 <div class="th-col">UNIT</div>
                 <div class="th-col">STATUS</div>
                 <div class="th-col">ORDER VALUE</div>
-                <div class="th-col">COMMISSION TOTAL</div>
+                <div class="th-col">COMMISSION</div>
                 <div class="th-col">INVOICE</div>
             </div>
 
@@ -138,7 +138,7 @@
                             <div class="td-col fw-bold text-dark">{order.netAmountDisplay}</div>
                             <div class="td-col commission-total-col">
                                 <span class="comm-amount-text">{order.commissionTotalDisplay}</span>
-                                <span class="comm-count-badge">{order.commissionCount}</span>
+                                <!-- <span class="comm-count-badge">{order.commissionCount}</span> -->
                             </div>
                             <div class="td-col invoice-col" onclick={stopPropagation}>
                                 <template if:true={order.invoiceLoading}>
@@ -157,12 +157,12 @@
                                     </template>
                                     <template if:false={order.hasInvoice}>
                                         <div class="invoice-actions">
-                                            <button class="btn-invoice btn-invoice-create" data-id={order.id}
+                                            <!-- <button class="btn-invoice btn-invoice-create" data-id={order.id}
                                                 onclick={handleCreateInvoice} title="Generate Invoice PDF">
                                                 <lightning-icon icon-name="utility:new"
                                                     size="xx-small"></lightning-icon>
                                                 <span>Create</span>
-                                            </button>
+                                            </button> -->
                                             <button class="btn-invoice btn-invoice-upload" data-id={order.id}
                                                 onclick={handleUploadClick} title="Upload Invoice">
                                                 <lightning-icon icon-name="utility:upload"
@@ -180,7 +180,9 @@
                             <div class="child-area">
                                 <div class="child-section-title">
                                     <lightning-icon icon-name="utility:people" size="xx-small"></lightning-icon>
-                                    <span>Broker Commissions ({order.commissionCount})</span>
+                                    <span>Broker Commissions </span>
+                                    <!-- <span>Broker Commissions ({order.commissionCount})</span> -->
+
                                 </div>
                                 <template if:true={order.hasCommissions}>
                                     <div class="child-bordered-table">

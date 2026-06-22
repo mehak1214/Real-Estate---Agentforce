@@ -139,11 +139,17 @@ public with sharing class BrokerSiteVisitRescheduleActions {
             }
 
             Site_Visit__c updatedVisit = [
-                SELECT Id, Name, Opportunity__r.Name, Sales_Rep__r.Name, Start_Time__c, End_Time__c
+                SELECT Id, Name, Opportunity__c, Opportunity__r.Name, Sales_Rep__r.Name, Start_Time__c, End_Time__c
                 FROM Site_Visit__c
                 WHERE Id = :siteVisit.Id
                 LIMIT 1
             ];
+
+            // Update Opportunity visit status to Scheduled
+            if(updatedVisit.Opportunity__c != null) {
+                Opportunity oppToUpdate = new Opportunity(Id = updatedVisit.Opportunity__c, visit_status__c = 'Scheduled');
+                Database.update(oppToUpdate, false);
+            }
 
             response.siteVisitId = updatedVisit.Id;
             response.siteVisitName = updatedVisit.Name;

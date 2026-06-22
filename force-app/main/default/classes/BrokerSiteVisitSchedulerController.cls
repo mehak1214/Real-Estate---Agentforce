@@ -277,6 +277,10 @@ public with sharing class BrokerSiteVisitSchedulerController {
         siteVisit.Lead_Source_Major__c = 'Channel Partner';
         insert siteVisit;
 
+        // Update Opportunity visit status to Scheduled
+        convertedOpportunity.site_visit_status__c = 'Scheduled';
+        update convertedOpportunity;
+
         Site_Visit__c insertedVisit = [
             SELECT Id, Name
             FROM Site_Visit__c

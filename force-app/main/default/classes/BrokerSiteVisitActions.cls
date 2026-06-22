@@ -177,6 +177,10 @@ public with sharing class BrokerSiteVisitActions {
                 return responses;
             }
 
+            // Update Opportunity visit status to Scheduled
+            Opportunity oppToUpdate = new Opportunity(Id = opportunity.Id, visit_status__c = 'Scheduled');
+            Database.update(oppToUpdate, false);
+
             Site_Visit__c insertedVisit = [
                 SELECT Id, Name
                 FROM Site_Visit__c

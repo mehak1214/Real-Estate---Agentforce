@@ -38,8 +38,8 @@ public with sharing class BrokerLeadCreationActions {
         public String relatedUnitId;
         */
 
-        @InvocableVariable(label='Typology' required=false description='Typology the buyer is interested in')
-        public String typology;
+        @InvocableVariable(label='Configuration' required=false description='Configuration the buyer is interested in')
+        public String configuration;
         
         @InvocableVariable(label='Budget' required=false description='Budget if available (in Lac or currency)')
         public String budget;
@@ -198,9 +198,9 @@ public with sharing class BrokerLeadCreationActions {
             }
             */
 
-            if (String.isNotBlank(input.typology)
-                && Schema.sObjectType.Lead.fields.getMap().containsKey('Typology__c')) {
-                newLead.put('Typology__c', input.typology.trim());
+            if (String.isNotBlank(input.configuration)
+                && Schema.sObjectType.Lead.fields.getMap().containsKey('Configuration__c')) {
+                newLead.put('Configuration__c', input.configuration.trim());
             }
             
             if (String.isNotBlank(input.budget)) {

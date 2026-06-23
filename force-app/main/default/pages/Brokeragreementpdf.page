@@ -1,45 +1,35 @@
 <apex:page renderAs="pdf" controller="BrokerAgreementPdfController" showHeader="false" sidebar="false" applyBodyTag="false" standardStylesheets="false">
 <html>
 <head>
-<style>
-    @page {
-        size: A4;
-        margin: 55px 65px 90px 65px;
-    }
+<style type="text/css">
+@page {
+    size: A4;
+    margin-top: 20mm;
+    margin-right: 15mm;
+    margin-left: 15mm;
+    margin-bottom: 30mm;
 
-    body {
-        font-family: Arial, sans-serif;
-        font-size: 10.5pt;
-        color: #000;
-        line-height: 1.55;
+    @bottom-center {
+        content: element(pageFooter);
+        vertical-align: bottom;
     }
+}
+    
 
-    #page-footer {
-        position: fixed;
-        left: 0;
-        right: 0;
-        bottom: 20px;
-        font-size: 8pt;
-        font-weight: bold;
-        text-align: center;
-        color: #000;
-        line-height: 1.5;
-        z-index: 1000;
-    }
 
-    #page-footer .page-line:before {
-        content: "Page " counter(page) " of " counter(pages);
-    }
-
-    .bold      { font-weight: bold; }
-    .underline { text-decoration: underline; }
 </style>
 </head>
+
 <body>
+
+
+
+
 
 <!-- ═══════════════════════════════════════════════════════
      PAGE 1 – COVER
 ═══════════════════════════════════════════════════════ -->
+    
 <div style="position: relative; height: 230mm; page-break-after: always; overflow: hidden;">
 
     <!-- Logo: top-left, large -->
@@ -55,21 +45,23 @@
 
         <div style="text-align: center; font-size: 10.5pt; font-weight: normal; margin-bottom: 30px;">between</div>
 
-        <div style="text-align: center; font-size: 14pt; font-weight: bold; margin-bottom: 30px;">IMTIAZ DEVELOPMENTS LLC</div>
+        <div style="text-align: center; font-size: 14pt; font-weight: bold; margin-bottom: 30px;">Tiger Group</div>
 
         <div style="text-align: center; font-size: 10.5pt; font-weight: bold; margin-bottom: 30px;">And</div>
 
         <div style="text-align: center; font-size: 14pt; font-weight: bold; margin-bottom: 30px;"><apex:outputText value="{!brokerApp.Name}" /></div>
+      
+        
+    
     </div>
+    
+    
+    
+
 
 </div>
 
-<!-- PAGE FOOTER (all pages) -->
-<div id="page-footer">
-    <div class="page-line"></div>
-    <apex:outputText value="{!brokerApp.Name}" /><br/>
-    <apex:outputText value="{!brokerApp.CommercialLicenseNumber__c}" />
-</div>
+
 
 <!-- ═══════════════════════════════════════════════════════
      PAGE 2 – PARTIES + BACKGROUND
@@ -116,7 +108,7 @@
     </tr>
     <tr>
         <td style="border: 1px solid #000; padding: 5px 9px; font-weight: bold; width: 34%;">Bank Name:</td>
-        <td style="border: 1px solid #000; padding: 5px 9px;"><apex:outputText value="{!brokerApp.BankName__c}" /></td>
+        <td style="border: 1px solid #000; padding: 5px 9px;"><apex:outputText value="{!brokerApp.BankNameValue__c}" /></td>
     </tr>
     <tr>
         <td style="border: 1px solid #000; padding: 5px 9px; font-weight: bold; width: 34%;">Account no.:</td>
@@ -154,9 +146,27 @@
 
 <div style="text-align: right; font-size: 8.5pt; margin-top: 12px; margin-bottom: 4px;">Initial and Stamp of the Agent</div>
 
+
+
+<div id="page-footer"
+     style="position:fixed;
+            bottom:10px;
+            left:0;
+            width:100%;
+            text-align:center;
+            font-size:8pt;
+            font-weight:bold;">
+
+    <div class="page-line">
+        
+    </div>
+
+    <apex:outputText value="{!brokerApp.Name}" /><br/>
+
+    <apex:outputText value="{!brokerApp.CommercialLicenseNumber__c}" />
+
+</div>
 <div style="page-break-after: always;"></div>
-
-
 <!-- ═══════════════════════════════════════════════════════
      PAGE 3 – AGREED TERMS / CLAUSE 1 (first half)
 ═══════════════════════════════════════════════════════ -->
@@ -233,9 +243,11 @@
 
 <div style="text-align: right; font-size: 8.5pt; margin-top: 12px; margin-bottom: 4px;">Initial and Stamp of the Agent</div>
 
+
+
+
+
 <div style="page-break-after: always;"></div>
-
-
 <!-- ═══════════════════════════════════════════════════════
      PAGE 4 – CLAUSE 1 (second half) + CLAUSE 2
 ═══════════════════════════════════════════════════════ -->
@@ -311,9 +323,10 @@
 
 <div style="text-align: right; font-size: 8.5pt; margin-top: 12px; margin-bottom: 4px;">Initial and Stamp of the Agent</div>
 
+
+
+
 <div style="page-break-after: always;"></div>
-
-
 <!-- ═══════════════════════════════════════════════════════
      PAGE 5 – CLAUSE 3
 ═══════════════════════════════════════════════════════ -->
@@ -382,9 +395,9 @@
 
 <div style="text-align: right; font-size: 8.5pt; margin-top: 12px; margin-bottom: 4px;">Initial and Stamp of the Agent</div>
 
+
+
 <div style="page-break-after: always;"></div>
-
-
 <!-- ═══════════════════════════════════════════════════════
      PAGE 6 – CLAUSE 4 obligations
 ═══════════════════════════════════════════════════════ -->
@@ -461,9 +474,10 @@
 
 <div style="text-align: right; font-size: 8.5pt; margin-top: 12px; margin-bottom: 4px;">Initial and Stamp of the Agent</div>
 
+
+
+
 <div style="page-break-after: always;"></div>
-
-
 <!-- ═══════════════════════════════════════════════════════
      PAGE 7 – CLAUSE 4(c) + CLAUSES 5 + 6
 ═══════════════════════════════════════════════════════ -->
@@ -541,9 +555,10 @@
 
 <div style="text-align: right; font-size: 8.5pt; margin-top: 12px; margin-bottom: 4px;">Initial and Stamp of the Agent</div>
 
+
+
+
 <div style="page-break-after: always;"></div>
-
-
 <!-- ═══════════════════════════════════════════════════════
      PAGE 8 – CLAUSE 6(cont) + CLAUSES 7–10
 ═══════════════════════════════════════════════════════ -->
@@ -613,8 +628,10 @@
 
 <div style="text-align: right; font-size: 8.5pt; margin-top: 12px; margin-bottom: 4px;">Initial and Stamp of the Agent</div>
 
-<div style="page-break-after: always;"></div>
 
+
+
+<div style="page-break-after: always;"></div>
 
 <!-- ═══════════════════════════════════════════════════════
      PAGE 9 – CLAUSES 11–13 + SIGNATURES
@@ -650,38 +667,64 @@
 
 <div style="text-align: right; font-size: 8.5pt; margin-top: 12px; margin-bottom: 4px;">Initial and Stamp of the Agent</div>
 
-<!-- SIGNATURE TABLE -->
-<table style="width: 100%; border-collapse: collapse; margin-top: 24px; font-size: 10pt;">
+<table style="width:100%; border-collapse:collapse; font-size:10pt; margin-top:20px;">
+
+    <!-- Row 1 -->
     <tr>
-        <td style="border: 1px solid #000; padding: 11px 13px; width: 50%; vertical-align: top;">
-            <p>For, and on behalf of, the <span class="bold">Developer</span> and its
-            <span class="bold">Subsidiaries</span>:</p>
-            <p style="margin-top:8px;">Represented by:</p>
-            <p style="margin-top:6px;">Designation:</p>
-            <p style="margin-top:6px;">Signature &amp; Stamp:</p>
-            <div style="height: 70px;"></div>
+        <td style="border:1px solid #000; padding:10px; width:40%; vertical-align:top;">
+            For, and on behalf of, the <b>Developer</b> and its
+            <b>Subsidiaries</b>:
         </td>
-        <td style="border: 1px solid #000; padding: 11px 13px; width: 50%; vertical-align: top;">
-            <p>
-                Broker:&#160;<span class="bold"><apex:outputText value="{!brokerApp.Name}" /></span>
-            </p>
-            <p style="margin-top:8px;">
-                Represented by:&#160;<span class="bold">
-                    <apex:outputText value="{!IF(applicant != null, applicant.Name, '')}" />
-                </span>
-            </p>
-            <p style="margin-top:6px;">
-                Designation:&#160;<span class="bold">
-                    <apex:outputText value="{!IF(applicant != null, applicant.Designation__c, '')}" />
-                </span>
-            </p>
-            <p style="margin-top:6px;">Signature &amp; Stamp:</p>
-            <div style="height: 70px;"></div>
+
+        <td style="border:1px solid #000; padding:10px; width:60%; vertical-align:top;">
+            <b>Broker: <apex:outputText value="{!brokerApp.Name}" /></b>
         </td>
     </tr>
+
+    <!-- Row 2 -->
+    <tr>
+        <td style="border:1px solid #000; padding:10px; height:45px;">
+            Represented by:
+        </td>
+
+        <td style="border:1px solid #000; padding:10px;">
+            Represented by:
+            <b>
+                <apex:outputText value="{!IF(applicant != null, applicant.Name, '')}" />
+            </b>
+        </td>
+    </tr>
+
+    <!-- Row 3 -->
+    <tr>
+        <td style="border:1px solid #000; padding:10px; height:45px;">
+            Designation:
+        </td>
+
+        <td style="border:1px solid #000; padding:10px;">
+            Designation:
+            <b>
+                <apex:outputText value="{!IF(applicant != null, applicant.Designation__c, '')}" />
+            </b>
+        </td>
+    </tr>
+
+    <!-- Row 4 - Signature Area -->
+    <tr>
+        <td style="border:1px solid #000; height:180px; vertical-align:bottom; padding:10px;">
+            Signature &amp; Stamp:
+        </td>
+
+        <td style="border:1px solid #000; height:180px; vertical-align:bottom; padding:10px;">
+            Signature &amp; Stamp:
+        </td>
+    </tr>
+
 </table>
 
 <div style="text-align: right; font-size: 8.5pt; margin-top: 14px; margin-bottom: 4px;">Initial and Stamp of the Agent</div>
+ 
+
 
 </body>
 </html>

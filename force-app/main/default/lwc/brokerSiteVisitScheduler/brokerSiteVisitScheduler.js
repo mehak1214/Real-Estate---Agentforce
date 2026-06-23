@@ -8,15 +8,13 @@ export default class BrokerSiteVisitScheduler extends LightningElement {
     @api leadId;
 
     @track projectOptions = [];
-    @track configurationOptions = [];
     @track slotOptions = [];
+    @track salesManagerOptions = [];
 
     projectId;
-    salesManagerName = '';
-    reportingManagerName = '';
+    selectedSalesManagerId;
     visitDate;
     availableSlot;
-    configuration;
     budget;
     isLoading = false;
     isSaving = false;
@@ -25,21 +23,24 @@ export default class BrokerSiteVisitScheduler extends LightningElement {
         this.loadDefaults();
     }
 
-    get salesManagerDisplay() {
-        if (!this.salesManagerName) {
-            return 'Not assigned';
-        }
-        return this.reportingManagerName
-            ? `${this.salesManagerName} (${this.reportingManagerName})`
-            : this.salesManagerName;
-    }
-
     get disableSlotSelection() {
-        return this.isLoading || !this.visitDate || !this.projectId || this.slotOptions.length === 0;
+        return (
+            this.isLoading ||
+            !this.visitDate ||
+            !this.projectId ||
+            !this.selectedSalesManagerId ||
+            this.slotOptions.length === 0
+        );
     }
 
     get disableSave() {
-        return this.isSaving || !this.projectId || !this.visitDate || !this.availableSlot || !this.configuration;
+        return (
+            this.isSaving ||
+            !this.projectId ||
+            !this.selectedSalesManagerId ||
+            !this.visitDate ||
+            !this.availableSlot
+        );
     }
 
     loadDefaults() {
@@ -47,11 +48,8 @@ export default class BrokerSiteVisitScheduler extends LightningElement {
         getSiteVisitDefaults({ leadId: this.leadId })
             .then((data) => {
                 this.projectOptions = data.projectOptions || [];
-                this.configurationOptions = data.configurationOptions || [];
+                this.salesManagerOptions = data.salesManagerOptions || [];
                 this.projectId = data.projectId;
-                this.salesManagerName = data.salesManagerName;
-                this.reportingManagerName = data.reportingManagerName;
-                this.configuration = data.configuration;
                 this.budget = data.budget;
             })
             .catch((error) => this.showError(error))
@@ -63,7 +61,7 @@ export default class BrokerSiteVisitScheduler extends LightningElement {
     refreshSlots() {
         this.availableSlot = null;
         this.slotOptions = [];
-        if (!this.visitDate || !this.projectId) {
+        if (!this.visitDate || !this.projectId || !this.selectedSalesManagerId) {
             return;
         }
 
@@ -71,7 +69,8 @@ export default class BrokerSiteVisitScheduler extends LightningElement {
         getAvailableSlots({
             leadId: this.leadId,
             projectId: this.projectId,
-            visitDate: this.visitDate
+            visitDate: this.visitDate,
+            salesManagerId: this.selectedSalesManagerId
         })
             .then((slots) => {
                 this.slotOptions = (slots || []).map((slot) => ({
@@ -81,7 +80,7 @@ export default class BrokerSiteVisitScheduler extends LightningElement {
                 if (this.slotOptions.length === 0) {
                     this.dispatchEvent(new ShowToastEvent({
                         title: 'No Slots',
-                        message: 'No available slots found for this sales manager and date.',
+                        message: 'No available slots found for the selected sales manager and date.',
                         variant: 'warning'
                     }));
                 }
@@ -97,6 +96,13 @@ export default class BrokerSiteVisitScheduler extends LightningElement {
         this.refreshSlots();
     }
 
+    handleSalesManagerChange(event) {
+        this.selectedSalesManagerId = event.detail.value;
+        this.availableSlot = null;
+        this.slotOptions = [];
+        this.refreshSlots();
+    }
+
     handleDateChange(event) {
         this.visitDate = event.detail.value;
         this.refreshSlots();
@@ -107,7 +113,7 @@ export default class BrokerSiteVisitScheduler extends LightningElement {
     }
 
     handleConfigurationChange(event) {
-        this.configuration = event.detail.value;
+        // configuration removed – no-op kept for safety
     }
 
     handleBudgetChange(event) {
@@ -125,8 +131,8 @@ export default class BrokerSiteVisitScheduler extends LightningElement {
             projectId: this.projectId,
             visitDate: this.visitDate,
             availableSlot: this.availableSlot,
-            configuration: this.configuration,
-            budget: this.budget
+            budget: this.budget,
+            salesManagerId: this.selectedSalesManagerId
         })
             .then((result) => {
                 this.dispatchEvent(new ShowToastEvent({

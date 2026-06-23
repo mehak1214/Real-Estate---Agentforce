@@ -15,13 +15,9 @@ public with sharing class BrokerSiteVisitSchedulerController {
         @AuraEnabled public Id leadId;
         @AuraEnabled public Id projectId;
         @AuraEnabled public String projectName;
-        @AuraEnabled public Id salesManagerId;
-        @AuraEnabled public String salesManagerName;
-        @AuraEnabled public String reportingManagerName;
-        @AuraEnabled public String configuration;
         @AuraEnabled public String budget;
         @AuraEnabled public List<OptionDTO> projectOptions;
-        @AuraEnabled public List<OptionDTO> configurationOptions;
+        @AuraEnabled public List<OptionDTO> salesManagerOptions;
     }
 
     public class SlotDTO {
@@ -39,11 +35,9 @@ public with sharing class BrokerSiteVisitSchedulerController {
         @AuraEnabled public String message;
     }
 
-    private class SalesManagerContext {
-        Id userId;
-        String userName;
-        String reportingManagerName;
-    }
+    // ─────────────────────────────────────────────────────────────────────────
+    // Public API
+    // ─────────────────────────────────────────────────────────────────────────
 
     @AuraEnabled(cacheable=true)
     public static SiteVisitDefaultsDTO getSiteVisitDefaults(Id leadId) {
@@ -52,48 +46,45 @@ public with sharing class BrokerSiteVisitSchedulerController {
         }
 
         Lead leadRecord = [
-            SELECT Id, Project__c, Project__r.Name, Configuration_interested_in__c, Budget__c,
+            SELECT Id, Project__c, Project__r.Name, Budget__c,
                 OwnerId
             FROM Lead
             WHERE Id = :leadId
             LIMIT 1
         ];
 
-        SalesManagerContext salesManager = resolveSalesManager(leadRecord);
-
         SiteVisitDefaultsDTO defaults = new SiteVisitDefaultsDTO();
         defaults.leadId = leadRecord.Id;
         defaults.projectId = leadRecord.Project__c;
         defaults.projectName = leadRecord.Project__r == null ? null : leadRecord.Project__r.Name;
-        defaults.salesManagerId = salesManager == null ? null : salesManager.userId;
-        defaults.salesManagerName = salesManager == null ? null : salesManager.userName;
-        if(salesManager != null) {
-            defaults.reportingManagerName = salesManager.reportingManagerName;
-        }
-        defaults.configuration = leadRecord.Configuration_interested_in__c;
         defaults.budget = leadRecord.Budget__c;
         defaults.projectOptions = getActiveProjectOptions();
-        defaults.configurationOptions = getPicklistOptions(Site_Visit__c.Configuration__c);
+        defaults.salesManagerOptions = getSalesManagerOptionsList();
         return defaults;
     }
 
+    /**
+     * Returns users who have at least one active Site_Visit_Availability__c record.
+     * Used to populate the Sales Manager dropdown in the LWC.
+     */
     @AuraEnabled(cacheable=true)
-    public static List<SlotDTO> getAvailableSlots(Id leadId, Id projectId, Date visitDate) {
+    public static List<OptionDTO> getSalesManagerOptions() {
+        return getSalesManagerOptionsList();
+    }
+
+    /**
+     * Returns available slots for a given sales manager, date, and project.
+     * salesManagerId is now explicit – driven by the LWC dropdown.
+     */
+    @AuraEnabled(cacheable=true)
+    public static List<SlotDTO> getAvailableSlots(Id leadId, Id projectId, Date visitDate, Id salesManagerId) {
         if(leadId == null) {
             throw new AuraHandledException('Lead is required.');
         }
-        if(visitDate == null) {
-            return new List<SlotDTO>();
+        if(salesManagerId == null) {
+            throw new AuraHandledException('Sales Manager is required.');
         }
-
-        Lead leadRecord = [
-            SELECT Id, OwnerId
-            FROM Lead
-            WHERE Id = :leadId
-            LIMIT 1
-        ];
-        SalesManagerContext salesManager = resolveSalesManager(leadRecord);
-        if(salesManager == null) {
+        if(visitDate == null) {
             return new List<SlotDTO>();
         }
 
@@ -104,7 +95,7 @@ public with sharing class BrokerSiteVisitSchedulerController {
         for(Site_Visit_Availability__c availability : [
             SELECT Available_Slots__c
             FROM Site_Visit_Availability__c
-            WHERE Sales_Manager__c = :salesManager.userId
+            WHERE Sales_Manager__c = :salesManagerId
               AND (Status__c = 'Available' OR Status__c = null)
               AND Start_Time__c < :dayEnd
               AND End_Time__c > :dayStart
@@ -125,7 +116,7 @@ public with sharing class BrokerSiteVisitSchedulerController {
             Integer bookedCount = [
                 SELECT COUNT()
                 FROM Site_Visit__c
-                WHERE Sales_Manager__c = :salesManager.userId
+                WHERE Sales_Manager__c = :salesManagerId
                   AND Scheduled_Date__c = :visitDate
                   AND Start_Time__c = :slotRange.startTime
                   AND End_Time__c = :slotRange.endTime
@@ -156,11 +147,11 @@ public with sharing class BrokerSiteVisitSchedulerController {
         Id projectId,
         Date visitDate,
         String availableSlot,
-        String configuration,
-        String budget
+        String budget,
+        Id salesManagerId
     ) {
         try {
-            return createSiteVisitFromLeadInternal(leadId, projectId, visitDate, availableSlot, configuration, budget);
+            return createSiteVisitFromLeadInternal(leadId, projectId, visitDate, availableSlot, budget, salesManagerId);
         } catch(AuraHandledException e) {
             throw e;
         } catch(DmlException e) {
@@ -170,13 +161,17 @@ public with sharing class BrokerSiteVisitSchedulerController {
         }
     }
 
+    // ─────────────────────────────────────────────────────────────────────────
+    // Private helpers
+    // ─────────────────────────────────────────────────────────────────────────
+
     private static SiteVisitBookingResultDTO createSiteVisitFromLeadInternal(
         Id leadId,
         Id projectId,
         Date visitDate,
         String availableSlot,
-        String configuration,
-        String budget
+        String budget,
+        Id salesManagerId
     ) {
         if(leadId == null) {
             throw new AuraHandledException('Lead is required.');
@@ -190,10 +185,17 @@ public with sharing class BrokerSiteVisitSchedulerController {
         if(String.isBlank(availableSlot)) {
             throw new AuraHandledException('Available Slot is required.');
         }
+        if(salesManagerId == null) {
+            throw new AuraHandledException('Sales Manager is required.');
+        }
 
         Lead leadRecord = [
-            SELECT Id, IsConverted, Channel_Partner__c, Project__c, Configuration_interested_in__c,
-                Budget__c, OwnerId
+            SELECT Id, IsConverted, OwnerId, FirstName, LastName, Company,
+                Phone, MobilePhone, Email, Website,
+                LeadSource, Rating, Industry, NumberOfEmployees, AnnualRevenue,
+                Description, Title, Salutation,
+                Street, City, State, PostalCode, Country,
+                Channel_Partner__c, Project__c, Budget__c
             FROM Lead
             WHERE Id = :leadId
             LIMIT 1
@@ -202,23 +204,18 @@ public with sharing class BrokerSiteVisitSchedulerController {
             throw new AuraHandledException('This Lead is already converted.');
         }
 
-        SalesManagerContext salesManager = resolveSalesManager(leadRecord);
-        if(salesManager == null) {
-            throw new AuraHandledException('No Sales Manager is available for this broker Lead.');
-        }
-
         SlotRange slotRange = parseSlotRange(visitDate, availableSlot);
         if(slotRange == null) {
             throw new AuraHandledException('Selected slot is not valid.');
         }
-        if(!isConfiguredAvailableSlot(salesManager.userId, visitDate, availableSlot)) {
+        if(!isConfiguredAvailableSlot(salesManagerId, visitDate, availableSlot)) {
             throw new AuraHandledException('Selected slot is not available for this Sales Manager.');
         }
 
         Integer bookedCount = [
             SELECT COUNT()
             FROM Site_Visit__c
-            WHERE Sales_Manager__c = :salesManager.userId
+            WHERE Sales_Manager__c = :salesManagerId
               AND Scheduled_Date__c = :visitDate
               AND Start_Time__c = :slotRange.startTime
               AND End_Time__c = :slotRange.endTime
@@ -230,11 +227,24 @@ public with sharing class BrokerSiteVisitSchedulerController {
 
         Id brokerContactId = resolveBrokerContactId();
 
+        // Use lead's full name (FirstName + LastName) as Company so the resulting
+        // Account and Opportunity are named after the full person name.
+        // The Contact is still created from the lead's own FirstName + LastName.
+        String fullName = '';
+        if(String.isNotBlank(leadRecord.FirstName)) {
+            fullName = leadRecord.FirstName.trim();
+        }
+        if(String.isNotBlank(leadRecord.LastName)) {
+            fullName = String.isBlank(fullName) ? leadRecord.LastName.trim() : fullName + ' ' + leadRecord.LastName.trim();
+        }
+        if(String.isNotBlank(fullName)) {
+            leadRecord.Company = fullName;
+        }
         leadRecord.Project__c = projectId;
-        leadRecord.Configuration_interested_in__c = configuration;
         leadRecord.Budget__c = budget;
         update leadRecord;
 
+        // Convert lead – Salesforce uses the Company field for Account/Opportunity name.
         Database.LeadConvert leadConvert = new Database.LeadConvert();
         leadConvert.setLeadId(leadRecord.Id);
         leadConvert.setDoNotCreateOpportunity(false);
@@ -253,11 +263,80 @@ public with sharing class BrokerSiteVisitSchedulerController {
         ];
         convertedOpportunity.Project__c = projectId;
         convertedOpportunity.Channel_Partner__c = leadRecord.Channel_Partner__c;
-        convertedOpportunity.Primary_Contact__c = convertedContactId;
-        convertedOpportunity.Configuration_interested_in__c = configuration;
+        convertedOpportunity.Primary_Contact__c = brokerContactId;
         convertedOpportunity.Budget__c = budget;
+        if(String.isNotBlank(leadRecord.LeadSource)) {
+            convertedOpportunity.LeadSource = leadRecord.LeadSource;
+        }
+        if(String.isNotBlank(leadRecord.Description)) {
+            convertedOpportunity.Description = leadRecord.Description;
+        }
         putIfFieldExists(convertedOpportunity, 'BrokerAgentContact__c', brokerContactId);
+        putIfFieldExists(convertedOpportunity, 'Phone__c', leadRecord.Phone);
+        putIfFieldExists(convertedOpportunity, 'Mobile__c', leadRecord.MobilePhone);
         update convertedOpportunity;
+
+        // Update the converted Account with all available lead address / profile data.
+        Account convertedAccount = [
+            SELECT Id
+            FROM Account
+            WHERE Id = :convertResult.getAccountId()
+            LIMIT 1
+        ];
+        if(String.isNotBlank(leadRecord.Phone)) {
+            convertedAccount.Phone = leadRecord.Phone;
+        }
+        if(String.isNotBlank(leadRecord.Website)) {
+            convertedAccount.Website = leadRecord.Website;
+        }
+        if(String.isNotBlank(leadRecord.Industry)) {
+            convertedAccount.Industry = leadRecord.Industry;
+        }
+        if(leadRecord.NumberOfEmployees != null) {
+            convertedAccount.NumberOfEmployees = leadRecord.NumberOfEmployees;
+        }
+        if(leadRecord.AnnualRevenue != null) {
+            convertedAccount.AnnualRevenue = leadRecord.AnnualRevenue;
+        }
+        if(String.isNotBlank(leadRecord.Description)) {
+            convertedAccount.Description = leadRecord.Description;
+        }
+        if(String.isNotBlank(leadRecord.Rating)) {
+            convertedAccount.Rating = leadRecord.Rating;
+        }
+        if(String.isNotBlank(leadRecord.Street)) {
+            convertedAccount.BillingStreet = leadRecord.Street;
+        }
+        if(String.isNotBlank(leadRecord.City)) {
+            convertedAccount.BillingCity = leadRecord.City;
+        }
+        if(String.isNotBlank(leadRecord.State)) {
+            convertedAccount.BillingState = leadRecord.State;
+        }
+        if(String.isNotBlank(leadRecord.PostalCode)) {
+            convertedAccount.BillingPostalCode = leadRecord.PostalCode;
+        }
+        if(String.isNotBlank(leadRecord.Country)) {
+            convertedAccount.BillingCountry = leadRecord.Country;
+        }
+        update convertedAccount;
+
+        // Explicitly set Phone, MobilePhone and Email on the Contact from the lead
+        // (standard convert maps these, but we do it explicitly to be certain).
+        Contact convertedContact = new Contact(Id = convertedContactId);
+        if(String.isNotBlank(leadRecord.Phone)) {
+            convertedContact.Phone = leadRecord.Phone;
+        }
+        if(String.isNotBlank(leadRecord.MobilePhone)) {
+            convertedContact.MobilePhone = leadRecord.MobilePhone;
+        }
+        if(String.isNotBlank(leadRecord.Email)) {
+            convertedContact.Email = leadRecord.Email;
+        }
+        if(String.isNotBlank(leadRecord.Title)) {
+            convertedContact.Title = leadRecord.Title;
+        }
+        update convertedContact;
 
         Site_Visit__c siteVisit = new Site_Visit__c();
         siteVisit.Lead__c = leadRecord.Id;
@@ -266,11 +345,10 @@ public with sharing class BrokerSiteVisitSchedulerController {
         siteVisit.Contact__c = convertedContactId;
         siteVisit.Broker__c = brokerContactId;
         siteVisit.Project__c = projectId;
-        siteVisit.Sales_Manager__c = salesManager.userId;
+        siteVisit.Sales_Manager__c = salesManagerId;
         siteVisit.Scheduled_Date__c = visitDate;
         siteVisit.Start_Time__c = slotRange.startTime;
         siteVisit.End_Time__c = slotRange.endTime;
-        siteVisit.Configuration__c = configuration;
         siteVisit.Budget_in_Lac__c = budget;
         siteVisit.Visit_Status__c = 'Scheduled';
         siteVisit.Visit_Type__c = 'Site Visit';
@@ -297,6 +375,36 @@ public with sharing class BrokerSiteVisitSchedulerController {
         return result;
     }
 
+    private static List<OptionDTO> getSalesManagerOptionsList() {
+        // Collect distinct Sales_Manager__c user IDs from availability records.
+        Set<Id> managerUserIds = new Set<Id>();
+        for(Site_Visit_Availability__c avail : [
+            SELECT Sales_Manager__c
+            FROM Site_Visit_Availability__c
+            WHERE Sales_Manager__c != null
+              AND (Status__c = 'Available' OR Status__c = null)
+        ]) {
+            managerUserIds.add(avail.Sales_Manager__c);
+        }
+
+        List<OptionDTO> options = new List<OptionDTO>();
+        if(managerUserIds.isEmpty()) {
+            return options;
+        }
+
+        for(User u : [
+            SELECT Id, FirstName, LastName
+            FROM User
+            WHERE Id IN :managerUserIds
+              AND IsActive = true
+            ORDER BY FirstName, LastName
+        ]) {
+            String label = (String.isNotBlank(u.FirstName) ? u.FirstName + ' ' : '') + u.LastName;
+            options.add(new OptionDTO(label.trim(), u.Id));
+        }
+        return options;
+    }
+
     private static String formatDmlException(DmlException e) {
         List<String> messages = new List<String>();
         for(Integer i = 0; i < e.getNumDml(); i++) {
@@ -308,39 +416,6 @@ public with sharing class BrokerSiteVisitSchedulerController {
         return messages.isEmpty()
             ? 'Unable to schedule site visit: ' + e.getMessage()
             : 'Unable to schedule site visit: ' + String.join(messages, ' ');
-    }
-
-    private static SalesManagerContext resolveSalesManager(Lead leadRecord) {
-        if(leadRecord == null || leadRecord.OwnerId == null || leadRecord.OwnerId.getSObjectType() != User.SObjectType) {
-            return null;
-        }
-
-        User ownerUser = [
-            SELECT Id, FirstName, LastName, Name, Manager.FirstName, Manager.LastName, Manager.Name
-            FROM User
-            WHERE Id = :leadRecord.OwnerId
-            LIMIT 1
-        ];
-
-        SalesManagerContext context = new SalesManagerContext();
-        context.userId = ownerUser.Id;
-        context.userName = buildUserDisplayName(ownerUser);
-        context.reportingManagerName = ownerUser.Manager == null ? null : buildUserDisplayName(ownerUser.Manager);
-        return context;
-    }
-
-    private static String buildUserDisplayName(User userRecord) {
-        if(userRecord == null) {
-            return null;
-        }
-        String fullName = '';
-        if(String.isNotBlank(userRecord.FirstName)) {
-            fullName += userRecord.FirstName.trim();
-        }
-        if(String.isNotBlank(userRecord.LastName)) {
-            fullName += String.isBlank(fullName) ? userRecord.LastName.trim() : ' ' + userRecord.LastName.trim();
-        }
-        return String.isBlank(fullName) ? userRecord.Name : fullName;
     }
 
     private static Id resolveBrokerContactId() {

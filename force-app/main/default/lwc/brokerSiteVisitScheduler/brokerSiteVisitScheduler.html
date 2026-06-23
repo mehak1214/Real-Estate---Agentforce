@@ -20,14 +20,17 @@
                         value={projectId}
                         options={projectOptions}
                         onchange={handleProjectChange}
+                        disabled
                         required>
                     </lightning-combobox>
 
-                    <lightning-input
+                    <lightning-combobox
                         label="Sales Manager"
-                        value={salesManagerDisplay}
-                        disabled>
-                    </lightning-input>
+                        value={selectedSalesManagerId}
+                        options={salesManagerOptions}
+                        onchange={handleSalesManagerChange}
+                        required>
+                    </lightning-combobox>
 
                     <lightning-input
                         label="Site Visit Date"
@@ -46,18 +49,11 @@
                         required>
                     </lightning-combobox>
 
-                    <lightning-combobox
-                        label="Configuration"
-                        value={configuration}
-                        options={configurationOptions}
-                        onchange={handleConfigurationChange}
-                        required>
-                    </lightning-combobox>
 
                     <lightning-input
                         label="Budget"
                         value={budget}
-                        onchange={handleBudgetChange}>
+                        disabled>
                     </lightning-input>
                 </div>
             </div>

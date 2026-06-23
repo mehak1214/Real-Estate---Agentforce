@@ -16,8 +16,6 @@ public with sharing class BrokerLeadCreationActions {
         
         @InvocableVariable(label='Mobile' required=true description='Buyer mobile number')
         public String mobile;
-
-        // phone removed: only `mobile` is captured now
         
         @InvocableVariable(label='Email' required=false description='Buyer email address')
         public String email;
@@ -30,13 +28,9 @@ public with sharing class BrokerLeadCreationActions {
 
         @InvocableVariable(label='Lead Type' required=false description='Lead type: Enquiry or Booking')
         public String leadType;
-        
-        // project and unit removed: typology is captured now
 
-        /*
-        @InvocableVariable(label='Unit' required=false description='Unit Id or unit name the buyer is interested in')
-        public String relatedUnitId;
-        */
+        @InvocableVariable(label='Project Interest' required=false description='Project Id or project name the buyer is interested in')
+        public String projectInterest;
 
         @InvocableVariable(label='Configuration' required=false description='Configuration the buyer is interested in')
         public String configuration;
@@ -62,8 +56,7 @@ public with sharing class BrokerLeadCreationActions {
     /**
      * Create a new lead for broker inquiry
      * Associates lead with logged-in broker contact and their account
-     * 
-     * @param inputs List of LeadCreateInput
+     * * @param inputs List of LeadCreateInput
      * @return List of LeadCreateOutput
      */
     @InvocableMethod(label='Create Broker Lead' 
@@ -163,18 +156,11 @@ public with sharing class BrokerLeadCreationActions {
             newLead.Purchaser__c = purchaser;
             newLead.Lead_Type__c = leadType;
             newLead.Channel_Partner__c = brokerContact.AccountId;
-            //newLead.OwnerId = '005Hn00000JIi8LIAT';
             if (Schema.sObjectType.Lead.fields.getMap().containsKey('BrokerAgentContact__c')) {
                 newLead.put('BrokerAgentContact__c', brokerContact.Id);
             }
             
             // Set optional fields
-            /* Phone assignment commented out: we only capture Mobile by design now.
-            if (String.isNotBlank(input.phone)) {
-                newLead.Phone = input.phone;
-            }
-            */
-            
             if (String.isNotBlank(input.email)) {
                 newLead.Email = input.email;
             }
@@ -184,19 +170,17 @@ public with sharing class BrokerLeadCreationActions {
                 newLead.put('Company_Name__c', input.companyName.trim());
             }
             
-            // Project and unit logic removed: leads no longer set Project__c or Related_Unit__c.
-            /*
-            if (String.isNotBlank(input.relatedUnitId)) {
-                Id unitId = resolveUnitId(input.relatedUnitId);
-                if (unitId == null) {
+            // Process Project Interest mapping
+            if (String.isNotBlank(input.projectInterest)) {
+                Id projectId = resolveProjectId(input.projectInterest);
+                if (projectId == null) {
                     output.status = 'Error';
-                    output.message = 'No unit was found for the provided Unit. Please provide a valid unit name or Unit record ID.';
+                    output.message = 'No project was found for the provided Project Interest. Please provide a valid project name or Project record ID.';
                     outputs.add(output);
-                    return outputs;
+                    return outputs; 
                 }
-                newLead.Related_Unit__c = unitId;
+                newLead.Project__c = projectId;
             }
-            */
 
             if (String.isNotBlank(input.configuration)
                 && Schema.sObjectType.Lead.fields.getMap().containsKey('Configuration__c')) {
@@ -232,7 +216,6 @@ public with sharing class BrokerLeadCreationActions {
         }
         
         // Send notification email to broker contact (outside lead creation try-catch)
-        // Email errors are logged but don't affect lead creation response
         if (output.status == 'Success' && createdLeadId != null) {
             Lead leadForEmail = queryLeadForEmail(createdLeadId);
             if (brokerContact != null && brokerContact.Id != null && leadForEmail != null) {
@@ -308,41 +291,37 @@ public with sharing class BrokerLeadCreationActions {
         return null;
     }
 
-    // resolveProjectId removed: project functionality deleted
-
-    /*
-    private static Id resolveUnitId(String unitReference) {
-        if (String.isBlank(unitReference)) {
+    private static Id resolveProjectId(String projectReference) {
+        if (String.isBlank(projectReference)) {
             return null;
         }
 
-        String trimmedReference = unitReference.trim();
+        String trimmedReference = projectReference.trim();
         Id providedId = parseId(trimmedReference);
-        if (providedId != null && providedId.getSObjectType() == Unit__c.SObjectType) {
+        if (providedId != null && providedId.getSObjectType() == Project__c.SObjectType) {
             return providedId;
         }
 
-        List<Unit__c> units = [
+        List<Project__c> projects = [
             SELECT Id
-            FROM Unit__c
+            FROM Project__c
             WHERE Name = :trimmedReference
             LIMIT 1
         ];
-        if (!units.isEmpty()) {
-            return units[0].Id;
+        if (!projects.isEmpty()) {
+            return projects[0].Id;
         }
 
-        String unitNameLike = '%' + trimmedReference + '%';
-        units = [
+        String projectNameLike = '%' + trimmedReference + '%';
+        projects = [
             SELECT Id
-            FROM Unit__c
-            WHERE Name LIKE :unitNameLike
+            FROM Project__c
+            WHERE Name LIKE :projectNameLike
             ORDER BY CreatedDate DESC
             LIMIT 1
         ];
-        return units.isEmpty() ? null : units[0].Id;
+        return projects.isEmpty() ? null : projects[0].Id;
     }
-    */
 
     private static Id parseId(String idText) {
         try {
@@ -417,7 +396,7 @@ public with sharing class BrokerLeadCreationActions {
             + '- Lead Type: ' + safeLeadType + '\n'
             + '- Status: ' + safeStatus + '\n\n'
             + 'Thank you,\n'
-            + 'Customer Support Team';
+            + 'Tiger Group Support Team';
     }
 
     /**
@@ -426,7 +405,6 @@ public with sharing class BrokerLeadCreationActions {
      */
     private static void sendLeadCreationEmail(Id contactId, Lead leadRecord) {
         try {
-            // Query contact email using the provided contactId
             Contact contact = queryContactEmail(contactId);
             if (contact == null || String.isBlank(contact.Email)) {
                 System.debug(LoggingLevel.WARN, 'Contact email not found for contact ID: ' + contactId);
@@ -468,10 +446,6 @@ public with sharing class BrokerLeadCreationActions {
         }
     }
 
-    /**
-     * Queries contact email by ID.
-     * Used for sending notifications to broker contacts.
-     */
     private static Contact queryContactEmail(Id contactId) {
         if (contactId == null) {
             return null;

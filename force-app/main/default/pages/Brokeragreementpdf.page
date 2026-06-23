@@ -34,7 +34,7 @@
 
     <!-- Logo: top-left, large -->
     <div style="display: block; width: 25%; margin-bottom: 0;">
-        <img src="{!$Resource.imteazlogo}" alt="Imtiaz Developments" style="height: 42px; width: auto; display: block; margin-top: 0;" />
+        <img src="{!$Resource.imteazlogo}" alt="TIGER GROUP" style="height: 114px; width: auto; display: block; margin-top: 0;" />
     </div>
 
     <!-- Centered content block -->
@@ -45,7 +45,7 @@
 
         <div style="text-align: center; font-size: 10.5pt; font-weight: normal; margin-bottom: 30px;">between</div>
 
-        <div style="text-align: center; font-size: 14pt; font-weight: bold; margin-bottom: 30px;">Tiger Group</div>
+        <div style="text-align: center; font-size: 14pt; font-weight: bold; margin-bottom: 30px;">TIGER GROUP DUBAI</div>
 
         <div style="text-align: center; font-size: 10.5pt; font-weight: bold; margin-bottom: 30px;">And</div>
 
@@ -67,7 +67,7 @@
      PAGE 2 – PARTIES + BACKGROUND
 ═══════════════════════════════════════════════════════ -->
 <div style="margin-bottom: 18px;">
-    <img src="{!$Resource.imteazlogo}" alt="Imtiaz Developments" style="height: 21px; width: auto;" />
+    <img src="{!$Resource.imteazlogo}" alt="Tiger Group Dubai" style="height: 58px; width: auto;" />
 </div>
 
 <p style="margin: 4px 0; text-align: justify;">
@@ -78,10 +78,9 @@
 <p style="margin: 10px 0; text-align: justify;">between:</p>
 
 <p style="margin: 10px 0; text-align: justify;">
-    1.&#160;&#160;&#160;<span class="bold">IMTIAZ DEVELOPMENTS LLC.</span> a company incorporated in Abu Dhabi,
-    with commercial registration no.<span class="bold">CN-1144938</span>, whose address is at
-    Park Heights Square - Suite-204, Level-2, Building-01 - Dubai Hills - Dubai - UAE. All references
-    in this Agreement to the Developer shall include Imtiaz Developments LLC . and its Subsidiaries
+    1.&#160;&#160;&#160;<span class="bold">TIGER GROUP</span> (or its associated entity <span class="bold">Tiger Properties</span>), a company incorporated in Dubai,
+    whose official registered office address is at <span class="bold">Samaya Hotel, 2nd Floor, Riggat Al Buteen, Deira, P.O. Box 88449, Dubai, UAE</span>. All references
+    in this Agreement to the Developer shall include Tiger Group, its subsidiaries, and its affiliates 
     (as defined herein below), who shall also be a Party to this Agreement.
 </p>
 
@@ -171,7 +170,7 @@
      PAGE 3 – AGREED TERMS / CLAUSE 1 (first half)
 ═══════════════════════════════════════════════════════ -->
 <div style="margin-bottom: 18px;">
-    <img src="{!$Resource.imteazlogo}" alt="Imtiaz Developments" style="height: 21px; width: auto;" />
+    <img src="{!$Resource.imteazlogo}" alt="Tiger Group Dubai" style="height: 58px; width: auto;" />
 </div>
 
 <div style="font-weight: bold; text-align: center; font-size: 10.5pt; margin-top: 16px; margin-bottom: 10px;">AGREED TERMS</div>
@@ -252,7 +251,7 @@
      PAGE 4 – CLAUSE 1 (second half) + CLAUSE 2
 ═══════════════════════════════════════════════════════ -->
 <div style="margin-bottom: 18px;">
-    <img src="{!$Resource.imteazlogo}" alt="Imtiaz Developments" style="height: 21px; width: auto;" />
+    <img src="{!$Resource.imteazlogo}" alt="Tiger Group Dubai" style="height: 58px; width: auto;" />
 </div>
 
 <p style="margin-left: 28px; margin-top: 4px; margin-bottom: 4px; text-align: justify;">
@@ -282,9 +281,9 @@
 </p>
 
 <p style="margin-left: 28px; margin-top: 4px; margin-bottom: 4px; text-align: justify;">
-    "<span class="bold">Subsidiary</span>" means any subsidiary of Imtiaz Developments LLC. duly
+    "<span class="bold">Subsidiary</span>" means any subsidiary or affiliated development entity of <span class="bold">Tiger Group</span> duly
     licensed to develop real estate projects, and which has developed real estate projects in the
-    Territory. For the avoidance of doubt, all other subsidiaries of Imtiaz Developments LLC shall
+    Territory. For the avoidance of doubt, all other unrelated subsidiaries shall
     not be a Subsidiary for the purposes of this Agreement.
 </p>
 
@@ -331,7 +330,7 @@
      PAGE 5 – CLAUSE 3
 ═══════════════════════════════════════════════════════ -->
 <div style="margin-bottom: 18px;">
-    <img src="{!$Resource.imteazlogo}" alt="Imtiaz Developments" style="height: 21px; width: auto;" />
+    <img src="{!$Resource.imteazlogo}" alt="Tiger Group Dubai" style="height: 58px; width: auto;" />
 </div>
 
 <p style="font-weight: bold; margin-top: 16px; margin-bottom: 3px; text-align: left;">3.&#160;&#160;&#160;&#160;Appointment:</p>
@@ -402,7 +401,7 @@
      PAGE 6 – CLAUSE 4 obligations
 ═══════════════════════════════════════════════════════ -->
 <div style="margin-bottom: 18px;">
-    <img src="{!$Resource.imteazlogo}" alt="Imtiaz Developments" style="height: 21px; width: auto;" />
+    <img src="{!$Resource.imteazlogo}" alt="Tiger Group Dubai" style="height: 58px; width: auto;" />
 </div>
 
 <p style="margin-left: 28px; margin-top: 4px; margin-bottom: 4px; text-align: justify;">
@@ -482,7 +481,7 @@
      PAGE 7 – CLAUSE 4(c) + CLAUSES 5 + 6
 ═══════════════════════════════════════════════════════ -->
 <div style="margin-bottom: 18px;">
-    <img src="{!$Resource.imteazlogo}" alt="Imtiaz Developments" style="height: 21px; width: auto;" />
+    <img src="{!$Resource.imteazlogo}" alt="Tiger Group Dubai" style="height: 58px; width: auto;" />
 </div>
 
 <p style="margin-left: 28px; margin-top: 4px; margin-bottom: 4px; text-align: justify;">
@@ -563,7 +562,7 @@
      PAGE 8 – CLAUSE 6(cont) + CLAUSES 7–10
 ═══════════════════════════════════════════════════════ -->
 <div style="margin-bottom: 18px;">
-    <img src="{!$Resource.imteazlogo}" alt="Imtiaz Developments" style="height: 21px; width: auto;" />
+    <img src="{!$Resource.imteazlogo}" alt="Tiger Group Dubai" style="height: 58px; width: auto;" />
 </div>
 
 <p style="margin-left: 28px; margin-top: 4px; margin-bottom: 4px; text-align: justify;">
@@ -591,7 +590,7 @@
 
 <p style="margin-left: 28px; margin-top: 5px; margin-bottom: 4px; text-align: justify;">
     7.3.&#160;&#160;Upon termination of this Agreement the Broker will provide the Developer with a list
-    of all Buyers that were identified during the Term of this Agreement as a result of any
+     of all Buyers that were identified during the Term of this Agreement as a result of any
     introduction, referral, direction or nomination made by the Broker, as sufficiently evidenced by
     email correspondence in writing.
 </p>
@@ -637,7 +636,7 @@
      PAGE 9 – CLAUSES 11–13 + SIGNATURES
 ═══════════════════════════════════════════════════════ -->
 <div style="margin-bottom: 18px;">
-    <img src="{!$Resource.imteazlogo}" alt="Imtiaz Developments" style="height: 21px; width: auto;" />
+    <img src="{!$Resource.imteazlogo}" alt="Tiger Group Dubai" style="height: 58px; width: auto;" />
 </div>
 
 <p style="font-weight: bold; margin-top: 16px; margin-bottom: 3px; text-align: left;">11.&#160;&#160;&#160;&#160;Costs:</p>

@@ -148,12 +148,20 @@
                                 </template>
                                 <template if:false={order.invoiceLoading}>
                                     <template if:true={order.hasInvoice}>
-                                        <button class="btn-invoice btn-invoice-view" data-id={order.id}
-                                            onclick={handleDownloadInvoice} title="Download Invoice">
-                                            <lightning-icon icon-name="utility:download"
-                                                size="xx-small"></lightning-icon>
-                                            <span>Download Invoice</span>
-                                        </button>
+                                        <div class="invoice-actions">
+                                            <button class="btn-invoice btn-invoice-view" data-id={order.id}
+                                                onclick={handleDownloadInvoice} title="Download Invoice">
+                                                <lightning-icon icon-name="utility:download"
+                                                    size="xx-small"></lightning-icon>
+                                                <span>Download</span>
+                                            </button>
+                                            <button class="btn-invoice btn-invoice-upload" data-id={order.id}
+                                                onclick={handleUploadClick} title="Upload Another Invoice">
+                                                <lightning-icon icon-name="utility:upload"
+                                                    size="xx-small"></lightning-icon>
+                                                <span>Upload</span>
+                                            </button>
+                                        </div>
                                     </template>
                                     <template if:false={order.hasInvoice}>
                                         <div class="invoice-actions">

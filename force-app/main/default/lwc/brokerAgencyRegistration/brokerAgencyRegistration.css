@@ -214,7 +214,7 @@
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     margin-bottom: 24px;
-    overflow: hidden;
+    overflow: visible;
 }
 
 .tab-content {
@@ -284,6 +284,24 @@
     margin-bottom: 24px;
 }
 
+.ui-only-field {
+    display: grid;
+    grid-template-columns: 33.333333% 66.666667%;
+    align-items: start;
+}
+
+.ui-only-field .slds-form-element__label {
+    color: #3e3e3c;
+    font-size: 12px;
+    line-height: 1.5;
+    margin: 0;
+    padding: 0.25rem 0.5rem 0 0;
+}
+
+.ui-only-field .slds-form-element__control {
+    min-width: 0;
+}
+
 /* 1-Column Grid for simplified forms */
 .form-grid-1col {
     display: grid;
@@ -294,6 +312,30 @@
 
 .form-group {
     margin-bottom: 0;
+}
+
+.terms-acceptance {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.terms-link {
+    background: none;
+    border: 0;
+    color: #0176d3;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 0;
+    text-decoration: underline;
+}
+
+.terms-link:hover,
+.terms-link:focus {
+    color: #014486;
 }
 
 /* Style lightning-input-field components */

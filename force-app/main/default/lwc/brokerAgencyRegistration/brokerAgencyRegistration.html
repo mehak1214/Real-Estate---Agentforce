@@ -138,6 +138,12 @@
                                     class="hidden-field"
                                 ></lightning-input-field>
 
+                                <lightning-input-field
+                                    field-name="CompanyName__c"
+                                    value={companyName}
+                                    class="hidden-field"
+                                ></lightning-input-field>
+
                                 <div class="form-grid-2col">
                                     <!-- Commercial License Number -->
                                     <div class="form-group">
@@ -149,7 +155,7 @@
                                             required
                                         ></lightning-input-field>
                                     </div>
-                                    
+
                                     <!-- Commercial License Expiry Date -->
                                     <div class="form-group">
                                         <lightning-input-field
@@ -173,15 +179,134 @@
                                         ></lightning-input-field>
                                     </div>
 
-                                    <!-- Company Name -->
-                                    <div class="form-group">
-                                        <lightning-input-field
-                                            field-name="CompanyName__c"
-                                            value={companyName}
-                                            onchange={handleInputChange}
-                                            class="form-input-field"
-                                            required
-                                        ></lightning-input-field>
+                                    <!-- Agency Name -->
+                                    <div class="form-group ui-only-field">
+                                        <label class="slds-form-element__label" for="agency-name">
+                                            <abbr class="slds-required" title="required">*</abbr>Agency Name
+                                        </label>
+                                        <div class="slds-form-element__control">
+                                            <lightning-input
+                                                id="agency-name"
+                                                label="Agency Name"
+                                                variant="label-hidden"
+                                                value={companyName}
+                                                data-field="companyName"
+                                                onchange={handleInputChange}
+                                                required
+                                            ></lightning-input>
+                                        </div>
+                                    </div>
+
+                                    <!-- Registered Country -->
+                                    <div class="form-group ui-only-field">
+                                        <label class="slds-form-element__label" for="registered-country">
+                                            <abbr class="slds-required" title="required">*</abbr>Registered Country
+                                        </label>
+                                        <div class="slds-form-element__control">
+                                            <lightning-combobox
+                                                id="registered-country"
+                                                label="Registered Country"
+                                                variant="label-hidden"
+                                                value={registeredCountry}
+                                                options={registeredCountryOptions}
+                                                data-field="registeredCountry"
+                                                onchange={handleInputChange}
+                                                required
+                                            ></lightning-combobox>
+                                        </div>
+                                    </div>
+
+                                    <!-- License Type -->
+                                    <div class="form-group ui-only-field">
+                                        <label class="slds-form-element__label" for="license-type">
+                                            <abbr class="slds-required" title="required">*</abbr>License Type
+                                        </label>
+                                        <div class="slds-form-element__control">
+                                            <lightning-combobox
+                                                id="license-type"
+                                                label="License Type"
+                                                variant="label-hidden"
+                                                value={licenseType}
+                                                options={licenseTypeOptions}
+                                                data-field="licenseType"
+                                                onchange={handleInputChange}
+                                                required
+                                            ></lightning-combobox>
+                                        </div>
+                                    </div>
+
+                                    <!-- Agency Email ID -->
+                                    <div class="form-group ui-only-field">
+                                        <label class="slds-form-element__label" for="agency-email-id">
+                                            <abbr class="slds-required" title="required">*</abbr>Agency Email ID
+                                        </label>
+                                        <div class="slds-form-element__control">
+                                            <lightning-input
+                                                id="agency-email-id"
+                                                label="Agency Email ID"
+                                                variant="label-hidden"
+                                                type="email"
+                                                value={agencyEmailId}
+                                                data-field="agencyEmailId"
+                                                onchange={handleInputChange}
+                                                required
+                                            ></lightning-input>
+                                        </div>
+                                    </div>
+
+                                    <!-- VAT Registration -->
+                                    <div class="form-group ui-only-field">
+                                        <label class="slds-form-element__label" for="is-vat-registered">
+                                            <abbr class="slds-required" title="required">*</abbr>Is VAT Registered?
+                                        </label>
+                                        <div class="slds-form-element__control">
+                                            <lightning-combobox
+                                                id="is-vat-registered"
+                                                label="Is VAT Registered?"
+                                                variant="label-hidden"
+                                                value={isVatRegistered}
+                                                options={vatRegisteredOptions}
+                                                data-field="isVatRegistered"
+                                                onchange={handleInputChange}
+                                                required
+                                            ></lightning-combobox>
+                                        </div>
+                                    </div>
+
+                                    <!-- ADM Number -->
+                                    <div class="form-group ui-only-field">
+                                        <label class="slds-form-element__label" for="adm-number">
+                                            <abbr class="slds-required" title="required">*</abbr>ADM Number
+                                        </label>
+                                        <div class="slds-form-element__control">
+                                            <lightning-input
+                                                id="adm-number"
+                                                label="ADM Number"
+                                                variant="label-hidden"
+                                                value={admNumber}
+                                                data-field="admNumber"
+                                                onchange={handleInputChange}
+                                                required
+                                            ></lightning-input>
+                                        </div>
+                                    </div>
+
+                                    <!-- Tax Registration Number -->
+                                    <div class="form-group ui-only-field">
+                                        <label class="slds-form-element__label" for="tax-registration-number">
+                                            <abbr class="slds-required" title="required">*</abbr>Tax Registration Number
+                                        </label>
+                                        <div class="slds-form-element__control">
+                                            <lightning-input
+                                                id="tax-registration-number"
+                                                label="Tax Registration Number"
+                                                variant="label-hidden"
+                                                value={taxRegistrationNumber}
+                                                data-field="taxRegistrationNumber"
+                                                onchange={handleInputChange}
+                                                required
+                                            ></lightning-input>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -253,7 +378,23 @@
                                         ></lightning-input-field>
                                     </div>
 
-                                    
+                                    <!-- Zip Code / PO Box Number -->
+                                    <div class="form-group ui-only-field">
+                                        <label class="slds-form-element__label" for="zip-code-po-box-number">
+                                            <abbr class="slds-required" title="required">*</abbr>Zip Code / PO Box Number
+                                        </label>
+                                        <div class="slds-form-element__control">
+                                            <lightning-input
+                                                id="zip-code-po-box-number"
+                                                label="Zip Code / PO Box Number"
+                                                variant="label-hidden"
+                                                value={zipCode}
+                                                data-field="zipCode"
+                                                onchange={handleInputChange}
+                                                required
+                                            ></lightning-input>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </lightning-record-edit-form>
@@ -281,6 +422,24 @@
                         >
                             <div class="form-section">
                                 <div class="form-grid-2col">
+                                    <!-- Beneficiary Name -->
+                                    <div class="form-group ui-only-field">
+                                        <label class="slds-form-element__label" for="beneficiary-name">
+                                            <abbr class="slds-required" title="required">*</abbr>Beneficiary Name
+                                        </label>
+                                        <div class="slds-form-element__control">
+                                            <lightning-input
+                                                id="beneficiary-name"
+                                                label="Beneficiary Name"
+                                                variant="label-hidden"
+                                                value={beneficiaryName}
+                                                data-field="beneficiaryName"
+                                                onchange={handleInputChange}
+                                                required
+                                            ></lightning-input>
+                                        </div>
+                                    </div>
+
                                     <!-- Bank Name -->
                                     <div class="form-group">
                                         <lightning-input-field
@@ -301,6 +460,42 @@
                                             class="form-input-field"
                                             required
                                         ></lightning-input-field>
+                                    </div>
+
+                                    <!-- IBAN -->
+                                    <div class="form-group ui-only-field">
+                                        <label class="slds-form-element__label" for="iban">
+                                            <abbr class="slds-required" title="required">*</abbr>IBAN
+                                        </label>
+                                        <div class="slds-form-element__control">
+                                            <lightning-input
+                                                id="iban"
+                                                label="IBAN"
+                                                variant="label-hidden"
+                                                value={iban}
+                                                data-field="iban"
+                                                onchange={handleInputChange}
+                                                required
+                                            ></lightning-input>
+                                        </div>
+                                    </div>
+
+                                    <!-- IBAN Reconfirmation -->
+                                    <div class="form-group ui-only-field">
+                                        <label class="slds-form-element__label" for="iban-reconfirmation">
+                                            <abbr class="slds-required" title="required">*</abbr>IBAN Reconfirmation
+                                        </label>
+                                        <div class="slds-form-element__control">
+                                            <lightning-input
+                                                id="iban-reconfirmation"
+                                                label="IBAN Reconfirmation"
+                                                variant="label-hidden"
+                                                value={ibanReconfirmation}
+                                                data-field="ibanReconfirmation"
+                                                onchange={handleInputChange}
+                                                required
+                                            ></lightning-input>
+                                        </div>
                                     </div>
 
                                     <!-- Bank Country -->
@@ -336,10 +531,62 @@
                                         ></lightning-input-field>
                                     </div>
                                 </div>
+
+                                <div class="terms-acceptance">
+                                    <lightning-input
+                                        type="checkbox"
+                                        label="I have read and understood the Terms of Use"
+                                        checked={termsAccepted}
+                                        data-field="termsAccepted"
+                                        onchange={handleInputChange}
+                                        required
+                                    ></lightning-input>
+                                    <button
+                                        type="button"
+                                        class="terms-link"
+                                        onclick={handleShowTerms}
+                                    >
+                                        Terms and Conditions
+                                    </button>
+                                </div>
                             </div>
                         </lightning-record-edit-form>
                     </div>
                 </div>
+            </template>
+
+            <template if:true={showTermsModal}>
+                <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="terms-heading" class="slds-modal slds-fade-in-open">
+                    <div class="slds-modal__container">
+                        <header class="slds-modal__header">
+                            <button class="slds-button slds-button_icon slds-modal__close" title="Close" onclick={handleCloseTerms}>
+                                <lightning-icon icon-name="utility:close" alternative-text="Close" size="small"></lightning-icon>
+                            </button>
+                            <h2 id="terms-heading" class="slds-modal__title slds-hyphenate">Terms and Conditions</h2>
+                        </header>
+                        <div class="slds-modal__content slds-p-around_medium">
+                            <p>
+                                This broker portal is provided for Tiger Group Dubai broker registration and related business processes.
+                            </p>
+                            <p>
+                                By using this portal, you confirm that the information submitted is accurate, current, and provided by an authorized representative.
+                            </p>
+                            <p>
+                                You agree to use the portal only for legitimate broker registration, verification, document submission, and communication with Tiger Group Dubai.
+                            </p>
+                            <p>
+                                Tiger Group Dubai may review, validate, reject, or request additional information for any submission made through this portal.
+                            </p>
+                            <p>
+                                You are responsible for keeping submitted business, bank, and contact details correct before proceeding.
+                            </p>
+                        </div>
+                        <footer class="slds-modal__footer">
+                            <button class="slds-button slds-button_brand" type="button" onclick={handleCloseTerms}>Close</button>
+                        </footer>
+                    </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open"></div>
             </template>
 
             <!-- Company Personnel Tab -->
@@ -469,27 +716,41 @@
                                                 ></lightning-input-field>
                                             </div>
 
-                                            <!-- Passport Number -->
-                                            <div class="form-group">
-                                                <lightning-input-field
-                                                    field-name="PassportNumber__c"
-                                                    value={agencyAdminPassportNumber}
-                                                    onchange={handleInputChange}
-                                                    class="form-input-field"
-                                                    required
-                                                ></lightning-input-field>
+                                            <!-- National ID -->
+                                            <div class="form-group ui-only-field">
+                                                <label class="slds-form-element__label" for="agency-admin-national-id">
+                                                    <abbr class="slds-required" title="required">*</abbr>National ID
+                                                </label>
+                                                <div class="slds-form-element__control">
+                                                    <lightning-input-field
+                                                        id="agency-admin-national-id"
+                                                        field-name="PassportNumber__c"
+                                                        value={agencyAdminPassportNumber}
+                                                        onchange={handleInputChange}
+                                                        class="form-input-field"
+                                                        variant="label-hidden"
+                                                        required
+                                                    ></lightning-input-field>
+                                                </div>
                                             </div>
 
-                                            <!-- Passport Expiry Date -->
-                                            <div class="form-group">
-                                                <lightning-input-field
-                                                    field-name="PassportExpiryDate__c"
-                                                    value={agencyAdminPassportExpiryDate}
-                                                    type="date"
-                                                    onchange={handleInputChange}
-                                                    class="form-input-field"
-                                                    required
-                                                ></lightning-input-field>
+                                            <!-- National ID Expiry Date -->
+                                            <div class="form-group ui-only-field">
+                                                <label class="slds-form-element__label" for="agency-admin-national-id-expiry-date">
+                                                    <abbr class="slds-required" title="required">*</abbr>National ID Expiry Date
+                                                </label>
+                                                <div class="slds-form-element__control">
+                                                    <lightning-input-field
+                                                        id="agency-admin-national-id-expiry-date"
+                                                        field-name="PassportExpiryDate__c"
+                                                        value={agencyAdminPassportExpiryDate}
+                                                        type="date"
+                                                        onchange={handleInputChange}
+                                                        class="form-input-field"
+                                                        variant="label-hidden"
+                                                        required
+                                                    ></lightning-input-field>
+                                                </div>
                                             </div>
 
                                             <!-- Date of Birth -->
@@ -604,6 +865,24 @@
                                                     class="form-input-field"
                                                     required
                                                 ></lightning-input-field>
+                                            </div>
+
+                                            <!-- Nationality -->
+                                            <div class="form-group ui-only-field">
+                                                <label class="slds-form-element__label" for="partner-owner-nationality">
+                                                    <abbr class="slds-required" title="required">*</abbr>Nationality
+                                                </label>
+                                                <div class="slds-form-element__control">
+                                                    <lightning-input
+                                                        id="partner-owner-nationality"
+                                                        label="Nationality"
+                                                        variant="label-hidden"
+                                                        value={partnerOwnerNationality}
+                                                        data-field="partnerOwnerNationality"
+                                                        onchange={handleInputChange}
+                                                        required
+                                                    ></lightning-input>
+                                                </div>
                                             </div>
 
                                             <!-- Passport Number -->

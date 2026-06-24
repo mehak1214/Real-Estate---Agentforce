@@ -30,6 +30,32 @@ export default class BrokerAgencyRegistration extends LightningElement {
 @track commercialLicenseExpiryDate = '';
 @track agencyType = '';
 @track companyName = '';
+@track registeredCountry = 'United Arab Emirates';
+@track agencyEmailId = '';
+@track admNumber = '';
+@track taxRegistrationNumber = '';
+@track licenseType = '';
+@track isVatRegistered = '';
+
+registeredCountryOptions = [
+{ label: 'United Arab Emirates', value: 'United Arab Emirates' },
+{ label: 'India', value: 'India' },
+{ label: 'Saudi Arabia', value: 'Saudi Arabia' },
+{ label: 'Qatar', value: 'Qatar' },
+{ label: 'Bahrain', value: 'Bahrain' },
+{ label: 'Kuwait', value: 'Kuwait' },
+{ label: 'Oman', value: 'Oman' }
+];
+
+licenseTypeOptions = [
+{ label: 'Commercial', value: 'Commercial' },
+{ label: 'Professional', value: 'Professional' }
+];
+
+vatRegisteredOptions = [
+{ label: 'Yes', value: 'Yes' },
+{ label: 'No', value: 'No' }
+];
 
 // Agency Address Tab Fields
 @track addressLine01 = '';
@@ -39,12 +65,17 @@ export default class BrokerAgencyRegistration extends LightningElement {
 @track city = '';
 
 // Bank Details Tab Fields
+@track beneficiaryName = '';
 @track bankName = '';
 @track accountNumber = '';
 @track bankCountry = '';
 @track bankBranchAddress = '';
 @track swiftCode = '';
 @track zipCode = '';
+@track iban = '';
+@track ibanReconfirmation = '';
+@track termsAccepted = false;
+@track showTermsModal = false;
 
 // Company Personnel Tab Fields - Agency Admin
 @track agencyAdminTitle = '';
@@ -65,6 +96,7 @@ export default class BrokerAgencyRegistration extends LightningElement {
 @track partnerOwnerLastName = '';
 @track partnerOwnerEmail = '';
 @track partnerOwnerPhone = '';
+@track partnerOwnerNationality = '';
 @track partnerOwnerPassportNumber = '';
 @track partnerOwnerPassportExpiryDate = '';
 @track partnerOwnerDateOfBirth = '';
@@ -164,7 +196,6 @@ this.accountNumber = existingApp.Account_Number__c || '';
 this.bankCountry = existingApp.BankCountry__c || '';
 this.bankBranchAddress = existingApp.BankBranchAddress__c || '';
 this.swiftCode = existingApp.SwiftCode__c || '';
-this.zipCode = existingApp.ZipCodePOBoxNumber__c || '';
 
 // Mark completed tabs based on existing data
 this.markCompletedTabs(existingApp);
@@ -203,7 +234,6 @@ this.accountNumber = existingApp.Account_Number__c || '';
 this.bankCountry = existingApp.BankCountry__c || '';
 this.bankBranchAddress = existingApp.BankBranchAddress__c || '';
 this.swiftCode = existingApp.SwiftCode__c || '';
-this.zipCode = existingApp.ZipCodePOBoxNumber__c || '';
 
 // Mark completed tabs based on existing data
 this.markCompletedTabs(existingApp);
@@ -489,11 +519,11 @@ this.tabs[currentIndex + 1].disabled = false;
 
 // Handle input changes for lightning-input-field
 handleInputChange(event) {
-    const field = event.target.fieldName;
+    const field = event.target.fieldName || event.target.dataset.field;
 
     let value;
 
-    if (field === 'IsAuthorizedSignatory__c') {
+    if (field === 'IsAuthorizedSignatory__c' || event.target.type === 'checkbox') {
         value = event.target.checked;
     } else {
         value = event.detail.value;
@@ -505,19 +535,31 @@ handleInputChange(event) {
         'CommercialLicenseExpiryDate__c': 'commercialLicenseExpiryDate',
         'AgencyType__c': 'agencyType',
         'CompanyName__c': 'companyName',
+        'companyName': 'companyName',
+        'registeredCountry': 'registeredCountry',
+        'agencyEmailId': 'agencyEmailId',
+        'admNumber': 'admNumber',
+        'taxRegistrationNumber': 'taxRegistrationNumber',
+        'licenseType': 'licenseType',
+        'isVatRegistered': 'isVatRegistered',
 
         // Address
         'AddressLine01__c': 'addressLine01',
         'AddressLine02__c': 'addressLine02',
         'Countries__c': 'country',
         'Emirate__c': 'state',
+        'zipCode': 'zipCode',
 
         // Bank
+        'beneficiaryName': 'beneficiaryName',
         'BankNameValue__c': 'bankName',
         'Account_Number__c': 'accountNumber',
         'BankCountry__c': 'bankCountry',
         'BankBranchAddress__c': 'bankBranchAddress',
         'SwiftCode__c': 'swiftCode',
+        'iban': 'iban',
+        'ibanReconfirmation': 'ibanReconfirmation',
+        'termsAccepted': 'termsAccepted',
 
         // Agency Admin
         'Title__c': this.activePersonnelTab === 'agencyAdmin'
@@ -543,6 +585,8 @@ handleInputChange(event) {
         'PhoneNumber__c': this.activePersonnelTab === 'agencyAdmin'
             ? 'agencyAdminPhone'
             : 'partnerOwnerPhone',
+
+        'partnerOwnerNationality': 'partnerOwnerNationality',
 
         'PassportNumber__c': this.activePersonnelTab === 'agencyAdmin'
             ? 'agencyAdminPassportNumber'
@@ -903,8 +947,7 @@ getFieldsForCurrentTab() {
             'Account_Number__c': this.accountNumber,
             'BankCountry__c': this.bankCountry,
             'BankBranchAddress__c': this.bankBranchAddress,
-            'SwiftCode__c': this.swiftCode,
-            'ZipCodePOBoxNumber__c': this.zipCode
+            'SwiftCode__c': this.swiftCode
         };
     }
     return {};
@@ -979,6 +1022,30 @@ return false;
 return true;
 }
 
+const ibanConfirmationInput = this.template.querySelector('[data-field="ibanReconfirmation"]');
+if (ibanConfirmationInput && this.activeTab === 'bankDetails') {
+ibanConfirmationInput.setCustomValidity(
+this.iban && this.ibanReconfirmation && this.iban !== this.ibanReconfirmation
+? 'IBAN and IBAN Reconfirmation must match.'
+: ''
+);
+}
+
+const inputs = [...this.template.querySelectorAll('lightning-input, lightning-combobox, lightning-input-field')];
+const allInputsValid = inputs.reduce((validSoFar, input) => {
+if (typeof input.reportValidity === 'function') {
+input.reportValidity();
+}
+const isValid = typeof input.checkValidity === 'function'
+? input.checkValidity()
+: true;
+return validSoFar && isValid;
+}, true);
+
+if (!allInputsValid) {
+return false;
+}
+
 const requiredFields = this.getRequiredFieldsForTab();
 
 for (const field of requiredFields) {
@@ -994,11 +1061,32 @@ return true;
 getRequiredFieldsForTab() {
 switch(this.activeTab) {
 case 'agencyInfo':
-return ['companyName', 'commercialLicenseNumber', 'commercialLicenseExpiryDate', 'agencyType'];
+return [
+'companyName',
+'commercialLicenseNumber',
+'commercialLicenseExpiryDate',
+'agencyType',
+'registeredCountry',
+'agencyEmailId',
+'admNumber',
+'taxRegistrationNumber',
+'licenseType',
+'isVatRegistered'
+];
 case 'agencyAddress':
-return ['addressLine01', 'country', 'state'];
+return ['addressLine01', 'country', 'state', 'zipCode'];
 case 'bankDetails':
-return ['bankName', 'accountNumber', 'bankCountry', 'bankBranchAddress', 'swiftCode'];
+return [
+'beneficiaryName',
+'bankName',
+'accountNumber',
+'bankCountry',
+'bankBranchAddress',
+'swiftCode',
+'iban',
+'ibanReconfirmation',
+'termsAccepted'
+];
 case 'companyPersonnel':
 if (this.activePersonnelTab === 'agencyAdmin') {
 return [
@@ -1018,6 +1106,7 @@ return [
 'partnerOwnerLastName',
 'partnerOwnerEmail',
 'partnerOwnerPhone',
+'partnerOwnerNationality',
 'partnerOwnerPassportNumber',
 'partnerOwnerPassportExpiryDate',
 'partnerOwnerDateOfBirth'
@@ -1092,5 +1181,13 @@ handleDashboard() {
 
     window.location.href =
         '/BrokerPortal';
+}
+
+handleShowTerms() {
+    this.showTermsModal = true;
+}
+
+handleCloseTerms() {
+    this.showTermsModal = false;
 }
 }

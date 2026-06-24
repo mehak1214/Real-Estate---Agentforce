@@ -873,15 +873,16 @@
                                                     <abbr class="slds-required" title="required">*</abbr>Nationality
                                                 </label>
                                                 <div class="slds-form-element__control">
-                                                    <lightning-input
+                                                    <lightning-combobox
                                                         id="partner-owner-nationality"
                                                         label="Nationality"
                                                         variant="label-hidden"
                                                         value={partnerOwnerNationality}
+                                                        options={registeredCountryOptions}
                                                         data-field="partnerOwnerNationality"
                                                         onchange={handleInputChange}
                                                         required
-                                                    ></lightning-input>
+                                                    ></lightning-combobox>
                                                 </div>
                                             </div>
 

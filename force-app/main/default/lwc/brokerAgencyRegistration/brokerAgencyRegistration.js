@@ -1007,57 +1007,192 @@ throw error;
 
 // Validate current tab
 validateCurrentTab() {
-if (this.activeTab === 'legalDocuments') {
-// Check if Broker Application exists
-if (!this.brokerApplicationId) {
-// this.showToast('Error', 'Please complete previous tabs first to create Broker Application', 'error');
-return false;
-}
+    if (this.activeTab === 'legalDocuments') {
+        // Check if Broker Application exists
+        if (!this.brokerApplicationId) {
+            this.showToast('Error', 'Please complete previous tabs first to create Broker Application', 'error');
+            return false;
+        }
 
-// Check if at least one document has a file
-const hasFiles = this.legalDocuments.some(doc => doc.fileContent);
-if (!hasFiles) {
-// this.showToast('Validation Error', 'Please upload at least one document', 'error');
-return false;
-}
+        // Check if at least one document has a file
+        const hasFiles = this.legalDocuments.some(doc => doc.fileContent);
+        if (!hasFiles) {
+            this.showToast('Validation Error', 'Please upload at least one document', 'error');
+            return false;
+        }
 
-return true;
-}
+        return true;
+    }
 
-const ibanConfirmationInput = this.template.querySelector('[data-field="ibanReconfirmation"]');
-if (ibanConfirmationInput && this.activeTab === 'bankDetails') {
-ibanConfirmationInput.setCustomValidity(
-this.iban && this.ibanReconfirmation && this.iban !== this.ibanReconfirmation
-? 'IBAN and IBAN Reconfirmation must match.'
-: ''
-);
-}
+    const inputs = [...this.template.querySelectorAll('lightning-input, lightning-combobox, lightning-input-field')];
+    const allInputsValid = inputs.reduce((validSoFar, input) => {
+        if (typeof input.reportValidity === 'function') {
+            input.reportValidity();
+        }
+        const isValid = typeof input.checkValidity === 'function' ?
+            input.checkValidity() :
+            true;
+        return validSoFar && isValid;
+    }, true);
 
-const inputs = [...this.template.querySelectorAll('lightning-input, lightning-combobox, lightning-input-field')];
-const allInputsValid = inputs.reduce((validSoFar, input) => {
-if (typeof input.reportValidity === 'function') {
-input.reportValidity();
-}
-const isValid = typeof input.checkValidity === 'function'
-? input.checkValidity()
-: true;
-return validSoFar && isValid;
-}, true);
 
-if (!allInputsValid) {
-return false;
-}
+    const validationRules = {
+        agencyInfo: {
+            commercialLicenseExpiryDate: {
+                validator: this.isFutureDate,
+                message: 'Commercial License Expiry Date must be in the future.'
+            },
+            companyName: {
+                validator: this.isAlpha,
+                message: 'Agency Name must contain only letters and spaces.'
+            },
+            agencyEmailId: {
+                validator: this.isEmail,
+                message: 'Invalid email format for Agency Email ID.'
+            },
+            admNumber: {
+                validator: this.isAlphaNumeric,
+                message: 'ADM Number must be alphanumeric.'
+            },
+            taxRegistrationNumber: {
+                validator: this.isAlphaNumeric,
+                message: 'Tax Registration Number must be alphanumeric.'
+            },
+        },
+        agencyAddress: {
+            zipCode: {
+                validator: this.isNumeric,
+                message: 'Zip Code must be numeric.'
+            },
+        },
+        bankDetails: {
+            beneficiaryName: {
+                validator: this.isAlpha,
+                message: 'Beneficiary Name must contain only letters and spaces.'
+            },
+            accountNumber: {
+                validator: this.isAlphaNumeric,
+                message: 'Account Number must be alphanumeric.'
+            },
+            iban: {
+                validator: this.isIBAN,
+                message: 'Invalid IBAN format.'
+            },
+            ibanReconfirmation: {
+                validator: (value) => value === this.iban,
+                message: 'IBAN and IBAN Reconfirmation must match.'
+            },
+            swiftCode: {
+                validator: this.isAlphaNumeric,
+                message: 'Swift code must be alphanumeric.'
+            },
+        },
+        companyPersonnel: {
+            agencyAdmin: {
+                agencyAdminFirstName: {
+                    validator: this.isAlpha,
+                    message: 'First Name must contain only letters.'
+                },
+                agencyAdminMiddleName: {
+                    validator: this.isAlpha,
+                    message: 'Middle Name must contain only letters.'
+                },
+                agencyAdminLastName: {
+                    validator: this.isAlpha,
+                    message: 'Last Name must contain only letters.'
+                },
+                agencyAdminEmail: {
+                    validator: this.isEmail,
+                    message: 'Invalid email format for Agency Admin Email.'
+                },
+                agencyAdminPhone: {
+                    validator: this.isPhoneNumber,
+                    message: 'Invalid phone number format for Agency Admin Phone.'
+                },
+                agencyAdminPassportNumber: {
+                    validator: this.isAlphaNumeric,
+                    message: 'National ID must be alphanumeric.'
+                },
+                agencyAdminPassportExpiryDate: {
+                    validator: this.isFutureDate,
+                    message: 'National ID Expiry Date must be in the future.'
+                },
+                agencyAdminDateOfBirth: {
+                    validator: this.isNotFutureDate,
+                    message: 'Date of Birth cannot be in the future.'
+                },
+            },
+            partnerOwner: {
+                partnerOwnerFirstName: {
+                    validator: this.isAlpha,
+                    message: 'First Name must contain only letters.'
+                },
+                partnerOwnerMiddleName: {
+                    validator: this.isAlpha,
+                    message: 'Middle Name must contain only letters.'
+                },
+                partnerOwnerLastName: {
+                    validator: this.isAlpha,
+                    message: 'Last Name must contain only letters.'
+                },
+                partnerOwnerEmail: {
+                    validator: this.isEmail,
+                    message: 'Invalid email format for Partner Owner Email.'
+                },
+                partnerOwnerPhone: {
+                    validator: this.isPhoneNumber,
+                    message: 'Invalid phone number format for Partner Owner Phone.'
+                },
+                partnerOwnerPassportNumber: {
+                    validator: this.isAlphaNumeric,
+                    message: 'Passport Number must be alphanumeric.'
+                },
+                partnerOwnerPassportExpiryDate: {
+                    validator: this.isFutureDate,
+                    message: 'Passport Expiry Date must be in the future.'
+                },
+                partnerOwnerDateOfBirth: {
+                    validator: this.isNotFutureDate,
+                    message: 'Date of Birth cannot be in the future.'
+                },
+            }
+        }
+    };
 
-const requiredFields = this.getRequiredFieldsForTab();
+    let rules;
+    if (this.activeTab === 'companyPersonnel') {
+        rules = validationRules[this.activeTab][this.activePersonnelTab];
+    } else {
+        rules = validationRules[this.activeTab];
+    }
 
-for (const field of requiredFields) {
-if (!this[field] || this[field].toString().trim() === '') {
-// this.showToast('Validation Error', 'Please fill all required fields.', 'error');
-return false;
-}
-}
+    if (rules) {
+        for (const fieldName in rules) {
+            const rule = rules[fieldName];
+            const value = this[fieldName];
 
-return true;
+            if (value && !rule.validator(value)) {
+                this.showToast('Validation Error', rule.message, 'error');
+                return false;
+            }
+        }
+    }
+
+    if (!allInputsValid) {
+        this.showToast('Validation Error', 'Please fill all required fields.', 'error');
+        return false;
+    }
+
+    const requiredFields = this.getRequiredFieldsForTab();
+
+    for (const field of requiredFields) {
+        if (!this[field] || this[field].toString().trim() === '') {
+            this.showToast('Validation Error', 'Please fill all required fields.', 'error');
+            return false;
+        }
+    }
+
+    return true;
 }
 
 getRequiredFieldsForTab() {
@@ -1177,6 +1312,65 @@ message: message,
 variant: variant,
 });
 this.dispatchEvent(event);
+}
+
+// Validation helper methods
+isFutureDate(dateString) {
+    if (!dateString) return true; // Not a required field, so valid if empty
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const inputDate = new Date(dateString);
+    return inputDate > today;
+}
+
+isPastDate(dateString) {
+    if (!dateString) return true;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const inputDate = new Date(dateString);
+    return inputDate < today;
+}
+
+isNotFutureDate(dateString) {
+    if (!dateString) return true;
+    const today = new Date();
+    today.setHours(23, 59, 59, 999);
+    const inputDate = new Date(dateString);
+    return inputDate <= today;
+}
+
+isAlpha(value) {
+    if (!value) return true;
+    return /^[a-zA-Z\s]*$/.test(value);
+}
+
+isAlphaNumeric(value) {
+    if (!value) return true;
+    return /^[a-zA-Z0-9\s]*$/.test(value);
+}
+
+isEmail(value) {
+    if (!value) return true;
+    // A simple email regex, can be replaced with a more robust one if needed
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+}
+
+isPhoneNumber(value) {
+    if (!value) return true;
+    // Simple phone number regex, allows for + and numbers
+    return /^\+?[0-9\s-()]*$/.test(value);
+}
+
+isIBAN(value) {
+    if (!value) return true;
+    // A simple IBAN regex, can be improved.
+    // This one just checks for alphanumeric and length between 15 and 34.
+    return /^[a-zA-Z0-9]{15,34}$/.test(value);
+}
+
+isNumeric(value) {
+    if (!value) return true;
+    return /^[0-9-]*$/.test(value);
 }
 
 handleDashboard() {

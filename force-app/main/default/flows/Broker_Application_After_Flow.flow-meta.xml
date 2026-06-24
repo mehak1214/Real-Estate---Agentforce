@@ -227,6 +227,11 @@
         <dataType>Boolean</dataType>
         <expression>ISNEW()</expression>
     </formulas>
+    <formulas>
+        <name>BillingCountryCodeForAccount</name>
+        <dataType>String</dataType>
+        <expression>CASE({!$Record.Country__c}, &quot;United Arab Emirates&quot;, &quot;AE&quot;, &quot;UAE&quot;, &quot;AE&quot;, {!$Record.Country__c})</expression>
+    </formulas>
     <interviewLabel>Broker Application After Flow {!$Flow.CurrentDateTime}</interviewLabel>
     <label>Broker Application After Flow</label>
     <loops>
@@ -316,7 +321,7 @@
         <inputAssignments>
             <field>BillingCountry</field>
             <value>
-                <elementReference>$Record.Country__c</elementReference>
+                <elementReference>BillingCountryCodeForAccount</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>

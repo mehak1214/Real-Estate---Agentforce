@@ -67,31 +67,28 @@ public with sharing class BrokerPaymentPlanAction {
             switch on typology {
 
                 when '1 BHK' {
-
                     res.typology = '1 BHK';
                     applyPaymentPlan(res, 950000);
-
                 }
 
                 when '2 BHK' {
-
                     res.typology = '2 BHK';
                     applyPaymentPlan(res, 1450000);
-
                 }
 
                 when '3 BHK' {
-
                     res.typology = '3 BHK';
                     applyPaymentPlan(res, 2200000);
-
                 }
 
-                when '4 BHK Sky Villa + Pool' {
-
-                    res.typology = '4 BHK Sky Villa + Pool';
+                when '4 BHK' {
+                    res.typology = '4 BHK';
                     applyPaymentPlan(res, 4500000);
+                }
 
+                when 'Villa' {
+                    res.typology = 'Villa';
+                    applyPaymentPlan(res, 6500000); // Standard premium Dubai Villa baseline
                 }
 
                 when 'Plot' {
@@ -113,16 +110,13 @@ public with sharing class BrokerPaymentPlanAction {
                 }
 
                 when else {
-
                     throw new AuraHandledException(
-                        'Supported typologies are: 1 BHK, 2 BHK, 3 BHK, 4 BHK Sky Villa + Pool, Plot. Supported plot sizes are: 5000, 7500, 10000 sqft.'
+                        'Supported typologies are: 1 BHK, 2 BHK, 3 BHK, 4 BHK, Villa, Plot. Supported plot sizes are: 5000, 7500, 10000 sqft.'
                     );
-
                 }
             }
 
             res.paymentPlanSummary = buildPaymentPlanSummary(res);
-
             responses.add(res);
         }
 
@@ -146,8 +140,11 @@ public with sharing class BrokerPaymentPlanAction {
         if (lowerTypology == '3 bhk' || lowerTypology == '3bhk') {
             return '3 BHK';
         }
-        if (lowerTypology == '4 bhk sky villa + pool' || lowerTypology == '4bhk sky villa + pool') {
-            return '4 BHK Sky Villa + Pool';
+        if (lowerTypology == '4 bhk' || lowerTypology == '4bhk' || lowerTypology.contains('sky villa')) {
+            return '4 BHK';
+        }
+        if (lowerTypology == 'villa') {
+            return 'Villa';
         }
         if (lowerTypology.contains('plot')) {
             return 'Plot';
@@ -202,7 +199,7 @@ public with sharing class BrokerPaymentPlanAction {
     private static void applyPaymentPlan(Response res, Decimal startingPriceAED) {
         res.startingPriceAED = startingPriceAED;
         res.bookingAmountAED = (startingPriceAED * 0.10).setScale(0);
-        res.agreementChargesAED = (startingPriceAED * 0.04).setScale(0);
+        res.agreementChargesAED = (startingPriceAED * 0.04).setScale(0); // Standard 4% DLD fee
         res.transferHandoverAED = (startingPriceAED * 0.20).setScale(0);
         res.balanceAED = (startingPriceAED * 0.70).setScale(0);
         res.monthlyInstallmentAED = (res.balanceAED / res.installmentDurationMonths).setScale(0);
@@ -213,7 +210,7 @@ public with sharing class BrokerPaymentPlanAction {
             (res.plotSizeSqft == null ? '' : ', Plot Size: ' + res.plotSizeSqft + ' sqft') +
             ', Starting Price: AED ' + res.startingPriceAED +
             ', Booking: AED ' + res.bookingAmountAED +
-            ', Agreement Charges: AED ' + res.agreementChargesAED +
+            ', Agreement Charges (DLD): AED ' + res.agreementChargesAED +
             ', Transfer/Handover: AED ' + res.transferHandoverAED +
             ', Balance: AED ' + res.balanceAED +
             ', Monthly Installment: AED ' + res.monthlyInstallmentAED +

@@ -49,7 +49,7 @@
 
         <div style="text-align: center; font-size: 10.5pt; font-weight: bold; margin-bottom: 30px;">And</div>
 
-        <div style="text-align: center; font-size: 14pt; font-weight: bold; margin-bottom: 30px;"><apex:outputText value="{!brokerApp.Name}" /></div>
+        <div style="text-align: center; font-size: 14pt; font-weight: bold; margin-bottom: 30px;"><apex:outputText value="{!brokerApp.CompanyName__c}" /></div>
       
         
     
@@ -87,7 +87,7 @@
 <p style="margin: 8px 0; text-align: justify;">and</p>
 
 <p style="margin: 8px 0; text-align: justify;">
-    2.&#160;&#160;&#160;<span class="bold"><apex:outputText value="{!brokerApp.Name}" /></span>,
+    2.&#160;&#160;&#160;<span class="bold"><apex:outputText value="{!brokerApp.CompanyName__c}" /></span>,
     a company incorporated under commercial registration n.&#160;
     <span class="bold"><apex:outputText value="{!brokerApp.CommercialLicenseNumber__c}" /></span>
     and address in UAE at&#160;<apex:outputText value="{!fullAddress}" />.
@@ -160,7 +160,7 @@
         
     </div>
 
-    <apex:outputText value="{!brokerApp.Name}" /><br/>
+    <apex:outputText value="{!brokerApp.CompanyName__c}" /><br/>
 
     <apex:outputText value="{!brokerApp.CommercialLicenseNumber__c}" />
 
@@ -676,7 +676,7 @@
         </td>
 
         <td style="border:1px solid #000; padding:10px; width:60%; vertical-align:top;">
-            <b>Broker: <apex:outputText value="{!brokerApp.Name}" /></b>
+            <b>Broker: <apex:outputText value="{!brokerApp.CompanyName__c}" /></b>
         </td>
     </tr>
 

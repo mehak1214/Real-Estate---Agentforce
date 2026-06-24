@@ -1,39 +1,39 @@
 import { LightningElement, api } from 'lwc';
-import { CloseActionScreenEvent } from 'lightning/actions';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import generateAndSavePDF from '@salesforce/apex/BrokerAgreementPdfController.generateAndSavePDF';
 
 export default class GenerateBrokerAgreement extends LightningElement {
 
     @api recordId;
-    isLoading = false;
 
-    handleGenerate() {
-        this.isLoading = true;
+    @api
+    invoke() {
         generateAndSavePDF({ recordId: this.recordId })
             .then(() => {
-                this.dispatchEvent(new ShowToastEvent({
-                    title: 'Agreement Generated',
-                    message: 'Broker Agreement PDF has been created and attached to this record.',
-                    variant: 'success'
-                }));
-                this.dispatchEvent(new CloseActionScreenEvent());
+                this.dispatchEvent(
+                    new ShowToastEvent({
+                        title: 'Success',
+                        message: 'Broker Agreement PDF generated successfully.',
+                        variant: 'success'
+                    })
+                );
             })
             .catch(error => {
-                const msg = (error.body && error.body.message)
-                    ? error.body.message
-                    : 'Failed to generate the PDF. Please try again.';
-                this.dispatchEvent(new ShowToastEvent({
-                    title: 'Error',
-                    message: msg,
-                    variant: 'error',
-                    mode: 'sticky'
-                }));
-                this.isLoading = false;
-            });
-    }
 
-    handleCancel() {
-        this.dispatchEvent(new CloseActionScreenEvent());
+                let message = 'Failed to generate PDF';
+
+                if (error.body?.message) {
+                    message = error.body.message;
+                }
+
+                this.dispatchEvent(
+                    new ShowToastEvent({
+                        title: 'Error',
+                        message,
+                        variant: 'error',
+                        mode: 'sticky'
+                    })
+                );
+            });
     }
 }

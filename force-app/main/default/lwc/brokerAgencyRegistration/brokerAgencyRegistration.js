@@ -884,11 +884,13 @@ async handleSaveAndProceed() {
 
     try {
         await sendApplicationSubmittedNotification({
+            brokerApplicationId: this.brokerApplicationId,
             applicationNumber: this.commercialLicenseNumber,
-            companyName: this.companyName
+            companyName: this.companyName,
+            agencyEmail: this.agencyEmailId
         });
     } catch(error) {
-        console.error('Email notification failed', error);
+        console.error('Submission notification failed', error);
     }
 
     this.markCurrentTabAsCompleted();

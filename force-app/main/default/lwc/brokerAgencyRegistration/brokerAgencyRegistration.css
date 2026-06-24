@@ -935,4 +935,97 @@
     border-radius: 0.25rem;
     color: #3c763d;
     font-size: 12px;
+}.success-container {
+    min-height: 80vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+}
+
+.success-card {
+    width: 100%;
+    max-width: 700px;
+    background: white;
+    border-radius: 12px;
+    padding: 40px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.success-icon {
+    width: 70px;
+    height: 70px;
+    background: #2e844a;
+    color: white;
+    border-radius: 50%;
+    margin: auto;
+    font-size: 40px;
+    line-height: 70px;
+    font-weight: bold;
+}
+
+.success-card h1 {
+    margin-top: 20px;
+    color: #16325c;
+}
+
+.success-message {
+    margin-top: 15px;
+    color: #555;
+}
+
+.application-number-box {
+    background: #f4fff4;
+    border: 1px solid #2e844a;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 25px 0;
+}
+
+.application-label {
+    font-size: 12px;
+    color: #666;
+}
+
+.application-number {
+    font-size: 28px;
+    font-weight: bold;
+    color: #2e844a;
+}
+
+.review-message {
+    margin-top: 20px;
+}
+
+.contact-message {
+    margin-top: 20px;
+}
+
+.email-address {
+    color: #0176d3;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.button-group {
+    margin-top: 30px;
+}
+
+.success-btn {
+    padding: 10px 20px;
+    margin: 5px;
+    border-radius: 6px;
+    cursor: pointer;
+    border: none;
+}
+
+.primary {
+    background: #0176d3;
+    color: white;
+}
+
+.secondary {
+    background: white;
+    border: 1px solid #ccc;
 }

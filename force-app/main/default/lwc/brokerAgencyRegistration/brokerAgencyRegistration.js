@@ -7,11 +7,15 @@ import getExistingApplicants from '@salesforce/apex/BrokerAgencyRegistrationCont
 import uploadFile from '@salesforce/apex/BrokerAgencyRegistrationController.uploadFile';
 import getExistingDocuments from '@salesforce/apex/BrokerAgencyRegistrationController.getExistingDocuments';
 import updateBrokerApplication from '@salesforce/apex/BrokerAgencyRegistrationController.updateBrokerApplication';
+import sendApplicationSubmittedNotification
+    from '@salesforce/apex/BrokerAgencyRegistrationController.sendApplicationSubmittedNotification';
 
 export default class BrokerAgencyRegistration extends LightningElement {
 @api applicationType = ''; 
 @api referenceNumber = '';
 @track applicationStatus = 'Draft';
+@track showSuccessPage = false;
+@track applicationNumber = '';
 @track isExistingApplication = false;
 @track existingDataLoaded = false;
 @track typeOfEstablishment = '';
@@ -52,6 +56,7 @@ export default class BrokerAgencyRegistration extends LightningElement {
 @track agencyAdminPassportNumber = '';
 @track agencyAdminPassportExpiryDate = '';
 @track agencyAdminDateOfBirth = '';
+@track agencyAdminAuthorizedSignatory = false;
 
 // Company Personnel Tab Fields - Partner Owner
 @track partnerOwnerTitle = '';
@@ -152,7 +157,7 @@ this.agencyType = existingApp.AgencyType__c || '';
 this.addressLine01 = existingApp.AddressLine01__c || '';
 this.addressLine02 = existingApp.AddressLine02__c || '';
 this.country = existingApp.Country__c || '';
-this.state = existingApp.State__c || '';
+this.state = existingApp.	Emirate__c || '';
 this.city = existingApp.City__c || '';
 this.bankName = existingApp.BankNameValue__c || '';
 this.accountNumber = existingApp.Account_Number__c || '';
@@ -190,9 +195,9 @@ this.commercialLicenseExpiryDate = existingApp.CommercialLicenseExpiryDate__c ||
 this.agencyType = existingApp.AgencyType__c || '';
 this.addressLine01 = existingApp.AddressLine01__c || '';
 this.addressLine02 = existingApp.AddressLine02__c || '';
-this.country = existingApp.Country__c || '';
-this.state = existingApp.State__c || '';
-this.city = existingApp.City__c || '';
+this.country = existingApp.Countries__c || '';
+this.state = existingApp.Emirate__c || '';
+
 this.bankName = existingApp.BankNameValue__c || '';
 this.accountNumber = existingApp.Account_Number__c || '';
 this.bankCountry = existingApp.BankCountry__c || '';
@@ -286,6 +291,8 @@ this.agencyAdminPhone = applicant.PhoneNumber__c || '';
 this.agencyAdminPassportNumber = applicant.PassportNumber__c || '';
 this.agencyAdminPassportExpiryDate = applicant.PassportExpiryDate__c || '';
 this.agencyAdminDateOfBirth = applicant.DateOfBirth__c || '';
+this.agencyAdminAuthorizedSignatory =
+    applicant.IsAuthorizedSignatory__c || false;
 } else if (applicant.Role__c === 'Partner Owner') {
 hasPartnerOwner = true;
 this.partnerOwnerTitle = applicant.Title__c || '';
@@ -323,7 +330,7 @@ case 'agencyInfo':
 completed = !!(existingApp.CompanyName__c && existingApp.CommercialLicenseNumber__c);
 break;
 case 'agencyAddress':
-completed = !!(existingApp.AddressLine01__c && existingApp.Country__c);
+completed = !!(existingApp.AddressLine01__c && existingApp.Countries__c);
 break;
 case 'bankDetails':
 completed = !!(existingApp.BankNameValue__c && existingApp.Account_Number__c);
@@ -445,6 +452,10 @@ if (!this.applicationType) {
 this.applicationType = 'UAE';
 }
 this.typeOfEstablishment = this.applicationType === 'UAE' ? 'Domestic' : 'International';
+if (!this.isExistingApplication) {
+        this.agencyAdminPhone = '+971 ';
+        this.partnerOwnerPhone = '+971 ';
+    }
 }
 
 // Handle main tab click with disabled check
@@ -478,45 +489,81 @@ this.tabs[currentIndex + 1].disabled = false;
 
 // Handle input changes for lightning-input-field
 handleInputChange(event) {
-const field = event.target.fieldName;
-const value = event.detail.value;
+    const field = event.target.fieldName;
 
-// Map field names to tracking variables
-const fieldMap = {
-// BrokerApplication fields
-'CompanyName__c': 'companyName',
-'CommercialLicenseNumber__c': 'commercialLicenseNumber',
-'CommercialLicenseExpiryDate__c': 'commercialLicenseExpiryDate',
-'AgencyType__c': 'agencyType',
-'TypeofEstablishment__c': 'typeOfEstablishment',
-'AddressLine01__c': 'addressLine01',
-'AddressLine02__c': 'addressLine02',
-'Country__c': 'country',
-'State__c': 'state',
-'City__c': 'city',
-'BankNameValue__c': 'bankName',
-'Account_Number__c': 'accountNumber',
-'BankCountry__c': 'bankCountry',
-'BankBranchAddress__c': 'bankBranchAddress',
-'SwiftCode__c': 'swiftCode',
-'ZipCodePOBoxNumber__c': 'zipCode',
+    let value;
 
+    if (field === 'IsAuthorizedSignatory__c') {
+        value = event.target.checked;
+    } else {
+        value = event.detail.value;
+    }
 
-// BrokerApplicant fields
-'Title__c': this.activePersonnelTab === 'agencyAdmin' ? 'agencyAdminTitle' : 'partnerOwnerTitle',
-'FirstName__c': this.activePersonnelTab === 'agencyAdmin' ? 'agencyAdminFirstName' : 'partnerOwnerFirstName',
-'MiddleName__c': this.activePersonnelTab === 'agencyAdmin' ? 'agencyAdminMiddleName' : 'partnerOwnerMiddleName',
-'LastName__c': this.activePersonnelTab === 'agencyAdmin' ? 'agencyAdminLastName' : 'partnerOwnerLastName',
-'Email__c': this.activePersonnelTab === 'agencyAdmin' ? 'agencyAdminEmail' : 'partnerOwnerEmail',
-'PhoneNumber__c': this.activePersonnelTab === 'agencyAdmin' ? 'agencyAdminPhone' : 'partnerOwnerPhone',
-'PassportNumber__c': this.activePersonnelTab === 'agencyAdmin' ? 'agencyAdminPassportNumber' : 'partnerOwnerPassportNumber',
-'PassportExpiryDate__c': this.activePersonnelTab === 'agencyAdmin' ? 'agencyAdminPassportExpiryDate' : 'partnerOwnerPassportExpiryDate',
-'DateOfBirth__c': this.activePersonnelTab === 'agencyAdmin' ? 'agencyAdminDateOfBirth' : 'partnerOwnerDateOfBirth'
-};
+    const fieldMap = {
+        // Agency Information
+        'CommercialLicenseNumber__c': 'commercialLicenseNumber',
+        'CommercialLicenseExpiryDate__c': 'commercialLicenseExpiryDate',
+        'AgencyType__c': 'agencyType',
+        'CompanyName__c': 'companyName',
 
-if (fieldMap[field]) {
-this[fieldMap[field]] = value;
-}
+        // Address
+        'AddressLine01__c': 'addressLine01',
+        'AddressLine02__c': 'addressLine02',
+        'Countries__c': 'country',
+        'Emirate__c': 'state',
+
+        // Bank
+        'BankNameValue__c': 'bankName',
+        'Account_Number__c': 'accountNumber',
+        'BankCountry__c': 'bankCountry',
+        'BankBranchAddress__c': 'bankBranchAddress',
+        'SwiftCode__c': 'swiftCode',
+
+        // Agency Admin
+        'Title__c': this.activePersonnelTab === 'agencyAdmin'
+            ? 'agencyAdminTitle'
+            : 'partnerOwnerTitle',
+
+        'FirstName__c': this.activePersonnelTab === 'agencyAdmin'
+            ? 'agencyAdminFirstName'
+            : 'partnerOwnerFirstName',
+
+        'MiddleName__c': this.activePersonnelTab === 'agencyAdmin'
+            ? 'agencyAdminMiddleName'
+            : 'partnerOwnerMiddleName',
+
+        'LastName__c': this.activePersonnelTab === 'agencyAdmin'
+            ? 'agencyAdminLastName'
+            : 'partnerOwnerLastName',
+
+        'Email__c': this.activePersonnelTab === 'agencyAdmin'
+            ? 'agencyAdminEmail'
+            : 'partnerOwnerEmail',
+
+        'PhoneNumber__c': this.activePersonnelTab === 'agencyAdmin'
+            ? 'agencyAdminPhone'
+            : 'partnerOwnerPhone',
+
+        'PassportNumber__c': this.activePersonnelTab === 'agencyAdmin'
+            ? 'agencyAdminPassportNumber'
+            : 'partnerOwnerPassportNumber',
+
+        'PassportExpiryDate__c': this.activePersonnelTab === 'agencyAdmin'
+            ? 'agencyAdminPassportExpiryDate'
+            : 'partnerOwnerPassportExpiryDate',
+
+        'DateOfBirth__c': this.activePersonnelTab === 'agencyAdmin'
+            ? 'agencyAdminDateOfBirth'
+            : 'partnerOwnerDateOfBirth',
+
+        'IsAuthorizedSignatory__c': 'agencyAdminAuthorizedSignatory'
+    };
+
+    if (fieldMap[field]) {
+        this[fieldMap[field]] = value;
+    }
+
+    console.log(field + ' = ' + value);
 }
 
 // Handle file upload
@@ -594,6 +641,7 @@ this.legalDocuments = [...this.legalDocuments, newDocument];
 }
 
 // Remove document row
+
 removeDocumentRow(event) {
 const id = parseInt(event.target.dataset.id);
 
@@ -755,6 +803,7 @@ async handleSaveAndProceed() {
                 applicantFields['PassportNumber__c'] = this.agencyAdminPassportNumber;
                 applicantFields['PassportExpiryDate__c'] = this.agencyAdminPassportExpiryDate;
                 applicantFields['DateOfBirth__c'] = this.agencyAdminDateOfBirth;
+               applicantFields['IsAuthorizedSignatory__c'] = this.agencyAdminAuthorizedSignatory;
             } else {
                 applicantFields['Title__c'] = this.partnerOwnerTitle;
                 applicantFields['FirstName__c'] = this.partnerOwnerFirstName;
@@ -785,14 +834,25 @@ async handleSaveAndProceed() {
         } 
 
         // --- CASE B: LEGAL DOCUMENTS ---
-        else if (this.activeTab === 'legalDocuments') {
-            await this.saveLegalDocuments();
-            this.markCurrentTabAsCompleted();
-            this.enableNextTab();
-            this.moveToNextTab();
-            this.isLoading = false;
-        } 
+      else if (this.activeTab === 'legalDocuments') {
 
+    await this.saveLegalDocuments();
+
+    try {
+        await sendApplicationSubmittedNotification({
+            applicationNumber: this.commercialLicenseNumber,
+            companyName: this.companyName
+        });
+    } catch(error) {
+        console.error('Email notification failed', error);
+    }
+
+    this.markCurrentTabAsCompleted();
+    this.enableNextTab();
+    this.moveToNextTab();
+
+    this.isLoading = false;
+}
         // --- CASE C: AGENCY INFO (CREATE) ---
         else if (this.activeTab === 'agencyInfo') {
             const brokerForm = this.template.querySelector(`[data-id="${this.activeTab}"]`);
@@ -834,9 +894,8 @@ getFieldsForCurrentTab() {
         return {
             'AddressLine01__c': this.addressLine01,
             'AddressLine02__c': this.addressLine02,
-            'Country__c': this.country,
-            'State__c': this.state,
-            'City__c': this.city
+            'Countries__c': this.country,
+            'Emirate__c': this.state
         };
     } else if (this.activeTab === 'bankDetails') {
         return {
@@ -937,7 +996,7 @@ switch(this.activeTab) {
 case 'agencyInfo':
 return ['companyName', 'commercialLicenseNumber', 'commercialLicenseExpiryDate', 'agencyType'];
 case 'agencyAddress':
-return ['addressLine01', 'country', 'state', 'city'];
+return ['addressLine01', 'country', 'state'];
 case 'bankDetails':
 return ['bankName', 'accountNumber', 'bankCountry', 'bankBranchAddress', 'swiftCode'];
 case 'companyPersonnel':
@@ -985,9 +1044,15 @@ const currentIndex = this.tabs.findIndex(tab => tab.id === this.activeTab);
 if (currentIndex < this.tabs.length - 1) {
 this.activeTab = this.tabs[currentIndex + 1].id;
 this.activePersonnelTab = 'agencyAdmin';
-} else {
-this.applicationStatus = 'Complete';
-// this.showToast('Congratulations!', 'All information has been saved successfully! Application completed.', 'success');
+}else {
+
+    this.applicationStatus = 'Submitted';
+
+    this.applicationNumber =
+        this.commercialLicenseNumber ||
+        this.brokerApplicationId;
+
+    this.showSuccessPage = true;
 }
 }
 
@@ -1021,5 +1086,11 @@ message: message,
 variant: variant,
 });
 this.dispatchEvent(event);
+}
+
+handleDashboard() {
+
+    window.location.href =
+        '/BrokerPortal';
 }
 }

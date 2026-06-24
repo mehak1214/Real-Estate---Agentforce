@@ -8,405 +8,445 @@ import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 export default class EventTeamMemberDashboard extends LightningElement {
 
-@track showModal = false;
-@track currentStep = 1;
-@track cases = [];
+    @track showModal = false;
+    @track currentStep = 1;
+    @track cases = [];
 
-caseId;
+    caseId;
 
-firstName='';
-lastName='';
-email='';
-phone='';
-nationalId='';
+    firstName = '';
+    lastName = '';
+    email = '';
+    phone = '';
+    nationalId = '';
 
-@track legalDocuments = [
-{
-id:1,
-fileName:'',
-fileContent:null,
-fileType:'',
-fileSize:'',
-displayNumber:'Document 1',
-showRemove:false
-}
-];
+    title = '';
+    nationality = 'UAE';
+    nationalIdExpiry = '';
+    dob = '';
+    isAuthorizedSignatory = false;
 
-nextDocumentId = 2;
+    @track legalDocuments = [
+        {
+            id: 1,
+            fileName: '',
+            fileContent: null,
+            fileType: '',
+            fileSize: '',
+            displayNumber: 'Document 1',
+            showRemove: false
+        }
+    ];
 
+    nextDocumentId = 2;
 
-/* COMPONENT LOAD */
 
-connectedCallback(){
-this.loadCases();
-}
+    /* COMPONENT LOAD */
 
+    connectedCallback() {
+        this.loadCases();
+    }
 
-/* LOAD APPLICATIONS */
 
-async loadCases(){
+    /* LOAD APPLICATIONS */
 
-try{
+    async loadCases() {
 
-const result = await getLastApplications();
+        try {
 
-/* Force LWC reactivity */
-this.cases = [];
-this.cases = [...result];
+            const result = await getLastApplications();
 
-}catch(error){
+            /* Force LWC reactivity */
+            this.cases = [];
+            this.cases = [...result];
 
-console.error('Load Cases Error',error);
+        } catch (error) {
 
-}
+            console.error('Load Cases Error', error);
 
-}
+        }
 
+    }
 
-/* MODAL OPEN */
 
-openModal(){
+    get nationalityOptions() {
+        return [
+            { label: 'UAE', value: 'UAE' },
+            { label: 'India', value: 'India' },
+            { label: 'Pakistan', value: 'Pakistan' },
+            { label: 'Bangladesh', value: 'Bangladesh' },
+            { label: 'Philippines', value: 'Philippines' },
+            { label: 'Egypt', value: 'Egypt' },
+            { label: 'Saudi Arabia', value: 'Saudi Arabia' },
+            { label: 'Other', value: 'Other' }
+        ];
+    }
 
-this.showModal = true;
 
-this.currentStep = 1;
+    /* MODAL OPEN */
 
-this.caseId = null;
+    openModal() {
 
-this.firstName = '';
-this.lastName = '';
-this.email = '';
-this.phone = '';
-this.nationalId = '';
+        this.showModal = true;
 
-this.nextDocumentId = 2;
+        this.currentStep = 1;
 
-this.legalDocuments = [
-{
-id:1,
-fileName:'',
-fileContent:null,
-fileType:'',
-fileSize:'',
-displayNumber:'Document 1',
-showRemove:false
-}
-];
+        this.caseId = null;
 
-}
+        this.firstName = '';
+        this.lastName = '';
+        this.email = '';
+        this.phone = '';
+        this.nationalId = '';
 
+        this.title = '';
+        this.nationality = 'UAE';
+        this.nationalIdExpiry = '';
+        this.dob = '';
+        this.isAuthorizedSignatory = false;
 
-/* MODAL CLOSE */
+        this.nextDocumentId = 2;
 
-closeModal(){
+        this.legalDocuments = [
+            {
+                id: 1,
+                fileName: '',
+                fileContent: null,
+                fileType: '',
+                fileSize: '',
+                displayNumber: 'BRN/RERA CARD',
+                showRemove: false
+            }
+        ];
 
-this.showModal = false;
-this.currentStep = 1;
+    }
 
-}
 
+    /* MODAL CLOSE */
 
-/* INPUT CHANGE */
+    closeModal() {
 
-handleChange(event){
+        this.showModal = false;
+        this.currentStep = 1;
 
-this[event.target.name] = event.target.value;
+    }
 
-}
 
+    /* INPUT CHANGE */
 
-/* STEP CHECK */
+    handleChange(event) {
 
-get isStep1(){
-return this.currentStep === 1;
-}
+        const field = event.target.name;
 
-get isStep2(){
-return this.currentStep === 2;
-}
+        if (event.target.type === 'checkbox') {
+            this[field] = event.target.checked;
+        } else {
+            this[field] = event.target.value;
+        }
+    }
 
 
-/* NEXT BUTTON */
+    /* STEP CHECK */
 
-handleNext(){
+    get isStep1() {
+        return this.currentStep === 1;
+    }
 
-console.log('NEXT BUTTON CLICKED');
-console.log('Current Case Id:', this.caseId);
+    get isStep2() {
+        return this.currentStep === 2;
+    }
 
-const allValid = [...this.template.querySelectorAll('lightning-input')]
-.reduce((validSoFar, inputField) => {
-inputField.reportValidity();
-return validSoFar && inputField.checkValidity();
-}, true);
 
-if (!allValid){
-console.log('Form validation failed');
-return;
-}
+    get titleOptions() {
+        return [
+            { label: 'Mr', value: 'Mr' },
+            { label: 'Mrs', value: 'Mrs' },
+            { label: 'Ms', value: 'Ms' },
+            { label: 'Dr', value: 'Dr' }
+        ];
+    }
 
-console.log('Form values:',{
-firstName:this.firstName,
-lastName:this.lastName,
-email:this.email,
-phone:this.phone,
-nationalId:this.nationalId
-});
+    /* NEXT BUTTON */
 
+    handleNext() {
 
-/* CREATE CASE */
+        console.log('NEXT BUTTON CLICKED');
+        console.log('Current Case Id:', this.caseId);
 
-if(!this.caseId){
+        const allValid = [...this.template.querySelectorAll('lightning-input')]
+            .reduce((validSoFar, inputField) => {
+                inputField.reportValidity();
+                return validSoFar && inputField.checkValidity();
+            }, true);
 
-console.log('Creating new Case...');
+        if (!allValid) {
+            console.log('Form validation failed');
+            return;
+        }
 
-createBrokerRegistrationCase({
-firstName:this.firstName,
-lastName:this.lastName,
-email:this.email,
-phone:this.phone,
-nationalId:this.nationalId
-})
-.then(result=>{
+        console.log('Form values:', {
+            firstName: this.firstName,
+            lastName: this.lastName,
+            email: this.email,
+            phone: this.phone,
+            nationalId: this.nationalId
+        });
 
-console.log('Case Created Successfully:', result);
 
-this.caseId = result;
-this.currentStep = 2;
+        /* CREATE CASE */
 
-})
-.catch(error=>{
+        if (!this.caseId) {
 
-console.error('Create Case Error:', error);
+            console.log('Creating new Case...');
 
-});
+            createBrokerRegistrationCase({
+                firstName: this.firstName,
+                lastName: this.lastName,
+                email: this.email,
+                phone: this.phone,
+                nationalId: this.nationalId
+            })
+                .then(result => {
 
-}
+                    console.log('Case Created Successfully:', result);
 
-/* UPDATE CASE */
+                    this.caseId = result;
+                    this.currentStep = 2;
 
-else{
+                })
+                .catch(error => {
 
-console.log('Updating existing Case:', this.caseId);
+                    console.error('Create Case Error:', error);
 
-updateBrokerRegistrationCase({
+                });
 
-caseId:this.caseId,
-firstName:this.firstName,
-lastName:this.lastName,
-email:this.email,
-phone:this.phone,
-nationalId:this.nationalId
+        }
 
-})
-.then(result=>{
+        /* UPDATE CASE */
 
-console.log('Case Updated Successfully:', result);
+        else {
 
-this.currentStep = 2;
+            console.log('Updating existing Case:', this.caseId);
 
-})
-.catch(error=>{
+            updateBrokerRegistrationCase({
 
-console.error('Update Case Error:', error);
+                caseId: this.caseId,
+                firstName: this.firstName,
+                lastName: this.lastName,
+                email: this.email,
+                phone: this.phone,
+                nationalId: this.nationalId
 
-});
+            })
+                .then(result => {
 
-}
+                    console.log('Case Updated Successfully:', result);
 
-}
+                    this.currentStep = 2;
 
+                })
+                .catch(error => {
 
-/* PREVIOUS BUTTON */
+                    console.error('Update Case Error:', error);
 
-handlePrevious(){
+                });
 
-this.currentStep = 1;
+        }
 
-}
+    }
 
 
-/* FINAL SUBMIT */
+    /* PREVIOUS BUTTON */
 
-async handleFinalSubmit(){
+    handlePrevious() {
 
-console.log('FINAL SUBMIT CLICKED');
-console.log('Updating Case Before Upload:', this.caseId);
+        this.currentStep = 1;
 
-try{
+    }
 
-/* UPDATE CASE AGAIN BEFORE DOCUMENT UPLOAD */
 
-await updateBrokerRegistrationCase({
+    /* FINAL SUBMIT */
 
-caseId:this.caseId,
-firstName:this.firstName,
-lastName:this.lastName,
-email:this.email,
-phone:this.phone,
-nationalId:this.nationalId
+    async handleFinalSubmit() {
 
-});
+        console.log('FINAL SUBMIT CLICKED');
+        console.log('Updating Case Before Upload:', this.caseId);
 
-console.log('Case Updated Successfully Before Upload');
+        try {
 
+            /* UPDATE CASE AGAIN BEFORE DOCUMENT UPLOAD */
 
-/* UPLOAD DOCUMENTS */
+            await updateBrokerRegistrationCase({
 
-for(const doc of this.legalDocuments){
+                caseId: this.caseId,
+                firstName: this.firstName,
+                lastName: this.lastName,
+                email: this.email,
+                phone: this.phone,
+                nationalId: this.nationalId
 
-if(doc.fileContent){
+            });
 
-await uploadFile({
+            console.log('Case Updated Successfully Before Upload');
 
-parentId:this.caseId,
-fileName:doc.fileName,
-base64Data:doc.fileContent,
-contentType:doc.fileType,
-fileDescription:'Legal Document'
 
-});
+            /* UPLOAD DOCUMENTS */
 
-console.log('File Uploaded:', doc.fileName);
+            for (const doc of this.legalDocuments) {
 
-}
+                if (doc.fileContent) {
 
-}
+                    await uploadFile({
 
+                        parentId: this.caseId,
+                        fileName: doc.fileName,
+                        base64Data: doc.fileContent,
+                        contentType: doc.fileType,
+                        fileDescription: 'Legal Document'
 
-/* SUCCESS MESSAGE */
+                    });
 
-this.dispatchEvent(
-new ShowToastEvent({
-title:'Success',
-message:'Case updated and documents submitted successfully',
-variant:'success'
-})
-);
+                    console.log('File Uploaded:', doc.fileName);
 
+                }
 
-/* REFRESH APPLICATION LIST */
+            }
 
-await this.loadCases();
 
+            /* SUCCESS MESSAGE */
 
-/* CLOSE MODAL */
+            this.dispatchEvent(
+                new ShowToastEvent({
+                    title: 'Success',
+                    message: 'Case updated and documents submitted successfully',
+                    variant: 'success'
+                })
+            );
 
-this.closeModal();
 
-}catch(error){
+            /* REFRESH APPLICATION LIST */
 
-console.error('Final Submit Error:', error);
+            await this.loadCases();
 
-this.dispatchEvent(
-new ShowToastEvent({
-title:'Error',
-message:'Something went wrong during final submit',
-variant:'error'
-})
-);
 
-}
+            /* CLOSE MODAL */
 
-}
+            this.closeModal();
 
+        } catch (error) {
 
-/* FILE UPLOAD */
+            console.error('Final Submit Error:', error);
 
-handleFileUpload(event){
+            this.dispatchEvent(
+                new ShowToastEvent({
+                    title: 'Error',
+                    message: 'Something went wrong during final submit',
+                    variant: 'error'
+                })
+            );
 
-const id = parseInt(event.target.dataset.id);
-const file = event.target.files[0];
+        }
 
-if(!file) return;
+    }
 
-const reader = new FileReader();
 
-reader.onloadend = ()=>{
+    /* FILE UPLOAD */
 
-const base64 = reader.result.split(',')[1];
+    handleFileUpload(event) {
 
-this.legalDocuments = this.legalDocuments.map(doc=>{
+        const id = parseInt(event.target.dataset.id);
+        const file = event.target.files[0];
 
-if(doc.id === id){
+        if (!file) return;
 
-doc.fileName = file.name;
-doc.fileContent = base64;
-doc.fileType = file.type;
+        const reader = new FileReader();
 
-}
+        reader.onloadend = () => {
 
-return doc;
+            const base64 = reader.result.split(',')[1];
 
-});
+            this.legalDocuments = this.legalDocuments.map(doc => {
 
-};
+                if (doc.id === id) {
 
-reader.readAsDataURL(file);
+                    doc.fileName = file.name;
+                    doc.fileContent = base64;
+                    doc.fileType = file.type;
 
-}
+                }
 
+                return doc;
 
-/* ADD DOCUMENT */
+            });
 
-addDocumentRow(){
+        };
 
-const newDoc = {
+        reader.readAsDataURL(file);
 
-id:this.nextDocumentId++,
-fileName:'',
-fileContent:null,
-fileType:'',
-displayNumber:'',
-showRemove:true
+    }
 
-};
 
-this.legalDocuments = [...this.legalDocuments,newDoc];
+    /* ADD DOCUMENT */
 
-}
+    addDocumentRow() {
 
+        const newDoc = {
 
-/* REMOVE DOCUMENT */
+            id: this.nextDocumentId++,
+            fileName: '',
+            fileContent: null,
+            fileType: '',
+            displayNumber: '',
+            showRemove: true
 
-removeDocumentRow(event){
+        };
 
-const id = parseInt(event.currentTarget.dataset.id);
+        this.legalDocuments = [...this.legalDocuments, newDoc];
 
-this.legalDocuments =
-this.legalDocuments.filter(doc => doc.id !== id);
+    }
 
-}
 
+    /* REMOVE DOCUMENT */
 
-/* DOCUMENT LIST */
+    removeDocumentRow(event) {
 
-get documentList(){
+        const id = parseInt(event.currentTarget.dataset.id);
 
-const total = this.legalDocuments.length;
+        this.legalDocuments =
+            this.legalDocuments.filter(doc => doc.id !== id);
 
-return this.legalDocuments.map((doc,index)=>{
+    }
 
-return{
-...doc,
-displayNumber:`Document ${index+1}`,
-showRemove: total > 1
-}
 
-});
+    /* DOCUMENT LIST */
 
-}
+    get documentList() {
 
+        const total = this.legalDocuments.length;
 
-/* FINAL SUBMIT VALIDATION */
+        return this.legalDocuments.map((doc, index) => {
 
-get disableFinalSubmit(){
+            return {
+                ...doc,
+                displayNumber: `Document ${index + 1}`,
+                showRemove: total > 1
+            }
 
-if(!this.legalDocuments || this.legalDocuments.length === 0){
-return true;
-}
+        });
 
-return !this.legalDocuments.some(doc => doc.fileContent);
+    }
 
-}
+
+    /* FINAL SUBMIT VALIDATION */
+
+    get disableFinalSubmit() {
+
+        if (!this.legalDocuments || this.legalDocuments.length === 0) {
+            return true;
+        }
+
+        return !this.legalDocuments.some(doc => doc.fileContent);
+
+    }
 
 }

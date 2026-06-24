@@ -1,4 +1,56 @@
 <template>
+    <template if:true={showSuccessPage}>
+    <div class="success-container">
+        <div class="success-card">
+
+            <div class="success-icon">
+                ✓
+            </div>
+
+            <h1>Application Submitted Successfully</h1>
+
+            <p class="success-message">
+                Your broker registration application has been submitted successfully.
+            </p>
+
+            <div class="application-number-box">
+                <div class="application-label">
+                    APPLICATION NUMBER
+                </div>
+
+                <div class="application-number">
+                    {applicationNumber}
+                </div>
+            </div>
+
+            <p class="review-message">
+                Our team will review your application and contact you if any
+                additional information or documents are required.
+            </p>
+
+            <p class="contact-message">
+                For further assistance please contact:
+            </p>
+
+            <div class="email-address">
+                support@tigergroup.com
+            </div>
+
+            <div class="button-group">
+                
+
+                <button
+                    class="success-btn secondary"
+                    onclick={handleDashboard}>
+                    Go To Dashboard
+                </button>
+            </div>
+
+        </div>
+    </div>
+</template>
+
+<template if:false={showSuccessPage}>
     <div class="container">
         <!-- Loading Overlay -->
         <template if:true={isLoading}>
@@ -182,7 +234,7 @@
                                     <!-- Country -->
                                     <div class="form-group">
                                         <lightning-input-field
-                                            field-name="Country__c"
+                                            field-name="Countries__c"
                                             value={country}
                                             onchange={handleInputChange}
                                             class="form-input-field"
@@ -193,7 +245,7 @@
                                     <!-- State -->
                                     <div class="form-group">
                                         <lightning-input-field
-                                            field-name="State__c"
+                                            field-name="Emirate__c"
                                             value={state}
                                             onchange={handleInputChange}
                                             class="form-input-field"
@@ -201,16 +253,7 @@
                                         ></lightning-input-field>
                                     </div>
 
-                                    <!-- City -->
-                                    <div class="form-group">
-                                        <lightning-input-field
-                                            field-name="City__c"
-                                            value={city}
-                                            onchange={handleInputChange}
-                                            class="form-input-field"
-                                            required
-                                        ></lightning-input-field>
-                                    </div>
+                                    
                                 </div>
                             </div>
                         </lightning-record-edit-form>
@@ -459,6 +502,14 @@
                                                     class="form-input-field"
                                                     required
                                                 ></lightning-input-field>
+                                            </div>
+                                            <div class="form-group">
+                                                <lightning-input-field
+                                                    field-name="IsAuthorizedSignatory__c"
+                                                   
+                                                    onchange={handleInputChange}
+                                                    class="form-input-field">
+                                                </lightning-input-field>
                                             </div>
 
                                             <!-- Hidden field for relationship -->
@@ -738,4 +789,5 @@
             </button>
         </div>
     </div>
+</template>
 </template>

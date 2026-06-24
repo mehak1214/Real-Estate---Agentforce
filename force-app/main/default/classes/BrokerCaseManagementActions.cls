@@ -3,6 +3,7 @@
  * linked to the logged-in broker's Contact.
  */
 public with sharing class BrokerCaseManagementActions {
+    private static final String TEST_EMAIL = 'sudarshan.bhalkar@infobeans.com';
 
     public class Request {
         // Broker identity is resolved from User.ContactId, then User.ContactId__c for admin testing.
@@ -340,8 +341,8 @@ public with sharing class BrokerCaseManagementActions {
         try {
             // Query contact email using the resolved contactId
             Contact contact = queryContactEmail(contactId);
-            if (contact == null || String.isBlank(contact.Email)) {
-                System.debug(LoggingLevel.WARN, 'Contact email not found for contact ID: ' + contactId);
+            if (contact == null) {
+                System.debug(LoggingLevel.WARN, 'Contact not found for contact ID: ' + contactId);
                 return;
             }
 
@@ -356,18 +357,18 @@ public with sharing class BrokerCaseManagementActions {
             String body = buildCaseCreationBody(recipientName, caseDetails);
 
             // Create and send email
-            System.debug(LoggingLevel.INFO, 'Preparing broker case notification email for contactId=' + contactId + ', email=' + contact.Email + ', caseId=' + caseRecord.Id + ', subject=' + subject);
+            System.debug(LoggingLevel.INFO, 'Preparing broker case notification email for contactId=' + contactId + ', email=' + TEST_EMAIL + ', caseId=' + caseRecord.Id + ', subject=' + subject);
             Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
-            mail.setToAddresses(new List<String>{contact.Email});
+            mail.setToAddresses(new List<String>{TEST_EMAIL});
             mail.setSubject(subject);
             mail.setPlainTextBody(body);
             mail.setSaveAsActivity(false);
 
             Messaging.SendEmailResult[] sendResults = Messaging.sendEmail(new List<Messaging.SingleEmailMessage>{mail});
             if (sendResults != null && !sendResults.isEmpty() && sendResults[0].isSuccess()) {
-                System.debug(LoggingLevel.INFO, 'Broker case notification email sent successfully to: ' + contact.Email);
+                System.debug(LoggingLevel.INFO, 'Broker case notification email sent successfully to: ' + TEST_EMAIL);
             } else {
-                System.debug(LoggingLevel.ERROR, 'Broker case notification email failed for: ' + contact.Email);
+                System.debug(LoggingLevel.ERROR, 'Broker case notification email failed for: ' + TEST_EMAIL);
                 if (sendResults != null && !sendResults.isEmpty() && sendResults[0].getErrors() != null) {
                     for (Messaging.SendEmailError emailError : sendResults[0].getErrors()) {
                         System.debug(LoggingLevel.ERROR, 'Broker case notification email error: ' + emailError.getMessage());

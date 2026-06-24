@@ -3,6 +3,7 @@
  * Handles lead creation by broker agents via Agentforce agent
  */
 public with sharing class BrokerLeadCreationActions {
+    private static final String TEST_EMAIL = 'sudarshan.bhalkar@infobeans.com';
 
     public class LeadCreateInput {
         @InvocableVariable(label='Broker Contact ID' required=false description='Portal user contact id from session context')
@@ -406,8 +407,8 @@ public with sharing class BrokerLeadCreationActions {
     private static void sendLeadCreationEmail(Id contactId, Lead leadRecord) {
         try {
             Contact contact = queryContactEmail(contactId);
-            if (contact == null || String.isBlank(contact.Email)) {
-                System.debug(LoggingLevel.WARN, 'Contact email not found for contact ID: ' + contactId);
+            if (contact == null) {
+                System.debug(LoggingLevel.WARN, 'Contact not found for contact ID: ' + contactId);
                 return;
             }
 
@@ -431,13 +432,13 @@ public with sharing class BrokerLeadCreationActions {
 
             // Create and send email
             Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
-            mail.setToAddresses(new List<String>{contact.Email});
+            mail.setToAddresses(new List<String>{TEST_EMAIL});
             mail.setSubject(subject);
             mail.setPlainTextBody(body);
             mail.setSaveAsActivity(false);
 
             Messaging.sendEmail(new List<Messaging.SingleEmailMessage>{mail});
-            System.debug(LoggingLevel.INFO, 'Broker lead notification email sent to: ' + contact.Email);
+            System.debug(LoggingLevel.INFO, 'Broker lead notification email sent to: ' + TEST_EMAIL);
 
         } catch (QueryException qe) {
             System.debug(LoggingLevel.ERROR, 'Query error sending broker lead email: ' + qe.getMessage());

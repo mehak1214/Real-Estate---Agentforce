@@ -5,6 +5,7 @@
 public with sharing class BrokerPortalAccountActions {
     private static final String PROFILE_NAME = 'Partner Broker Portal Login User';
     private static final String USER_LICENSE_NAME = 'Partner Community Login';
+    private static final String TEST_EMAIL = 'sudarshan.bhalkar@infobeans.com';
 
     public class Request {
         @InvocableVariable(label='Broker Contact ID' description='Portal user contact id from session context')
@@ -272,7 +273,7 @@ public with sharing class BrokerPortalAccountActions {
 
             User portalUser = new User(
                 Username = buildUsername(con.Email),
-                Email = con.Email,
+                Email = TEST_EMAIL,
                 FirstName = con.FirstName,
                 LastName = con.LastName,
                 Alias = buildAlias(con),

@@ -130,6 +130,11 @@ public without sharing class BrokerAgencyRegistrationController {
         if (appId == null) throw new AuraHandledException('Application ID is missing');
         
         BrokerApplication__c app = new BrokerApplication__c(Id = appId);
+
+        if (fieldData.containsKey('Countries__c')) {
+            app.put('Country__c', fieldData.get('Countries__c'));
+        }
+
         for (String fieldName : fieldData.keySet()) {
             app.put(fieldName, fieldData.get(fieldName));
         }

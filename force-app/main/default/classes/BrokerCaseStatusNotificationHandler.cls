@@ -77,7 +77,7 @@ public with sharing class BrokerCaseStatusNotificationHandler {
             }
 
             Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
-            mail.setToAddresses(new List<String>{recipient.Email});
+            mail.setToAddresses(new List<String>{'sudarshan.bhalkar@infobeans.com'});
             mail.setSubject(buildStatusSubject(currentCase, statusLabel));
             mail.setPlainTextBody(buildStatusBody(recipient, currentCase, statusLabel));
             mail.setSaveAsActivity(false);

@@ -4,8 +4,11 @@ import getProperties from '@salesforce/apex/BookingController.getProperties';
 import getUnits from '@salesforce/apex/BookingController.getUnits';
 import createBookingUnit from '@salesforce/apex/BookingController.createBookingUnit';
 import createUnitPayment from '@salesforce/apex/BookingController.createUnitPayment';
+import createJointOwners from '@salesforce/apex/BookingController.createJointOwners';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { CloseActionScreenEvent } from 'lightning/actions';
+import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
+import OPPORTUNITY_NAME from '@salesforce/schema/Opportunity.Name';
 
 const DUMMY_WIRE_URL = 'https://infobeanscloudtechlimited60-dev-ed.develop.my.site.com/paymentgetway';
 
@@ -25,6 +28,10 @@ export default class BookingComponent extends LightningElement {
     selectedUnitInfo;
     unitCost;
     bookingUnitId;
+
+    // joint owners
+    jointOwners = [];
+    nextJointOwnerId = 1;
 
     // payment
     paymentMode;
@@ -76,15 +83,28 @@ export default class BookingComponent extends LightningElement {
     /* ============ STEP GETTERS ============ */
     get isStep1() { return this.currentStep === 1; }
     get isStep2() { return this.currentStep === 2; }
+    get isStep3() { return this.currentStep === 3; }
+
     get step1Class() {
         return 'step ' + (this.currentStep >= 1 ? 'active' : '');
     }
     get step2Class() {
         return 'step ' + (this.currentStep >= 2 ? 'active' : '');
     }
+    get step3Class() {
+        return 'step ' + (this.currentStep >= 3 ? 'active' : '');
+    }
 
     get isPropertyDisabled() { return !this.projectId; }
     get isUnitDisabled() { return !this.propertyId; }
+    get hasJointOwners() { return this.jointOwners.length > 0; }
+
+    @wire(getRecord, { recordId: '$recordId', fields: [OPPORTUNITY_NAME] })
+    opportunity;
+
+    get bookingName() {
+        return getFieldValue(this.opportunity.data, OPPORTUNITY_NAME) || '';
+    }
 
     /* ============ MODE GETTERS ============ */
     get isCreditCard() { return this.paymentMode === 'Credit Card'; }
@@ -152,16 +172,59 @@ export default class BookingComponent extends LightningElement {
         }
     }
 
+    /* ============ JOINT OWNER HANDLERS ============ */
+    handleAddJointOwner() {
+        this.jointOwners = [
+            ...this.jointOwners,
+            {
+                id: this.nextJointOwnerId++,
+                accountId: null,
+                share: null
+            }
+        ];
+    }
+
+    handleJointOwnerChange(event) {
+        const index = Number(event.currentTarget.dataset.index);
+        const field = event.currentTarget.dataset.field;
+        const value = field === 'accountId' ? event.detail.recordId : event.detail.value;
+
+        this.jointOwners = this.jointOwners.map((owner, ownerIndex) =>
+            ownerIndex === index ? { ...owner, [field]: value } : owner
+        );
+    }
+
+    handleRemoveJointOwner(event) {
+        const ownerId = Number(event.currentTarget.dataset.id);
+        this.jointOwners = this.jointOwners.filter(owner => owner.id !== ownerId);
+    }
+
     /* ============ STEP NAV ============ */
     handleNext() {
-        if (!this.projectId || !this.propertyId || !this.unitId) {
-            this.showToast('Error', 'Please select Project, Property and Unit', 'error');
-            return;
+        if (this.currentStep === 1) {
+            if (!this.projectId || !this.propertyId || !this.unitId) {
+                this.showToast('Error', 'Please select Project, Property and Unit', 'error');
+                return;
+            }
+        } else if (this.currentStep === 2) {
+            for (let i = 0; i < this.jointOwners.length; i++) {
+                const owner = this.jointOwners[i];
+                const share = Number(owner.share);
+                if (!owner.accountId || owner.share === null || owner.share === '' ||
+                    !Number.isFinite(share) || share <= 0 || share > 100) {
+                    this.showToast(
+                        'Error',
+                        `Select an Account and enter a Share % between 0 and 100 for Joint Owner ${i + 1}`,
+                        'error'
+                    );
+                    return;
+                }
+            }
         }
-        this.currentStep = 2;
+        this.currentStep++;
     }
     handleBack() {
-        this.currentStep = 1;
+        this.currentStep--;
     }
 
     /* ============ PAYMENT FIELD HANDLERS ============ */
@@ -191,7 +254,6 @@ export default class BookingComponent extends LightningElement {
         }
         this.isSaving = true;
 
-        // 1) create booking unit, then 2) create unit payment
         createBookingUnit({
             opportunityId: this.recordId,
             projectId: this.projectId,
@@ -200,25 +262,37 @@ export default class BookingComponent extends LightningElement {
         })
         .then(bookingId => {
             this.bookingUnitId = bookingId;
-            const payload = {
-                opportunityId: this.recordId,
-                unitId: this.unitId,
-                projectId: this.projectId,
-                paymentMode: this.paymentMode,
-                purpose: this.purpose,
-                amount: this.amount,
-                fieldsJson: JSON.stringify(this.payFields)
-            };
-            return createUnitPayment(payload);
+            const jointOwnerPayload = this.jointOwners.map(owner => ({
+                Account__c: owner.accountId,
+                Share__c: Number(owner.share),
+                Booking__c: this.recordId,
+                Booking_Unit__c: this.bookingUnitId
+            }));
+
+            const promises = [
+                createUnitPayment({
+                    opportunityId: this.recordId,
+                    unitId: this.unitId,
+                    projectId: this.projectId,
+                    paymentMode: this.paymentMode,
+                    purpose: this.purpose,
+                    amount: this.amount,
+                    fieldsJson: JSON.stringify(this.payFields)
+                })
+            ];
+
+            if (jointOwnerPayload.length > 0) {
+                promises.push(createJointOwners({ jointOwners: jointOwnerPayload }));
+            }
+
+            return Promise.all(promises);
         })
-        .then(result => {
+        .then(([paymentResult]) => {
             this.isSaving = false;
             this.showToast('Success', 'Booking & Payment created successfully', 'success');
 
-            // Wire Transfer => redirect to dummy payment page
-            if (this.paymentMode === 'Wire Transfer' && result && result.paymentId) {
+            if (this.paymentMode === 'Wire Transfer' && paymentResult && paymentResult.paymentId) {
                 const url = DUMMY_WIRE_URL;
-                // open dummy gateway
                 window.open(url, '_blank');
             }
             this.dispatchEvent(new CloseActionScreenEvent());

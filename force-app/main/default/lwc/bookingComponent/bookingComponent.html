@@ -11,6 +11,11 @@
                 <div class="connector"></div>
                 <div class={step2Class}>
                     <div class="circle">2</div>
+                    <span class="step-label">Joint Owner</span>
+                </div>
+                <div class="connector"></div>
+                <div class={step3Class}>
+                    <div class="circle">3</div>
                     <span class="step-label">Payment</span>
                 </div>
             </div>
@@ -73,8 +78,96 @@
                 </div>
             </template>
 
-            <!-- ================= STEP 2 : PAYMENT ================= -->
+            <!-- ================= STEP 2 : JOINT OWNER ================= -->
             <template if:true={isStep2}>
+                <div class="card-section slds-box slds-theme_shade">
+                    <div class="joint-owner-header">
+                        <h3 class="section-title">Add Joint Owners</h3>
+                        <lightning-button
+                            label="Add"
+                            variant="brand"
+                            icon-name="utility:add"
+                            onclick={handleAddJointOwner}>
+                        </lightning-button>
+                    </div>
+
+                    <template if:false={hasJointOwners}>
+                        <div class="joint-owner-empty">
+                            No joint owners added. Click Add to select an Account.
+                        </div>
+                    </template>
+
+                    <template for:each={jointOwners} for:item="owner" for:index="index">
+                        <div key={owner.id} class="joint-owner-section slds-m-top_medium">
+                            <div class="slds-grid slds-gutters slds-wrap slds-grid_vertical-align-end">
+                                <div class="slds-col slds-size_1-of-1 slds-large-size_5-of-12">
+                                    <lightning-record-picker
+                                        label="Account"
+                                        placeholder="Search Accounts..."
+                                        object-api-name="Account"
+                                        value={owner.accountId}
+                                        onchange={handleJointOwnerChange}
+                                        data-index={index}
+                                        data-field="accountId"
+                                        required>
+                                    </lightning-record-picker>
+                                </div>
+                                <div class="slds-col slds-size_1-of-1 slds-large-size_2-of-12">
+                                    <lightning-input
+                                        type="number"
+                                        label="Share %"
+                                        value={owner.share}
+                                        min="0.01"
+                                        max="100"
+                                        step="0.01"
+                                        onchange={handleJointOwnerChange}
+                                        data-index={index}
+                                        data-field="share"
+                                        required>
+                                    </lightning-input>
+                                </div>
+                                <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12">
+                                    <lightning-input
+                                        label="Booking"
+                                        value={bookingName}
+                                        disabled>
+                                    </lightning-input>
+                                </div>
+                                <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-12 remove-owner">
+                                    <lightning-button-icon
+                                        icon-name="utility:delete"
+                                        alternative-text="Remove joint owner"
+                                        title="Remove"
+                                        variant="border-filled"
+                                        data-id={owner.id}
+                                        onclick={handleRemoveJointOwner}>
+                                    </lightning-button-icon>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+
+                <div class="footer-actions slds-m-top_medium">
+                    <lightning-button
+                        label="Back"
+                        variant="neutral"
+                        icon-name="utility:back"
+                        onclick={handleBack}
+                        class="slds-m-right_small">
+                    </lightning-button>
+                    <lightning-button
+                        label="Next"
+                        variant="brand"
+                        icon-name="utility:forward"
+                        icon-position="right"
+                        onclick={handleNext}>
+                    </lightning-button>
+                </div>
+            </template>
+
+            <!-- ================= STEP 3 : PAYMENT ================= -->
+            <template if:true={isStep3}>
                 <div class="card-section slds-box slds-theme_shade">
                     <h3 class="section-title">Payment Details</h3>
 

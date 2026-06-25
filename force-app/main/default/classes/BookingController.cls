@@ -162,7 +162,14 @@ public without sharing class BookingController {
         }
     }
 
-
+    @AuraEnabled
+    public static void createJointOwners(List<Joint_Owner__c> jointOwners){
+        try {
+            insert jointOwners;
+        } catch (Exception e) {
+            throw new AuraHandledException('Error while creating Joint Owners: ' + e.getMessage());
+        }
+    }
 
      private static String formatIsoDate(Date value) {
         String month = String.valueOf(value.month()).leftPad(2, '0');

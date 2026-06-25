@@ -1,0 +1,131 @@
+<apex:page
+    controller="UnitPaymentReceiptController"
+    renderAs="pdf"
+    showHeader="false"
+    sidebar="false"
+    standardStylesheets="false"
+    applyHtmlTag="false"
+    applyBodyTag="false">
+    <html>
+        <head>
+            <style type="text/css">
+                @page {
+                    size: A4;
+                    margin: 25mm 15mm 20mm;
+                    @bottom-center {
+                        content: "Page " counter(page) " of " counter(pages);
+                        font-size: 9px;
+                        color: #666666;
+                    }
+                }
+                body {
+                    font-family: Arial, sans-serif;
+                    font-size: 10px;
+                    color: #222222;
+                }
+                .header {
+                    border-bottom: 3px solid #1b96ff;
+                    padding-bottom: 12px;
+                    margin-bottom: 18px;
+                }
+                .title {
+                    font-size: 22px;
+                    font-weight: bold;
+                    color: #032d60;
+                }
+                .subtitle {
+                    margin-top: 4px;
+                    color: #666666;
+                }
+                .status {
+                    float: right;
+                    padding: 5px 12px;
+                    border-radius: 12px;
+                    background: #2e844a;
+                    color: #ffffff;
+                    font-weight: bold;
+                }
+                .section-title {
+                    margin-top: 16px;
+                    padding: 7px 9px;
+                    background: #eef4ff;
+                    border-left: 4px solid #1b96ff;
+                    color: #032d60;
+                    font-size: 12px;
+                    font-weight: bold;
+                }
+                table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin-top: 6px;
+                }
+                td {
+                    padding: 6px 8px;
+                    border: 1px solid #dddddd;
+                    vertical-align: top;
+                }
+                .label {
+                    width: 34%;
+                    background: #f7f7f7;
+                    font-weight: bold;
+                    color: #444444;
+                }
+                .footer-note {
+                    margin-top: 20px;
+                    padding-top: 10px;
+                    border-top: 1px solid #cccccc;
+                    color: #666666;
+                    font-size: 9px;
+                    text-align: center;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="header">
+                <span class="status">COMPLETED</span>
+                <div class="title">Payment Receipt</div>
+                <div class="subtitle">
+                    Receipt generated on {!generatedOn}
+                </div>
+            </div>
+
+            <apex:outputPanel rendered="{!customerRows.size > 0}">
+                    <div class="section-title">Customer Information</div>
+                    <table>
+                        <apex:repeat value="{!customerRows}" var="row">
+                            <tr>
+                                <td class="label">{!row.label}</td>
+                                <td>{!row.value}</td>
+                            </tr>
+                        </apex:repeat>
+                    </table>
+            </apex:outputPanel>
+
+            <apex:outputPanel rendered="{!bookingRows.size > 0}">
+                    <div class="section-title">Booking Information</div>
+                    <table>
+                        <apex:repeat value="{!bookingRows}" var="row">
+                            <tr>
+                                <td class="label">{!row.label}</td>
+                                <td>{!row.value}</td>
+                            </tr>
+                        </apex:repeat>
+                    </table>
+            </apex:outputPanel>
+
+            <div class="section-title">Complete Payment Information</div>
+            <table>
+                <apex:repeat value="{!paymentRows}" var="row">
+                    <tr>
+                        <td class="label">{!row.label}</td>
+                        <td>{!row.value}</td>
+                    </tr>
+                </apex:repeat>
+            </table>
+
+            <div class="footer-note">
+                This is a system-generated receipt for the completed Unit Payment.
+            </div>
+        </body>
+    </html>
+</apex:page>

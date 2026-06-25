@@ -1,5 +1,97 @@
-public with sharing class BookingController {
+public without sharing class BookingController {
 
+    public class PaymentResult {
+        @AuraEnabled public Id paymentId;
+        @AuraEnabled public String paymentUrl;
+    }
+    
+    @AuraEnabled
+    public static PaymentResult createUnitPayment(
+        Id opportunityId, Id unitId, Id projectId,
+        String paymentMode, String purpose, Decimal amount,
+        String fieldsJson
+    ){
+        Map<String, Object> f = (fieldsJson != null && fieldsJson != '')
+            ? (Map<String, Object>) JSON.deserializeUntyped(fieldsJson)
+            : new Map<String, Object>();
+    
+        Unit_Payment__c p = new Unit_Payment__c();
+    
+        // ---- auto-populated context ----
+        p.Opportunity__c   = opportunityId;
+        p.Unit__c          = unitId;
+        p.Project__c       = projectId;
+        p.OwnerId          = UserInfo.getUserId();
+        p.Sales_Consultant__c = UserInfo.getUserId();
+        p.Payment_Mode__c  = paymentMode;
+        p.Purpose__c       = purpose;
+        p.Amount__c        = String.valueOf(amount);
+        p.Total_Amount__c  = amount;
+        p.TotalAmount__c   = amount;
+        p.PaymentStatus__c = 'Completed';
+        p.Date_Acknowledged__c = Date.today();
+    
+        // ---- mode-specific ----
+        if (paymentMode == 'Credit Card') {
+            p.NameOnCard__c          = str(f, 'nameOnCard');
+            p.CardType__c            = str(f, 'cardType');
+            p.CardLast4Digits__c     = dec(f, 'cardLast4');
+            p.CardExpiryMonthYear__c = str(f, 'cardExpiry');
+            p.CardIssuingBank__c     = str(f, 'cardIssuingBank');
+            p.Installments__c        = str(f, 'installments');
+            p.Authorization_Code__c  = str(f, 'authCode');
+        } else if (paymentMode == 'Cheque') {
+            p.ChequeNumber__c          = str(f, 'chequeNumber');
+            p.BankName__c              = str(f, 'bankName');
+            p.ChequeDate__c            = dt(f, 'chequeDate');
+            p.ChequeClearanceDate__c   = dt(f, 'chequeClearanceDate');
+            p.Cheque_Status__c         = str(f, 'chequeStatus');
+        } else if (paymentMode == 'Cash') {
+            p.ReceiptSent__c       = str(f, 'receiptSent');
+            p.Date_Acknowledged__c = dt(f, 'dateAcknowledged') != null ? dt(f, 'dateAcknowledged') : Date.today();
+        } else if (paymentMode == 'Bank Transfer') {
+            p.SenderAccountName__c     = str(f, 'senderAccountName');
+            p.BankReferenceNumber__c   = str(f, 'bankRefNumber');
+            p.TransferReferenceUTR__c  = str(f, 'transferUTR');
+            p.TransferDate__c          = dt(f, 'transferDate');
+            p.BankName__c              = str(f, 'bankNameText');
+        } else if (paymentMode == 'Wire Transfer') {
+            p.SenderAccountName__c     = str(f, 'senderAccountName');
+            p.SwiftCodeIBAN__c         = str(f, 'swiftIban');
+            p.TransferReferenceUTR__c  = str(f, 'transferUTR');
+            p.TransferDate__c          = dt(f, 'transferDate');
+            p.BankName__c              = str(f, 'bankNameText');
+            p.PaymentStatus__c         = 'Pending';
+        }
+    
+        insert p;
+    
+        // Wire Transfer => set dummy payment URL on the record
+        PaymentResult res = new PaymentResult();
+        res.paymentId = p.Id;
+        if (paymentMode == 'Wire Transfer') {
+            String dummy = 'https://infobeanscloudtechlimited60-dev-ed.develop.my.site.com/paymentgetway' + p.Id;
+            p.PaymentURL__c = dummy;
+            p.PayModeGateWay__c = 'Wire Gateway';
+            update p;
+            res.paymentUrl = dummy;
+        }
+        return res;
+    }
+    
+    /* ---- helpers ---- */
+    private static String str(Map<String, Object> m, String k) {
+        return m.containsKey(k) && m.get(k) != null ? String.valueOf(m.get(k)) : null;
+    }
+    private static Decimal dec(Map<String, Object> m, String k) {
+        String v = str(m, k);
+        return String.isBlank(v) ? null : Decimal.valueOf(v);
+    }
+    private static Date dt(Map<String, Object> m, String k) {
+        String v = str(m, k);
+        return String.isBlank(v) ? null : Date.valueOf(v);
+    }
+    
     @AuraEnabled(cacheable=true)
     public static List<Project__c> getProjects(){
         return [SELECT Id, Name FROM Project__c ORDER BY Name];
@@ -33,7 +125,7 @@ public with sharing class BookingController {
             SELECT Id, Name, Status__c
             FROM Inventory__c 
             WHERE Property_Inv__c = :propertyId 
-            AND Status__c = 'Available'
+            //AND Status__c = 'Available'
             LIMIT 1
         ];
         

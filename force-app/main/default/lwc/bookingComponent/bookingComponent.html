@@ -1,44 +1,266 @@
 <template>
-    <lightning-card title="Create Booking">
+    <lightning-card title="Create Booking & Payment" icon-name="standard:opportunity">
+        <div class="booking-wrapper slds-p-around_medium">
 
-        <div class="slds-p-around_medium">
+            <!-- ===== PROGRESS INDICATOR ===== -->
+            <div class="progress-bar slds-m-bottom_large">
+                <div class={step1Class}>
+                    <div class="circle">1</div>
+                    <span class="step-label">Booking</span>
+                </div>
+                <div class="connector"></div>
+                <div class={step2Class}>
+                    <div class="circle">2</div>
+                    <span class="step-label">Payment</span>
+                </div>
+            </div>
 
-            <!-- Project -->
-            <lightning-combobox
-                label="Project"
-                value={projectId}
-                options={projectOptions}
-                onchange={handleProjectChange}
-                required>
-            </lightning-combobox>
+            <!-- ================= STEP 1 : BOOKING ================= -->
+            <template if:true={isStep1}>
+                <div class="card-section slds-box slds-theme_shade">
+                    <h3 class="section-title">Select Inventory</h3>
 
-            <!-- Property -->
-            <lightning-combobox
-                label="Property"
-                value={propertyId}
-                options={propertyOptions}
-                onchange={handlePropertyChange}
-                disabled={isPropertyDisabled}
-                required>
-            </lightning-combobox>
+                    <lightning-combobox
+                        class="slds-m-bottom_small"
+                        label="Project"
+                        value={projectId}
+                        options={projectOptions}
+                        onchange={handleProjectChange}
+                        placeholder="Choose a project"
+                        required>
+                    </lightning-combobox>
 
-            <!-- Unit -->
-            <lightning-combobox
-                label="Unit"
-                value={unitId}
-                options={unitOptions}
-                onchange={handleUnitChange}
-                disabled={isUnitDisabled}
-                required>
-            </lightning-combobox>
+                    <lightning-combobox
+                        class="slds-m-bottom_small"
+                        label="Property"
+                        value={propertyId}
+                        options={propertyOptions}
+                        onchange={handlePropertyChange}
+                        disabled={isPropertyDisabled}
+                        placeholder="Choose a property"
+                        required>
+                    </lightning-combobox>
 
-            <br/>
+                    <lightning-combobox
+                        label="Unit"
+                        value={unitId}
+                        options={unitOptions}
+                        onchange={handleUnitChange}
+                        disabled={isUnitDisabled}
+                        placeholder="Choose a unit"
+                        required>
+                    </lightning-combobox>
 
-            <lightning-button 
-                label="Create Booking"
-                variant="brand"
-                onclick={handleSave}>
-            </lightning-button>
+                    <!-- Unit summary preview -->
+                    <template if:true={selectedUnitInfo}>
+                        <div class="unit-preview slds-m-top_medium">
+                            <div class="preview-row">
+                                <span class="preview-key">Unit Cost</span>
+                                <span class="preview-val">{formattedUnitCost}</span>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+
+                <div class="footer-actions slds-m-top_medium">
+                    <lightning-button
+                        label="Next"
+                        variant="brand"
+                        icon-name="utility:forward"
+                        icon-position="right"
+                        onclick={handleNext}>
+                    </lightning-button>
+                </div>
+            </template>
+
+            <!-- ================= STEP 2 : PAYMENT ================= -->
+            <template if:true={isStep2}>
+                <div class="card-section slds-box slds-theme_shade">
+                    <h3 class="section-title">Payment Details</h3>
+
+                    <div class="slds-grid slds-gutters slds-wrap">
+                        <div class="slds-col slds-size_1-of-2">
+                            <lightning-combobox
+                                label="Payment Mode"
+                                value={paymentMode}
+                                options={paymentModeOptions}
+                                onchange={handlePaymentModeChange}
+                                placeholder="Select mode"
+                                required>
+                            </lightning-combobox>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2">
+                            <lightning-combobox
+                                label="Purpose"
+                                value={purpose}
+                                options={purposeOptions}
+                                onchange={handleFieldChange}
+                                data-field="purpose"
+                                placeholder="Select purpose">
+                            </lightning-combobox>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2 slds-m-top_small">
+                            <lightning-input
+                                type="number"
+                                label="Amount"
+                                value={amount}
+                                onchange={handleFieldChange}
+                                data-field="amount"
+                                formatter="currency"
+                                step="0.01"
+                                required>
+                            </lightning-input>
+                        </div>
+                    </div>
+
+                    <!-- ===== CREDIT CARD ===== -->
+                    <template if:true={isCreditCard}>
+                        <div class="mode-section">
+                            <div class="mode-badge">Credit Card</div>
+                            <div class="slds-grid slds-gutters slds-wrap">
+                                <div class="slds-col slds-size_1-of-2">
+                                    <lightning-input label="Name on Card" data-field="nameOnCard" onchange={handleFieldChange}></lightning-input>
+                                </div>
+                                <div class="slds-col slds-size_1-of-2">
+                                    <lightning-combobox label="Card Type" value={cardType} options={cardTypeOptions} data-field="cardType" onchange={handleFieldChange}></lightning-combobox>
+                                </div>
+                                <div class="slds-col slds-size_1-of-2 slds-m-top_x-small">
+                                    <lightning-input type="number" label="Card Last 4 Digits" max="9999" data-field="cardLast4" onchange={handleFieldChange}></lightning-input>
+                                </div>
+                                <div class="slds-col slds-size_1-of-2 slds-m-top_x-small">
+                                    <lightning-input label="Expiry (MM/YY)" maxlength="5" placeholder="MM/YY" data-field="cardExpiry" onchange={handleFieldChange}></lightning-input>
+                                </div>
+                                <div class="slds-col slds-size_1-of-2 slds-m-top_x-small">
+                                    <lightning-input label="Card Issuing Bank" data-field="cardIssuingBank" onchange={handleFieldChange}></lightning-input>
+                                </div>
+                                <div class="slds-col slds-size_1-of-2 slds-m-top_x-small">
+                                    <lightning-combobox label="Installments" value={installments} options={installmentOptions} data-field="installments" onchange={handleFieldChange}></lightning-combobox>
+                                </div>
+                                <div class="slds-col slds-size_1-of-2 slds-m-top_x-small">
+                                    <lightning-input label="Authorization Code" data-field="authCode" onchange={handleFieldChange}></lightning-input>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+
+                    <!-- ===== CHEQUE ===== -->
+                    <template if:true={isCheque}>
+                        <div class="mode-section">
+                            <div class="mode-badge">Cheque</div>
+                            <div class="slds-grid slds-gutters slds-wrap">
+                                <div class="slds-col slds-size_1-of-2">
+                                    <lightning-input label="Cheque Number" data-field="chequeNumber" onchange={handleFieldChange}></lightning-input>
+                                </div>
+                                <div class="slds-col slds-size_1-of-2">
+                                    <lightning-combobox label="Bank Name" value={bankName} options={bankNameOptions} data-field="bankName" onchange={handleFieldChange}></lightning-combobox>
+                                </div>
+                                <div class="slds-col slds-size_1-of-2 slds-m-top_x-small">
+                                    <lightning-input type="date" label="Cheque Date" data-field="chequeDate" onchange={handleFieldChange}></lightning-input>
+                                </div>
+                                <div class="slds-col slds-size_1-of-2 slds-m-top_x-small">
+                                    <lightning-input type="date" label="Cheque Clearance Date" data-field="chequeClearanceDate" onchange={handleFieldChange}></lightning-input>
+                                </div>
+                                <div class="slds-col slds-size_1-of-2 slds-m-top_x-small">
+                                    <lightning-combobox label="Cheque Status" value={chequeStatus} options={chequeStatusOptions} data-field="chequeStatus" onchange={handleFieldChange}></lightning-combobox>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+
+                    <!-- ===== CASH ===== -->
+                    <template if:true={isCash}>
+                        <div class="mode-section">
+                            <div class="mode-badge">Cash</div>
+                            <div class="slds-grid slds-gutters slds-wrap">
+                                <div class="slds-col slds-size_1-of-2">
+                                    <lightning-input label="Receipt Sent" data-field="receiptSent" onchange={handleFieldChange}></lightning-input>
+                                </div>
+                                <div class="slds-col slds-size_1-of-2">
+                                    <lightning-input type="date" label="Date Acknowledged" data-field="dateAcknowledged" onchange={handleFieldChange}></lightning-input>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+
+                    <!-- ===== BANK TRANSFER ===== -->
+                    <template if:true={isBankTransfer}>
+                        <div class="mode-section">
+                            <div class="mode-badge">Bank Transfer</div>
+                            <div class="slds-grid slds-gutters slds-wrap">
+                                <div class="slds-col slds-size_1-of-2">
+                                    <lightning-input label="Sender Account Name" data-field="senderAccountName" onchange={handleFieldChange}></lightning-input>
+                                </div>
+                                <div class="slds-col slds-size_1-of-2">
+                                    <lightning-input label="Bank Reference Number" data-field="bankRefNumber" onchange={handleFieldChange}></lightning-input>
+                                </div>
+                                <div class="slds-col slds-size_1-of-2 slds-m-top_x-small">
+                                    <lightning-input label="Transfer Reference / UTR" data-field="transferUTR" onchange={handleFieldChange}></lightning-input>
+                                </div>
+                                <div class="slds-col slds-size_1-of-2 slds-m-top_x-small">
+                                    <lightning-input type="date" label="Transfer Date" data-field="transferDate" onchange={handleFieldChange}></lightning-input>
+                                </div>
+                                <div class="slds-col slds-size_1-of-2 slds-m-top_x-small">
+                                    <lightning-input label="Bank Name" data-field="bankNameText" onchange={handleFieldChange}></lightning-input>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+
+                    <!-- ===== WIRE TRANSFER ===== -->
+                    <template if:true={isWireTransfer}>
+                        <div class="mode-section">
+                            <div class="mode-badge wire">Wire Transfer</div>
+                            <div class="wire-note slds-m-bottom_small">
+                                <lightning-icon icon-name="utility:info" size="x-small"></lightning-icon>
+                                On success you'll be redirected to the secure payment gateway.
+                            </div>
+                            <div class="slds-grid slds-gutters slds-wrap">
+                                <!-- <div class="slds-col slds-size_1-of-2">
+                                    <lightning-input label="Sender Account Name" Value = "Skyline Heights" data-field="senderAccountName" onchange={handleFieldChange}></lightning-input>
+                                </div> -->
+                                <div class="slds-col slds-size_1-of-2">
+                                    <lightning-input label="Sender Account Name" value="Skyline Heights" data-field="senderAccountName" onchange={handleFieldChange}></lightning-input>
+                                </div>
+                                <div class="slds-col slds-size_1-of-2">
+                                    <lightning-input label="Swift Code / IBAN" data-field="swiftIban" onchange={handleFieldChange}></lightning-input>
+                                </div>
+                                <!-- <div class="slds-col slds-size_1-of-2 slds-m-top_x-small">
+                                    <lightning-input label="Transfer Reference / UTR" data-field="transferUTR" onchange={handleFieldChange}></lightning-input>
+                                </div> -->
+                                <div class="slds-col slds-size_1-of-2 slds-m-top_x-small">
+                                    <lightning-input type="date" label="Transfer Date" data-field="transferDate" onchange={handleFieldChange}></lightning-input>
+                                </div>
+                                <div class="slds-col slds-size_1-of-2 slds-m-top_x-small">
+                                    <lightning-input label="Bank Name" data-field="bankNameText" onchange={handleFieldChange}></lightning-input>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+
+                </div>
+
+                <div class="footer-actions slds-m-top_medium">
+                    <lightning-button
+                        label="Back"
+                        variant="neutral"
+                        icon-name="utility:back"
+                        onclick={handleBack}
+                        class="slds-m-right_small">
+                    </lightning-button>
+                    <lightning-button
+                        label="Save & Pay"
+                        variant="brand"
+                        icon-name="utility:money"
+                        onclick={handleSave}
+                        disabled={isSaving}>
+                    </lightning-button>
+                </div>
+            </template>
+
+            <!-- Spinner -->
+            <template if:true={isSaving}>
+                <lightning-spinner alternative-text="Processing" size="medium"></lightning-spinner>
+            </template>
 
         </div>
     </lightning-card>

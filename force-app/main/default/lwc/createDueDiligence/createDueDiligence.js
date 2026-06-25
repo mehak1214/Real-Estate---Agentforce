@@ -1,17 +1,16 @@
-import { LightningElement, api } from 'lwc';
+import { LightningElement, api, track } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { CloseActionScreenEvent } from 'lightning/actions';
 import createForOpportunity from '@salesforce/apex/DueDiligenceService.createForOpportunity';
 
 export default class CreateDueDiligence extends LightningElement {
     _recordId;
-    buyers = [];
-    hasJointBuyers = false;
+    @track buyers = [];
     isLoading = true;
     isSaving = false;
-    pendingSaves = 0;
-    hasSaveError = false;
+    activeTabId = null;
 
+    // ── recordId setter ──────────────────────────────────────────
     @api
     get recordId() {
         return this._recordId;
@@ -24,6 +23,7 @@ export default class CreateDueDiligence extends LightningElement {
         }
     }
 
+    // ── Derived getters ──────────────────────────────────────────
     get hasBuyers() {
         return this.buyers.length > 0;
     }
@@ -32,12 +32,57 @@ export default class CreateDueDiligence extends LightningElement {
         return this.isLoading || this.isSaving || !this.hasBuyers;
     }
 
+    get savedCount() {
+        return this.buyers.filter(b => b.isSaved).length;
+    }
+
+    get progressStyle() {
+        if (!this.buyers.length) return 'width: 0%';
+        const pct = Math.round((this.savedCount / this.buyers.length) * 100);
+        return `width: ${pct}%`;
+    }
+
+    /** Tab pills – derived from buyers list */
+    get buyerTabs() {
+        return this.buyers.map(buyer => ({
+            dueDiligenceId: buyer.dueDiligenceId,
+            shortName: buyer.accountName.split(' ')[0],   // first name only for narrow tabs
+            isActive: buyer.dueDiligenceId === this.activeTabId,
+            tabClass: this._tabClass(buyer),
+        }));
+    }
+
+    _tabClass(buyer) {
+        const base = 'buyer-tab-btn';
+        const active = buyer.dueDiligenceId === this.activeTabId ? ' active' : '';
+        const saved = buyer.isSaved ? ' saved' : '';
+        return base + active + saved;
+    }
+
+    get saveButtonLabel() {
+        if (this.isSaving) return 'Saving…';
+        const activeBuyer = this.buyers.find(b => b.dueDiligenceId === this.activeTabId);
+        return activeBuyer?.isSaved ? 'Saved ✓' : 'Save';
+    }
+
+    // ── Data loading ─────────────────────────────────────────────
     async loadDueDiligenceForms() {
         this.isLoading = true;
         try {
             const result = await createForOpportunity({ opportunityId: this.recordId });
-            this.buyers = result?.buyers || [];
-            this.hasJointBuyers = result?.hasJointBuyers || false;
+            const raw = result?.buyers || [];
+
+            this.buyers = raw.map((b, idx) => ({
+                ...b,
+                isActive: idx === 0,
+                isSaved: false,
+                badgeClass: b.isPrimary
+                    ? 'buyer-context-badge'
+                    : 'buyer-context-badge joint',
+                badgeLabel: b.isPrimary ? 'Primary' : 'Joint',
+            }));
+
+            this.activeTabId = this.buyers[0]?.dueDiligenceId ?? null;
         } catch (error) {
             this.showToast(
                 'Unable to Prepare Due Diligence',
@@ -49,50 +94,90 @@ export default class CreateDueDiligence extends LightningElement {
         }
     }
 
-    handleCancel() {
-        this.dispatchEvent(new CloseActionScreenEvent());
+    // ── Tab switching ────────────────────────────────────────────
+    handleTabClick(event) {
+        const clickedId = event.currentTarget.dataset.id;
+        if (clickedId === this.activeTabId) return;
+
+        this.activeTabId = clickedId;
+        this.buyers = this.buyers.map(b => ({
+            ...b,
+            isActive: b.dueDiligenceId === clickedId,
+        }));
     }
 
-    handleSaveAll() {
+    // ── Save current tab ─────────────────────────────────────────
+    handleSaveCurrent() {
+        // Validate only the visible form's fields
         const fields = [...this.template.querySelectorAll('lightning-input-field')];
         const allValid = fields.reduce((valid, field) => field.reportValidity() && valid, true);
+
         if (!allValid) {
-            this.showToast('Required Information', 'Complete all required fields for every buyer.', 'error');
+            this.showToast('Required Fields Missing', 'Complete all required fields before saving.', 'error');
             return;
         }
 
         const forms = [...this.template.querySelectorAll('lightning-record-edit-form')];
-        if (!forms.length) {
-            return;
-        }
+        if (!forms.length) return;
 
         this.isSaving = true;
-        this.hasSaveError = false;
-        this.pendingSaves = forms.length;
-        forms.forEach(form => form.submit());
+        forms[0].submit();
     }
 
+    // ── Form events ──────────────────────────────────────────────
     handleSuccess() {
-        this.pendingSaves--;
-        if (this.pendingSaves === 0 && !this.hasSaveError) {
-            this.isSaving = false;
+        this.isSaving = false;
+
+        // Mark active buyer as saved
+        this.buyers = this.buyers.map(b => ({
+            ...b,
+            isSaved: b.dueDiligenceId === this.activeTabId ? true : b.isSaved,
+        }));
+
+        const allSaved = this.buyers.every(b => b.isSaved);
+        if (allSaved) {
             this.showToast(
-                'Due Diligence Saved',
-                `Due Diligence details saved for ${this.buyers.length} buyer(s).`,
+                'All Due Diligence Saved',
+                `Records saved for all ${this.buyers.length} buyer(s).`,
                 'success'
             );
             this.dispatchEvent(new CloseActionScreenEvent());
+            return;
+        }
+
+        // Auto-advance to next unsaved tab
+        const nextUnsaved = this.buyers.find(b => !b.isSaved);
+        if (nextUnsaved) {
+            this.showToast(
+                'Saved',
+                `Due Diligence saved for ${this.activeBuyerName}. Moving to next buyer.`,
+                'success'
+            );
+            this.activeTabId = nextUnsaved.dueDiligenceId;
+            this.buyers = this.buyers.map(b => ({
+                ...b,
+                isActive: b.dueDiligenceId === this.activeTabId,
+            }));
         }
     }
 
     handleError(event) {
-        this.hasSaveError = true;
         this.isSaving = false;
         this.showToast(
-            'Unable to Save Due Diligence',
+            'Unable to Save',
             event.detail?.message || 'Review the form and try again.',
             'error'
         );
+    }
+
+    // ── Cancel ───────────────────────────────────────────────────
+    handleCancel() {
+        this.dispatchEvent(new CloseActionScreenEvent());
+    }
+
+    // ── Helpers ──────────────────────────────────────────────────
+    get activeBuyerName() {
+        return this.buyers.find(b => b.dueDiligenceId === this.activeTabId)?.accountName || 'Buyer';
     }
 
     showToast(title, message, variant) {

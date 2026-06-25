@@ -1,7 +1,7 @@
 public with sharing class AgentOnboardingController {
 
 @AuraEnabled
-public static Id createBrokerRegistrationCase(
+public static String createBrokerRegistrationCase(
 String firstName,
 String lastName,
 String email,
@@ -26,7 +26,9 @@ c.Approval_Status__c = 'Draft';
 
 insert c;
 
-return c.Id;
+
+system.debug('result---->'+ c);
+return [select Id, CaseNumber From case Where ID =: c.Id].CaseNumber;
 
 }
 
@@ -34,7 +36,7 @@ return c.Id;
 @AuraEnabled
 public static void updateBrokerRegistrationCase(
 
-Id caseId,
+String caseId,
 String firstName,
 String lastName,
 String email,
@@ -42,7 +44,8 @@ String phone,
 String nationalId
 ){
 
-Case c = [SELECT Id FROM Case WHERE Id=:caseId];
+//Id parentId = [select id from case where CaseNumber =:caseNumber].Id;
+Case c = [SELECT Id FROM Case WHERE CaseNumber =:caseId];
 
 c.First_Name__c = firstName;
 c.Last_Name__c = lastName;
@@ -61,13 +64,14 @@ update c;
 @AuraEnabled
 public static String uploadFile(
 
-Id parentId,
+String caseId,
 String fileName,
 String base64Data,
 String contentType,
 String fileDescription
 ){
 
+Id parentId = [select id from case where CaseNumber =:caseId].Id;
 Blob body = EncodingUtil.base64Decode(base64Data);
 
 ContentVersion cv = new ContentVersion();

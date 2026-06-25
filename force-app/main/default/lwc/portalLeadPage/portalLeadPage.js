@@ -1,5 +1,5 @@
 import { LightningElement, wire, track } from 'lwc';
-import getUserLeads from '@salesforce/apex/LeadController.getLeads';
+import getUserLeads from '@salesforce/apex/LeadController.getUserLeads';
 
 const COLUMNS = [
 { label: 'First Name', fieldName: 'FirstName' },

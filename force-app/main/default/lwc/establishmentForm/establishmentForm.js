@@ -62,7 +62,7 @@ export default class EstablishmentType extends LightningElement {
         const value = event.detail?.value !== undefined ? event.detail.value : event.target.value;
 
         if (field === 'uaeLicense') this.uaeLicense = value;
-        if (field === 'intlLicense') this.intlLicense = value; 
+        if (field === 'intlLicense') this.intlLicense = value;
         if (field === 'country') this.country = value;
     }
 

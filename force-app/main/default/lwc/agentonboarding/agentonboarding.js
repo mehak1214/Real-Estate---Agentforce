@@ -26,15 +26,39 @@ export default class EventTeamMemberDashboard extends LightningElement {
     dob = '';
     isAuthorizedSignatory = false;
 
+    // @track legalDocuments = [
+    //     {
+    //         id: 1,
+    //         fileName: '',
+    //         fileContent: null,
+    //         fileType: '',
+    //         fileSize: '',
+    //         displayNumber: 'BRN/RERA CARD',
+    //         showRemove: false
+    //     }
+    // ];
+
     @track legalDocuments = [
         {
             id: 1,
+            documentType: 'National ID - Front Side',
             fileName: '',
             fileContent: null,
-            fileType: '',
-            fileSize: '',
-            displayNumber: 'Document 1',
-            showRemove: false
+            fileType: ''
+        },
+        {
+            id: 2,
+            documentType: 'National ID - Back Side',
+            fileName: '',
+            fileContent: null,
+            fileType: ''
+        },
+        {
+            id: 3,
+            documentType: 'BRN/RERA CARD',
+            fileName: '',
+            fileContent: null,
+            fileType: ''
         }
     ];
 
@@ -91,7 +115,7 @@ export default class EventTeamMemberDashboard extends LightningElement {
 
         this.currentStep = 1;
 
-        this.caseId = null;
+        this.caseId = '';
 
         this.firstName = '';
         this.lastName = '';
@@ -108,16 +132,28 @@ export default class EventTeamMemberDashboard extends LightningElement {
         this.nextDocumentId = 2;
 
         this.legalDocuments = [
-            {
-                id: 1,
-                fileName: '',
-                fileContent: null,
-                fileType: '',
-                fileSize: '',
-                displayNumber: 'BRN/RERA CARD',
-                showRemove: false
-            }
-        ];
+        {
+            id: 1,
+            documentType: 'National ID - Front Side',
+            fileName: '',
+            fileContent: null,
+            fileType: ''
+        },
+        {
+            id: 2,
+            documentType: 'National ID - Back Side',
+            fileName: '',
+            fileContent: null,
+            fileType: ''
+        },
+        {
+            id: 3,
+            documentType: 'BRN/RERA CARD',
+            fileName: '',
+            fileContent: null,
+            fileType: ''
+        }
+    ];
 
     }
 
@@ -298,7 +334,7 @@ export default class EventTeamMemberDashboard extends LightningElement {
 
                     await uploadFile({
 
-                        parentId: this.caseId,
+                        caseId: this.caseId,
                         fileName: doc.fileName,
                         base64Data: doc.fileContent,
                         contentType: doc.fileType,
@@ -390,6 +426,7 @@ export default class EventTeamMemberDashboard extends LightningElement {
 
     addDocumentRow() {
 
+        
         const newDoc = {
 
             id: this.nextDocumentId++,
@@ -421,18 +458,7 @@ export default class EventTeamMemberDashboard extends LightningElement {
     /* DOCUMENT LIST */
 
     get documentList() {
-
-        const total = this.legalDocuments.length;
-
-        return this.legalDocuments.map((doc, index) => {
-
-            return {
-                ...doc,
-                displayNumber: `Document ${index + 1}`,
-                showRemove: total > 1
-            }
-
-        });
+    return this.legalDocuments;
 
     }
 
@@ -448,5 +474,13 @@ export default class EventTeamMemberDashboard extends LightningElement {
         return !this.legalDocuments.some(doc => doc.fileContent);
 
     }
+
+    // get disableFinalSubmit() {
+
+    //     return this.legalDocuments.some(
+    //         doc => !doc.fileContent
+    //     );
+
+    // }
 
 }

@@ -10,15 +10,15 @@ public class reimdisplayProjectsControllerTest {
         
         Test.startTest();
         // Call the showProjects method
-        List<reimdisplayProjectsController.ProjectWithTowerCountWrapper> result = reimdisplayProjectsController.showProjects();
+        List<Project__c> result = reimdisplayProjectsController.showProjects();
         Test.stopTest();
         
         // Verify the results
         System.assertEquals(2, result.size(), 'correct number of projects returned');
-        System.assertEquals('Project 1', result[0].project.Name, 'correct project name');
-        System.assertEquals('Residential Property description 1', result[0].project.Project_Description__c, 'correct project description');
-        System.assertEquals('Project 2', result[1].project.Name, 'correct project name');
-        System.assertEquals('Residential Property description 2', result[1].project.Project_Description__c, 'correct project description');
+        System.assertEquals('Project 1', result[0].Name, 'correct project name');
+        System.assertEquals('Residential Property description 1', result[0].Project_Description__c, 'correct project description');
+        System.assertEquals('Project 2', result[1].Name, 'correct project name');
+        System.assertEquals('Residential Property description 2', result[1].Project_Description__c, 'correct project description');
     }
   
     @isTest

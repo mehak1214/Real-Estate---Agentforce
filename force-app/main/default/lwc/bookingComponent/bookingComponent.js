@@ -11,7 +11,7 @@ export default class BookingComponent extends LightningElement {
     @api recordId; // Opportunity Id
 
     projectId;
-    propertyId; 
+    propertyId;
     unitId;
 
     projectOptions = [];

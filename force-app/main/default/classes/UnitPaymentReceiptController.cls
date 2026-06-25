@@ -29,16 +29,7 @@ public without sharing class UnitPaymentReceiptController {
 
         Map<String, Schema.SObjectField> fields =
             Schema.SObjectType.Unit_Payment__c.fields.getMap();
-        List<String> queryFields = new List<String>();
-        for (String fieldName : fields.keySet()) {
-            Schema.DisplayType fieldType = fields.get(fieldName).getDescribe().getType();
-            if (fieldType != Schema.DisplayType.Base64 &&
-                fieldType != Schema.DisplayType.Address &&
-                fieldType != Schema.DisplayType.Location) {
-                queryFields.add(fieldName);
-            }
-        }
-        queryFields.sort();
+        List<String> queryFields = getReceiptFieldNames(fields);
 
         payment = Database.query(
             'SELECT ' + String.join(queryFields, ',') +
@@ -50,22 +41,69 @@ public without sharing class UnitPaymentReceiptController {
     }
 
     private void buildPaymentRows(Map<String, Schema.SObjectField> fields) {
-        Map<String, Object> populatedFields = payment.getPopulatedFieldsAsMap();
-        List<String> fieldNames = new List<String>(populatedFields.keySet());
-        fieldNames.sort();
-
-        for (String fieldName : fieldNames) {
-            if (fieldName == 'Id') {
+        for (String fieldName : getReceiptFieldNames(fields)) {
+            if (fieldName == 'Id' ||
+                fieldName == 'Opportunity__c' ||
+                fieldName == 'Unit__c' ||
+                fieldName == 'Project__c' ||
+                fieldName == 'Sales_Consultant__c') {
                 continue;
             }
 
             Schema.DescribeFieldResult describe = fields.get(fieldName).getDescribe();
-            Object rawValue = populatedFields.get(fieldName);
+            Object rawValue = payment.get(fieldName);
             String displayValue = formatValue(rawValue, describe.getType());
             if (!String.isBlank(displayValue)) {
                 paymentRows.add(new ReceiptRow(describe.getLabel(), displayValue));
             }
         }
+    }
+
+    private static List<String> getReceiptFieldNames(
+        Map<String, Schema.SObjectField> availableFields
+    ) {
+        List<String> preferredFields = new List<String>{
+            'Name',
+            'PaymentStatus__c',
+            'Payment_Mode__c',
+            'Purpose__c',
+            'Total_Amount__c',
+            'Date_Acknowledged__c',
+            'NameOnCard__c',
+            'CardType__c',
+            'CardLast4Digits__c',
+            'CardIssuingBank__c',
+            'Installments__c',
+            'Authorization_Code__c',
+            'ChequeNumber__c',
+            'BankName__c',
+            'ChequeDate__c',
+            'ChequeClearanceDate__c',
+            'Cheque_Status__c',
+            'SenderAccountName__c',
+            'BankReferenceNumber__c',
+            'TransferReferenceUTR__c',
+            'TransferDate__c'
+        };
+
+        List<String> receiptFields = new List<String>{ 'Id' };
+        for (String fieldName : preferredFields) {
+            if (availableFields.containsKey(fieldName)) {
+                receiptFields.add(fieldName);
+            }
+        }
+
+        for (String relationshipField : new List<String>{
+            'Opportunity__c',
+            'Unit__c',
+            'Project__c',
+            'Sales_Consultant__c'
+        }) {
+            if (availableFields.containsKey(relationshipField)) {
+                receiptFields.add(relationshipField);
+            }
+        }
+        return receiptFields;
     }
 
     private void buildRelatedRows() {
@@ -109,19 +147,15 @@ public without sharing class UnitPaymentReceiptController {
         Id unitId = (Id) payment.get('Unit__c');
         if (unitId != null) {
             Unit__c unit = [
-                SELECT Id, Name, Unit_Cost__c, Status__c
+                SELECT Id, Name
                 FROM Unit__c
                 WHERE Id = :unitId
                 LIMIT 1
             ];
             addRow(bookingRows, 'Unit', unit.Name);
-            addRow(bookingRows, 'Unit Status', unit.Status__c);
-            addRow(bookingRows, 'Unit Cost', unit.Unit_Cost__c != null
-                ? unit.Unit_Cost__c.format() : null);
         }
 
         addNamedRecord(bookingRows, 'Project', 'Project__c', (Id) payment.get('Project__c'));
-        addNamedRecord(bookingRows, 'Record Owner', 'User', (Id) payment.get('OwnerId'));
         addNamedRecord(
             bookingRows,
             'Sales Consultant',
@@ -131,8 +165,7 @@ public without sharing class UnitPaymentReceiptController {
 
         if (opportunityId != null && unitId != null) {
             List<Booking_Unit__c> bookings = [
-                SELECT Id, Name, Booking_Unit_Price__c, Booking_Unit_Status__c,
-                    booking_status__c, Inventory__r.Name
+                SELECT Id, Name, Booking_Unit_Price__c, Inventory__r.Name
                 FROM Booking_Unit__c
                 WHERE Opportunity__c = :opportunityId
                 AND Unit__c = :unitId
@@ -142,8 +175,6 @@ public without sharing class UnitPaymentReceiptController {
             if (!bookings.isEmpty()) {
                 Booking_Unit__c booking = bookings[0];
                 addRow(bookingRows, 'Booking Unit', booking.Name);
-                addRow(bookingRows, 'Booking Status', booking.booking_status__c);
-                addRow(bookingRows, 'Booking Unit Status', booking.Booking_Unit_Status__c);
                 addRow(bookingRows, 'Inventory', booking.Inventory__r != null
                     ? booking.Inventory__r.Name : null);
                 addRow(bookingRows, 'Booking Unit Price', booking.Booking_Unit_Price__c != null

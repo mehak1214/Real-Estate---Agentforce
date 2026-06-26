@@ -113,7 +113,7 @@ public without sharing class BookingController {
             SELECT Id, Name 
             FROM Unit__c 
             WHERE Property__c = :propertyId
-            AND Status__c = 'Available'
+            AND Status__c IN ('Available','Assigned') 
             ORDER BY Name
         ];
     }

@@ -90,7 +90,7 @@ export default class BookingComponent extends LightningElement {
     }
 
     // Unit Change
-    handleUnitChange(event) {
+    handleUnitChange(event) { 
         this.unitId = event.detail.value;
         console.log('[BookingComponent] Unit selected', { unitId: this.unitId });
     }

@@ -14,7 +14,7 @@ public with sharing class BookingController {
         List<Property__c> properties = [
             SELECT Id, Name 
             FROM Property__c 
-            WHERE Project_Inv__c = :projectId
+            WHERE Project_Inv__c = :projectId   
             ORDER BY Name
         ];
         System.debug(LoggingLevel.INFO, 'BookingController.getProperties returning count=' + properties.size());

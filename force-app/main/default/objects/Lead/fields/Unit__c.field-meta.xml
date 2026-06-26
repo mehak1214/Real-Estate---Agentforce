@@ -2,7 +2,7 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Unit__c</fullName>
     <deleteConstraint>SetNull</deleteConstraint>
-    <label>Unit</label>
+    <label>Unit(Module)</label>
     <lookupFilter>
         <active>true</active>
         <filterItems>

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Tower_Ray__c</fullName>
+    <fullName>Site_Visit__c</fullName>
     <deleteConstraint>SetNull</deleteConstraint>
-    <label>Tower</label>
-    <referenceTo>Tower__c</referenceTo>
+    <label>Site Visit</label>
+    <referenceTo>Site_Visit__c</referenceTo>
     <relationshipLabel>Leads</relationshipLabel>
     <relationshipName>Leads</relationshipName>
     <required>false</required>

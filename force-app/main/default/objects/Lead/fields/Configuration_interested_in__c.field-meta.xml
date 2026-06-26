@@ -26,38 +26,44 @@
                 <label>3 BHK</label>
             </value>
             <value>
-                <fullName>4 BHK</fullName>
+                <fullName>4 BHK Villa</fullName>
                 <default>false</default>
-                <label>4 BHK</label>
-            </value>
-            <value>
-                <fullName>Duplex</fullName>
-                <default>false</default>
-                <label>Duplex</label>
-            </value>
-            <value>
-                <fullName>Online 1 BHK</fullName>
-                <default>false</default>
-                <label>Online 1 BHK</label>
-            </value>
-            <value>
-                <fullName>Online 2 BHK</fullName>
-                <default>false</default>
-                <label>Online 2 BHK</label>
+                <label>4 BHK Villa</label>
             </value>
             <value>
                 <fullName>5 BHK</fullName>
                 <default>false</default>
+                <isActive>false</isActive>
                 <label>5 BHK</label>
             </value>
             <value>
                 <fullName>6 BHK</fullName>
                 <default>false</default>
+                <isActive>false</isActive>
                 <label>6 BHK</label>
+            </value>
+            <value>
+                <fullName>Duplex</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Duplex</label>
+            </value>
+            <value>
+                <fullName>Online 1 BHK</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Online 1 BHK</label>
+            </value>
+            <value>
+                <fullName>Online 2 BHK</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Online 2 BHK</label>
             </value>
             <value>
                 <fullName>Retail</fullName>
                 <default>false</default>
+                <isActive>false</isActive>
                 <label>Retail</label>
             </value>
         </valueSetDefinition>

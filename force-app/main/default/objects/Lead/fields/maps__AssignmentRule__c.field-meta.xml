@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Tower_Ray__c</fullName>
+    <fullName>maps__AssignmentRule__c</fullName>
     <deleteConstraint>SetNull</deleteConstraint>
-    <label>Tower</label>
-    <referenceTo>Tower__c</referenceTo>
+    <deprecated>false</deprecated>
+    <label>Maps Assignment Rule</label>
+    <referenceTo>maps__AssignmentRule__c</referenceTo>
     <relationshipLabel>Leads</relationshipLabel>
     <relationshipName>Leads</relationshipName>
     <required>false</required>

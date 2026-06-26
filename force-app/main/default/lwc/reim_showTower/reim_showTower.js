@@ -24,12 +24,17 @@ export default class reim_showTower extends NavigationMixin(LightningElement) {
 
     /*-------FETCH TOWERS--------*/
     @wire(getTowers, { ProjectId: '$recordId' }) getTowerdata({ error, data }) {
-        if (data && Array.isArray(data) && data.length > 0) {
+        if (data) {
             this.projectTowerLst = data;
-            const first = this.projectTowerLst[0];
-            this.towerId = first.Id;
-            this.towerName = first.Tower_Name__c;
-            this.towerProjId = first.Project__c;
+            this.towerId = this
+                .projectTowerLst[0]
+                .Id;
+            this.towerName = this
+                .projectTowerLst[0]
+                .Tower_Name__c;
+            this.towerProjId = this
+                .projectTowerLst[0]
+                .Project__c;
             //this.towerUniqueCode = this.projectTowerLst[0].UniqueCode__c;
             console.log('Tower list => ' + JSON.stringify(this.projectTowerLst));
             console.log('Tower Id => ' + this.towerId);
@@ -39,7 +44,9 @@ export default class reim_showTower extends NavigationMixin(LightningElement) {
 
             //console.log('Tower Unique  Code => '+this.towerUniqueCode);
 
-            this.tower = data.map(tower => ({ label: tower.Tower_Name__c, value: tower.Tower_Name__c, Id: tower.Id }));
+            this.tower = data.map(
+                tower => ({ label: tower.Tower_Name__c, value: tower.Tower_Name__c, Id: tower.Id })
+            );
             for (var i = 0; i < this.projectTowerLst.length; i++) {
                 var allTower = this.projectTowerLst[i];
                 console.log('ALL Tower' + JSON.stringify(allTower));
@@ -47,15 +54,6 @@ export default class reim_showTower extends NavigationMixin(LightningElement) {
             }
         } else if (error) {
             this.error = error;
-            // Clear lists when there's an error or no data
-            this.projectTowerLst = [];
-            this.tower = [];
-            this.showTower = false;
-        } else {
-            // No data returned (empty array) — clear state
-            this.projectTowerLst = [];
-            this.tower = [];
-            this.showTower = false;
         }
     }
    

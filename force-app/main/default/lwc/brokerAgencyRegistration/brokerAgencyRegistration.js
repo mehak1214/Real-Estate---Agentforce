@@ -728,6 +728,11 @@ handleSubmit(event) {
         fields.Name = this.commercialLicenseNumber;
     }
 
+    // 1.a Ensure license type is included when submitting agency info
+    if (this.activeTab === 'agencyInfo') {
+        fields.LicenseType__c = this.licenseType;
+    }
+
     // 2. Select the SPECIFIC form for the active tab
     const form = this.template.querySelector(`[data-id="${this.activeTab}"]`);
     

@@ -17,7 +17,7 @@ global class AR_PostDatedChequeBatch implements Database.Batchable<SObject>, Dat
         return Database.getQueryLocator([
             SELECT Id, Amount__c, Opportunity__c, Account__c, Charge_Type__c
             FROM AR_Post_Dated_Cheque__c
-            WHERE Cheque_Date__c = :today AND Opportunity__c != null AND (Account__c != null OR 
+            WHERE Cheque_Date__c = :today AND Opportunity__c != null AND Account__c != null
         ]);
     }
     

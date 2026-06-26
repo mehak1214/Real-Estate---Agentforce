@@ -109,9 +109,9 @@
                                     onchange={handleChange}>
                                 </lightning-input>
 
-                                <lightning-input label="National ID" name="nationalId" required class="full-width"
+                                <!-- <lightning-input label="National ID" name="nationalId" required class="full-width"
                                     value={nationalId} onchange={handleChange}>
-                                </lightning-input>
+                                </lightning-input> -->
 
                                 <lightning-combobox label="Title" name="title" value={title} options={titleOptions}
                                     onchange={handleChange}>
@@ -128,6 +128,10 @@
                                 <lightning-input type="date" label="National ID Expiry" name="nationalIdExpiry"
                                     value={nationalIdExpiry} onchange={handleChange}>
                                 </lightning-input>
+
+                                <lightning-combobox label="Nationality" name="nationality" value={nationality}
+                                    options={nationalityOptions} onchange={handleChange}>
+                                </lightning-combobox>
 
                                 <div class="full-width">
                                     <lightning-input type="checkbox" label="Is Authorized Signatory"
@@ -166,14 +170,14 @@
                                     <h3 class="section-title">Upload Legal Documents</h3>
 
                                     <button
-            type="button"
-            class="btn-add-doc"
-            onclick={addDocumentRow}>
+                                        type="button"
+                                        class="btn-add-doc"
+                                        onclick={addDocumentRow}>
 
-            <lightning-icon icon-name="utility:add" size="x-small"></lightning-icon>
-            Add Another Document
+                                        <lightning-icon icon-name="utility:add" size="x-small"></lightning-icon>
+                                        Add Another Document
 
-        </button>
+                                    </button>
 
                                 </div>
 
@@ -183,18 +187,21 @@
 
                                         <div class="document-row-header">
 
-                                            <h4>{doc.displayNumber}</h4>
+                                            <h4>{doc.documentType}</h4>
 
                                             <button
-                    class="btn-remove-doc"
-                    data-id={doc.id}
-                    onclick={removeDocumentRow}
-                    if:true={doc.showRemove}>
+                                                class="btn-remove-doc"
+                                                data-id={doc.id}
+                                                onclick={removeDocumentRow}
+                                                if:true={doc.showRemove}>
+                                                    
 
-                    <lightning-icon icon-name="utility:delete" size="x-small"></lightning-icon>
-                    Remove
+                                                <lightning-icon icon-name="utility:delete" size="x-small">
 
-                </button>
+                                                </lightning-icon>
+                                                Remove
+
+                                            </button>
 
                                         </div>
 

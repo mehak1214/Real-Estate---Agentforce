@@ -1,0 +1,218 @@
+<template>
+    <lightning-quick-action-panel header="Due Diligence">
+
+        <!-- ── Loading ──────────────────────────────────────────── -->
+        <template if:true={isLoading}>
+            <div class="loading-area">
+                <lightning-spinner
+                    alternative-text="Preparing due diligence forms"
+                    size="medium">
+                </lightning-spinner>
+            </div>
+        </template>
+
+        <template if:false={isLoading}>
+
+            <!-- ── Has buyers: tabbed wizard ──────────────────────── -->
+            <template if:true={hasBuyers}>
+
+                <!-- Step-pill tab bar -->
+                <div class="buyer-nav" role="tablist">
+                    <template for:each={buyerTabs} for:item="tab">
+                        <button
+                            key={tab.dueDiligenceId}
+                            role="tab"
+                            data-id={tab.dueDiligenceId}
+                            aria-selected={tab.isActive}
+                            class={tab.tabClass}
+                            onclick={handleTabClick}>
+                            <span class="tab-status"></span>
+                            {tab.shortName}
+                        </button>
+                    </template>
+                </div>
+
+                <!-- Progress bar -->
+                <div class="progress-bar-wrap">
+                    <div class="progress-track">
+                        <div class="progress-fill" style={progressStyle}></div>
+                    </div>
+                    <div class="progress-label">{savedCount} of {buyers.length} saved</div>
+                </div>
+
+                <!-- Active buyer panel -->
+                <div class="panel-wrapper" role="tabpanel">
+                    <template for:each={buyers} for:item="buyer">
+                        <div key={buyer.dueDiligenceId}>
+                            <template if:true={buyer.isActive}>
+
+                                <!-- Buyer context banner -->
+                                <div class="buyer-context">
+                                    <lightning-icon
+                                        icon-name="standard:account"
+                                        size="small"
+                                        alternative-text="Buyer">
+                                    </lightning-icon>
+                                    <div class="buyer-context-info">
+                                        <div class="buyer-context-name">{buyer.accountName}</div>
+                                        <div class="buyer-context-type">{buyer.buyerType}</div>
+                                    </div>
+                                    <span class={buyer.badgeClass}>{buyer.badgeLabel}</span>
+                                </div>
+
+                                <!-- Saved confirmation -->
+                                <template if:true={buyer.isSaved}>
+                                    <div class="saved-banner">
+                                        <lightning-icon
+                                            icon-name="utility:check"
+                                            size="x-small"
+                                            alternative-text="Saved">
+                                        </lightning-icon>
+                                        Due Diligence saved for {buyer.accountName}
+                                    </div>
+                                </template>
+
+                                <!-- Edit form -->
+                                <lightning-record-edit-form
+                                    record-id={buyer.dueDiligenceId}
+                                    object-api-name="Due_Diligence__c"
+                                    onsuccess={handleSuccess}
+                                    onerror={handleError}>
+
+                                    <lightning-messages></lightning-messages>
+
+                                    <!-- Read-only context -->
+                                    <div class="context-output">
+                                        <lightning-output-field field-name="Account__c">
+                                        </lightning-output-field>
+                                        <lightning-output-field field-name="Opportunity__c">
+                                        </lightning-output-field>
+                                    </div>
+
+                                    <!-- Core Due Diligence -->
+                                    <h3 class="form-section-title">
+                                        <lightning-icon
+                                            icon-name="utility:file"
+                                            size="x-small"
+                                            alternative-text="">
+                                        </lightning-icon>
+                                        Core Due Diligence
+                                    </h3>
+                                    <div class="form-grid">
+                                        <lightning-input-field
+                                            field-name="Source_of_funds__c"
+                                            required>
+                                        </lightning-input-field>
+                                        <lightning-input-field
+                                            field-name="Details_on_Funds_of_Transaction__c"
+                                            required>
+                                        </lightning-input-field>
+                                        <lightning-input-field
+                                            field-name="Intended_use_of_Property__c"
+                                            required>
+                                        </lightning-input-field>
+                                        <lightning-input-field field-name="Place_of_Birth__c">
+                                        </lightning-input-field>
+                                        <lightning-input-field field-name="RC_KYC_Submitted_Date__c">
+                                        </lightning-input-field>
+                                    </div>
+
+                                    <!-- Compliance -->
+                                    <h3 class="form-section-title">
+                                        <lightning-icon
+                                            icon-name="utility:shield"
+                                            size="x-small"
+                                            alternative-text="">
+                                        </lightning-icon>
+                                        Compliance Information
+                                    </h3>
+                                    <div class="form-grid">
+                                        <lightning-input-field
+                                            field-name="You_ultimate_owners_subject_to_sanctions__c">
+                                        </lightning-input-field>
+                                        <lightning-input-field
+                                            field-name="You_ultimate_owners_Politically_Exposed__c">
+                                        </lightning-input-field>
+                                        <lightning-input-field field-name="Details_on_Sanctions__c">
+                                        </lightning-input-field>
+                                    </div>
+
+                                    <!-- Employment -->
+                                    <h3 class="form-section-title">
+                                        <lightning-icon
+                                            icon-name="utility:work_order"
+                                            size="x-small"
+                                            alternative-text="">
+                                        </lightning-icon>
+                                        Employment / Business
+                                    </h3>
+                                    <div class="form-grid">
+                                        <lightning-input-field field-name="Self_Employed__c">
+                                        </lightning-input-field>
+                                        <lightning-input-field field-name="Name_of_Employer__c">
+                                        </lightning-input-field>
+                                        <lightning-input-field field-name="Address_of_Employer__c">
+                                        </lightning-input-field>
+                                        <lightning-input-field field-name="Nature_of_Business__c">
+                                        </lightning-input-field>
+                                        <lightning-input-field field-name="Legal_Form__c">
+                                        </lightning-input-field>
+                                        <lightning-input-field field-name="Country_of_Incorporation__c">
+                                        </lightning-input-field>
+                                        <lightning-input-field field-name="City_of_Incorporation__c">
+                                        </lightning-input-field>
+                                    </div>
+
+                                </lightning-record-edit-form>
+                            </template>
+                        </div>
+                    </template>
+                </div>
+
+            </template>
+
+            <!-- ── No buyers: empty state ──────────────────────────── -->
+            <template if:false={hasBuyers}>
+                <div class="empty-state">
+                    <div class="empty-state-icon">
+                        <lightning-icon
+                            icon-name="utility:groups"
+                            size="large"
+                            alternative-text="">
+                        </lightning-icon>
+                    </div>
+                    <div class="empty-state-title">No Joint Owners Found</div>
+                    <p>Due Diligence forms are only required when a Joint Owner is added to this Opportunity.</p>
+                </div>
+            </template>
+        </template>
+
+        <!-- ── Footer ──────────────────────────────────────────────── -->
+        <div slot="footer">
+            <div class="footer-inner">
+                <span class="footer-hint" if:true={hasBuyers}>
+                    {savedCount} of {buyers.length} form(s) saved
+                </span>
+                <div class="footer-right">
+                    <lightning-button
+                        label="Cancel"
+                        onclick={handleCancel}
+                        disabled={isSaving}>
+                    </lightning-button>
+                    <lightning-button
+                        label={saveButtonLabel}
+                        variant="brand"
+                        onclick={handleSaveCurrent}
+                        disabled={isSaveDisabled}>
+                    </lightning-button>
+                </div>
+            </div>
+        </div>
+
+    </lightning-quick-action-panel>
+
+    <template if:true={isSaving}>
+        <lightning-spinner alternative-text="Saving due diligence details">
+        </lightning-spinner>
+    </template>
+</template>

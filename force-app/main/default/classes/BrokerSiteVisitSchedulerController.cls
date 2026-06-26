@@ -342,7 +342,7 @@ public with sharing class BrokerSiteVisitSchedulerController {
         siteVisit.Lead__c = leadRecord.Id;
         siteVisit.Opportunity__c = convertedOpportunity.Id;
         siteVisit.Channel_Partner__c = leadRecord.Channel_Partner__c;
-        siteVisit.Contact__c = convertedContactId;
+        siteVisit.Contact__c = convertedContactId; 
         siteVisit.Broker__c = brokerContactId;
         siteVisit.Project__c = projectId;
         siteVisit.Sales_Manager__c = salesManagerId;

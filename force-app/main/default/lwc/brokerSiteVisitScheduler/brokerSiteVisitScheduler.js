@@ -15,7 +15,7 @@ export default class BrokerSiteVisitScheduler extends LightningElement {
     selectedSalesManagerId;
     visitDate;
     availableSlot;
-    budget;
+    budget; 
     isLoading = false;
     isSaving = false;
 
